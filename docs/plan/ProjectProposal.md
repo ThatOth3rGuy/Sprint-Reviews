@@ -28,15 +28,57 @@ Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus elit, vestibu
 
 ## Users, Usage Scenarios and High Level Requirements 
 
-### Users Groups: - Yatharth
-Provide a a descriotion of the primary users in the system and when their high-level goals are with the system (Hint: there is more than one group for most projects).  Proto-personas will help to identify user groups and their wants/needs. 
+### Users Groups: 
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus elit, vestibulum ut, placerat ac, adipiscing vitae, felis. Curabitur dictum gravida mauris. Nam arcu libero, nonummy eget, consectetuer id, vulputate a, magna. Donec vehicula augue eu neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris ut leo. Cras viverra metus rhoncus sem. Nulla et lectus vestibulum urna fringilla ultrices. Phasellus eu tellus sit amet tortor gravida placerat. Integer sapien est, iaculis in, pretium quis, viverra ac, nunc. Praesent eget sem vel leo ultrices bibendum. Aenean faucibus. Morbi dolor nulla, malesuada eu, pulvinar at, mollis ac, nulla. Curabitur auctor semper nulla. Donec varius orci eget risus. Duis nibh mi, congue eu, accumsan eleifend, sagittis quis, diam. Duis eget orci sit amet orci dignissim rutrum.
+1. **Instructors**: Instructors are our primary users who will be responsible for creating classroom groups, assignments for peer review, and groups of students within the classroom group (as an optional feature). Their goal is to have a user-friendly platform that allows an easily managed grading system that is obtrained through an anonymous peer review system.
+&nbsp;
 
-### Envisioned Usage - Yatharth
-What can the user do with your software? If there are multiple user groups, explain it from each of their perspectives. These are what we called *user scenarios* back in COSC 341. Use subsections if needed to make things more clear. Make sure you tell a full story about how the user will use your software. An MVP is a minimal and viable, so don’t go overboard with making things fancy (to claim you’ll put in a ton of extra features and not deliver in the end), and don’t focus solely on one part of your software so that the main purpose isn’t achievable. Scope wisely.  Don't forget about journey lines to describe the user scenarios.  
+2. **Students**: Students are also our primary users, as the system is created for them to submit assignments and receive assignments to be reviewed anonymously. This also includes providing feedback and following a rubric provided by their respective instructors to evaluate their peers. Their goal is to have an efficient system that allows easy submission of assignments, receives timely feedback, and gains insights, while aiding the instructors in the process by reviewing other peers works.  
+&nbsp;
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus elit, vestibulum ut, placerat ac, adipiscing vitae, felis. Curabitur dictum gravida mauris. Nam arcu libero, nonummy eget, consectetuer id, vulputate a, magna. Donec vehicula augue eu neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris ut leo. Cras viverra metus rhoncus sem. Nulla et lectus vestibulum urna fringilla ultrices. Phasellus eu tellus sit amet tortor gravida placerat. Integer sapien est, iaculis in, pretium quis, viverra ac, nunc. Praesent eget sem vel leo ultrices bibendum. Aenean faucibus. Morbi dolor nulla, malesuada eu, pulvinar at, mollis ac, nulla. Curabitur auctor semper nulla. Donec varius orci eget risus. Duis nibh mi, congue eu, accumsan eleifend, sagittis quis, diam. Duis eget orci sit amet orci dignissim rutrum.
+3. **Administrators**: Administrators are users who have a purely  technical support system that enables them to manage and maintain the software. Their goal is to ensure smooth operation of the platform and provide any technical support needed for any user.
+
+
+
+### Envisioned Usage 
+
+1. **Instructor**:- 
+Here is a list of user scenarios for instructors as primary users:
+    - **Scenario 1**: The instructor wants to create a new classroom group.
+        - The instructor logs into their  instructor level account  and navigates to "Create Classroom.".
+        - They fill in their name, classroom description, and classroom number.
+        - They then add a list of students in their classroom who receive emails for invitations to the classroom.
+        - The platform enables students to be part of the instructor's classroom.        
+    - **Scenario 2**: Instructor wants to monitor student progress and conduct peer review.
+        - The instructor can view the grades and evaluation dashboard for each student in their respective classrooms
+        - The instructor can upload the students files and provide the rubric of evaluation with the file, the system shall randomly assign the assignment to be reviewed by the students.
+    - **Journey Line** :-  Here is a potential journey line for instructors:
+        1. The instructor logs into their instructor account.
+        1. They navigate to Create Classroom (if a new classroom is to be created) or go to the Classroom Group (which is identified with a classroom number and name).
+        1. Additionally, the instructor can go to "Create Classroom Teams," which creates a group of students within their respective classrooms.
+        1. The instructor uploads the assignments and clicks distribute.
+        1. They are led to the option of choosing the number of students to include in the evaluation, sending the assignment at random to every student (ensuring no student receives their own assignment), or sending it to separate teams of students, if created, who are in the classroom. 
+&nbsp;
+2. **Student** :- 
+Here is a list of user scenarios for our students as primary users:
+    - **Scenario 1**: The students wants to submit an assignment to their respective classrooms and perform peer review evaluations
+        - The student logs into their student  account to view their pending assignments and peer reviews to do.
+        - They upload their assignments as per rubrics provided
+        - They open their review assignment, which provides the classroom in which the assignment review needs to be conducted based on another set of rubrics
+        
+    - **Journey Line** :- Here is a potential journey line for students: 
+        - The student logs into their student account.
+        - They will submit assignments by uploading their assignments into the respective submissions boxes made on the "Assignments and Submission" page
+        - They will then also have to open the "Peer Evaluation" section to follow the peer reviews assigned to them and follow the rubric provided by instructor.
+        - Additionally they can review their grades and performances on the "Grades Dashboard", which give them grades and feedback of each assignment
+&nbsp;
+3. **Administrators**:-
+Here is a list of user scenarios for our Administrators as primary users:
+    - **Scenario and Journey Line**: Maintain the system and ensure smooth flow of software usage.
+        - They are to log in through the admin portal, separate from the other log in formats.
+        - They have access to daily analytics of the application, users online and offline and admin related issues raised as tickets. 
+        - They will be given issues as tickets from the instructor or student 
+        - They have complete control of being given access to use the application as a student and instructor.
 
 ### Requirements: - Tithi
 In the requirements section, make sure to clearly define/describe the **functional** requirements (what the system will do), **non-functional** requirements (performane/development), **user requirements (what the users will be able to do with the system and **technical** requirements).  These requirements will be used to develop the detailed uses in the design and form your feature list.
