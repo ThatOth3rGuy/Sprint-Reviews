@@ -6,11 +6,42 @@
 
 ## Overview:
 
-### Project purpose or justification (UVP) - Eric
+### Project purpose or justification (UVP)
 
-What is the purpose of this software? What problem does it solve? What is the unique value proposition? Why is your solution better than others?
+#### Project Purpose
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus elit, vestibulum ut, placerat ac, adipiscing vitae, felis. Curabitur dictum gravida mauris. Nam arcu libero, nonummy eget, consectetuer id, vulputate a, magna. Donec vehicula augue eu neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris ut leo. Cras viverra metus rhoncus sem. Nulla et lectus vestibulum urna fringilla ultrices. Phasellus eu tellus sit amet tortor gravida placerat. Integer sapien est, iaculis in, pretium quis, viverra ac, nunc. Praesent eget sem vel leo ultrices bibendum. Aenean faucibus. Morbi dolor nulla, malesuada eu, pulvinar at, mollis ac, nulla. Curabitur auctor semper nulla. Donec varius orci eget risus. Duis nibh mi, congue eu, accumsan eleifend, sagittis quis, diam. Duis eget orci sit amet orci dignissim rutrum.
+
+The purpose of this software is to create a user-friends platform aimed at simplifying the assignment submission and evaluation processes for students and instructors. More specifically, the software will be catered towards peer evaluation as it will allow instructors to set assignments to be peer-reviewed by a predetermined number of other students, and it will provide easy access for students to both submit and receive feedback from other students.
+
+
+#### Unique Value Proposition
+
+
+* User Friendliness
+
+
+    The platform will provide and intuitive interface for instructors, allowing easy access to create assignments and manage students progress.
+   
+    It will provide a simple assignment submission process for students, making it effortless for them to submit their work and receive prompt feedback and progress reports.
+
+
+* Integrated Peer Review Process
+
+
+    The software will allow for an easy, user-friendly, method of integrating peer review into the assignments.
+
+
+* Scalability
+
+
+    Since the software will be developed with the React framework, it allows for
+
+
+#### Why Our Solution is Better
+
+
+Our product stands out due to its user-centred design. Unlike existing solutions, our product is catered around peer reviews, allowing for a fair and simple integration of the peer review process for both instructors and students. Overall, this ensures a seamless, efficient, and collaborative educational experience for all users.
+
 
 ### High-level project description and boundaries - Divya
 
