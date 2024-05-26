@@ -43,11 +43,23 @@ The purpose of this software is to create a user-friends platform aimed at simpl
 Our product stands out due to its user-centred design. Unlike existing solutions, our product is catered around peer reviews, allowing for a fair and simple integration of the peer review process for both instructors and students. Overall, this ensures a seamless, efficient, and collaborative educational experience for all users.
 
 
-### High-level project description and boundaries - Divya
+### High-level project description and boundaries 
+Minimum Viable Product (MVP):
 
-Describe your MVP in a few statements and identify the boundaries of the system.
+* A platform for instructors to select their institution and create and manage classes and assignments.
+* Incorporation of a robust peer review process where students can anonymously review each other's work.
+* Secure user authentication and account management for students and instructors.
+* A personalized dashboard for instructors to monitor student progress and feedback.
+* A personalized dashbard for students to view submitted assignments, peer reviews, feedback recieved, progress.
+* An efficient submission system for students to allow them to upload their assigments easily.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus elit, vestibulum ut, placerat ac, adipiscing vitae, felis. Curabitur dictum gravida mauris. Nam arcu libero, nonummy eget, consectetuer id, vulputate a, magna. Donec vehicula augue eu neque. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris ut leo. Cras viverra metus rhoncus sem. Nulla et lectus vestibulum urna fringilla ultrices. Phasellus eu tellus sit amet tortor gravida placerat. Integer sapien est, iaculis in, pretium quis, viverra ac, nunc. Praesent eget sem vel leo ultrices bibendum. Aenean faucibus. Morbi dolor nulla, malesuada eu, pulvinar at, mollis ac, nulla. Curabitur auctor semper nulla. Donec varius orci eget risus. Duis nibh mi, congue eu, accumsan eleifend, sagittis quis, diam. Duis eget orci sit amet orci dignissim rutrum.
+Boundaries:
+
+* All peer reviews will be anonymous to ensure fairness.
+* The system will support assignment submissions in terms of selected file formats like .TXT and .DOC
+* The initial deployment of the system will support a limited number of classes and students considering the short development period.
+* The platform will be optimized for desktop and mobile use.
+
 
 ### Measurable project objectives and related success criteria (scope of project) - Brendan
 
