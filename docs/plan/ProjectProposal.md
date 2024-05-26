@@ -170,9 +170,9 @@ For **good At**, list of skills relevant to the project that you think you are g
 
 |  Category  | Brendan Michaud | Divyajot Kaur | Eric Harrison | Tithi Soni | Yatharth Mathur |
 | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-|  **Experience**  | COSC 310 - Security Survailence System | 2 | COSC 310 - Weather Dashboard | COSC 310- Canvas Clone, COSC 360- Discussion Forum | 5 |
-|  **Good At**  | Project Management, Java/JS/PHP/Node/Python/SQL (MySQL primarily),De-bugging | 2 | Backend Development, SQL/Python/Java/Javascript/CSS/HTML, Time Management | Design- Figma, Planning, Coding(Java, Python, PHP, Javascript, HTML/CSS) | 5 |
-|  **Expect to learn**  | 1  | 2 | React, Node, Copilot | 4 | 5 |
+|  **Experience**  | COSC 310 - Security Survailence System | COSC 310 - IClicker Clone | COSC 310 - Weather Dashboard | COSC 310- Canvas Clone, COSC 360- Discussion Forum | 5 |
+|  **Good At**  | Project Management, Java/JS/PHP/Node/Python/SQL (MySQL primarily),De-bugging | Project Management, Java/PHP/JS/Python/MySQl, Front-end Development, Design  | Backend Development, SQL/Python/Java/Javascript/CSS/HTML, Time Management | Design- Figma, Planning, Coding(Java, Python, PHP, Javascript, HTML/CSS) | 5 |
+|  **Expect to learn**  | 1  | React, Copilot, Node | React, Node, Copilot | 4 | 5 |
 
 Use this opportunity to discuss with your team who **may** do what in the project. Make use of everyone’s skill set and discuss each person’s role and responsibilities by considering how everyone will contribute.  Remember to identify project work (some examples are listed below at the top of the table) and course deliverables (the bottom half of the table). You might want to change the rows depending on what suits your project and team.  Understand that no one person will own a single task.  Recall that this is just an incomplete example.  Please explain how things are assigned in the caption below the table, or put the explanation into a separate paragraph so the reader understands why things are done this way and how to interpret your table.
 
