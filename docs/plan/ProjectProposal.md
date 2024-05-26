@@ -151,7 +151,17 @@ For each choice you make, provide a short justification based on the current tre
 
 ## High-level risks
 
-Describe and analyze any risks identified or associated with the project.
+Description and analysis of identified risks associated with the project : 
+
+* Scalability Issues : The system may not be able to scale to handle a larger number of users
+* Security and Privacy : There could be data breaches and potential unauthorized access of personal information of users.
+* Technical Debt : Continuous and rapid development given the short time period could result in a code difficult to maintain.
+* Deadline Compliance : Short development period may not be enough to deliver all features
+* UX Design issues : The design of the platform developed may fail to be user-friendly impairing user experience.
+* Regulatory Compliance : The platform may fail to comply with educational regulations and data protection laws.
+* Performance Issues : The platform may experience downtime and slow response time with heavy traffic.
+* Communication and collaboration challenges: There could be a possible miscommunication and absence of strong collaboration  between team members.
+  
 
 ## Assumptions and constraints
 
