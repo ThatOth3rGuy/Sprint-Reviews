@@ -161,6 +161,20 @@ Description and analysis of identified risks associated with the project :
 * Regulatory Compliance : The platform may fail to comply with educational regulations and data protection laws.
 * Performance Issues : The platform may experience downtime and slow response time with heavy traffic.
 * Communication and collaboration challenges: There could be a possible miscommunication and absence of strong collaboration  between team members.
+
+| Risk ID | Risk Description                       | Impact | Probability |
+|---------|----------------------------------------|--------|-------------|
+| 1       | Scalability issues                     | High   | Medium      |
+| 2       | Security and Privacy                   | High   | Medium      |
+| 3       | Technical Debt                         | High   | Medium      |
+| 4       | Missing deadlines (Deadline compliance)| High   | Medium      |
+| 5       | Low user adoption                      | Medium | High        |
+| 6       | Poor user experience (UX)              | Medium | Medium      |
+| 7       | Regulatory compliance issues           | High   | Low         |
+| 8       | Performance issues during peak usage   | High   | Medium      |
+| 9       | Communication and collaboration issues | Medium | Medium      |
+
+
   
 
 ## Assumptions and constraints
