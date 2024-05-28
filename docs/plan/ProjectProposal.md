@@ -129,100 +129,99 @@ Here is a list of user scenarios for our Administrators as primary users:
 **Functional Requirements:**
 
 1. User Management
-    a. Registration and login system for students, instructors, and administrators.
-    b. User roles and permissions based on the type of user.
-    c. Profile management- users can see and update personal information.
+    1. Registration and login system for students, instructors, and administrators.
+    2. User roles and permissions based on the type of user.
+    3. Profile management- users can see and update personal information.
 2. Class and Assignment Management
-    a. Instructors can create, update, and delete classes
-    b. Instructors can set parameters for assignments
-       * Deadlines, group members, rubrics
+    1. Instructors can create, update, and delete classes
+    2. Instructors can set parameters for assignments
+        1. Deadlines, group members, rubrics
 3. Assignment Submission and Review
-    a. Students can submit assignments and receive instant feedback
-       * Similar to feedback process of Turnitin
-    b. Students can review peer assignments that are assigned to them by the instructor
-    c. Student information is not available assignments that will be reviewed by peers
+    1. Students can submit assignments and receive instant feedback
+        1. Similar to feedback process of Turnitin
+    2. Students can review peer assignments that are assigned to them by the instructor
+    3. Student information is not available assignments that will be reviewed by peers
 4. Evaluation and Feedback
-    a. Instructors can review and provide feedback for assignments
-    b. Students can review and provide feedback on their peers’ assignments
-    c. Students can view feedback and grades on their own assignments
+    1. Instructors can review and provide feedback for assignments
+    2. Students can review and provide feedback on their peers’ assignments
+    3. Students can view feedback and grades on their own assignments
 5. Performance Tracking
-    a. Instructors can track individual student performance and overall class performance
+    1. Instructors can track individual student performance and overall class performance
 6. Security
-    a. Secure authentication and authorization mechanisms
-    b. Data encryption to protect personal information of users
+    1. Secure authentication and authorization mechanisms
+    2. Data encryption to protect personal information of users
 7. System Management
-    a. Administrators can manage the overall system, including user management and system settings
+    1. Administrators can manage the overall system, including user management and system settings
 8. User Interface
-    b. Interface is user friendly and easy to navigate for all user types
-    c. Responsive design that will support desktop and mobile devices
+    1. Interface is user friendly and easy to navigate for all user types
+    2. Responsive design that will support desktop and mobile devices
 
 **Non-functional Requirements:**
 
 1. Performance
-    a. The system should handle concurrent peer reviews efficiently, allowing multiple users to submit and review papers simultaneously.
-    b. Response time for loading forms and documents should be less than 2 seconds to maintain a seamless user experience.
+    1. The system should handle concurrent peer reviews efficiently, allowing multiple users to submit and review papers simultaneously.
+    2. Response time for loading forms and documents should be less than 2 seconds to maintain a seamless user experience.
 2. Security
-    a. User authentication and authorization mechanisms must be robust to prevent unauthorized access to sensitive data.
-    b. All communication between users and the system should be encrypted using industry-standard protocols (HTTPS)
-    c. The application should have role-based access control to manage permissions for authors, reviewers, and administrators
+    1. User authentication and authorization mechanisms must be robust to prevent unauthorized access to sensitive data.
+    2. All communication between users and the system should be encrypted using industry-standard protocols (HTTPS)
+    3. The application should have role-based access control to manage permissions for authors, reviewers, and administrators
 3. Reliability
-    a. The system should have a high uptime, with a target availability of 99.9%.
-    b. Regular backups of review data should be performed to prevent data loss.
+    1. The system should have a high uptime, with a target availability of 99.9%.
+    2. Regular backups of review data should be performed to prevent data loss.
 4. Usability
-    a. The user interface should be intuitive and user-friendly, allowing reviewers to easily navigate through the application.
-    b. Clear error messages and helpful tooltips should guide users during form submissions.
-    c. Accessibility standards (e.g., WCAG) should be followed to accommodate users with disabilities.
+    1. The user interface should be intuitive and user-friendly, allowing reviewers to easily navigate through the application.
+    2. Clear error messages and helpful tooltips should guide users during form submissions.
+    3. Accessibility standards (e.g., WCAG) should be followed to accommodate users with disabilities.
 5. Scalability
-    a. The application should handle an increasing number of users and reviews without performance degradation.
+    1. The application should handle an increasing number of users and reviews without performance degradation.
 6. Maintainability
-    a. Code should follow best practices and be well-documented.
-    b. Regular code reviews and refactoring should be part of the development process.
+    1. Code should follow best practices and be well-documented.
+    2. Regular code reviews and refactoring should be part of the development process.
 7. Compatibility
-    a. The application should work seamlessly across different browsers and devices
+    1. The application should work seamlessly across different browsers and devices
 
 **User Requirements:**
 
 1. Students
-    a. Submit assignments
-    b. Review and provide feedback on assignments from their peers as directed by instructor
-    c. View feedback on their own assignments
-    d. Provide feedback on peer’s contributions in group assignments anonymously
+    1. Submit assignments
+    2. Review and provide feedback on assignments from their peers as directed by instructor
+    3. View feedback on their own assignments
+    4. Provide feedback on peer’s contributions in group assignments anonymously
 2. Instructors
-    a. Create, manage, and delete classes and related assignments and data.
-    b. Set parameters for assignments: deadlines, groups for peer reviews, and assignment details/rubrics
-    c. Oversee assignments, create evaluations, and monitor student progress
-    d. Have a comprehensive view of student progress and performance
+    1. Create, manage, and delete classes and related assignments and data.
+    2. Set parameters for assignments: deadlines, groups for peer reviews, and assignment details/rubrics
+    3. Oversee assignments, create evaluations, and monitor student progress
+    4. Have a comprehensive view of student progress and performance
 3. Administrator
-    a. Manage overall systems: user management and system settings
+    1. Manage overall systems: user management and system settings
 4. All users
-    a. Register and login to the system
-    b. View and update personal information
-    c. Access the system on any device
+    1. Register and login to the system
+    2. View and update personal information
+    3. Access the system on any device
 
 **Technical Requirements:**
 
 1. Software Requirements
-    a. The application should be developed using React
-    b. The system should support a database that is efficient at handling storage and data retrieval
+    1. The application should be developed using React
+    2. The system should support a database that is efficient at handling storage and data retrieval
 2. System Design
-    a. System architecture should be designed to support multiple user roles and their respective functionalities
-    b. UI/UX should be intuitive and user-friendly, a seamless experience for all users
+    1. System architecture should be designed to support multiple user roles and their respective functionalities
+    2. UI/UX should be intuitive and user-friendly, a seamless experience for all users
 3. Programming Code
-    a. The backend code should be robust, secure, and efficient
-    b. Codde should follow best practices for readability, maintainability, and scalability
+    1. The backend code should be robust, secure, and efficient
+    2. Codde should follow best practices for readability, maintainability, and scalability
 4. Testing
-    a. Application should undergo rigorous testing, including unit testing, integration testing, system testing, and acceptance testing
-    b. Peer review of code should be conducted to identify defects, improvements, and ensure flow of the code.
+    1. Application should undergo rigorous testing, including unit testing, integration testing, system testing, and acceptance testing
+    2. Peer review of code should be conducted to identify defects, improvements, and ensure flow of the code.
 5. Deployment and Maintenance
-    a. Application should be deployable on various platforms and environments
-    b. Regular updates and maintenance should be planned to ensure the application remains up to date and secure
+    1. Application should be deployable on various platforms and environments
+    2. Regular updates and maintenance should be planned to ensure the application remains up to date and secure
 6. Integration
-    a. The application should support integration with other systems as required by the client
+    1. The application should support integration with other systems as required by the client
 7. Data Management
-    a. The system should support efficient data management practices, including regular backups, data validation, and data security measures
+    1. The system should support efficient data management practices, including regular backups, data validation, and data security measures
 8. Documentation
-    a. Comprehensive documentation should be maintained for the system design, code, suer manual, and other technical aspects of the application.
-
+    1. Comprehensive documentation should be maintained for the system design, code, suer manual, and other technical aspects of the application.
   
 ## Tech Stack
 
