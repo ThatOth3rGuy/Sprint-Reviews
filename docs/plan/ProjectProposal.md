@@ -56,9 +56,9 @@ Minimum Viable Product (MVP):
 Boundaries:
 
 * All peer reviews will be anonymous to ensure fairness.
-* The system will support assignment submissions in terms of selected file formats like .TXT and .DOC
+* The system will support assignment submissions in terms of selected file formats like .TXT , .DOC , .PDF and .ZIP
 * The initial deployment of the system will support a limited number of classes and students considering the short development period.
-* The platform will be optimized for desktop and mobile use.
+* The platform will only be optimized for desktop and mobile use.
 
 
 ### Measurable project objectives and related success criteria (scope of project) - Brendan
