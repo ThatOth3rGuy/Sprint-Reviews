@@ -61,7 +61,7 @@ Boundaries:
 * The platform will only be optimized for desktop and mobile use.
 
 
-### Measurable project objectives and related success criteria (scope of project) - Brendan
+### Measurable project objectives and related success criteria (scope of project)
 
 The goal of this project is to create an easy-to-use, online platform for students and instructors to effectively evaluate assignment submissions through peer review. Students will be able to submit assignments and receive anonymous feedback from a designated number of other students. Evaluations will support both feedback for individual and group assignments, determined by the instructor. The application will allow instructors to easily create and manage classes, add and determine evaluation criteria for assignments, and monitor student progress. This process will promote collaboration, accountability, student development, and simple evaluation by anonymous peer review. 
 
@@ -124,7 +124,7 @@ Here is a list of user scenarios for our Administrators as primary users:
         - They will be given issues as tickets from the instructor or student 
         - They have complete control of being given access to use the application as a student and instructor.
 
-### Requirements: - Tithi
+### Requirements: 
 
 **Functional Requirements:**
 
