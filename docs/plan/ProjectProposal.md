@@ -125,24 +125,104 @@ Here is a list of user scenarios for our Administrators as primary users:
         - They have complete control of being given access to use the application as a student and instructor.
 
 ### Requirements: - Tithi
-In the requirements section, make sure to clearly define/describe the **functional** requirements (what the system will do), **non-functional** requirements (performane/development), **user requirements (what the users will be able to do with the system and **technical** requirements).  These requirements will be used to develop the detailed uses in the design and form your feature list.
-#### Functional Requirements:
-- Describe the characteristics of the final deliverable in ordinary non-technical language
-- Should be understandable to the customers
-- Functional requirements are what you want the deliverable to do
 
-#### Non-functional Requirements:
-- Specify criteria that can be used to judge the final product or service that your project delivers
-- List restrictions or constraints to be placed on the deliverable and how to build it; remember that this is intended to restrict the number of solutions that will meet a set of requirements.
+**Functional Requirements:**
 
-#### User Requirements:
-- Describes what the user needs to do with the system (links to FR)
-- Focus is on the user experience with the system under all scenarios
+1. User Management
+    a. Registration and login system for students, instructors, and administrators.
+    b. User roles and permissions based on the type of user.
+    c. Profile management- users can see and update personal information.
+2. Class and Assignment Management
+    a. Instructors can create, update, and delete classes
+    b. Instructors can set parameters for assignments
+       * Deadlines, group members, rubrics
+3. Assignment Submission and Review
+    a. Students can submit assignments and receive instant feedback
+       * Similar to feedback process of Turnitin
+    b. Students can review peer assignments that are assigned to them by the instructor
+    c. Student information is not available assignments that will be reviewed by peers
+4. Evaluation and Feedback
+    a. Instructors can review and provide feedback for assignments
+    b. Students can review and provide feedback on their peers’ assignments
+    c. Students can view feedback and grades on their own assignments
+5. Performance Tracking
+    a. Instructors can track individual student performance and overall class performance
+6. Security
+    a. Secure authentication and authorization mechanisms
+    b. Data encryption to protect personal information of users
+7. System Management
+    a. Administrators can manage the overall system, including user management and system settings
+8. User Interface
+    b. Interface is user friendly and easy to navigate for all user types
+    c. Responsive design that will support desktop and mobile devices
 
-#### Technical Requirements:
-- These emerge from the functional requirements to answer the questions: 
--- How will the problem be solved this time and will it be solved technologically and/or procedurally?
--- Specify how the system needs to be designed and implemented to provide required functionality and fulfill required operational characteristics.
+**Non-functional Requirements:**
+
+1. Performance
+    a. The system should handle concurrent peer reviews efficiently, allowing multiple users to submit and review papers simultaneously.
+    b. Response time for loading forms and documents should be less than 2 seconds to maintain a seamless user experience.
+2. Security
+    a. User authentication and authorization mechanisms must be robust to prevent unauthorized access to sensitive data.
+    b. All communication between users and the system should be encrypted using industry-standard protocols (HTTPS)
+    c. The application should have role-based access control to manage permissions for authors, reviewers, and administrators
+3. Reliability
+    a. The system should have a high uptime, with a target availability of 99.9%.
+    b. Regular backups of review data should be performed to prevent data loss.
+4. Usability
+    a. The user interface should be intuitive and user-friendly, allowing reviewers to easily navigate through the application.
+    b. Clear error messages and helpful tooltips should guide users during form submissions.
+    c. Accessibility standards (e.g., WCAG) should be followed to accommodate users with disabilities.
+5. Scalability
+    a. The application should handle an increasing number of users and reviews without performance degradation.
+6. Maintainability
+    a. Code should follow best practices and be well-documented.
+    b. Regular code reviews and refactoring should be part of the development process.
+7. Compatibility
+    a. The application should work seamlessly across different browsers and devices
+
+**User Requirements:**
+
+1. Students
+    a. Submit assignments
+    b. Review and provide feedback on assignments from their peers as directed by instructor
+    c. View feedback on their own assignments
+    d. Provide feedback on peer’s contributions in group assignments anonymously
+2. Instructors
+    a. Create, manage, and delete classes and related assignments and data.
+    b. Set parameters for assignments: deadlines, groups for peer reviews, and assignment details/rubrics
+    c. Oversee assignments, create evaluations, and monitor student progress
+    d. Have a comprehensive view of student progress and performance
+3. Administrator
+    a. Manage overall systems: user management and system settings
+4. All users
+    a. Register and login to the system
+    b. View and update personal information
+    c. Access the system on any device
+
+**Technical Requirements:**
+
+1. Software Requirements
+    a. The application should be developed using React
+    b. The system should support a database that is efficient at handling storage and data retrieval
+2. System Design
+    a. System architecture should be designed to support multiple user roles and their respective functionalities
+    b. UI/UX should be intuitive and user-friendly, a seamless experience for all users
+3. Programming Code
+    a. The backend code should be robust, secure, and efficient
+    b. Codde should follow best practices for readability, maintainability, and scalability
+4. Testing
+    a. Application should undergo rigorous testing, including unit testing, integration testing, system testing, and acceptance testing
+    b. Peer review of code should be conducted to identify defects, improvements, and ensure flow of the code.
+5. Deployment and Maintenance
+    a. Application should be deployable on various platforms and environments
+    b. Regular updates and maintenance should be planned to ensure the application remains up to date and secure
+6. Integration
+    a. The application should support integration with other systems as required by the client
+7. Data Management
+    a. The system should support efficient data management practices, including regular backups, data validation, and data security measures
+8. Documentation
+    a. Comprehensive documentation should be maintained for the system design, code, suer manual, and other technical aspects of the application.
+
   
 ## Tech Stack
 
