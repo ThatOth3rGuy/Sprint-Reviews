@@ -11,7 +11,7 @@
 #### Project Purpose
 
 
-The purpose of this software is to create a user-friends platform aimed at simplifying the assignment submission and evaluation processes for students and instructors. More specifically, the software will be catered towards peer evaluation as it will allow instructors to set assignments to be peer-reviewed by a predetermined number of other students, and it will provide easy access for students to both submit and receive feedback from other students.
+The purpose of this software is to create a user-friendly platform aimed at simplifying the assignment submission and evaluation processes for students and instructors. More specifically, the software will be catered towards peer evaluation as it will allow instructors to set assignments to be peer-reviewed by a predetermined number of other students, and it will provide easy access for students to both submit and receive feedback from other students.
 
 
 #### Unique Value Proposition
@@ -20,21 +20,23 @@ The purpose of this software is to create a user-friends platform aimed at simpl
 * User Friendliness
 
 
-    The platform will provide and intuitive interface for instructors, allowing easy access to create assignments and manage students progress.
+    - The platform will provide an intuitive interface for instructors, allowing easy access to create assignments, manage student progress and oversee the peer review process.
    
-    It will provide a simple assignment submission process for students, making it effortless for them to submit their work and receive prompt feedback and progress reports.
+    - It will provide a simple assignment submission process for students, making it effortless for them to submit their work and receive prompt feedback and progress reports.
 
 
 * Integrated Peer Review Process
 
 
-    The software will allow for an easy, user-friendly, method of integrating peer review into the assignments.
+    - The software will allow for an easy, user-friendly, method of integrating peer review into the assignments.
+
+    - Instructors can create groups within the platform, enabling an easy method for group assignments and allowing students to easily provide anonymous feedback to the other students within their group.
 
 
 * Scalability
 
 
-    Since the software will be developed with the React framework, it allows for
+    - Since the software will be developed with the React framework, it allows for easy integration of further software at later dates.
 
 
 #### Why Our Solution is Better
