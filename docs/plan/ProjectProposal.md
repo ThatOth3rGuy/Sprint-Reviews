@@ -1,7 +1,9 @@
 # Project Proposal for Project #3
 
 **Project Title:** Peer-Review Application
+
 **Team Number:** 3
+
 **Team Members:** Brendan Michaud, Divyajot Kaur, Eric Harrison, Tithi Soni, Yatharth Mathur
 
 ## Overview
@@ -218,7 +220,7 @@ Technologies that will be used to build the platform:
 | Authentication | JWT | Allows secure, stateless authentication and authorization. |
 | Development platforms and tools for collaboration | VS Code | Powerful code editor with extensive support for JavaScript and Node.js. |
 |  | Git & GitHub | Version control and collaboration platform for tracking code changes and facilitating teamwork. |
-| API | RESTful, Google API | Standard architectural style for designing easy-to-use networked applications using HTTP requests. |
+| API | RESTful API, Google API | Standard architectural style for designing easy-to-use networked applications using HTTP requests. |
 
 *Subject to change
 
