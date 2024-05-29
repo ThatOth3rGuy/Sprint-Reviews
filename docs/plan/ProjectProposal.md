@@ -122,7 +122,7 @@ Here is a list of user scenarios for Administrators as primary users:
 3. Assignment Submission and Review
     * Students can submit assignments
     * Students can review peer assignments that are assigned to them by the instructor
-    * Student information is not available for assignments that will be reviewed by peers, to maintain anonymity and fariness
+    * Student information is not available for assignments that will be reviewed by peers, to maintain anonymity and fairness
 4. Evaluation and Feedback
     * Instructors can review and provide feedback for assignments
     * Students can review and provide feedback on their peers’ assignments
