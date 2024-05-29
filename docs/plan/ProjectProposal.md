@@ -205,9 +205,8 @@ Here is a list of user scenarios for Administrators as primary users:
 8. Documentation
     1. Comprehensive documentation should be maintained for the system design, code, user manual, and other technical aspects of the application.
   
-## Tech Stack
-
-Technologies that will be used to build the platform :
+## Tech Stack*
+Technologies that will be used to build the platform:
 
 | Type | Technology | Justification |
 |-------------|-------------|-------------|
@@ -220,6 +219,8 @@ Technologies that will be used to build the platform :
 | Development platforms and tools for collaboration | VS Code | Powerful code editor with extensive support for JavaScript and Node.js. |
 |  | Git & GitHub | Version control and collaboration platform for tracking code changes and facilitating teamwork. |
 | API | RESTful, Google API | Standard architectural style for designing easy-to-use networked applications using HTTP requests. |
+
+*Subject to change
 
 ## High-level risks
 
