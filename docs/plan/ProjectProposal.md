@@ -214,9 +214,9 @@ Technologies that will be used to build the platform :
 | Front-end | React | React allows the building of complex applications with flexibility. It allows code reusability. It allows component-driven development. We can create a user interface and break it into reusable components allowing ease of development |
 |  | HTML/CSS | Fundamental technologies for web development. |
 | Back-end | Node.js | Non-blocking, event-driven architecture ideal for scalable network applications. |
+|| NextJs | React-based framework used for creating static websites and SEO optimizations. |
 | Database | MySQL | Flexible and scalable database that stores data in JSON-like documents. |
 | Authentication | JWT | Allows secure, stateless authentication and authorization. |
-| Storage | AWS S3 | Highly scalable and reliable storage service for file uploads and media storage. |
 | Development platforms and tools for collaboration | VS Code | Powerful code editor with extensive support for JavaScript and Node.js. |
 |  | Git & GitHub | Version control and collaboration platform for tracking code changes and facilitating teamwork. |
 | API | RESTful, Google API | Standard architectural style for designing easy-to-use networked applications using HTTP requests. |
