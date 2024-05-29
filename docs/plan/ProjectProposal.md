@@ -211,7 +211,7 @@ Technologies that will be used to build the platform :
 
 | Type | Technology | Justification |
 |-------------|-------------|-------------|
-| Front-end | React | Popular for building user interfaces with a component-based architecture. |
+| Front-end | React | React allows building of complex applications with flexibility. It allows code reusability. It allows component driven development. We can create a user interface and break it into resuable components allowing ease of development |
 |  | HTML/CSS | Fundamental technologies for web development. |
 | Back-end | Node.js | Non-blocking, event-driven architecture ideal for scalable network applications. |
 | Database | MySQL | Flexible, scalable NoSQL database that stores data in JSON-like documents. |
