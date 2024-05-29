@@ -259,7 +259,24 @@ Description and analysis of identified risks associated with the project:
 
 ## Assumptions and constraints
 
-What assumptions is the project team making and what are the constraints for the project?
+### **Project Assumptions**
+* All intended libraries and APIs to use are free and fully open-source
+* APIs needed/wanted exist and are usable
+* The given requirements are accurate to the clients based on the initial project description
+* All team members are able to operate the necessary components of the tech stack on their machine
+* The final submitted project is a operational prototype, and may not be fully-developed deployable software without continued development
+* Every team member will provide equal contribution to the final product
+* All elements of our chosen tech stack will be openly available and able to be integrated together
+* New technology will be learned by all team members, creating code issues that will be continously resolved
+
+### **Project Constraints**
+* The greatest constraint is the lack of financial budget, meaning all APIs and libraries will need to be free open source software
+* Heavy time constraints restrict us from building new APIs that may be included from scratch
+* Lack of time also means a shortened planning and development process, limiting the ability for extra features
+* Possible hardware constraints, limiting the scalability testing and server deployment
+* Time also creates workload constraints, impacted by the number of team members as well. Thus the breakdown of feature development is limited in size.
+* Outside of financial, hardware, and time constraints there may be interpersonal constraints presented during development, possibly delaying the project progress
+* A short development period means that if major issues occur, requirements may not be met, and reworking will be needed to produce a complete application by the deadline
 
 ## Summary milestone schedule
 
