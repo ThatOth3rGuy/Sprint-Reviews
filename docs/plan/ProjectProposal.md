@@ -51,7 +51,7 @@ Boundaries:
 
 The goal of this project is to create an easy-to-use, online platform for students and instructors to effectively evaluate assignment submissions through peer review. Students will be able to submit assignments and receive anonymous feedback from a designated number of other students. Evaluations will support both feedback for individual and group assignments, determined by the instructor. The application will allow instructors to easily create and manage classes, add and determine evaluation criteria for assignments, and monitor student progress. This process will promote collaboration, accountability, student development, and simple evaluation by anonymous peer review.
 
-Users will be able to easily create new accounts, or log-in to existing accounts by providing authentication. Instructors and administrators will be able to create classes and assign students into the classroom using csv files or manual entry. Student accounts will be linked only to classes assigned by instructors, and able to review selected peer assignments. The application will support compatibility with mobile or desktop devices, allow all users to efficiently upload files from a set number of file types (txt, doc, pdf, and zip) as well as links. The project will also provide simple site navigation using a minimalistic interface.
+Users will be able to easily create new accounts, or log in to existing accounts by providing authentication. Instructors and administrators will be able to create classes and assign students to the classroom using csv files or manual entry. Student accounts will be linked only to classes assigned by instructors, and able to review selected peer assignments. The application will support compatibility with mobile or desktop devices, allow all users to efficiently upload files from a set number of file types (txt, doc, pdf, and zip) as well as links. The project will also provide simple site navigation using a minimalistic interface.
 
 The application will be built using React as well as a relational database to provide flexibility to users and enable future scalability to the system. This project is intended to support a few classes, given the limited development period of 3 months. With rigorous testing and iterative development, the application will be deployed with the required functionality in August 2024.
 
@@ -72,7 +72,7 @@ The application will be built using React as well as a relational database to pr
 1. **Instructor:**
 Here is a list of user scenarios for instructors as one of the primary users:
     * **Scenario 1:** The instructor wants to create a new classroom group.
-        * The instructor logs into their  instructor-level account  and navigates to "Create Classroom", a page where they have a form to create classrooms.
+        * The instructor logs into their instructor-level account and navigates to "Create Classroom", a page where they have a form to create classrooms.
         * They fill in their name, classroom description, and classroom number.
         * They subsequently compile a list of students in their classroom into a .csv file format. These students are the recipients of classroom invitations via a shared link. The instructor has the discretion to distribute these invitations as they see fit.
         * The platform facilitates student participation in the instructor’s classroom, and concurrently, the instructor is notified when students join their classroom.
@@ -105,7 +105,7 @@ Here is a list of user scenarios for Administrators as primary users:
         * They are to log in through the admin portal, separate from the other login formats.
         * They are privy to daily analytics of the application, including data on users who are online
         * They also have “view only” access to the accounts of instructors and students
-        * They also can create user profiles and remove user profiles
+        * They can also create user profiles and remove user profiles
 
 ### Requirements
 
@@ -211,7 +211,7 @@ Technologies that will be used to build the platform :
 
 | Type | Technology | Justification |
 |-------------|-------------|-------------|
-| Front-end | React | React allows building of complex applications with flexibility. It allows code reusability. It allows component driven development. We can create a user interface and break it into resuable components allowing ease of development |
+| Front-end | React | React allows the building of complex applications with flexibility. It allows code reusability. It allows component-driven development. We can create a user interface and break it into reusable components allowing ease of development |
 |  | HTML/CSS | Fundamental technologies for web development. |
 | Back-end | Node.js | Non-blocking, event-driven architecture ideal for scalable network applications. |
 | Database | MySQL | Flexible, scalable NoSQL database that stores data in JSON-like documents. |
@@ -228,9 +228,9 @@ Description and analysis of identified risks associated with the project:
 * Scalability Issues
   * The system may not be able to scale to handle a larger number of users
 * Security and Privacy
-  * There could be data breaches and potential unauthorized access of the personal information of users.
+  * There could be data breaches and potential unauthorized access to the personal information of users.
 * Technical Debt
-  * Continuous and rapid development given the short period could result in code difficult to maintain.
+  * Continuous and rapid development given the short period could result in code being difficult to maintain.
 * Deadline Compliance
   * Short development period may not be enough to deliver all features
 * UX Design Issues
@@ -240,7 +240,7 @@ Description and analysis of identified risks associated with the project:
 * Performance Issues
   * The platform may experience downtime and slow response time with heavy traffic.
 * Communication and Collaboration Challenges
-  * There could be  possible miscommunication and the absence of strong collaboration between team members.
+  * There could be possible miscommunication and the absence of strong collaboration between team members.
 
 | Risk ID | Risk Description                       | Impact | Probability |
 |---------|----------------------------------------|--------|-------------|
