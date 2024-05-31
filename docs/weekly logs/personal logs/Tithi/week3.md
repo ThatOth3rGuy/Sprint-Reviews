@@ -33,7 +33,8 @@ Topics Covered:
 | Rerecord functional requirements part of video | 05/29/2024 | :heavy_check_mark: |
 | Install docker and npm | 06/01/2024 | npm: :heavy_check_mark: |
 | Make design demo | 05/31/2024 | WIP |
-
+| Create personal logs section on github | 05/31/2024 | :heavy_check_mark: |
+| Write weekly log | 05/31/2024 | WIP |
 
 **05/24/2024**
 
