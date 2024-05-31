@@ -43,7 +43,7 @@
 | Task | Assignee | Due |
 | --- | --- | --- |
 | Install Docker and npm | Tithi Soni, Yatharth Mathur, Divyajot, Eric, Brendan | 6/1/2024 |
-| Make wireframe | Tithi, Divya | 5/31/2024 |
+| Make wireframe | Tithi, Divyajot | 5/31/2024 |
 | Make system architecture designs | Brendan | 5/30/2024 |
 | Research potential APIs we want to use | Tithi Soni, Yatharth Mathur, Divyajot, Eric, Brendan | 5/31/2024 |
 | DFD level 0 and level 1 | Yatharth | 6/1/2024 |
