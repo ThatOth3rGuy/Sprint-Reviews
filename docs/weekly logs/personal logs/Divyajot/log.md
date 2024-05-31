@@ -1,6 +1,6 @@
  # Weekly Logs 
 ------------------------------------
-## Week 1 May
+## Week 1 
 * Meet and greet 
 * Team formations
 * Ice breaker
