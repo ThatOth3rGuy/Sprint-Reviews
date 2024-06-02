@@ -47,4 +47,4 @@ Topics Covered:
 
 | Task | Due By | Status |
 | ------- | ------- | ------- |
-| Complete detailed UI design | 06/05/2024 | :heavy_check_mark: |
+| Complete detailed UI design | 06/05/2024 | WIP |
