@@ -32,12 +32,19 @@ Topics Covered:
 | ------- | ------- | ------- |
 | Rerecord functional requirements part of video | 05/29/2024 | :heavy_check_mark: |
 | Install docker and npm | 06/01/2024 | npm: :heavy_check_mark: |
-| Make design demo | 05/31/2024 | WIP |
+| Make design demo | 05/31/2024 | :heavy_check_mark: |
 | Create personal logs section on github | 05/31/2024 | :heavy_check_mark: |
-| Write weekly log | 05/31/2024 | WIP |
+| Write weekly log | 05/31/2024 | :heavy_check_mark: |
 
 **05/24/2024**
 
 Topics Covered:
 
-Unfortunately I cannot time travel so I have to wait until tomorrow's meeting to finish this section.
+* reviewed dfd diagrams, er diagrams, system architecture, wireframe, and basic UI design and discussed any changes we wanted to add
+* decided monday meeting time and location for task updates
+
+*Action Items*
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Complete detailed UI design | 06/05/2024 | :heavy_check_mark: |
