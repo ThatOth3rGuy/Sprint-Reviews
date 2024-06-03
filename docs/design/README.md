@@ -20,7 +20,11 @@ Extending from your requirements, the team will need to develop a set of usage s
 
 ## Database Design 
 
-Provide an ER diagram of the entities and relationships you anticipate having in your system (this will most likely change, but you need a starting point).  In a few sentences, explain why the data is modelled this way and what is the purpose of each table/attribute.  For this part, you only need to have ONE diagram and an explanation.
+This diagram shows how information will be represented as objects in a relational schema.
+
+* Users will be broken down into 1 of the 2 mandatory subclasses, students and instructors. Instructors are connected to classes, assignments, and other users with some of their permissions depending on the isAdmin attribute. 
+* Students are connected to the classes they're in, and they're connected to assignments through the weak entities that store information regarding their submissions and feedback.
+* Classes are connected to the assignments within them, with the isArchived boolean being a foreign key so it's easy to archive all assignments within an archived class.
 
 ![ER Diagram](ERDiagram.png)
 
