@@ -37,6 +37,25 @@ Team meeting notes / Teams Weekly Tasks
 
 My tasks
 
-* Recording my part of proposal video
-* Editing proposal video
-* ER diagram
+* Recording my part of proposal video (2 hours)
+* Editing proposal video (4 hours)
+* ER diagram (WIP)
+
+## Week 4
+
+Team meeting notes / Teams Weekly Tasks
+
+* Install Docker, Node, and NPM
+* Complete project design document (both System design and UI)
+* Team meeting where we meet Parsa
+* Update project proposal/design based on meeting with Parsa
+* Collectively revewed design document
+* Revew other team's project proposals
+
+My Tasks
+
+* Create ER Diagram (2 hours)
+* Add database design explanation to document (0.5 hours)
+* Implement Nextjs framework (4 hours)
+* Review other team's project proposals (1 hour)
+* Add all Use Cases to kanban board (1 hour)
