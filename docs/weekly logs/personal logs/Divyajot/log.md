@@ -44,6 +44,7 @@
      - Updating tech stack section in project proposal document 
      - Review final Project proposal document 
      - Wireframing and UI design prototyping
+     - Project board management and task assignment on kanban board, categorization of tasks to milestones and Tshirt sizing of tasks
    
 
   ## Week 4
@@ -61,7 +62,6 @@ Team meeting notes:
 
   - Update UI design to explain the flow of screens based on the design diagrams
   - Setup and install framework
-  - Project board management and task assignment on kanban board, categorization of tasks to milestones and Tshirt sizing of tasks
   - Review other team's project proposals
   - Learning React
   
