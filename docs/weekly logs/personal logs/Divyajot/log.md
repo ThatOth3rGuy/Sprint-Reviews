@@ -61,9 +61,9 @@ Team meeting notes:
 
   - Update UI design to explain the flow of screens based on the design diagrams
   - Setup and install framework
-  - Project board management and task assignment to ensure kanban is upto date and categorization of tasks to milestones
+  - Project board management and task assignment on kanban board, categorization of tasks to milestones and Tshirt sizing of tasks
   - Review other team's project proposals
-  - Learn React
+  - Learning React
   
 
 
