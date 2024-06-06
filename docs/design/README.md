@@ -20,6 +20,8 @@ Each layer contains one or several components, where those components are isolat
 ![System Architecture Design](./images/SystemArchitectureDesign.png)
 
 ## Use Case Models
+Here is the comprehensive list of derived use case models, carefully tailored to meet the user requirements and envisioned usage.
+
 | Use Case ID | Use Case                                       | Actors                |
 |-------------|------------------------------------------------|-----------------------|
 | 1.1         | Create Account                                 | Student, Instructor   |
