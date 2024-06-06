@@ -212,7 +212,7 @@ The wireflow diagram, shown below, describes how users will be interacting with 
 
 ### Key Design Mockups:
 
-Using Figma, a more detailed visual of the application can be made to better visualize use cases. With this in mind, here are a few key frames designed for the student, instructor and admin users.
+Using Figma, a more detailed interface of the application can be made to better visualize the use cases. With this in mind, here are a few key frames designed for the student and instructor users. The admin interface is the same as the instructor interface, with minimal additions, which is why it is not shown below.
 
 #### Student Frames:
 
@@ -228,7 +228,7 @@ The following frames depict key student interactions with the system, including 
 
 #### Instructor Frames:
 
-The following frames depict key instructor interactions with the system, including signup, login, homepage view, create assignment, release assignment, and viewing student performance.
+The following frames depict key instructor interactions with the system, including signup, login, homepage view, create assignment, release assignment, and viewing student performance. 
 
 ![Instructor- Signup](./images/instructor-signup.png)
 
@@ -241,3 +241,5 @@ The following frames depict key instructor interactions with the system, includi
 ![Instructor- Release Assignment](./images/instructor-release-assign.png)
 
 ![Instructor- Overall Grades](./images/instructor-overall-grades.png)
+
+[Here](https://www.figma.com/design/6n2YkfmHc4Sa2xd1B8cBCP/Peer-Review--UI-Design?node-id=0-1&t=YiNBJKdJmiFIHNJP-1) is a link to the Figma prototype, which shows a more detailed version of user interaction with the application.
