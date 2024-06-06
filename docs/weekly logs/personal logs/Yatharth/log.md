@@ -43,20 +43,20 @@ My tasks to do /done
       - DFD level 0 (in progress)
       - Use case Scenarios( in progress) 
 
-# Week 4
+# Week 3
 
 ## Wednesday (6/5/2024)
 
 ### Timesheet
-![alt text]()
+![alt text](images/Week3.png)
 
-![alt text]()
 
-### Current Tasks
-  * #1: Finalizing DFD1, UCD, use case descriptions, ERD
-  * #2: Finailizing design doc and convert to Markdown
+### Current Tasks (Complete by the end of the day)
+  * Make changes in DFD as per Kevin's feedback
+  * Update the Use case models and diagram to the Design Document
 
-### Progress Update (since 5/31/2024)
+
+### Progress Update (since 5/29/2024)
 <table>
     <tr>
         <td><strong>TASK/ISSUE #</strong>
@@ -66,37 +66,29 @@ My tasks to do /done
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td>* #5: Start & finish use case diagram and use case descriptions
+        <td>Start & finish use case diagram and use case descriptions
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Accept and set up clokify as per instructions 
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Drone CI integration 
         </td>
         <!-- Status -->
         <td> In progress
         </td>
     </tr>
-    <tr>
-        <!-- Task/Issue # -->
-        <td> Figure out Clockify & its integration w/ GitHub
-        </td>
-        <!-- Status -->
-        <td> Not started
-        </td>
-    </tr>
-    <tr>
-        <!-- Task/Issue # -->
-        <td> Learn TravisCI
-        </td>
-        <!-- Status -->
-        <td> Not started
-        </td>
-    </tr>
-    <tr>
-        <!-- Task/Issue # -->
-        <td> Learn TravisCI
-        </td>
-        <!-- Status -->
-        <td> Not started
-        </td>
-    </tr>
-    <tr>
+        <tr>
         <!-- Task/Issue # -->
         <td> Learn React
         </td>
@@ -109,18 +101,50 @@ My tasks to do /done
         <td> Meeting w/ client (5/31/2024)
         </td>
         <!-- Status -->
-        <td> Completed
+        <td> Done
         </td>
     </tr>
-     <tr>
+          <tr>
         <!-- Task/Issue # -->
-        <td> Clockify set up
+        <td> Help with fininalizng UI design
         </td>
         <!-- Status -->
-        <td> Completed
+        <td> In progress
         </td>
     </tr>
-     <tr>
+    
+</table>
+
+### Weekly Goal Review
+I have successfully accomplished the planned administrative tasks. I am now to work on the Dron CI integration 
+
+### Next Cycle Goals
+  * Drone CI integration 
+
+
+# Week 4
+
+## Friday (06/07/2024)
+
+### Timesheet
+![Week4 Friday Logs image]()
+
+
+
+### Current Tasks (Complete by the end of the day)
+  * Make changes in DFD as per Kevin's feedback
+  * Update the Use case models and diagram to the Design Document
+
+
+### Progress Update (since 5/29/2024)
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+   <tr>
         <!-- Task/Issue # -->
         <td> Help with fininalizng UI design
         </td>
@@ -130,74 +154,29 @@ My tasks to do /done
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> Database ER diagram
+        <td> Drone CI integration 
+        </td>
+        <!-- Status -->
+        <td> In progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Learn React
+        </td>
+        <!-- Status -->
+        <td> In progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Learn Next.js
         </td>
         <!-- Status -->
         <td> In progress
         </td>
     </tr>
 </table>
-
-### Weekly Goal Review
-I completed administrative tasks as planned, but system analysis and diagram are taking longer than expected due to complexity in some areas of our current system design. 
-
-### Next Cycle Goals
-  * Create slides for design video
-  * Shoot my portion of design video
-  * Initiate coding process
-
-<!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-## Friday (6/7/2024)
-
-### Timesheet
-![alt text](image_url_here)
-
-### Current Tasks
-  * #1: Task 1
-  * #2: Task 2
-  * #3: Task 3
-
-### Progress Update (since 6/5/2024)
-<table>
-    <tr>
-        <td><strong>TASK/ISSUE #</strong>
-        </td>
-        <td><strong>STATUS</strong>
-        </td>
-    </tr>
-    <tr>
-        <!-- Task/Issue # -->
-        <td>Task A
-        </td>
-        <!-- Status -->
-        <td>Complete
-        </td>
-    </tr>
-    <tr>
-        <!-- Task/Issue # -->
-        <td>Task B
-        </td>
-        <!-- Status -->
-        <td>In Progress
-        </td>
-    </tr>
-    <tr>
-        <!-- Task/Issue # -->
-        <td>Task C
-        </td>
-        <!-- Status -->
-        <td>In Progress
-        </td>
-    </tr>
-</table>
-
-### Weekly Goal Review
-I completed Task A as planned, but Task B and C is taking longer than expected due to complexity in testing. 
-
-### Next Cycle Goals
-  * Goal 1
-  * Goal 2
-  * Goal 3
 
 
     
