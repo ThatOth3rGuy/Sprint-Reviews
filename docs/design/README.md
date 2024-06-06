@@ -2,9 +2,9 @@
 
 ## Introduction
 
-Start with a brief introduction of **what** you are building, reminding the reader of the high-level usage scenarios (project purpose).   Complete each section with the required components.  Don't forget that you can include [images in your markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#images).  
+We are building a Peer Review Application, aimed at simplifying the assignment submission and review processes for students and instructors. The primary purpose of this application is to streamline the peer review process in educational settings.
 
-Start each section with a lead-in, detailing what it is.  Also, do not just have a collection of images.   Each diagram must be explained clearly. **Do not assume that the reader understands the intentions of your designs**.
+This platform will allow instructors to set assignments to be peer-reviewed by  other students, providing easy access for students to both submit their work and receive feedback from their peers. This not only enhances the learning experience but also fosters a collaborative environment amongst students.
 
 ## System Architecture Design
 
@@ -17,7 +17,7 @@ As an MVC pattern, our system is divided into the 3 main layers:
 
 Each layer contains one or several components, where those components are isolated in their own container. Outside the layers, the ***"Users"*** indicates any user that accesses the application, which is sent to a reverse proxy to determine user type and proper navigation. This protocol is not directly connected to the application but containerized as a transfer protocol telling the controller which view component to access. The View layer is the front-end system the users will interact with which makes the requests to the controller. This layer contains two main view components: **the instructor dashboard and the student dashboard**, which may interact with each other, but act independently. The Controller is simply our main system logic, handling all requests by the user, sending and receiving data from the model (Database), and interacting with added APIs. The chosen framework for the controller is Next.js, allowing for simple API integration and future scalability. Finally, the Model of our system is our database, which solely interacts with the controller, processing any requests and transmitting data back. The initial database framework chosen is MySQL as the database will be relational and its accessibility with Node, however this framework may change. 
 
-![System Architecture Design](SystemArchitectureDesign.png)
+![System Architecture Design](./images/SystemArchitectureDesign.png)
 
 ## Use Case Models
 | Use Case ID | Use Case                                       | Actors                |
@@ -176,7 +176,7 @@ Each layer contains one or several components, where those components are isolat
 
 
 ### Use Case Diagram
-![usecases](Use_Case_Diagram.png)
+![usecases](./images/Use_Case_Diagram.png)
 This is a high-level use case diagram. 
 
 ## Database Design 
@@ -187,24 +187,57 @@ This diagram shows how information will be represented as objects in a relationa
 * Students are connected to the classes they're in, and they're connected to assignments through the weak entities that store information regarding their submissions and feedback.
 * Classes are connected to the assignments within them, with the isArchived boolean being a foreign key so it's easy to archive all assignments within an archived class.
 
-![ER Diagram](ERDiagram.png)
+![ER Diagram](./images/ERDiagram.png)
 
 ## Data Flow Diagram (Level 0/Level 1)
 The diagrams you’re viewing are comprehensive representations of the data flow within the system. These data flow diagrams, or DFDs, serve as visual guides that depict the path of data through the various components of the system. The arrows in these diagrams, known as data flow arrows, define the direction and route of data transmission, providing a lucid understanding of the system’s data dynamics. 
 ### DFD Level 0
 The Level 0 DFD, often referred to as the context diagram, offers a bird’s eye view of the system. It illustrates the interactions between users and the system, based on the inputs they provide. This high-level overview is instrumental in understanding the system’s basic operations and the flow of information from and to the users.
 
-![dfdlevel0](DFDlevel0.png)
+![dfdlevel0](./images/DFDlevel0.png)
 
 ### DFD Level 1
 On the other hand, the Level 1 DFD delves deeper into the system’s intricacies. It breaks down the system into numerous sub-processes, each with its own unique role. This detailed diagram provides insights into how these sub-systems interact with the users, and how data traverses through these interactions. By studying the Level 1 DFD, one can gain a more granular understanding of the system’s inner workings and the complex data flows within it.
 
-![dfdlevel](DFDlevel1.png)
+![dfdlevel](./images/DFDlevel1.png)
 
 ## User Interface (UI) Design
 
-The team is required to put forward a series of UI mock-ups that will be used as starting points for the design of the system   They can be minimal but the team will need to  have at least made some choices about the interaction flow of the application.  You should consider the different major aspects of user interactions and develop UI mockups for those (think about the different features/use cases and what pages are needed; you will have a number most likely).  Additionally, create a diagram to explain the navigation flow for the MVP  prototype (and any alternate flows).  When considering your UI, think about usability, accessibility, desktop and mobile uses.  As a team, you will need to discuss design choices for the system.
-
 ### Wireflow Diagram:
-![dfdlevel0](PeerReviewWireflowUpdated.jpeg)
+
+The wireflow diagram, shown below, describes how users will be interacting with the Peer Review Application.
+
+![dfdlevel0](./images/PeerReviewWireflowUpdated.jpeg)
 [Wireflow link here](https://lucid.app/lucidspark/27f7f586-1c38-438d-a66a-0492e525870c/edit?viewport_loc=-6787%2C-1561%2C7408%2C4182%2C0_0&invitationId=inv_a3cddd55-2816-4b02-b069-d5f64d055270)
+
+### Key Design Mockups:
+
+Using Figma, a more detailed visual of the application can be made to better visualize use cases. With this in mind, here are a few key frames designed for the student, instructor and admin users.
+
+#### Student Frames:
+
+The following frames depict key student interactions with the system, including signup, login, homepage view, and their course dashboard.
+
+![Student- Signup](./images/student-signup.png)
+
+![Student- Login](./images/student-login.png)
+
+![Student- Home Page](./images/student-home.png)
+
+![Student- Course Dashboard](./images/student-course-dash.png)
+
+#### Instructor Frames:
+
+The following frames depict key instructor interactions with the system, including signup, login, homepage view, create assignment, release assignment, and viewing student performance.
+
+![Instructor- Signup](./images/instructor-signup.png)
+
+![Instructor- Login](./images/instructor-login.png)
+
+![Instructor- Home](./images/instructor-home.png)
+
+![Instructor- Create Assignment](./images/instructor-create-assign.png)
+
+![Instructor- Release Assignment](./images/instructor-release-assign.png)
+
+![Instructor- Overall Grades](./images/instructor-overall-grades.png)
