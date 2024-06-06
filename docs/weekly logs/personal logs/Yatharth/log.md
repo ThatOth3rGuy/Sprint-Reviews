@@ -126,14 +126,9 @@ I have successfully accomplished the planned administrative tasks. I am now to w
 
 ## Friday (06/07/2024)
 
-### Timesheet
-![Week4 Friday Logs image]()
-
-
-
 ### Current Tasks (Complete by the end of the day)
-  * Make changes in DFD as per Kevin's feedback
-  * Update the Use case models and diagram to the Design Document
+  * Integration of Drone CI with Docker and Framework setup
+  * Need to ensure all set up is done during the team meeting and hello world live on all systems
 
 
 ### Progress Update (since 5/29/2024)
@@ -146,7 +141,7 @@ I have successfully accomplished the planned administrative tasks. I am now to w
     </tr>
    <tr>
         <!-- Task/Issue # -->
-        <td> Help with fininalizng UI design
+        <td> Help with finalizing UI design
         </td>
         <!-- Status -->
         <td> In progress
@@ -154,7 +149,15 @@ I have successfully accomplished the planned administrative tasks. I am now to w
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> Drone CI integration 
+        <td> Drone CI setup 
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> Drone CI Integration 
         </td>
         <!-- Status -->
         <td> In progress
