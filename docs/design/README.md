@@ -20,6 +20,8 @@ Each layer contains one or several components, where those components are isolat
 ![System Architecture Design](./images/SystemArchitectureDesign.png)
 
 ## Use Case Models
+Here is the comprehensive list of derived use case models, carefully tailored to meet the user requirements and envisioned usage.
+
 | Use Case ID | Use Case                                       | Actors                |
 |-------------|------------------------------------------------|-----------------------|
 | 1.1         | Create Account                                 | Student, Instructor   |
@@ -241,5 +243,6 @@ The following frames depict key instructor interactions with the system, includi
 ![Instructor- Release Assignment](./images/instructor-release-assign.png)
 
 ![Instructor- Overall Grades](./images/instructor-overall-grades.png)
+
 
 [Here](https://www.figma.com/design/6n2YkfmHc4Sa2xd1B8cBCP/Peer-Review--UI-Design?node-id=0-1&t=YiNBJKdJmiFIHNJP-1) is a link to the Figma prototype, which shows a more detailed version of user interaction with the application.
