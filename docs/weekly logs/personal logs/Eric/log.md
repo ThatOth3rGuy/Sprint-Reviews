@@ -154,6 +154,7 @@ My tasks
 
 ### Cycle Review
 
+On Wednesday's meeting we spent a large amount of time reviewing the UI design on Figma making sure we are all on the same page about everything. After that the main goals until Friday are to get the Nextjs framework, docker, and drone CI all set up. As well as that we need the design video finished by the end of Friday. My main tasks are to finish the framework setup and make sure it works for everyone, and then work with Brendan to get the framework running with Docker. I'll also be making the database Schema in this time.
 
 ### Current Tasks
   * #1: Help the rest of the team implement their Nextjs frameworks
@@ -170,7 +171,7 @@ My tasks
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td>Task A
+        <td>Help the rest of the team implement their Nextjs frameworks
         </td>
         <!-- Status -->
         <td>Complete
@@ -178,15 +179,15 @@ My tasks
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td>Task B
+        <td>Create the database schema
         </td>
         <!-- Status -->
-        <td>In Progress
+        <td>Complete
         </td>
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td>Task C
+        <td>Implement the Nextjs framework together with docker
         </td>
         <!-- Status -->
         <td>In Progress
