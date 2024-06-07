@@ -47,10 +47,11 @@
      - Project board management and task assignment on kanban board, categorization of tasks to milestones and Tshirt sizing of tasks
    
 # Week 4  
-## Wednesday June 5 2024
-
 ### Timesheet
 ![clockify](week4ss.png)
+## Wednesday June 5 2024
+### Cycle review
+Since the last meeting, we have managed to complete most of the tasks assigned to us. A lot of the tasks were related to the design of the system including system architecture, er diagrams, use case models, dfd diagrams, wireflow, and the UI design. Once all the tasks related to the design document and video are reviewed and completed, we will be moving on to the set up of the frameworks and Docker containers so we can begin building the prototype.
 
 
 ### Current Tasks 
@@ -130,6 +131,10 @@
 
 
 ## Friday June 7 2024
+
+### Cycle review
+On Wednesday's meeting we spent a large amount of time reviewing the UI design on Figma making sure we are all on the same page about everything. After that the main goals until Friday are to get the Nextjs framework, docker, and drone CI all set up. As well as that we need the design video finished by the end of Friday. My main tasks are to finish the design video and make sure it is submitted.
+
 
 ### Current Tasks (Complete by the end of the day)
   * Video presentation template is created
