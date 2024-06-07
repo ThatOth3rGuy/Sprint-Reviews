@@ -144,49 +144,38 @@
         <td><strong>TASK/ISSUE #</strong></td>
         <td><strong>STATUS</strong></td>
     </tr>
+    <!-- Done tasks -->
     <tr>
-        <!-- Task/Issue # -->
         <td>Adding UI wireflow to the design document</td>
-        <!-- Status -->
         <td>Done</td>
     </tr>
     <tr>
-        <!-- Task/Issue # -->
         <td>Video presentation template</td>
-        <!-- Status -->
         <td>Done</td>
     </tr>
     <tr>
-        <!-- Task/Issue # -->
-        <td>Learn React</td>
-        <!-- Status -->
-        <td>In progress</td>
-    </tr>
-    <tr>
-        <!-- Task/Issue # -->
         <td>Setup framework</td>
-        <!-- Status -->
-        <td>Done </td>
+        <td>Done</td>
     </tr>
     <tr>
-        <!-- Task/Issue # -->
-        <td>Learn Next.js</td>
-        <!-- Status -->
+        <td>UI design wireflow updating and reviewing</td>
+        <td>Done</td>
+    </tr>
+    <!-- In progress tasks -->
+    <tr>
+        <td>Learn React</td>
         <td>In progress</td>
     </tr>
     <tr>
-        <!-- Task/Issue # -->
-        <td>UI design wireflow updating and reviewing </td>
-        <!-- Status -->
-        <td>Done/td>
+        <td>Learn Next.js</td>
+        <td>In progress</td>
     </tr>
     <tr>
-        <!-- Task/Issue # -->
         <td>Test Cases</td>
-        <!-- Status -->
         <td>In progress</td>
     </tr>
 </table>
+
 
 ### Weekly Goal Review
   * I have created the project design video template and need a few inputs for the final submission and compilation.
