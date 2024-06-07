@@ -64,7 +64,142 @@ Team meeting notes:
   - Setup and install framework
   - Review other team's project proposals
   - Learning React
-  
+# Week 4  
+## Wednesday June 5 2024
 
+### Timesheet
+![clockify]()
+
+
+### Current Tasks 
+  * Make changes in UI design wireflow based on team meeting feedback.
+  * Add tasks to milestones in kanban board.
+  * Install Docker, Node, and NPM
+    
+    
+
+
+### Progress Update (since 5/29/2024)
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Start & finish wireflow for the web application and UI design
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Accept and set up clokify as per instructions 
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Design proposal document UI mockup section upload
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Learn React
+        </td>
+        <!-- Status -->
+        <td> In progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Meeting w/ client (5/31/2024)
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+          <tr>
+        <!-- Task/Issue # -->
+        <td>  UI design wireflow updating and reviewing
+        </td>
+        <!-- Status -->
+        <td> In progress
+        </td>
+    </tr>
+    
+</table>
+
+### Weekly Goal Review
+ I am now working on the video presentation creation. Adding the updated UI mockup wireflow to the document. 
+
+### Next Cycle Goals
+  * Design Video presentation
+  * Adding UI mockups to the design document.
+
+
+
+
+## Friday June 7 2024
+
+### Current Tasks (Complete by the end of the day)
+  * Video presentation template is created
+  * Video presentation is compiled
+  * Need to ensure all set up is done during the team meeting and hello world live on all systems
+  * Start writing tests based on tests cases
+
+
+### Progress Update (since 5/29/2024)
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong></td>
+        <td><strong>STATUS</strong></td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Adding UI wireflow to the design document</td>
+        <!-- Status -->
+        <td>Done</td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Video presentation template</td>
+        <!-- Status -->
+        <td>Under review</td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Learn React</td>
+        <!-- Status -->
+        <td>In progress</td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Learn Next.js</td>
+        <!-- Status -->
+        <td>In progress</td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Test Cases</td>
+        <!-- Status -->
+        <td>In progress</td>
+    </tr>
+</table>
+
+### Weekly Goal Review
+  * I have created the project design video template and need a few inputs for the final submission and compilation.
+
+### Next Cycle Goals
+* Writing test cases
+* Get features assigned and start development
 
    
