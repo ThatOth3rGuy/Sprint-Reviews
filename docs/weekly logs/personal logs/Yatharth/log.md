@@ -129,6 +129,7 @@ I have successfully accomplished the planned administrative tasks. I am now to w
 ### Current Tasks (Complete by the end of the day)
   * Integration of Drone CI with Docker and Framework setup
   * Need to ensure all set up is done during the team meeting and hello world live on all systems
+  * Start writing tests based on tests cases
 
 
 ### Progress Update (since 5/29/2024)
@@ -179,9 +180,23 @@ I have successfully accomplished the planned administrative tasks. I am now to w
         <td> In progress
         </td>
     </tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> Test Cases
+        </td>
+        <!-- Status -->
+        <td> In progress
+        </td>
+    </tr>
 </table>
+### Weekly Goal Review
+  * I have set up the drone CI to work with the GitHub and have to make sure it works on all independent PC. I have met this weeks goal and need to start next cycle items.
+  * I had a meeting which was to help in Docker setup 
 
-
+### Next Cycle Goals
+* Writing test cases
+* Get features assigned and start development
+  
     
     
    
