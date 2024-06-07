@@ -79,7 +79,7 @@ Team meeting notes:
     
 
 
-### Progress Update (since 5/29/2024)
+### Progress Update (since 29 May 2024)
 <table>
     <tr>
         <td><strong>TASK/ISSUE #</strong>
@@ -157,7 +157,7 @@ Team meeting notes:
   * Start writing tests based on tests cases
 
 
-### Progress Update (since 5/29/2024)
+### Progress Update (since 29 May 2024)
 <table>
     <tr>
         <td><strong>TASK/ISSUE #</strong></td>
