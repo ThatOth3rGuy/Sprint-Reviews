@@ -46,24 +46,6 @@
      - Wireframing and UI design prototyping
      - Project board management and task assignment on kanban board, categorization of tasks to milestones and Tshirt sizing of tasks
    
-
-  ## Week 4
-
-Team meeting notes:
-
-* Install Docker, Node, and NPM
-* Complete project design document (both System design and UI)
-* Team meeting where we meet Parsa
-* Update project proposal/design based on meeting with Parsa
-* Collectively reviewed design document
-* Review other team's project proposals
-
-  My contributions:
-
-  - Update UI design to explain the flow of screens based on the design diagrams
-  - Setup and install framework
-  - Review other team's project proposals
-  - Learning React
 # Week 4  
 ## Wednesday June 5 2024
 
@@ -129,8 +111,7 @@ Team meeting notes:
     </tr>
           <tr>
         <!-- Task/Issue # -->
-        <td>  UI design wireflow updating and reviewing
-        </td>
+        <td>  UI design wireflow updating and reviewing</td>
         <!-- Status -->
         <td> In progress
         </td>
@@ -173,7 +154,7 @@ Team meeting notes:
         <!-- Task/Issue # -->
         <td>Video presentation template</td>
         <!-- Status -->
-        <td>Under review</td>
+        <td>Done</td>
     </tr>
     <tr>
         <!-- Task/Issue # -->
@@ -183,9 +164,21 @@ Team meeting notes:
     </tr>
     <tr>
         <!-- Task/Issue # -->
+        <td>Setup framework</td>
+        <!-- Status -->
+        <td>Done </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
         <td>Learn Next.js</td>
         <!-- Status -->
         <td>In progress</td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>UI design wireflow updating and reviewing </td>
+        <!-- Status -->
+        <td>Done/td>
     </tr>
     <tr>
         <!-- Task/Issue # -->
