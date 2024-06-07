@@ -14,3 +14,5 @@ Burnup overall:
 
 
 Clockify Times:
+![Clockify Bar Graph](./Images/Clockify4.2%20bar.png)
+![Clockify Bar Graph](./Images/Clockify4.2%20pie.png)
