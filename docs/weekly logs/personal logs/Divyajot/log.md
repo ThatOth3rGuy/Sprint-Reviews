@@ -174,7 +174,12 @@
         <td>Test Cases</td>
         <td>In progress</td>
     </tr>
+    <tr>
+        <td>Final design video compilation</td>
+        <td>In progress</td>
+    </tr>
 </table>
+
 
 
 ### Weekly Goal Review
