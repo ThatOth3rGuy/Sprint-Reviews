@@ -123,7 +123,7 @@
  I am now working on the video presentation creation. Adding the updated UI mockup wireflow to the document. 
 
 ### Next Cycle Goals
-  * Design Video presentation
+  * Design Video presentation template and recording
   * Adding UI mockups to the design document.
 
 
