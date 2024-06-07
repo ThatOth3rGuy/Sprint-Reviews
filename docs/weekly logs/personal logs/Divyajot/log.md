@@ -50,7 +50,7 @@
 ## Wednesday June 5 2024
 
 ### Timesheet
-![clockify](ScreenShot2024-06-07at12.16.57AM.png)
+![clockify](docs/weekly logs/personallogs/Divyajot/ScreenShot2024-06-07 at 12.16.57 AM.png)
 
 
 ### Current Tasks 
