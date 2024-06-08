@@ -23,7 +23,18 @@ services:
       - 3001:3000
     networks:
       - my_network
-
+  db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=SprintRunners
+      - MYSQL_DATABASE=mydb
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./app/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - my_network
+volumes:
+  db_data:
   # Add more containers below OUR DB BUILD***
 
 
