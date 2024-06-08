@@ -1,35 +1,37 @@
 -------------------------------------
- -- schema.sql
- -- script for initializing the db.
- -------------------------------------
+-- init.sql
+-- script for initializing the db.
+-------------------------------------
+CREATE DATABASE IF NOT EXISTS mydb;
+USE mydb;
 
-
-CREATE TABLE user (
-    userID INT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS user (
+    userID INT AUTO_INCREMENT PRIMARY KEY,
     firstName VARCHAR(50),
     lastName VARCHAR(50),
     email VARCHAR(100),
-    password VARCHAR(100),
-    role VARCHAR(20),
+    pwd VARCHAR(100),
+    userRole VARCHAR(20),
     institution VARCHAR(100)
 );
 
-CREATE TABLE student (
+CREATE TABLE IF NOT EXISTS student (
     userID INT PRIMARY KEY,
+    studentID INT,
     phoneNumber VARCHAR(15),
-    address VARCHAR(255),
+    homeAddress VARCHAR(255),
     dateOfBirth DATE,
     FOREIGN KEY (userID) REFERENCES user(userID)
 );
 
-CREATE TABLE instructor (
+CREATE TABLE IF NOT EXISTS instructor (
     userID INT PRIMARY KEY,
     isAdmin BOOLEAN,
     departments VARCHAR(255),
     FOREIGN KEY (userID) REFERENCES user(userID)
 );
 
-CREATE TABLE class (
+CREATE TABLE IF NOT EXISTS class (
     classID INT PRIMARY KEY,
     className VARCHAR(100),
     description TEXT,
@@ -38,7 +40,7 @@ CREATE TABLE class (
     FOREIGN KEY (instructorID) REFERENCES instructor(userID)
 );
 
-CREATE TABLE assignment (
+CREATE TABLE IF NOT EXISTS assignment (
     assignmentID INT PRIMARY KEY,
     title VARCHAR(100),
     description TEXT,
@@ -49,7 +51,7 @@ CREATE TABLE assignment (
     FOREIGN KEY (classID) REFERENCES class(classID)
 );
 
-CREATE TABLE Submission (
+CREATE TABLE IF NOT EXISTS Submission (
     submissionID INT PRIMARY KEY,
     assignmentID INT,
     content TEXT,
@@ -58,7 +60,7 @@ CREATE TABLE Submission (
     FOREIGN KEY (studentID) REFERENCES student(userID)
 );
 
-CREATE TABLE Feedback (
+CREATE TABLE IF NOT EXISTS Feedback (
     feedbackID INT PRIMARY KEY,
     assignmentID INT,
     content TEXT,
@@ -67,10 +69,13 @@ CREATE TABLE Feedback (
     FOREIGN KEY (otherStudentID) REFERENCES student(userID)
 );
 
-CREATE TABLE Enrollment (
+CREATE TABLE IF NOT EXISTS Enrollment (
     studentID INT,
     classID INT,
     PRIMARY KEY (studentID, classID),
     FOREIGN KEY (studentID) REFERENCES student(userID),
     FOREIGN KEY (classID) REFERENCES class(classID)
 );
+
+INSERT INTO user (firstName, lastName, email, pwd, userRole, institution)
+VALUES ('John', 'Doe', 'john.doe@example.com', 'password123', 'student', 'Example University');
