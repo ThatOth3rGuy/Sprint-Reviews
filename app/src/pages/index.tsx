@@ -1,7 +1,17 @@
 import { useEffect, useState } from 'react';
 
+interface User {
+  userID: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  pwd: string;
+  userRole: string;
+  institution: string;
+}
+
 export default function Home() {
-  const [user, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     fetch('/api/users')
@@ -14,8 +24,15 @@ export default function Home() {
     <div>
       <h1>Users</h1>
       <ul>
-        {user.map((user, index) => (
-          <li key={index}>{user}</li>
+        {users.map((user) => (
+          <li key={user.userID}>
+            <div>
+              <strong>{user.firstName} {user.lastName}</strong>
+              <p>Email: {user.email}</p>
+              <p>Role: {user.userRole}</p>
+              <p>Institution: {user.institution}</p>
+            </div>
+          </li>
         ))}
       </ul>
     </div>
