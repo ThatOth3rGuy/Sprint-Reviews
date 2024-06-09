@@ -22,13 +22,16 @@ First, run the development server:
 ```bash
 # Create a network, which allows containers to communicate
 # with each other, by using their container name as a hostname
+
 docker network create my_network
 
 # Build dev
-docker compose -f dev.yml build
-
+docker compose -f dev.yml build 
+# IF YOU WISH TO BUILD BOTH THE DEV AND TEST CONTAINERS
+# Otherwise:
+docker compose -f dev.yml build app
 # Up dev
-docker compose -f dev.yml up
+docker compose -f dev.yml up 
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
