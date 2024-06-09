@@ -35,6 +35,15 @@ services:
     networks:
       - my_network
 
+  test:
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile.jest
+    networks:
+      - my_network
+    depends_on:
+      - db
+
 volumes:
   db_data:
   # Add more containers below OUR DB BUILD***
