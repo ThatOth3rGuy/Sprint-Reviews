@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise';
+import '@testing-library/jest-dom'
 
 let pool: mysql.Pool;
 
