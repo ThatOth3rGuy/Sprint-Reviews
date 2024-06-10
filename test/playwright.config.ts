@@ -5,10 +5,10 @@ const config: PlaywrightTestConfig = {
     // Configure options here
     headless: true,
     viewport: { width: 1280, height: 720 },
-    screenshot: 'on',
-  },
+    screenshot: 'only-on-failure',
+    },
   // Define global setup and teardown, test directory, etc.
-  testDir: './test/tests',
+  testDir: './tests',
 };
 
 export default config;
