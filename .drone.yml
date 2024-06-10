@@ -1,0 +1,44 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: build_app
+  image: docker:dind
+  volumes:
+  - name: dockersock
+    path: /var/run
+  environment:
+    DOCKER_USERNAME:
+      from_secret: docker_username #fill here your docker username
+    DOCKER_REPO:
+      from_secret: team-3-capstone-sprint-runners
+    DOCKER_TAG:
+      from_secret: latest
+  commands:
+  - docker build -f ./app/Dockerfile -t $DOCKER_USERNAME/$DOCKER_REPO:$DOCKER_TAG ./app
+
+- name: build_playwright_tests
+  image: docker:dind
+  volumes:
+  - name: dockersock
+    path: /var/run
+  environment:
+    DOCKER_USERNAME:
+      from_secret: docker_username #fill here your docker username
+    DOCKER_REPO:
+      from_secret: team-3-capstone-sprint-runners
+    DOCKER_TAG:
+      from_secret: latest
+  commands:
+  - docker build -f ./test/Dockerfile -t $DOCKER_USERNAME/$DOCKER_REPO:playwright-tests .
+
+- name: test
+  image: $DOCKER_USERNAME/$DOCKER_REPO:playwright-tests
+  commands:
+  - echo "Run your tests here"
+
+volumes:
+- name: dockersock
+  host:
+    path: /var/run
