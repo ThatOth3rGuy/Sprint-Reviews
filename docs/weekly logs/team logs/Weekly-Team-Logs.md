@@ -222,4 +222,4 @@ Clockify Times:
 
 ### Overview:
 
-The team focused on [Summary of work done]. The Kanban Board has been populated with user stories and tasks, milestones have been added, and the dashboard visuals creation has been completed. The next cycle will focus on [Tasks for the next cycle]
+The team focused on reviewing the system designs and UI designs in the project propsal document as well as working on the design proposal video. The Kanban Board has been populated with user stories and tasks, milestones have been added, and the dashboard visuals creation has been completed. The next cycle will focus on deployment of code and delivering the MVP.
