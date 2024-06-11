@@ -137,15 +137,14 @@ The team focused on [Summary of work done]. The Kanban Board has been populated 
 
 ### Burn-up Chart (Velocity):
 Burnup since last meeting:
-![Burnup Chart](./Images/burnup%204.2%20weekly.png)
-Burnup overall:
-![Burnup Chart](./Images/burnup%204.2.png)
+![Burnup Chart](./Images/burnup%204.1.png)
+**Note, the burnup charts were messed up this week by converting all our tasks on the kanban board into issues**
 
 ### Times for Team/Individual:
 
 Clockify Times:
-![Clockify Bar Graph](./Images/Clockify4.2%20bar.png)
-![Clockify Bar Graph](./Images/Clockify4.2%20pie.png)
+![Clockify Bar Graph](./Images/Clockify4.1%20bar.png)
+![Clockify Bar Graph](./Images/Clockify4.1%20pie.png)
 
 
 ### Completed Tasks:
@@ -202,15 +201,15 @@ Several tasks were assigned to each of the team during Friday's meeting. By the 
 
 ### Burn-up Chart (Velocity):
 Burnup since last meeting:
-![Burnup Chart]()
+![Burnup Chart](./Images/burnup%204.2%20weekly.png)
 Burnup overall:
-![Burnup Chart]()
+![Burnup Chart](./Images/burnup%204.2.png)
 
 ### Times for Team/Individual:
 
 Clockify Times:
-![Clockify Bar Graph]()
-![Clockify Bar Graph]()
+![Clockify Bar Graph](./Images/Clockify4.2%20bar.png)
+![Clockify Pie Graph](./Images/Clockify4.2%20pie.png)
 
 
 ### Completed Tasks:
