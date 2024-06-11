@@ -196,6 +196,79 @@ I have successfully accomplished the planned administrative tasks. I am now to w
 ### Next Cycle Goals
 * Writing test cases
 * Get features assigned and start development
+
+
+## Wednesday (6/12/2024)
+
+### Timesheet Week 4 (06/05/2024 - 06/12/2024)
+![alt text](images/Week4.png)
+
+
+### Current Tasks (Complete by the end of the day)
+  * Complete Drone CI, Docker and Playwright testing setup running ok on all PCs
+  * Any meeting changes noted here
+
+
+### Progress Update (since 5/29/2024)
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Start integration of the Authorization API with the Login Page
+        </td>
+        <!-- Status -->
+        <td> Need to start 
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Set Up RP for landing page using the Next.js libraries 
+        </td>
+        <!-- Status -->
+        <td> In-Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Drone CI integration 
+        </td>
+        <!-- Status -->
+        <td> Complete/Need test
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Write tests for all configurations 
+        </td>
+        <!-- Status -->
+        <td> In progress
+        </td>
+    </tr>   
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Help with finalizing UI design
+        </td>
+        <!-- Status -->
+        <td> In progress
+        </td>
+    </tr>
+    
+</table>
+
+### Weekly Goal Review
+- The Drone Ci and Playwright testing to work smoothly still needs to be checked(for now), but the software runs successfully on my local PC
+- I have researched and started setting up the RP using nginx.
+- I have learnt REACT, Node and Next.js libraries and docs for future feature building 
+
+### Next Cycle Goals
+  * API integration to work with Login & authentication and RP to ensure user landing is handled
+  * Write tests for API integration (critical)
+  * For Any goals after Wednesday's meeting go here.  
   
     
     
