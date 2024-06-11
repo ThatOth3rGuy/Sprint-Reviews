@@ -33,10 +33,7 @@
 ### Alternatively, include image of the project board with tasks and status:
 
 ### Burn-up Chart (Velocity):
-Burnup since last meeting:
-![Burnup Chart](./Images/burnup%204.2%20weekly.png)
-Burnup overall:
-![Burnup Chart](./Images/burnup%204.2.png)
+
 
 ### Times for Team/Individual:
 
@@ -47,8 +44,7 @@ Burnup overall:
 | [Name]      | [Hours]      |
 
 Clockify Times:
-![Clockify Bar Graph](./Images/Clockify4.2%20bar.png)
-![Clockify Bar Graph](./Images/Clockify4.2%20pie.png)
+
 
 
 ### Completed Tasks:
@@ -97,10 +93,7 @@ Clockify Times:
 ### Alternatively, include image of the project board with tasks and status:
 
 ### Burn-up Chart (Velocity):
-Burnup since last meeting:
-![Burnup Chart](./Images/burnup%204.2%20weekly.png)
-Burnup overall:
-![Burnup Chart](./Images/burnup%204.2.png)
+
 
 ### Times for Team/Individual:
 
@@ -111,8 +104,7 @@ Burnup overall:
 | [Name]      | [Hours]      |
 
 Clockify Times:
-![Clockify Bar Graph](./Images/Clockify4.2%20bar.png)
-![Clockify Bar Graph](./Images/Clockify4.2%20pie.png)
+
 
 
 ### Completed Tasks:
