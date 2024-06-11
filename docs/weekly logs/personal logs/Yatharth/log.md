@@ -56,7 +56,7 @@ My tasks to do /done
   * Update the Use case models and diagram to the Design Document
 
 
-### Progress Update (since 5/29/2024)
+### Progress Update 
 <table>
     <tr>
         <td><strong>TASK/ISSUE #</strong>
@@ -132,7 +132,7 @@ I have successfully accomplished the planned administrative tasks. I am now to w
   * Start writing tests based on tests cases
 
 
-### Progress Update (since 5/29/2024)
+### Progress Update 
 <table>
     <tr>
         <td><strong>TASK/ISSUE #</strong>
@@ -190,8 +190,8 @@ I have successfully accomplished the planned administrative tasks. I am now to w
     </tr>
 </table>
 ### Weekly Goal Review
-  * I have set up the drone CI to work with the GitHub and have to make sure it works on all independent PC. I have met this weeks goal and need to start next cycle items.
-  * I had a meeting which was to help in Docker setup 
+  * I have set up the drone CI to work with GitHub and have to make sure it works on all independent PC. I have met this weeks goal and need to start next cycle items.
+  * I had a meeting which was to help with Docker setup 
 
 ### Next Cycle Goals
 * Writing test cases
@@ -209,7 +209,7 @@ I have successfully accomplished the planned administrative tasks. I am now to w
   * Any meeting changes noted here
 
 
-### Progress Update (since 5/29/2024)
+### Progress Update 
 <table>
     <tr>
         <td><strong>TASK/ISSUE #</strong>
