@@ -24,18 +24,11 @@
 
 
 ### Burn-up Chart (Velocity):
-
+![burn up chart](./Images/burnup-June11.png)
 
 ### Times for Team/Individual:
 
-| Team Member | Logged Hours |
-| ----------- | ------------ |
-| [Name]      | [Hours]      |
-| [Name]      | [Hours]      |
-| [Name]      | [Hours]      |
-
-Clockify Times:
-
+Clockify Times: [Add ss]
 
 
 ### Completed Tasks:
@@ -44,7 +37,7 @@ Clockify Times:
 ### In Progress Tasks/ To do:
 ![week5-In Progress](./Images/week5-in-prog.png)
 
-### Test Report / Testing Status:
+### Status: We have begun the development phase of the project and are working towards delivering the MVP and 3 features of our app by  the end of the next cycle.
 
 ## June 12(Wed) - June 14(Fri)
 
