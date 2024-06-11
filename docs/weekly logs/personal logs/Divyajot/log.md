@@ -1,51 +1,37 @@
 # Weekly Logs 
 ------------------------------------
-## Week 1 
-* Meet and greet 
-* Team formations
-* Ice breaker
-## Week 2
-  Team meeting notes:
-* Established Communication channels
-* Chose our team name -Sprint runners
-* First official meeting (1 hour)
-* Division of action items on the Project Proposal
-      
-  My contributions:  
-     
-     - Set up the project Kanban board on github and manage dashboard
-     - General research on other peer-review applications
-     - Update High level requirements and boundaries in the project proposal document (1.5 hrs)
-     - Update risks section in the project proposal document
-     - Review Project proposal document
-    
- ## Week 3
-   Team meeting notes:
-  * Review of project proposal and feedback
-  * Project Proposal video presentation creation and review
-  * Begin design documentation
-  * Completing final parts of project proposal (assumtions and constraints + tech stack)
-  * Reading and reviewing the project proposal
-  * Incorperating feedback into proposal
-  * Project Proposal video presentation creation
-  * Project Proposal Video creation/editing/compilation
-  * Design Documentation started, and divied up between team members
-  * System Architecture Design
-  * Use Case Models
-  * Database design / Relational Model
-  * DFD Level 0 and 1
-  * UI Design
 
-    My contributions:  
-     
-     - Kanban board management
-     - Video presentation 
-     - Video creation of my part
-     - Updating tech stack section in project proposal document 
-     - Review final Project proposal document 
-     - Wireframing and UI design prototyping
-     - Project board management and task assignment on kanban board, categorization of tasks to milestones and Tshirt sizing of tasks
-   
+# Week 5
+## Wednesday June 12, 2024
+
+### Timesheet
+![alt text]()
+
+### Current Tasks (Complete by the end of the day)
+  * Complete Docker and Playwright testing setup running ok on PC
+  * Correct and update logs
+  * Instructor and student login pages feature.
+
+
+### Progress Update 
+| **TASK/ISSUE #**                       | **STATUS**       |
+|----------------------------------------|------------------|
+| Create login page                      | Need to start    |
+| Set up all frameworks for deployment on PC | In-Review        |
+| Write tests for all configurations     | In progress      |
+| Final Design Proposal video    | Done     |
+
+### Weekly Goal Review
+- The framework set ups for Drone Ci and Playwright testing to work smoothly still needs to be checked
+- I have researched and tried to learn REACT Js, Node and Next js for future deployement
+- I have tried to fix the weekly team logs
+- I had recorded and submitted the design video on Friday
+
+### Next Cycle Goals
+  * Writing tests for instructor and student login pages as well as html and css component.
+  * Write tests for API integration (critical)
+  * For Any goals after Wednesday's meeting go here
+
 # Week 4  
 ### Timesheet
 ![clockify](week4ss.png)
@@ -53,16 +39,12 @@
 ### Cycle review
 Since the last meeting, we have managed to complete most of the tasks assigned to us. A lot of the tasks were related to the design of the system including system architecture, er diagrams, use case models, dfd diagrams, wireflow, and the UI design. Once all the tasks related to the design document and video are reviewed and completed, we will be moving on to the set up of the frameworks and Docker containers so we can begin building the prototype.
 
-
 ### Current Tasks 
   * Make changes in UI design wireflow based on team meeting feedback.
   * Add tasks to milestones in kanban board.
   * Install Docker, Node, and NPM
     
-    
-
-
-### Progress Update (since 29 May 2024)
+### Progress Update 
 <table>
     <tr>
         <td><strong>TASK/ISSUE #</strong>
@@ -143,7 +125,7 @@ On Wednesday's meeting we spent a large amount of time reviewing the UI design o
   * Start writing tests based on tests cases
 
 
-### Progress Update (since 29 May 2024)
+### Progress Update 
 <table>
     <tr>
         <td><strong>TASK/ISSUE #</strong></td>
@@ -194,5 +176,49 @@ On Wednesday's meeting we spent a large amount of time reviewing the UI design o
 * Writing test cases
 * Get features assigned and start development
 
+ # Week 3
+   Team meeting notes:
+  * Review of project proposal and feedback
+  * Project Proposal video presentation creation and review
+  * Begin design documentation
+  * Completing final parts of project proposal (assumtions and constraints + tech stack)
+  * Reading and reviewing the project proposal
+  * Incorperating feedback into proposal
+  * Project Proposal video presentation creation
+  * Project Proposal Video creation/editing/compilation
+  * Design Documentation started, and divied up between team members
+  * System Architecture Design
+  * Use Case Models
+  * Database design / Relational Model
+  * DFD Level 0 and 1
+  * UI Design
 
+    My contributions:  
+     
+     - Kanban board management
+     - Video presentation 
+     - Video creation of my part
+     - Updating tech stack section in project proposal document 
+     - Review final Project proposal document 
+     - Wireframing and UI design prototyping
+     - Project board management and task assignment on kanban board, categorization of tasks to milestones and Tshirt sizing of tasks
    
+
+# Week 2
+  Team meeting notes:
+* Established Communication channels
+* Chose our team name -Sprint runners
+* First official meeting (1 hour)
+* Division of action items on the Project Proposal
+      
+  My contributions:  
+     
+     - Set up the project Kanban board on github and manage dashboard
+     - General research on other peer-review applications
+     - Update High level requirements and boundaries in the project proposal document (1.5 hrs)
+     - Update risks section in the project proposal document
+     - Review Project proposal document
+# Week 1 
+* Meet and greet 
+* Team formations
+* Ice breaker   
