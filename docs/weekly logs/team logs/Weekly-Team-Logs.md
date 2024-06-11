@@ -62,7 +62,6 @@ Clockify Times:
 | [#ID]   | [Task Description] | [Assignee]  |
 
 ### Test Report / Testing Status:
-Several tasks were assigned to each of the team during Friday's meeting. By the time of the meeting, each of us accomplished a significant amount of work either completing or nearly completing what was assigned. Though review on all of the work is required, it seems we managed to reach all of our goals for the weekend cycle. Managing the project boards and working on the system architecture design, tasks are being completed on time and everyone is contributing effectively. With the database design done and ready for review and the framework setup underway, the goal for this next cycle is to finish the framework setup and add all use cases to the kanban board.
 
 ## June 12(Wed) - June 14(Fri)
 
@@ -190,7 +189,8 @@ Clockify Times:
 | [#ID]   | [Task Description] | [Assignee]  |
 | [#ID]   | [Task Description] | [Assignee]  |
 
-### Test Report / Testing Status:
+### Cycle Status:
+Several tasks were assigned to each of the team during Friday's meeting. By the time of the meeting, each of us accomplished a significant amount of work either completing or nearly completing what was assigned. Though review on all of the work is required, it seems we managed to reach all of our goals for the weekend cycle. Managing the project boards and working on the system architecture design, tasks are being completed on time and everyone is contributing effectively. With the database design done and ready for review and the framework setup underway, the goal for this next cycle is to finish the framework setup and add all use cases to the kanban board.
 
 ## June 5 (Wed) - June 7 (Fri)
 
