@@ -8,20 +8,12 @@
 
 ### Features in the Project Plan Cycle:
 
-- [Feature 1]
-- [Feature 2]
-- [Feature 3]
-- [Feature 4]
-- [Feature 5]
+-  Feature 1:Choose your role/Reverse Proxy with Frontend and UX
+-  Feature 2:Registration and Login Save to Database, the data is stored correctly and displays data correctly
+-  Feature 3:Connection Auth API to System and is able to authenticate users
 
 ### Associated Tasks from Project Board:
 
-| Task ID | Description        | Feature   | Assigned To | Status   |
-| ------- | ------------------ | --------- | ----------- | -------- |
-| [#ID]   | [Task Description] | [Feature] | [Assignee]  | [Status] |
-| [#ID]   | [Task Description] | [Feature] | [Assignee]  | [Status] |
-
-### Alternatively, include image of the project board with tasks and status:
 
 ### Tasks for Next Cycle:
 
