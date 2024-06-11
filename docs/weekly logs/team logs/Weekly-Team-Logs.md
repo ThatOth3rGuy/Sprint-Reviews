@@ -4,7 +4,7 @@
 
 ## Week 5 
 
-## June 7(Fri) - June 12(Wed)
+## June 7(Fri) - June 12(Wed) 
 
 ### Features in the Project Plan Cycle:
 
@@ -48,7 +48,7 @@ Clockify Times:
 
 ## June 12(Wed) - June 14(Fri)
 
-### Features in the Project Plan Cycle:
+### Features in the Project Plan Cycle: TBA
 
 - [Feature 1]
 - [Feature 2]
@@ -117,11 +117,9 @@ The team focused on [Summary of work done]. The Kanban Board has been populated 
 
 ### Features in the Project Plan Cycle:
 
-- [Feature 1]
-- [Feature 2]
-- [Feature 3]
-- [Feature 4]
-- [Feature 5]
+- Design Proposal Document
+- Design Proposal Video
+- Framework setup
 
 ### Associated Tasks from Project Board:
 
@@ -146,12 +144,6 @@ Burnup overall:
 ![Burnup Chart](./Images/burnup%204.2.png)
 
 ### Times for Team/Individual:
-
-| Team Member | Logged Hours |
-| ----------- | ------------ |
-| [Name]      | [Hours]      |
-| [Name]      | [Hours]      |
-| [Name]      | [Hours]      |
 
 Clockify Times:
 ![Clockify Bar Graph](./Images/Clockify4.2%20bar.png)
@@ -173,17 +165,14 @@ Clockify Times:
 | [#ID]   | [Task Description] | [Assignee]  |
 
 ### Cycle Status:
-Several tasks were assigned to each of the team during Friday's meeting. By the time of the meeting, each of us accomplished a significant amount of work either completing or nearly completing what was assigned. Though review on all of the work is required, it seems we managed to reach all of our goals for the weekend cycle. Managing the project boards and working on the system architecture design, tasks are being completed on time and everyone is contributing effectively. With the database design done and ready for review and the framework setup underway, the goal for this next cycle is to finish the framework setup and add all use cases to the kanban board.
+Several tasks were assigned to each of the team during Friday's meeting. By the time of the meeting, each of us accomplished a significant amount of work either completing or nearly completing what was assigned. Though review on all of the work is required, it seems we managed to reach all of our goals for the weekend cycle. Managing the project boards and working on the system architecture design, tasks are being completed on time and everyone is contributing effectively.
 
 ## June 5 (Wed) - June 7 (Fri)
 
 ### Features in the Project Plan Cycle:
 
-- [Feature 1]
-- [Feature 2]
-- [Feature 3]
-- [Feature 4]
-- [Feature 5]
+- Design Propsal Video
+- Frameworks Setup
 
 ### Associated Tasks from Project Board:
 
@@ -211,12 +200,6 @@ Burnup overall:
 
 ### Times for Team/Individual:
 
-| Team Member | Logged Hours |
-| ----------- | ------------ |
-| [Name]      | [Hours]      |
-| [Name]      | [Hours]      |
-| [Name]      | [Hours]      |
-
 Clockify Times:
 ![Clockify Bar Graph](./Images/Clockify4.2%20bar.png)
 ![Clockify Bar Graph](./Images/Clockify4.2%20pie.png)
@@ -236,9 +219,6 @@ Clockify Times:
 | [#ID]   | [Task Description] | [Assignee]  |
 | [#ID]   | [Task Description] | [Assignee]  |
 
-### Test Report / Testing Status:
-
-N/A
 
 ### Overview:
 
