@@ -6,7 +6,7 @@
 
 ## May 31 (Fri) - June 5 (Wed)
 
-## Features in the Project Plan Cycle:
+### Features in the Project Plan Cycle:
 
 - [Feature 1]
 - [Feature 2]
@@ -14,7 +14,7 @@
 - [Feature 4]
 - [Feature 5]
 
-## Associated Tasks from Project Board:
+### Associated Tasks from Project Board:
 
 | Task ID | Description        | Feature   | Assigned To | Status   |
 | ------- | ------------------ | --------- | ----------- | -------- |
@@ -23,22 +23,20 @@
 
 ### Alternatively, include image of the project board with tasks and status:
 
-## Tasks for Next Cycle:
+### Tasks for Next Cycle:
 
 | Task ID | Description        | Estimated Time (hrs) | Assigned To |
 | ------- | ------------------ | -------------------- | ----------- |
 | [#ID]   | [Task Description] | [Estimated Time]     | [Assignee]  |
 | [#ID]   | [Task Description] | [Estimated Time]     | [Assignee]  |
 
-### Alternatively, include image of the project board with tasks and status:
-
-## Burn-up Chart (Velocity):
+### Burn-up Chart (Velocity):
 Burnup since last meeting:
 ![Burnup Chart](./Images/burnup%204.2%20weekly.png)
 Burnup overall:
 ![Burnup Chart](./Images/burnup%204.2.png)
 
-## Times for Team/Individual:
+### Times for Team/Individual:
 
 | Team Member | Logged Hours |
 | ----------- | ------------ |
@@ -51,25 +49,25 @@ Clockify Times:
 ![Clockify Bar Graph](./Images/Clockify4.2%20pie.png)
 
 
-## Completed Tasks:
+### Completed Tasks:
 
 | Task ID | Description        | Completed By |
 | ------- | ------------------ | ------------ |
 | [#ID]   | [Task Description] | [Assignee]   |
 | [#ID]   | [Task Description] | [Assignee]   |
 
-## In Progress Tasks/ To do:
+### In Progress Tasks/ To do:
 
 | Task ID | Description        | Assigned To |
 | ------- | ------------------ | ----------- |
 | [#ID]   | [Task Description] | [Assignee]  |
 | [#ID]   | [Task Description] | [Assignee]  |
 
-## Test Report / Testing Status:
+### Test Report / Testing Status:
 
 ## June 5 (Wed) - June 7 (Fri)
 
-## Features in the Project Plan Cycle:
+### Features in the Project Plan Cycle:
 
 - [Feature 1]
 - [Feature 2]
@@ -77,7 +75,7 @@ Clockify Times:
 - [Feature 4]
 - [Feature 5]
 
-## Associated Tasks from Project Board:
+### Associated Tasks from Project Board:
 
 | Task ID | Description        | Feature   | Assigned To | Status   |
 | ------- | ------------------ | --------- | ----------- | -------- |
@@ -86,7 +84,7 @@ Clockify Times:
 
 ### Alternatively, include image of the project board with tasks and status:
 
-## Tasks for Next Cycle:
+### Tasks for Next Cycle:
 
 | Task ID | Description        | Estimated Time (hrs) | Assigned To |
 | ------- | ------------------ | -------------------- | ----------- |
@@ -95,13 +93,13 @@ Clockify Times:
 
 ### Alternatively, include image of the project board with tasks and status:
 
-## Burn-up Chart (Velocity):
+### Burn-up Chart (Velocity):
 Burnup since last meeting:
 ![Burnup Chart](./Images/burnup%204.2%20weekly.png)
 Burnup overall:
 ![Burnup Chart](./Images/burnup%204.2.png)
 
-## Times for Team/Individual:
+### Times for Team/Individual:
 
 | Team Member | Logged Hours |
 | ----------- | ------------ |
@@ -114,25 +112,25 @@ Clockify Times:
 ![Clockify Bar Graph](./Images/Clockify4.2%20pie.png)
 
 
-## Completed Tasks:
+### Completed Tasks:
 
 | Task ID | Description        | Completed By |
 | ------- | ------------------ | ------------ |
 | [#ID]   | [Task Description] | [Assignee]   |
 | [#ID]   | [Task Description] | [Assignee]   |
 
-## In Progress Tasks/ To do:
+### In Progress Tasks/ To do:
 
 | Task ID | Description        | Assigned To |
 | ------- | ------------------ | ----------- |
 | [#ID]   | [Task Description] | [Assignee]  |
 | [#ID]   | [Task Description] | [Assignee]  |
 
-## Test Report / Testing Status:
+### Test Report / Testing Status:
 
 N/A
 
-## Overview:
+### Overview:
 
 The team focused on [Summary of work done]. The Kanban Board has been populated with user stories and tasks, milestones have been added, and the dashboard visuals creation has been completed. The next cycle will focus on [Tasks for the next cycle]
 
@@ -140,7 +138,7 @@ The team focused on [Summary of work done]. The Kanban Board has been populated 
 
 ## June 7(Fri) - June 12(Wed)
 
-## Features in the Project Plan Cycle:
+### Features in the Project Plan Cycle:
 
 - [Feature 1]
 - [Feature 2]
@@ -148,7 +146,7 @@ The team focused on [Summary of work done]. The Kanban Board has been populated 
 - [Feature 4]
 - [Feature 5]
 
-## Associated Tasks from Project Board:
+### Associated Tasks from Project Board:
 
 | Task ID | Description        | Feature   | Assigned To | Status   |
 | ------- | ------------------ | --------- | ----------- | -------- |
@@ -157,7 +155,7 @@ The team focused on [Summary of work done]. The Kanban Board has been populated 
 
 ### Alternatively, include image of the project board with tasks and status:
 
-## Tasks for Next Cycle:
+### Tasks for Next Cycle:
 
 | Task ID | Description        | Estimated Time (hrs) | Assigned To |
 | ------- | ------------------ | -------------------- | ----------- |
@@ -166,13 +164,13 @@ The team focused on [Summary of work done]. The Kanban Board has been populated 
 
 ### Alternatively, include image of the project board with tasks and status:
 
-## Burn-up Chart (Velocity):
+### Burn-up Chart (Velocity):
 Burnup since last meeting:
 ![Burnup Chart](./Images/burnup%204.2%20weekly.png)
 Burnup overall:
 ![Burnup Chart](./Images/burnup%204.2.png)
 
-## Times for Team/Individual:
+### Times for Team/Individual:
 
 | Team Member | Logged Hours |
 | ----------- | ------------ |
@@ -185,26 +183,26 @@ Clockify Times:
 ![Clockify Bar Graph](./Images/Clockify4.2%20pie.png)
 
 
-## Completed Tasks:
+### Completed Tasks:
 
 | Task ID | Description        | Completed By |
 | ------- | ------------------ | ------------ |
 | [#ID]   | [Task Description] | [Assignee]   |
 | [#ID]   | [Task Description] | [Assignee]   |
 
-## In Progress Tasks/ To do:
+### In Progress Tasks/ To do:
 
 | Task ID | Description        | Assigned To |
 | ------- | ------------------ | ----------- |
 | [#ID]   | [Task Description] | [Assignee]  |
 | [#ID]   | [Task Description] | [Assignee]  |
 
-## Test Report / Testing Status:
+### Test Report / Testing Status:
 
 
 ## June 12(Wed) - June 14(Fri)
 
-## Features in the Project Plan Cycle:
+### Features in the Project Plan Cycle:
 
 - [Feature 1]
 - [Feature 2]
@@ -212,7 +210,7 @@ Clockify Times:
 - [Feature 4]
 - [Feature 5]
 
-## Associated Tasks from Project Board:
+### Associated Tasks from Project Board:
 
 | Task ID | Description        | Feature   | Assigned To | Status   |
 | ------- | ------------------ | --------- | ----------- | -------- |
@@ -221,7 +219,7 @@ Clockify Times:
 
 ### Alternatively, include image of the project board with tasks and status:
 
-## Tasks for Next Cycle:
+### Tasks for Next Cycle:
 
 | Task ID | Description        | Estimated Time (hrs) | Assigned To |
 | ------- | ------------------ | -------------------- | ----------- |
@@ -230,13 +228,13 @@ Clockify Times:
 
 ### Alternatively, include image of the project board with tasks and status:
 
-## Burn-up Chart (Velocity):
+### Burn-up Chart (Velocity):
 Burnup since last meeting:
 ![Burnup Chart](./Images/burnup%204.2%20weekly.png)
 Burnup overall:
 ![Burnup Chart](./Images/burnup%204.2.png)
 
-## Times for Team/Individual:
+### Times for Team/Individual:
 
 | Team Member | Logged Hours |
 | ----------- | ------------ |
@@ -249,24 +247,24 @@ Clockify Times:
 ![Clockify Bar Graph](./Images/Clockify4.2%20pie.png)
 
 
-## Completed Tasks:
+### Completed Tasks:
 
 | Task ID | Description        | Completed By |
 | ------- | ------------------ | ------------ |
 | [#ID]   | [Task Description] | [Assignee]   |
 | [#ID]   | [Task Description] | [Assignee]   |
 
-## In Progress Tasks/ To do:
+### In Progress Tasks/ To do:
 
 | Task ID | Description        | Assigned To |
 | ------- | ------------------ | ----------- |
 | [#ID]   | [Task Description] | [Assignee]  |
 | [#ID]   | [Task Description] | [Assignee]  |
 
-## Test Report / Testing Status:
+### Test Report / Testing Status:
 
 N/A
 
-## Overview:
+### Overview:
 
 The team focused on [Summary of work done]. The Kanban Board has been populated with user stories and tasks, milestones have been added, and the dashboard visuals creation has been completed. The next cycle will focus on [Tasks for the next cycle]
