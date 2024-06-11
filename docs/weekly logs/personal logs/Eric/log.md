@@ -1,5 +1,86 @@
 # Weekly Logs
 
+# Week 5
+## Friday - June 7, 2024
+### Cycle Review
+    
+This was the last week of planning, after this our focus is going to be coding and implementing features. The last thing to do for planning is create and submit the deisgn presentation video. After that we've split our first focus of features throughout the group. Starting with the database & testing setup (Me and Tithi), and the Reverse Proxy & CI setup (Brendan, Yatharth, and Divya)
+
+### Current Tasks
+  * #1: Set up the database 
+  * #2: Implement Jest framework
+  * #3: Create Jest testing for the database setup
+
+### Progress Update: Fri-Mon
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Set up the database
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Implement Jest framework
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create testing for database setup
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
+## Monday - June 10, 2024
+**Timesheet Tracking is presented in our weekly log**
+### Cycle Review
+
+At this point, design is finished and we're focused on finishing 3 features by Friday. Most of the setup is complete, but the testing still isn't working. We're letting Brendan and Yatharth focus on getting the testing working while the rest of us work on implementing some features. It was decided that the 3 features we'll have done by Friday are the Reverse Proxy for changing between Instructor/Student view, the Create Account/Login with authentication, and the main dashboard view once a user is logged in.
+
+### Current Tasks
+  * #1: Create landing page
+  * #2: Create log in pages
+
+### Progress Update: Mon-Wed
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create Landing Page
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create login pages
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
 # Week 4
 ## Monday - June 3, 2024
 **Timesheet Tracking is presented in our weekly log**
