@@ -2,9 +2,9 @@
 
 # Weekly Team Logs
 
-## Week 4 
+## Week 5 
 
-## May 31 (Fri) - June 5 (Wed)
+## June 7(Fri) - June 12(Wed)
 
 ### Features in the Project Plan Cycle:
 
@@ -29,6 +29,8 @@
 | ------- | ------------------ | -------------------- | ----------- |
 | [#ID]   | [Task Description] | [Estimated Time]     | [Assignee]  |
 | [#ID]   | [Task Description] | [Estimated Time]     | [Assignee]  |
+
+### Alternatively, include image of the project board with tasks and status:
 
 ### Burn-up Chart (Velocity):
 Burnup since last meeting:
@@ -65,7 +67,8 @@ Clockify Times:
 
 ### Test Report / Testing Status:
 
-## June 5 (Wed) - June 7 (Fri)
+
+## June 12(Wed) - June 14(Fri)
 
 ### Features in the Project Plan Cycle:
 
@@ -134,9 +137,9 @@ N/A
 
 The team focused on [Summary of work done]. The Kanban Board has been populated with user stories and tasks, milestones have been added, and the dashboard visuals creation has been completed. The next cycle will focus on [Tasks for the next cycle]
 
-## Week 5 
+## Week 4 
 
-## June 7(Fri) - June 12(Wed)
+## May 31 (Fri) - June 5 (Wed)
 
 ### Features in the Project Plan Cycle:
 
@@ -161,8 +164,6 @@ The team focused on [Summary of work done]. The Kanban Board has been populated 
 | ------- | ------------------ | -------------------- | ----------- |
 | [#ID]   | [Task Description] | [Estimated Time]     | [Assignee]  |
 | [#ID]   | [Task Description] | [Estimated Time]     | [Assignee]  |
-
-### Alternatively, include image of the project board with tasks and status:
 
 ### Burn-up Chart (Velocity):
 Burnup since last meeting:
@@ -199,8 +200,7 @@ Clockify Times:
 
 ### Test Report / Testing Status:
 
-
-## June 12(Wed) - June 14(Fri)
+## June 5 (Wed) - June 7 (Fri)
 
 ### Features in the Project Plan Cycle:
 
