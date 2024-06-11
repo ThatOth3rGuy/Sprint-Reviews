@@ -2,7 +2,10 @@
 
 # Weekly Team Logs
 
-## Week 4 (June 5 - June 7)
+## Week 4 
+
+
+## June 5 - June 7
 
 ## Features in the Project Plan Cycle:
 
