@@ -12,17 +12,16 @@
 -  Feature 2:Registration and Login Save to Database, the data is stored correctly and displays data correctly
 -  Feature 3:Connection Auth API to System and is able to authenticate users
 
-### Associated Tasks from Project Board:
+### Tasks from Project Board:
 
+![week5-done](./Images/week5-done.png)
+
+![week5-In Progress](./Images/week5-in-prog.png)
 
 ### Tasks for Next Cycle:
 
-| Task ID | Description        | Estimated Time (hrs) | Assigned To |
-| ------- | ------------------ | -------------------- | ----------- |
-| [#ID]   | [Task Description] | [Estimated Time]     | [Assignee]  |
-| [#ID]   | [Task Description] | [Estimated Time]     | [Assignee]  |
+![week5-todo](./Images/week5-todo)
 
-### Alternatively, include image of the project board with tasks and status:
 
 ### Burn-up Chart (Velocity):
 
@@ -40,18 +39,10 @@ Clockify Times:
 
 
 ### Completed Tasks:
-
-| Task ID | Description        | Completed By |
-| ------- | ------------------ | ------------ |
-| [#ID]   | [Task Description] | [Assignee]   |
-| [#ID]   | [Task Description] | [Assignee]   |
+![week5-done](./Images/week5-done.png)
 
 ### In Progress Tasks/ To do:
-
-| Task ID | Description        | Assigned To |
-| ------- | ------------------ | ----------- |
-| [#ID]   | [Task Description] | [Assignee]  |
-| [#ID]   | [Task Description] | [Assignee]  |
+![week5-In Progress](./Images/week5-in-prog.png)
 
 ### Test Report / Testing Status:
 
