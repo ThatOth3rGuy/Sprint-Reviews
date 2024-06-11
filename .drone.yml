@@ -36,7 +36,7 @@ steps:
 - name: test
   image: $DOCKER_USERNAME/$DOCKER_REPO:playwright-tests
   commands:
-  - echo "Run your tests here"
+  - npx playwright test
 
 volumes:
 - name: dockersock
