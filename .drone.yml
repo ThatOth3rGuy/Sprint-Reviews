@@ -38,7 +38,9 @@ steps:
   commands:
   - npx playwright test
 
+
 volumes:
 - name: dockersock
   host:
     path: /var/run
+
