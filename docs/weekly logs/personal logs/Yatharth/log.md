@@ -248,15 +248,7 @@ I have successfully accomplished the planned administrative tasks. I am now to w
         <!-- Status -->
         <td> In progress
         </td>
-    </tr>   
-        <tr>
-        <!-- Task/Issue # -->
-        <td> Help with finalizing UI design
-        </td>
-        <!-- Status -->
-        <td> In progress
-        </td>
-    </tr>
+   
     
 </table>
 
