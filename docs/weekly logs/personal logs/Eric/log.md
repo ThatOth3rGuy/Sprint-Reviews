@@ -2,6 +2,10 @@
 
 # Week 5
 ## Friday - June 7, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%205.1.png)
+
 ### Cycle Review
     
 This was the last week of planning, after this our focus is going to be coding and implementing features. The last thing to do for planning is create and submit the deisgn presentation video. After that we've split our first focus of features throughout the group. Starting with the database & testing setup (Me and Tithi), and the Reverse Proxy & CI setup (Brendan, Yatharth, and Divya)
@@ -46,7 +50,10 @@ This was the last week of planning, after this our focus is going to be coding a
 </table>
 
 ## Monday - June 10, 2024
-**Timesheet Tracking is presented in our weekly log**
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%205.1.png)
+
 ### Cycle Review
 
 At this point, design is finished and we're focused on finishing 3 features by Friday. Most of the setup is complete, but the testing still isn't working. We're letting Brendan and Yatharth focus on getting the testing working while the rest of us work on implementing some features. It was decided that the 3 features we'll have done by Friday are the Reverse Proxy for changing between Instructor/Student view, the Create Account/Login with authentication, and the main dashboard view once a user is logged in.
@@ -83,7 +90,10 @@ At this point, design is finished and we're focused on finishing 3 features by F
 
 # Week 4
 ## Monday - June 3, 2024
-**Timesheet Tracking is presented in our weekly log**
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%204.1.png)
+
 ### Cycle Review
     
 Several tasks were assigned to each of the team during Friday's meeting. By the time of the meeting, each of us accomplished a significant amount of work either completing or nearly completing what was assigned. Though review on all of the work is required, it seems we managed to reach all of our goals for the weekend cycle. Managing the project boards and working on the system architecture design, tasks are being completed on time and everyone is contributing effectively. With the database design done and ready for review and the framework setup underway, the goal for this next cycle is to finish the framework setup and add all use cases to the kanban board.
@@ -138,7 +148,10 @@ Several tasks were assigned to each of the team during Friday's meeting. By the 
 
 #
 ## Wednesday - June 5, 2024
-**Timesheet Tracking is presented in our weekly log**
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%204.2.png)
+
 ### Cycle Review
     
 From Monday to Wednesday's Meeting, not much to complete for tasks. After completing Database Design (ER Diagram) and explanation of the design, it will need to be reviewed and then make necessary changes. If changes are needed, that will be high priority to complete for document submission Wednesday night. With all design document tasks nearly complete by everyone assigned to them, all we have left is mainly the UI design. This will likely be finalized during our meeting by Tithi. Evaluations of other team's proposals will need to be completed. With the Nextjs framework set up and running on my laptop, I need to help the rest of the team make sure it works for them, and then work with Brendan to implement it properly with Docker. Once all that is done, we just need to set up testing before we can start committing to coding features.
