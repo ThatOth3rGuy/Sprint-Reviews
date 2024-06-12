@@ -238,3 +238,142 @@
     </tr>
 </table>
 
+# Week 5
+## Monday - June 10, 2024
+**Timesheet Tracking (Friday-Sunday)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_06_07_2024-06_09_2024.pdf)
+### Cycle Review
+    Several tasks were assigned to each of the team during Friday's meeting. As we have completed the design, we used our Friday meeting to break down our tasks for the weekend, and decide which features we will need ready for June 14th. We decided on our features and I helped layout our plan for the week, assigning everyone including myself tasks. Over the weekend I spent a lot of hours configuring the docker file to ensure we have working containers for development. Once the containers were **mostly** running properly, the test framework needed to be added so we can start creating  tests for the features. With some success I was able to get testing up. For the weekend cycle I did manage to nearly accomplish everything I needed to while the others were putting together the DB and our CI. My goal for this week is to fix the test framework, and our docker to hopefully build and run containers smoothly while running the E2E tests error free for everyone. I will also help with the DB and testing so that we can have our features ready and tests passing by Wednesday-Friday. We will decide exactly how this will be split during our meeting
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Finalize Docker Setup From Friday
+  * #3: Create Automated Test Framework for Project
+  * #4: Reverse Proxy Setup and Test
+  * #5: Test Database
+  * #6: Add Basic Landing Page for App
+
+### Progress Update: Fri-Mon
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Ongoing
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Finalize Docker Setup From Friday
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create Automated Test Framework for Project
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Reverse Proxy Setup and Test
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Add Basic Landing Page for App
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Test Database
+        </td>
+        <!-- Status -->
+        <td>To Do
+        </td>
+    </tr>
+</table>
+
+#
+## Wednesday - June 12, 2024
+**Timesheet Tracking (Friday-Sunday)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_06_10_2024-06_011_2024.pdf)
+### Cycle Review
+    From Monday to Wednesday's Meeting, I unfortunately was not able to do a ton. Before our Monday meeting, I was able to get the login page up and passing tests, however it is not perfect and will need to be fixed and integrated with our CI. After our meeting my internet went out all day, and had to work Tuesday. I was not able to accomplish all I was tasked with, though the team seems to have picked up my slack. I do believe we are mostly on pace for having all the features by Friday. My goal for the remainder of the week is to make sure the tests work especially the DB, and we will be able to efficiently run our completed features for Friday. I am working on the testing/integrations, and managing the project boards. Wednesday we will breakdown what is left and ensure we are on pace for the project, if any issues are present we will hopefully be able to fix them with little issue.
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Setup Docker Compose for DB, Drone, App, and Tests for integrated Testing
+  * #3: Fix Bugs in Test Frameworks (Unit and E2E Testing)
+  * #4: Reverse Proxy Setup and Test (Simple Redirects vs Proxy API)
+  * #5: Test Database (Get tests to properly pass)
+  * #6: Add DB to app for Login Function
+
+### Progress Update: Mon-Wed
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Setup Docker Files for Project Components
+        </td>
+        <!-- Status -->
+        <td>Complete*
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Fix Bugs In Test Framework/Automated Testing
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Proxy Setup and Test
+        </td>
+        <!-- Status -->
+        <td>Complete*
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Setup Database Function in App & Test
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
+[definitionFilePath]: ../../../../../../../Downloads/Clockify_Time_Report_Detailed_06_07_2024-06_09_2024.pdf
