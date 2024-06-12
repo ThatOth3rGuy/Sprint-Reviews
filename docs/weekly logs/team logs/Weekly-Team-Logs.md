@@ -28,7 +28,7 @@
 
 ### Times for Team/Individual:
 
-Clockify Times: [Team Clockify](./Images/Week5-TeamClockify.png)
+Clockify Times: ![Team Clockify](./Images/Week5-TeamClockify.png)
 
 
 ### Completed Tasks:
