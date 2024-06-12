@@ -5,7 +5,7 @@
 ## Wednesday June 12, 2024
 
 ### Timesheet
-![alt text]()
+![Week5](./images/week5ss.png)
 
 ### Current Tasks (Complete by the end of the day)
   * Complete Docker and Playwright testing setup running ok on PC
@@ -34,7 +34,7 @@
 
 # Week 4  
 ### Timesheet
-![clockify](week4ss.png)
+![clockify](./images/week4ss.png)
 ## Wednesday June 5 2024
 ### Cycle review
 Since the last meeting, we have managed to complete most of the tasks assigned to us. A lot of the tasks were related to the design of the system including system architecture, er diagrams, use case models, dfd diagrams, wireflow, and the UI design. Once all the tasks related to the design document and video are reviewed and completed, we will be moving on to the set up of the frameworks and Docker containers so we can begin building the prototype.
