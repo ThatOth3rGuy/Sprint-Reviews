@@ -28,7 +28,7 @@
 
 ### Times for Team/Individual:
 
-Clockify Times: [Add ss]
+Clockify Times: [Team Clockify](./Images/Week5-TeamClockify.png)
 
 
 ### Completed Tasks:
@@ -37,9 +37,9 @@ Clockify Times: [Add ss]
 ### In Progress Tasks/ To do:
 ![week5-In Progress](./Images/week5-in-prog.png)
 
-### Overview : We have begun the development phase of the project and are working towards delivering the MVP and 3 features of our app by  the end of the next cycle.
+### Overview : We have begun the development phase of the project and are working towards delivering the MVP and 3 features of our app by  the end of the next cycle. We are working on building webiste pages and proper setup and integration of APIs and database. To be prepare for our mini presentation on Friday.
 
-## June 12(Wed) - June 14(Fri)
+## June 12(Wed) - June 14(Fri)-TBA
 
 ### Features in the Project Plan Cycle: TBA
 
@@ -51,19 +51,19 @@ Clockify Times: [Add ss]
 
 ### Associated Tasks from Project Board:
 
-| Task ID | Description        | Feature   | Assigned To | Status   |
+| Task  | Description        | Feature   | Assigned To | Status   |
 | ------- | ------------------ | --------- | ----------- | -------- |
-| [#ID]   | [Task Description] | [Feature] | [Assignee]  | [Status] |
-| [#ID]   | [Task Description] | [Feature] | [Assignee]  | [Status] |
+| 1   | [Task Description] | [Feature] | [Assignee]  | [Status] |
+| 2  | [Task Description] | [Feature] | [Assignee]  | [Status] |
 
 ### Alternatively, include image of the project board with tasks and status:
 
 ### Tasks for Next Cycle:
 
-| Task ID | Description        | Estimated Time (hrs) | Assigned To |
+| Task | Description        | Estimated Time (hrs) | Assigned To |
 | ------- | ------------------ | -------------------- | ----------- |
-| [#ID]   | [Task Description] | [Estimated Time]     | [Assignee]  |
-| [#ID]   | [Task Description] | [Estimated Time]     | [Assignee]  |
+| 1   | [Task Description] | [Estimated Time]     | [Assignee]  |
+| 2  | [Task Description] | [Estimated Time]     | [Assignee]  |
 
 ### Alternatively, include image of the project board with tasks and status:
 
@@ -116,24 +116,24 @@ The team focused on [Summary of work done]. The Kanban Board has been populated 
 
 ### Associated Tasks from Project Board:
 
-| Task ID | Description        | Feature   | Assigned To | Status   |
+| Task | Description        | Feature   | Assigned To | Status   |
 | ------- | ------------------ | --------- | ----------- | -------- |
-| [#ID]   | System Architecture Design | Design Proposal Document| Brendan  | Done |
-| [#ID]   | UI Wiredflow  | Design Proposal document | Divyajot  | Done |
-| [#ID]   | Database design | Design Proposal document | Eric  | Done |
-| [#ID]   | DFDs | Design Proposal document | Yatharth | Done |
-| [#ID]   | Use cases | Design Proposal document | Yatharth | Done |
+| 1   | System Architecture Design | Design Proposal Document| Brendan  | Done |
+| 2   | UI Wiredflow  | Design Proposal document | Divyajot  | Done |
+| 3   | Database design | Design Proposal document | Eric  | Done |
+| 4   | DFDs | Design Proposal document | Yatharth | Done |
+| 5   | Use cases | Design Proposal document | Yatharth | Done |
 
 ### Alternatively, include image of the project board with tasks and status:
 
 ### Tasks for Next Cycle:
 
-| Task ID | Description        | Estimated Time (hrs) | Assigned To |
+| Task  | Description        | Estimated Time (hrs) | Assigned To |
 | ------- | ------------------ | -------------------- | ----------- |
-| [#ID]   | Video Presentation template design | 2 hrs    | Divyajot  |
-| [#ID]   | Video  presentation explanation| 2 hrs     | Brendan, Divyajot,Eric, Tithi, Yatharh  |
-| [#ID]   | Video Presentation recording and compilation | 2 hrs    | Divyajot  |
-| [#ID]   | Framework setup/Environment setup | 3 hrs | Brendan, Divyajot,Eric, Tithi, Yatharh | 
+| 1   | Video Presentation template design | 2 hrs    | Divyajot  |
+| 2   | Video  presentation explanation| 2 hrs     | Brendan, Divyajot,Eric, Tithi, Yatharh  |
+| 3   | Video Presentation recording and compilation | 2 hrs    | Divyajot  |
+| 4   | Framework setup/Environment setup | 3 hrs | Brendan, Divyajot,Eric, Tithi, Yatharh | 
 
 ### Burn-up Chart (Velocity):
 Burnup since last meeting:
@@ -148,20 +148,20 @@ Clockify Times:
 
 
 ### Completed Tasks:
-| Task ID | Description        | Feature   | Assigned To | Status   |
+| Task  | Description        | Feature   | Assigned To | Status   |
 | ------- | ------------------ | --------- | ----------- | -------- |
-| [#ID]   | System Architecture Design | Design Proposal Document| Brendan  | Done |
-| [#ID]   | UI Wiredflow  | Design Proposal document | Divyajot  | Done |
-| [#ID]   | Database design | Design Proposal document | Eric  | Done |
-| [#ID]   | DFDs | Design Proposal document | Yatharth | Done |
-| [#ID]   | Use cases | Design Proposal document | Yatharth | Done |
+| 1   | System Architecture Design | Design Proposal Document| Brendan  | Done |
+| 2   | UI Wiredflow  | Design Proposal document | Divyajot  | Done |
+| 3   | Database design | Design Proposal document | Eric  | Done |
+| 4   | DFDs | Design Proposal document | Yatharth | Done |
+| 5   | Use cases | Design Proposal document | Yatharth | Done |
 
 
 ### In Progress Tasks/ To do:
 
-| Task ID | Description        | Assigned To |
+| Task | Description        | Assigned To |
 | ------- | ------------------ | ----------- |
-| [#ID]   | Review proposal document | Brendan, Divyajot,Eric, Tithi, Yatharh  |
+| 1   | Review proposal document | Brendan, Divyajot,Eric, Tithi, Yatharh  |
 
 
 ### Cycle Status:
@@ -176,24 +176,24 @@ Several tasks were assigned to each of the team during Friday's meeting. By the 
 
 ### Associated Tasks from Project Board:
 
-| Task ID | Description        | Assigned To |Status
+| Task  | Description        | Assigned To |Status
 | ------- | ------------------ | -------------------- | ----------- |
-| [#ID]   | Video Presentation template design | Divyajot  | Done |
-| [#ID]   | Video  presentation explanation|  Brendan, Divyajot,Eric, Tithi, Yatharh  | Done|
-| [#ID]   | Video Presentation recording and compilation |Divyajot  |Done|
-| [#ID]   | Framework setup/Environment setup |  Brendan, Divyajot,Eric, Tithi, Yatharh | In progress|
+| 1   | Video Presentation template design | Divyajot  | Done |
+| 2   | Video  presentation explanation|  Brendan, Divyajot,Eric, Tithi, Yatharh  | Done|
+| 3   | Video Presentation recording and compilation |Divyajot  |Done|
+| 4   | Framework setup/Environment setup |  Brendan, Divyajot,Eric, Tithi, Yatharh | In progress|
 
 ### Alternatively, include image of the project board with tasks and status:
 
 ### Tasks for Next Cycle:
 
-| Task ID | Description        | Estimated Time (hrs) | Assigned To |
+| Task | Description        | Estimated Time (hrs) | Assigned To |
 | ------- | ------------------ | -------------------- | ----------- |
-| [#ID]   | Docker framework setup | 4 hrs    | Brendan|
-| [#ID]   | Create tests | 2 hrs     | Brendan, Divyajot,Eric, Tithi, Yatharth  |
-| [#ID]   | Build pages | 2 hrs    | Divyajot,Eric, Tithi  |
-| [#ID]   | Reverse proxy |   2 hrs  | Brendan, Yatharth  |
-| [#ID]   | Database setup|   2 hrs  | Tithi, Eric  |
+| 1   | Docker framework setup | 4 hrs    | Brendan|
+| 2  | Create tests | 2 hrs     | Brendan, Divyajot,Eric, Tithi, Yatharth  |
+| 3   | Build pages | 2 hrs    | Divyajot,Eric, Tithi  |
+| 4   | Reverse proxy |   2 hrs  | Brendan, Yatharth  |
+| 5  | Database setup|   2 hrs  | Tithi, Eric  |
 
 
 
@@ -214,18 +214,18 @@ Clockify Times:
 
 ### Completed Tasks:
 
-| Task ID | Description        | Assigned To |Status
+| Task| Description        | Assigned To |Status
 | ------- | ------------------ | -------------------- | ----------- |
-| [#ID]   | Video Presentation template design | Divyajot  | Done |
-| [#ID]   | Video  presentation explanation|  Brendan, Divyajot,Eric, Tithi, Yatharth  | Done|
-| [#ID]   | Video Presentation recording and compilation |Divyajot  |Done|
-| [#ID]   | Framework setup/Environment setup |  Brendan, Divyajot,Eric, Tithi, Yatharth | In progress|
+| 1  | Video Presentation template design | Divyajot  | Done |
+| 2   | Video  presentation explanation|  Brendan, Divyajot,Eric, Tithi, Yatharth  | Done|
+| 3   | Video Presentation recording and compilation |Divyajot  |Done|
+| 4   | Framework setup/Environment setup |  Brendan, Divyajot,Eric, Tithi, Yatharth | In progress|
 
 ### In Progress Tasks/ To do:
 
-| Task ID | Description        | Assigned To |
+| Task | Description        | Assigned To |
 | ------- | ------------------ | ----------- |
-| [#ID]   | Video Review | Brendan, Divyajot,Eric, Tithi, Yatharth  |
+| 1  | Video Review | Brendan, Divyajot,Eric, Tithi, Yatharth  |
 
 ### Overview:
 
