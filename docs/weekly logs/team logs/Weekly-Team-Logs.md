@@ -28,8 +28,8 @@
 
 ### Times for Team/Individual:
 
-Clockify Times: ![Team Clockify](./Images/Week5-TeamClockify.png)
-
+Clockify Times: ![Team Clockify Bar Graph](./Images/Clockify5.1%20bar.png)
+Clockify Times: ![Team Clockify Pie Chart](./Images/Clockify5.1%20pie.png)
 
 ### Completed Tasks:
 ![week5-done](./Images/week5-done.png)
