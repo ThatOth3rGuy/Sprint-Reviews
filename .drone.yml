@@ -36,30 +36,10 @@ steps:
 - name: test
   image: $DOCKER_USERNAME/$DOCKER_REPO:playwright-tests
   commands:
-  - npm install
-  - npm run test
+  - npx playwright test
 
-services:
-- name: app
-  image: $DOCKER_USERNAME/$DOCKER_REPO:$DOCKER_TAG
-  environment:
-    ENV_VARIABLE:
-      from_secret: ENV_VARIABLE
-    NEXT_PUBLIC_ENV_VARIABLE:
-      from_secret: NEXT_PUBLIC_ENV_VARIABLE
-  ports:
-  - 3001
-  volumes:
-  - name: app_src
-    path: /app/src
-  - name: app_public
-    path: /app/public
 
 volumes:
 - name: dockersock
   host:
     path: /var/run
-- name: app_src
-  temp: {}
-- name: app_public
-  temp: {}
