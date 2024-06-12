@@ -123,6 +123,69 @@ I have successfully accomplished the planned administrative tasks. I am now to w
 
 
 # Week 4
+## Wednesday (6/12/2024)
+
+### Timesheet Week 4 (06/05/2024 - 06/12/2024)
+![alt text](images/Week4.png)
+
+
+### Current Tasks (Complete by the end of the day)
+  * Complete Drone CI, Docker and Playwright testing setup running ok on all PCs
+  * Any meeting changes noted here
+
+
+### Progress Update 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Start integration of the Authorization API with the Login Page
+        </td>
+        <!-- Status -->
+        <td> Need to start 
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Set Up RP for landing page using the Next.js libraries 
+        </td>
+        <!-- Status -->
+        <td> In-Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Drone CI integration 
+        </td>
+        <!-- Status -->
+        <td> Complete/Need test
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Write tests for all configurations 
+        </td>
+        <!-- Status -->
+        <td> In progress
+        </td>
+   
+    
+</table>
+
+### Weekly Goal Review
+- The Drone Ci and Playwright testing to work smoothly still needs to be checked(for now), but the software runs successfully on my local PC
+- I have researched and started setting up the RP using nginx.
+- I have learnt REACT, Node and Next.js libraries and docs for future feature building 
+
+### Next Cycle Goals
+  * API integration to work with Login & authentication and RP to ensure user landing is handled
+  * Write tests for API integration (critical)
+  * For Any goals after Wednesday's meeting go here.
 
 ## Friday (06/07/2024)
 
@@ -198,69 +261,7 @@ I have successfully accomplished the planned administrative tasks. I am now to w
 * Get features assigned and start development
 
 
-## Wednesday (6/12/2024)
-
-### Timesheet Week 4 (06/05/2024 - 06/12/2024)
-![alt text](images/Week4.png)
-
-
-### Current Tasks (Complete by the end of the day)
-  * Complete Drone CI, Docker and Playwright testing setup running ok on all PCs
-  * Any meeting changes noted here
-
-
-### Progress Update 
-<table>
-    <tr>
-        <td><strong>TASK/ISSUE #</strong>
-        </td>
-        <td><strong>STATUS</strong>
-        </td>
-    </tr>
-    <tr>
-        <!-- Task/Issue # -->
-        <td>Start integration of the Authorization API with the Login Page
-        </td>
-        <!-- Status -->
-        <td> Need to start 
-        </td>
-    </tr>
-    <tr>
-        <!-- Task/Issue # -->
-        <td> Set Up RP for landing page using the Next.js libraries 
-        </td>
-        <!-- Status -->
-        <td> In-Progress
-        </td>
-    </tr>
-    <tr>
-        <!-- Task/Issue # -->
-        <td> Drone CI integration 
-        </td>
-        <!-- Status -->
-        <td> Complete/Need test
-        </td>
-    </tr>
-        <tr>
-        <!-- Task/Issue # -->
-        <td> Write tests for all configurations 
-        </td>
-        <!-- Status -->
-        <td> In progress
-        </td>
-   
-    
-</table>
-
-### Weekly Goal Review
-- The Drone Ci and Playwright testing to work smoothly still needs to be checked(for now), but the software runs successfully on my local PC
-- I have researched and started setting up the RP using nginx.
-- I have learnt REACT, Node and Next.js libraries and docs for future feature building 
-
-### Next Cycle Goals
-  * API integration to work with Login & authentication and RP to ensure user landing is handled
-  * Write tests for API integration (critical)
-  * For Any goals after Wednesday's meeting go here.  
+  
   
     
     
