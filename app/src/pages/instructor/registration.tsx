@@ -11,10 +11,34 @@ const SignUp: NextPage = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const router = useRouter();
   
-    const handleSignUpClick = () => {
-        // Handle sign-up logic here
-        console.log('User signed up with:', { firstName, lastName, email, password });
-      };
+    const handleSignUpClick = async () => {
+        // Reference any additional necessary authentification logic here
+
+
+        if (password !== confirmPassword) {
+            alert('Passwords do not match');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/addUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ firstName, lastName, email, password,role: 'instructor' })
+            });
+
+            if (response.ok) {
+                router.push('/instructor/login');
+            } else {
+                const errorData = await response.json();
+                alert(errorData.error);
+            }
+        } catch (error) {
+            alert('Failed to sign up');
+        }
+    };
 
     const handleBackClick = () => {
         // Redirect user to login page
