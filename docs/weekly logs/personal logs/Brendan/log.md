@@ -132,7 +132,7 @@
   * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
   * #2: Get feedback on Software Architecture Design and Explanation
   * #3: Evaluate other project proposals (1 remaining)
-  * #4: Setup and Run Docker Containers 
+  * #4: Setup and Run Docker Containers
 
 ### Progress Update: Mon-Wed
 <table>
@@ -180,10 +180,13 @@
 ## Friday - June 7, 2024
 
 ### Cycle Review
-
+    Wednesday to Friday there was not a ton of progress done on my behalf, most of my time was spent tracking project workflow via Plaky and the Project Board. Thursday I was only able to spend the afternoon on the project due to work, however as reflected by clockify hours the entire evening was spent trying to get docker running with our framework. I was unfortunately not successful and my primary goal for the next cycle is to make sure that is up so the team can begin coding ASAP. All work for our project design has been done, and the video is in progress. With the next 4 days free to work on the project my goal is to start coding features so there is stuff to review on Monday.
 
 ### Current Tasks
-  * #1:
+  * #1: Setup Docker
+  * #2: Manage Project Workflow Boards
+  * #3: Review Video before submission
+  * #4: Help review and track pull requests
 
 ### Progress Update: Wed-Fri
 <table>
@@ -195,7 +198,23 @@
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td>Task A
+        <td>Setup Docker
+        </td>
+        <!-- Status -->
+        <td>In-Progress (crying)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Manage Project Boards
+        </td>
+        <!-- Status -->
+        <td>Ongoing
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Review Other Project Proposals
         </td>
         <!-- Status -->
         <td>Complete
@@ -203,18 +222,18 @@
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td>Task B
+        <td>Complete Architecture Design for Doc and Video
         </td>
         <!-- Status -->
-        <td>In Progress
+        <td>Complete
         </td>
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td>Task C
+        <td>Review Current Pull-Requests & Video
         </td>
         <!-- Status -->
-        <td>In Progress
+        <td>To Do
         </td>
     </tr>
 </table>

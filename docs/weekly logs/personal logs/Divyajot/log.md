@@ -203,22 +203,11 @@ On Wednesday's meeting we spent a large amount of time reviewing the UI design o
      - Wireframing and UI design prototyping
      - Project board management and task assignment on kanban board, categorization of tasks to milestones and Tshirt sizing of tasks
    
+# Week 4  
+### Timesheet
+![clockify](week4ss.png)
+## Wednesday June 5 2024
+### Cycle review
+Since the last meeting, we have managed to complete most of the tasks assigned to us. A lot of the tasks were related to the design of the system including system architecture, er diagrams, use case models, dfd diagrams, wireflow, and the UI design. Once all the tasks related to the design document and video are reviewed and completed, we will be moving on to the set up of the frameworks and Docker containers so we can begin building the prototype.
 
-# Week 2
-  Team meeting notes:
-* Established Communication channels
-* Chose our team name -Sprint runners
-* First official meeting (1 hour)
-* Division of action items on the Project Proposal
-      
-  My contributions:  
-     
-     - Set up the project Kanban board on github and manage dashboard
-     - General research on other peer-review applications
-     - Update High level requirements and boundaries in the project proposal document (1.5 hrs)
-     - Update risks section in the project proposal document
-     - Review Project proposal document
-# Week 1 
-* Meet and greet 
-* Team formations
-* Ice breaker   
+
