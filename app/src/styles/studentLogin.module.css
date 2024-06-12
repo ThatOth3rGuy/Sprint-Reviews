@@ -1,0 +1,151 @@
+.container {
+  width: 100%;
+  max-width: 1366px;
+  height: 100vh;
+  position: relative;
+  background-color: #FAFAF9; /* bg-stone-50 */
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.img1 {
+  width: 300px;
+  height: 275px;
+  position: absolute;
+  left: 50px;
+  top: 200px;
+  mix-blend-mode: multiply;
+}
+
+.horizontalLine {
+  width: 500px;
+  height: 0;
+  position: absolute;
+  left: 30%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  border: 1px solid black;
+}
+
+.loginButton {
+  width: 300px;
+  height: 50px;
+  position: absolute;
+  left: 50%;
+  top: 100px;
+  transform: translateX(-50%);
+  background-color: #134E4A; /* teal-900 */
+  border: 1px solid #134E4A;
+  border-radius: 15px;
+}
+
+.loginText {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 20px; /* 2xl */
+  font-family: 'Inria Serif', serif;
+  font-weight: bold;
+}
+
+.emailInput, .passwordInput {
+  width: 300px;
+  height: 50px;
+  position: absolute;
+  left: 50%;
+  background-color: #FFFFFF;
+  border: 2px solid #134E4A;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow */
+  transform: translateX(-50%);
+}
+
+.emailInput {
+  top: 200px;
+}
+
+.passwordInput {
+  top: 300px;
+}
+
+.inputField {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  padding-left: 16px;
+  font-size: 16px;
+  font-family: 'Inria Serif', serif;
+  font-weight: bold;
+  color: #134E4A; /* teal-900 */
+  border-radius: 15px;
+  box-sizing: border-box; /* Ensure padding does not affect border size */
+}
+
+.forgotPassword {
+  width: 200px;
+  height: 20px;
+  position: absolute;
+  left: 50%;
+  top: 400px;
+  transform: translateX(-50%);
+  color: #737373; /* neutral-500 */
+  font-size: 16px;
+  font-family: 'Inria Serif', serif;
+  font-weight: bold;
+  text-align: center;
+}
+
+.signUpPrompt {
+  width: 300px;
+  height: 50px;
+  position: absolute;
+  left: 50%;
+  top: 450px;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.signUpText {
+  color: #737373; /* neutral-500 */
+  font-size: 16px;
+  font-family: 'Inria Serif', serif;
+  font-weight: bold;
+}
+
+.signUpLink {
+  color: #FCA78B; /* orange-300 */
+  font-size: 16px;
+  font-family: 'Inria Serif', serif;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.signInButton {
+  width: 200px;
+  height: 50px;
+  position: absolute;
+  left: 50%;
+  top: 550px;
+  transform: translateX(-50%);
+  background-color: #737373; /* neutral-500 */
+  border: 1px solid #737373;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow */
+}
+
+.signInText {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FAFAF9; /* stone-50 */
+  font-size: 20px; /* 2xl */
+  font-family: 'Inria Serif', serif;
+  font-weight: bold;
+}
