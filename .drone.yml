@@ -4,62 +4,42 @@ name: default
 
 steps:
 - name: build_app
-  image: docker:dind
-  volumes:
-  - name: dockersock
-    path: /var/run
-  environment:
-    DOCKER_USERNAME:
-      from_secret: yatharthmathur711 #fill here your docker username
-    DOCKER_REPO:
-      from_secret: team-3-capstone-sprint-runners
-    DOCKER_TAG:
-      from_secret: latest
-  commands:
-  - docker build -f ./app/Dockerfile -t $DOCKER_USERNAME/$DOCKER_REPO:$DOCKER_TAG ./app
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: DOCKER_USERNAME
+    password:
+      from_secret: DOCKER_PASSWORD
+    repo: team-3-capstone-sprint-runners
+    tags: latest
+    dockerfile: ./app/Dockerfile
+    context: ./app
 
 - name: build_playwright_tests
-  image: docker:dind
-  volumes:
-  - name: dockersock
-    path: /var/run
-  environment:
-    DOCKER_USERNAME:
-      from_secret: yatharthmathur711 #fill here your docker username
-    DOCKER_REPO:
-      from_secret: team-3-capstone-sprint-runners
-    DOCKER_TAG:
-      from_secret: latest
-  commands:
-  - docker build -f ./test/Dockerfile -t $DOCKER_USERNAME/$DOCKER_REPO:playwright-tests .
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: DOCKER_USERNAME
+    password:
+      from_secret: DOCKER_PASSWORD
+    repo: team-3-capstone-sprint-runners
+    tags: playwright-tests
+    dockerfile: ./test/Dockerfile
+    context: ./test
 
 - name: test
-  image: $DOCKER_USERNAME/$DOCKER_REPO:playwright-tests
+  image: team-3-capstone-sprint-runners:playwright-tests
   commands:
   - npm install
   - npm run test
 
 services:
 - name: app
-  image: $DOCKER_USERNAME/$DOCKER_REPO:$DOCKER_TAG
+  image: team-3-capstone-sprint-runners:latest
   environment:
     ENV_VARIABLE:
       from_secret: ENV_VARIABLE
     NEXT_PUBLIC_ENV_VARIABLE:
       from_secret: NEXT_PUBLIC_ENV_VARIABLE
   ports:
-  - 3001
-  volumes:
-  - name: app_src
-    path: /app/src
-  - name: app_public
-    path: /app/public
-
-volumes:
-- name: dockersock
-  host:
-    path: /var/run
-- name: app_src
-  temp: {}
-- name: app_public
-  temp: {}
+  - 3001:3000
