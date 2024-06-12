@@ -1,19 +1,103 @@
-/* Page.module.css */
-.container {
+.roleSelection {
+  width: 1440px;
+  height: 1024px;
+  position: relative;
+  background-color: #fafaf9;
+}
+
+.roleButton {
+  width: 541px;
+  height: 79.45px;
+  position: absolute;
+  top: 312px;
+  left: 778px;
+  background-color: #002975;
+  border-radius: 15px;
+  border: 1px solid #CDAF75;
+  text-align: center;
+  font-family: 'Inria Serif', serif;
+  font-size: 3rem;
+  font-weight: bold;
+  color: #fff;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh; /* Adjust based on your layout */
 }
 
-.roleSelection {
+.image {
+  width: 363px;
+  height: 330px;
+  position: absolute;
+  left: 146px;
+  top: 347px;
+  mix-blend-mode: multiply;
+}
+
+.line {
+  width: 852.03px;
+  height: 0;
+  position: absolute;
+  left: 672.51px;
+  top: 961.01px;
+  transform-origin: top left;
+  transform: rotate(-90deg);
+  border: 1px solid black;
+}
+
+.description {
+  position: absolute;
+  top: 420px;
+  left: 809px;
+  font-family: 'Inria Serif', serif;
+  font-size: 25px;
+  font-weight: bold;
+  color: #000;
+}
+
+.iAmA {
+  position: absolute;
+  top: 482px;
+  left: 1004px;
+  font-family: 'Inria Serif', serif;
+  font-size: 25px;
+  font-weight: bold;
+  color: #000;
+}
+
+.roleButtons {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: absolute;
+  top: 563px;
+  left: 809px;
+  gap: 57px; /* Adjusted for spacing between buttons */
 }
 
-.roleButton, .studentButton, .instructorButton {
-  margin: 10px;
-  padding: 10px 20px;
+.studentButton {
+  width: 220px;
+  height: 60px;
+  background-color: #64AB9D;
+  border-radius: 15px;
+  border: 1px solid #CDAF75;
+  font-family: 'Inria Serif', serif;
+  font-size: 3rem;
+  font-weight: bold;
+  color: #fafaf9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.instructorButton {
+  width: 220px;
+  height: 60px;
+  background-color: #028090;
+  border-radius: 15px;
+  border: 1px solid #CDAF75;
+  font-family: 'Inria Serif', serif;
+  font-size: 3rem;
+  font-weight: bold;
+  color: #fafaf9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
