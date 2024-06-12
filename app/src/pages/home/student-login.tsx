@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import styles from '../styles/studentLogin.module.css';
+import styles from '../../styles/studentLogin.module.css';
 import { useState } from 'react';
 
 const StudentLogin: NextPage = () => {
@@ -14,10 +14,10 @@ const StudentLogin: NextPage = () => {
 
   return (
     <div className={styles.container}>
-      <img className={styles.img1} src="https://via.placeholder.com/300x275" alt="Placeholder" />
+      <img className={styles.img1} src="/images/Logo.png" alt="Logo" /> {/* Use relative path */}
       <div className={styles.horizontalLine}></div>
       <div className={styles.loginButton}>
-        <div className={styles.loginText}>Login</div>
+        <div className={styles.loginText}>Student Login</div>
       </div>
       <div className={styles.emailInput}>
         <input 
@@ -45,10 +45,10 @@ const StudentLogin: NextPage = () => {
       <div className={styles.signInButton}>
         <div className={styles.signInText}>Sign In</div>
       </div>
-      <img className={styles.img2} src="https://via.placeholder.com/100x100" alt="Placeholder" />
     </div>
   );
 };
 
 export default StudentLogin;
+
 
