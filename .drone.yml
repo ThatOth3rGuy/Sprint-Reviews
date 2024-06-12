@@ -10,7 +10,7 @@ steps:
     path: /var/run
   environment:
     DOCKER_USERNAME:
-      from_secret: docker_username #fill here your docker username
+      from_secret: yatharthmathur711 #fill here your docker username
     DOCKER_REPO:
       from_secret: team-3-capstone-sprint-runners
     DOCKER_TAG:
@@ -25,7 +25,7 @@ steps:
     path: /var/run
   environment:
     DOCKER_USERNAME:
-      from_secret: docker_username #fill here your docker username
+      from_secret: yatharthmathur711 #fill here your docker username
     DOCKER_REPO:
       from_secret: team-3-capstone-sprint-runners
     DOCKER_TAG:
@@ -36,9 +36,30 @@ steps:
 - name: test
   image: $DOCKER_USERNAME/$DOCKER_REPO:playwright-tests
   commands:
-  - npx playwright test
+  - npm install
+  - npm run test
+
+services:
+- name: app
+  image: $DOCKER_USERNAME/$DOCKER_REPO:$DOCKER_TAG
+  environment:
+    ENV_VARIABLE:
+      from_secret: ENV_VARIABLE
+    NEXT_PUBLIC_ENV_VARIABLE:
+      from_secret: NEXT_PUBLIC_ENV_VARIABLE
+  ports:
+  - 3001
+  volumes:
+  - name: app_src
+    path: /app/src
+  - name: app_public
+    path: /app/public
 
 volumes:
 - name: dockersock
   host:
     path: /var/run
+- name: app_src
+  temp: {}
+- name: app_public
+  temp: {}
