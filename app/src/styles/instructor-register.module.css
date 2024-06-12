@@ -1,0 +1,153 @@
+.sprintrunner1Icon {
+    position: absolute;
+    top: 347px;
+    left: 146px;
+    width: 363px;
+    height: 330px;
+    object-fit: cover;
+    mix-blend-mode: multiply;
+}
+.signUpChild {
+    position: absolute;
+    top: 108.49px;
+    left: 672.01px;
+    border-right: 1px solid #000;
+    box-sizing: border-box;
+    width: 1px;
+    height: 853px;
+}
+.signUpItem {
+    position: absolute;
+    top: 129px;
+    left: 786px;
+    border-radius: 15px;
+    background-color: #04124b;
+    border: 1px solid #04124b;
+    box-sizing: border-box;
+    width: 541px;
+    height: 79.4px;
+}
+.createAnAccount {
+    position: absolute;
+    top: 143px;
+    left: 865px;
+    font-size: 30px;
+    display: flex;
+    color: #fff;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    width: 383.1px;
+    height: 52px;
+}
+.textInputChild {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0%;
+    right: 0%;
+    bottom: 0%;
+    left: 0%;
+    border-radius: 15px;
+    background-color: #fff;
+    border: 2px solid #04124b;
+    box-sizing: border-box;
+}
+.firstName {
+    position: absolute;
+    height: 71.23%;
+    width: 64.54%;
+    top: 15.07%;
+    left: 3.19%;
+    display: flex;
+    align-items: center;
+}
+.textInput {
+    position: absolute;
+    top: 312px;
+    left: 805px;
+    width: 502px;
+    height: 73px;
+}
+.textInput1 {
+    position: absolute;
+    top: 639px;
+    left: 805px;
+    width: 502px;
+    height: 73px;
+}
+.textInput2 {
+    position: absolute;
+    top: 530px;
+    left: 805px;
+    width: 502px;
+    height: 73px;
+}
+.textInput3 {
+    position: absolute;
+    top: 421px;
+    left: 805px;
+    width: 502px;
+    height: 73px;
+}
+.createEvaluationButtonChild {
+    position: absolute;
+    height: 98.33%;
+    width: 100%;
+    top: 0%;
+    right: 0%;
+    bottom: 1.67%;
+    left: 0%;
+    border-radius: 15px;
+    background-color: #04124b;
+    border: 1px solid #04124b;
+    box-sizing: border-box;
+}
+.createEvaluation {
+    position: absolute;
+    height: 98.33%;
+    width: 89.31%;
+    top: 1.67%;
+    left: 5.51%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.createEvaluationButton {
+    position: absolute;
+    top: 748px;
+    left: 875px;
+    width: 363px;
+    height: 60px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 30px;
+    color: #fcf9f7;
+}
+.pleaseEnterThe {
+    position: absolute;
+    top: 246px;
+    left: 829px;
+    font-size: 25px;
+}
+.backIcon {
+    position: absolute;
+    top: 9px;
+    left: 0px;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    cursor: pointer;
+}
+.signUp {
+    width: 100%;
+    position: relative;
+    background-color: #fcf9f7;
+    height: 1024px;
+    overflow: hidden;
+    text-align: center;
+    font-size: 20px;
+    color: #04124b;
+    font-family: 'Inria Serif';
+}
+
