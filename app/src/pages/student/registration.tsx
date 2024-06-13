@@ -1,10 +1,10 @@
-// Instructor Registration
-// src/pages/instructor/registration.tsx
+// Student Registration
+// src/pages/student/registration.tsx
 
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import styles from '../../styles/instructor-register.module.css';
+import styles from '../../styles/student-register.module.css';
 
 const SignUp: NextPage = () => {
     const [firstName, setFirstName] = useState('');
@@ -12,6 +12,7 @@ const SignUp: NextPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [institution, setInstitution] = useState('');
     const router = useRouter();
   
     const handleSignUpClick = async () => {
@@ -29,7 +30,7 @@ const SignUp: NextPage = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ firstName, lastName, email, password,role: 'instructor' })
+                body: JSON.stringify({ firstName, lastName, email, password, role: 'students', institution })
             });
 
             if (response.ok) {
@@ -43,10 +44,10 @@ const SignUp: NextPage = () => {
         }
     };
 
-    const handleBackClick = () => {
+    const handleLoginClick = () => {
         // Redirect user to login page
-        router.push('/instructor/login');
-      };
+        router.push('/student/login');
+    }
     
     return (
       <div className={styles.signUp}>
@@ -100,11 +101,23 @@ const SignUp: NextPage = () => {
           className={styles.textInputChild}
         />
         </div>
+        <div className={`${styles.textInput}`} style={{ top: '550px' }}>
+        <input
+          type="institution"
+          placeholder="Institution"
+          value={institution}
+          onChange={(e) => setInstitution(e.target.value)}
+          className={styles.textInputChild}
+        />
+        </div>
         <button className={styles.createEvaluationButton} onClick={handleSignUpClick}>
         <div className={styles.createEvaluationButtonChild}>Sign Up</div>
         </button>
         <p className={styles.pleaseEnterThe}>Please enter the following information:</p>
-        <img className={styles.backIcon} alt="Back" src="/images/Back-Arrow.png" onClick={handleBackClick}/>
+        <div className={styles.loginPrompt}>
+            <span className={styles.loginText}>Already have an account?<br/></span>
+            <span className={styles.loginLink} onClick={handleLoginClick}>Login</span>
+        </div>
       </div>
     );
     };
