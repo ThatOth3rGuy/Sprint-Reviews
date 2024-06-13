@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import styles from '../styles/index.module.css'; // Assuming you have or will create a CSS module for styling
+import styles from '../styles/landing.module.css';
 
 export default function Page() {
   return (
