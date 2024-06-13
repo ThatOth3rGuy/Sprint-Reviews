@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 //TODO: import RegisterToCoursePopUp from "../components/register-to-course-pop-up";
 //TODO:  import PortalPopup from "../components/portal-popup";
 //TODO: import ProfileOptions from "../components/profile-options";
-import styles from "./index.module.css";
+import styles from "../../styles/index.module.css";
 
 interface State {
   isRegisterToCoursePopUpOpen: boolean;
