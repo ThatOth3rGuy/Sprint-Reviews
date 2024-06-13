@@ -2,6 +2,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styles from '../../styles/instructor-register.module.css';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const SignUp: NextPage = () => {
     const [firstName, setFirstName] = useState('');
@@ -10,6 +11,9 @@ const SignUp: NextPage = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const router = useRouter();
+    
+
+    
   
     const handleSignUpClick = async () => {
         // Reference any additional necessary authentification logic here
