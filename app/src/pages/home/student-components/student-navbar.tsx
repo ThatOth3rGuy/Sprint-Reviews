@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
-import { useCallback } from "react";
 import Link from "next/link";
 import style from "../../../styles/student-components.module.css";
+
 
 //TODO: Add logo and images per button
 
@@ -20,10 +20,11 @@ const StudentNavbar: NextPage = () => {
       <div className={style.navButton}>
         <Link href="#">Settings</Link>
       </div>
-      <div className={style.navButton}>
-        <Link href="#">Logout</Link>
+      <div className={style.logoutWrapper}>
+        <div className={style.navButton}>
+          <Link href="#">Logout</Link>
+        </div>
       </div>
-      
     </nav>
   );
 };
