@@ -1,0 +1,22 @@
+# Step 1: Use the official Node.js 16 image as the base image
+FROM node:latest
+
+# Step 2: Set the working directory inside the container
+WORKDIR /app
+
+# Step 3: Copy package.json and package-lock.json
+COPY ./test/package*.json ./
+
+# Step 4: Install dependencies
+RUN npm install jest pg
+RUN npm install
+
+# Step 5: Copy the test directory and any necessary application code into the container
+COPY ./test ./
+COPY . .
+
+# Step 6: Expose the port your app runs on (optional, depends on your app)
+EXPOSE 3000
+
+# Step 7: Command to run Jest tests
+CMD ["npm", "test"]

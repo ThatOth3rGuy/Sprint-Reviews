@@ -1,0 +1,21 @@
+FROM node:latest
+
+WORKDIR /app
+
+# Update package list and install system dependencies for Playwright
+
+
+# Copy only package.json initially to leverage Docker cache
+COPY ./app/test/package*.json ./
+
+# Install Playwright as a local dependency
+RUN npm install playwright
+
+# Now copy the rest of the test scripts
+# COPY ./app/test ./app/test
+
+# Install necessary browsers
+RUN npx playwright install --with-deps chromium
+
+# Run tests (adjust command as needed)
+CMD ["npx", "playwright", "test"]
