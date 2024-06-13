@@ -89,6 +89,7 @@
     border: 1px solid #FCF9F7;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow */
+    cursor: pointer;
   }
   
   .createEvaluationButtonChild {
