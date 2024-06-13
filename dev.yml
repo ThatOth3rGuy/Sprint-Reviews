@@ -33,7 +33,6 @@ services:
       - my_network
     working_dir: /test
     
-
   db:
     image: mysql:latest
     environment:
