@@ -8,7 +8,7 @@ export default function Page() {
       <header className={styles.roleButton}>Select Your Role</header>
       <Image 
         className={styles.image} 
-        src="/sprintrunner.png" 
+        src="/Logo.png" 
         alt="SprintRunners Logo"
         width={363}
         height={330}
