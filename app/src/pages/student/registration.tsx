@@ -25,7 +25,7 @@ const SignUp: NextPage = () => {
         }
 
         try {
-            const response = await fetch('/api/addUser', {
+            const response = await fetch('/api/addStudent', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -34,7 +34,7 @@ const SignUp: NextPage = () => {
             });
 
             if (response.ok) {
-                router.push('/instructor/login');
+                router.push('/student/login');
             } else {
                 const errorData = await response.json();
                 alert(errorData.error);

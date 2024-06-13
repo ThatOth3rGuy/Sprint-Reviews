@@ -13,7 +13,7 @@ const SignUp: NextPage = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const router = useRouter();
-  
+
     const handleSignUpClick = async () => {
         // Reference any additional necessary authentification logic here
 
@@ -24,12 +24,12 @@ const SignUp: NextPage = () => {
         }
 
         try {
-            const response = await fetch('/api/addUser', {
+            const response = await fetch('/api/addInstructor', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ firstName, lastName, email, password,role: 'instructor' })
+                body: JSON.stringify({ firstName, lastName, email, password, role: 'instructor' })
             });
 
             if (response.ok) {

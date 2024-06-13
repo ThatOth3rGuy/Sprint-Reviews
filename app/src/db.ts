@@ -21,13 +21,26 @@ export async function query(sql: string, values: any[] = []) {
   }
 }
 
-export async function addUserToDatabase(firstName: string, lastName: string, email: string, password: string, role: string) {
+export async function addInstructorToDatabase(firstName: string, lastName: string, email: string, password: string, role: string) {
   const sql = `
-    INSERT INTO user (firstName, lastName, email, password, role)
+    INSERT INTO user (firstName, lastName, email, pwd, userRole)
     VALUES (?, ?, ?, ?, ?)
   `;
   try {
     await query(sql, [firstName, lastName, email, password, role]);
+  } catch (error) {
+    console.error('Error in addUserToDatabase:', error); // Log the error
+    throw error;
+  }
+}
+
+export async function addStudentToDatabase(firstName: string, lastName: string, email: string, password: string, role: string, institution: string) {
+  const sql = `
+    INSERT INTO user (firstName, lastName, email, pwd, userRole, institution)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
+  try {
+    await query(sql, [firstName, lastName, email, password, role, institution]);
   } catch (error) {
     console.error('Error in addUserToDatabase:', error); // Log the error
     throw error;
