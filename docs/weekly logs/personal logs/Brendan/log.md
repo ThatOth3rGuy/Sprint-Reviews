@@ -379,7 +379,7 @@
 #
 ## Friday - June 14, 2024
 **Timesheet Tracking (Wednesday & Thursday)**
-* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_06_12_2024-06_014_2024.pdf)
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_06_12_2024-06_14_2024.pdf)
 ### Cycle Review
     From Wednesday to Friday's Meeting, there was a ton of things to complete for our presentation. We managed to get nearly all of it complete, and I put in significant amount of hours (mostly losing sleep) between Wednesdays meeting and Friday. I spent nearly all my time working on ensuring the dev containers run  and everything is testable. After many many hours some tests finally passed post integration. I believe we are on a good pace, though with much still to do we all know whats expected. I will continue to manage the workflow boards and task breakdowns, but the goal for the next cycle is to hit the ground running with features. We should get tests and everything set. I hope our demo goes well.
 
