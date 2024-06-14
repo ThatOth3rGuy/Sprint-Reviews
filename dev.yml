@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
   app:
@@ -16,22 +16,23 @@ services:
       - ./app/public:/app/public
     restart: always
     ports:
-      - "3001:3000"
+      - "3000:3000"
     networks:
       - my_network
   
-  playwright-tests:
-    container_name: playwright-tests
+  playwright:
     build:
-      context: .
-      dockerfile: ./test/Dockerfile # Ensure you have a Dockerfile for Playwright setup
+      context: ./app/server-test
+      dockerfile: Dockerfile.playwright # Ensure you have a Dockerfile for Playwright setup
     volumes:
-      - ./test:/tests # Assuming your tests are in the ./test directory
+      - ./app/server-test:/app/server-test # Mount the test directory to /app/tests in the container
     depends_on:
+      - db
       - app
     networks:
       - my_network
-    working_dir: /test
+    working_dir: /app
+    # command: /bin/sh -c "npm run dev && npx playwright test"
     
   db:
     image: mysql:latest
@@ -44,6 +45,27 @@ services:
     networks:
       - my_network
 
+  jest:
+    build:
+      context: ./app/server-test
+      dockerfile: Dockerfile.jest # Ensure you have a Dockerfile for Jest setup
+    volumes:
+      - ./app/server-test:/app # Mount the test directory to /test in the container
+    depends_on:
+      - app
+      - db
+    networks:
+      - my_network
+    working_dir: /app
+    command: npm run test:jest
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=SprintRunners
+      - MYSQL_DATABASE=mydb
+    
+
+# Define a volume, which is a directory that is stored outside of the container's filesystem
 volumes:
   db_data:
   # Add more containers below OUR DB BUILD***
