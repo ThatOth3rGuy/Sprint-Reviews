@@ -376,4 +376,67 @@
     </tr>
 </table>
 
-[definitionFilePath]: ../../../../../../../Downloads/Clockify_Time_Report_Detailed_06_07_2024-06_09_2024.pdf
+#
+## Friday - June 14, 2024
+**Timesheet Tracking (Wednesday & Thursday)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_06_12_2024-06_014_2024.pdf)
+### Cycle Review
+    From Wednesday to Friday's Meeting, there was a ton of things to complete for our presentation. We managed to get nearly all of it complete, and I put in significant amount of hours (mostly losing sleep) between Wednesdays meeting and Friday. I spent nearly all my time working on ensuring the dev containers run  and everything is testable. After many many hours some tests finally passed post integration. I believe we are on a good pace, though with much still to do we all know whats expected. I will continue to manage the workflow boards and task breakdowns, but the goal for the next cycle is to hit the ground running with features. We should get tests and everything set. I hope our demo goes well.
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Setup Docker Compose for DB, Drone, App, and Tests for integrated Testing
+  * #3: Fix Bugs in Test Frameworks (Unit and E2E Testing)
+  * #4: Reverse Proxy Setup and Test (Simple Redirects vs Proxy API)
+  * #5: Test Database (Get tests to properly pass)
+  * #6: Mini-Presentation Setup
+
+### Progress Update: Mon-Wed
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Setup Docker Compose for App Feature Integration
+        </td>
+        <!-- Status -->
+        <td>Complete*
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Fix Bugs In Test Framework/Automated Testing
+        </td>
+        <!-- Status -->
+        <td>In Progress <\Partially Complete\>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Test Feature Components and DB Function
+        </td>
+        <!-- Status -->
+        <td>Complete*
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Mini-Presentation Setup
+        </td>
+        <!-- Status -->
+        <td>In Progress <\Complete as of 11:30PM Thursday\>
+        </td>
+    </tr>
+</table>
