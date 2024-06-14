@@ -1,5 +1,10 @@
-import type { AppProps } from 'next/app'
- 
+import type { AppProps } from 'next/app';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
 export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  return (
+    <GoogleOAuthProvider clientId="840904295882-mu21shj3dc5lk519961jndun8pkiao0p.apps.googleusercontent.com">
+      <Component {...pageProps} />
+    </GoogleOAuthProvider>
+  );
 }
