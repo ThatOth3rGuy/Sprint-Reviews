@@ -22,7 +22,27 @@ Topics Covered:
 * There were quite a bit of issues with setting up the testing framework as well so Brendan is taking over that aspect
 * I was able to get some of the navbar setup for the dashboard but I still have quite a few components to make before it can be called complete
 
-### 06/12/2024
+### 06/13/2024
+
+Topics Covered:
+* updates on feature status
+* debugged testing issues
+* presentation part split between 4 members
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Create Presentation | 06/13/2024 | Complete |
+| Work on dynamic aspect of navigation | 06/16/2024 | Not Started |
+| Build more student and instructor pages | 06/16/2024 | Not Started |
+
+#### Cycle Review From last meeting
+
+* I was able to get a basic navbar and page header component built for student and instructor, and I was also able to get a very basic dashboard setup with these components
+* We had a meeting today for discussing features and trying to solve our testing automation issue, we also did our integration and pull requests during our meeting
+
+#### Upcoming Cycle Goals
+
+* I want to have a dynamic header page for all users and I want to have at least two separate pages built by our Monday meeting
 
 ### 06/14/2024
 
