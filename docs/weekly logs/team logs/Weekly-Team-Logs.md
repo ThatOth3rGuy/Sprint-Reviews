@@ -3,6 +3,49 @@
 # Weekly Team Logs
 
 ## Week 5 
+## June 12(Wed) - June 14(Fri)
+
+### Features in the Project Plan Cycle: 
+
+- F1: Reverse Proxy for Student/Instructor pages
+- F2: Login & Registration with authentication through the database 
+- F3 : Static dashboard view with working buttons for non-existent pages
+
+### Associated Tasks from Project Board:
+
+![week5-done](./Images/FeatureTracker.png)
+
+
+### Tasks for Next Cycle:
+
+![week5-done](./Images/NextCycleW5.png)
+
+
+### Burn-up Chart (Velocity):
+![week5-done](./Images/w513062024.png)
+
+### Times for Team/Individual:
+
+![week5-done](./Images/FeatureTracker.png)
+Clockify Times:
+
+![week5-done](./Images/clokify_individual_times.png)
+
+### Completed Tasks:
+
+![week5-done](./Images/DoneItems.png)
+
+### In Progress Tasks/ To do:
+
+![week5-done](./Images/InProgress.png)
+
+### Test Report / Testing Status:
+
+![week5-done](./Images/testLogsW5.png)
+
+### Overview:
+
+The team has primarily focused on the three features due on June 14th. Additionally, we have been actively working to establish our CI and testing, which initially presented a roadblock but is now being set up.
 
 ## June 7(Fri) - June 12(Wed) 
 
@@ -10,7 +53,7 @@
 
 -  Feature 1:Choose your role/Reverse Proxy with Frontend and UX
 -  Feature 2:Registration and Login Save to Database, the data is stored correctly and displays data correctly
--  Feature 3:Connection Auth API to System and is able to authenticate users
+-  Feature 3:Connection Auth API to System and can authenticate users
 
 ### Tasks from Project Board:
 
@@ -39,70 +82,7 @@ Clockify Times: ![Team Clockify Pie Chart](./Images/Clockify5.1%20pie.png)
 
 ### Overview : We have begun the development phase of the project and are working towards delivering the MVP and 3 features of our app by  the end of the next cycle. We are working on building webiste pages and proper setup and integration of APIs and database. To be prepare for our mini presentation on Friday.
 
-## June 12(Wed) - June 14(Fri)-TBA
 
-### Features in the Project Plan Cycle: TBA
-
-- [Feature 1]
-- [Feature 2]
-- [Feature 3]
-- [Feature 4]
-- [Feature 5]
-
-### Associated Tasks from Project Board:
-
-| Task  | Description        | Feature   | Assigned To | Status   |
-| ------- | ------------------ | --------- | ----------- | -------- |
-| 1   | [Task Description] | [Feature] | [Assignee]  | [Status] |
-| 2  | [Task Description] | [Feature] | [Assignee]  | [Status] |
-
-### Alternatively, include image of the project board with tasks and status:
-
-### Tasks for Next Cycle:
-
-| Task | Description        | Estimated Time (hrs) | Assigned To |
-| ------- | ------------------ | -------------------- | ----------- |
-| 1   | [Task Description] | [Estimated Time]     | [Assignee]  |
-| 2  | [Task Description] | [Estimated Time]     | [Assignee]  |
-
-### Alternatively, include image of the project board with tasks and status:
-
-### Burn-up Chart (Velocity):
-
-
-### Times for Team/Individual:
-
-| Team Member | Logged Hours |
-| ----------- | ------------ |
-| [Name]      | [Hours]      |
-| [Name]      | [Hours]      |
-| [Name]      | [Hours]      |
-
-Clockify Times:
-
-
-
-### Completed Tasks:
-
-| Task ID | Description        | Completed By |
-| ------- | ------------------ | ------------ |
-| [#ID]   | [Task Description] | [Assignee]   |
-| [#ID]   | [Task Description] | [Assignee]   |
-
-### In Progress Tasks/ To do:
-
-| Task ID | Description        | Assigned To |
-| ------- | ------------------ | ----------- |
-| [#ID]   | [Task Description] | [Assignee]  |
-| [#ID]   | [Task Description] | [Assignee]  |
-
-### Test Report / Testing Status:
-
-N/A
-
-### Overview:
-
-The team focused on [Summary of work done]. The Kanban Board has been populated with user stories and tasks, milestones have been added, and the dashboard visuals creation has been completed. The next cycle will focus on [Tasks for the next cycle]
 
 ## Week 4 
 
@@ -230,3 +210,74 @@ Clockify Times:
 ### Overview:
 
 The team focused on reviewing the system designs and UI designs in the project propsal document as well as working on the design proposal video. The Kanban Board has been populated with user stories and tasks, milestones have been added, and the dashboard visuals creation has been completed. The next cycle will focus on deployment of code and delivering the MVP.
+
+
+
+--------------------------------------
+
+# Template:
+## June 12(Wed) - June 14(Fri)-TBA
+
+### Features in the Project Plan Cycle: TBA
+
+- [Feature 1]
+- [Feature 2]
+- [Feature 3]
+- [Feature 4]
+- [Feature 5]
+
+### Associated Tasks from Project Board:
+
+| Task  | Description        | Feature   | Assigned To | Status   |
+| ------- | ------------------ | --------- | ----------- | -------- |
+| 1   | [Task Description] | [Feature] | [Assignee]  | [Status] |
+| 2  | [Task Description] | [Feature] | [Assignee]  | [Status] |
+
+### Alternatively, include image of the project board with tasks and status:
+
+### Tasks for Next Cycle:
+
+| Task | Description        | Estimated Time (hrs) | Assigned To |
+| ------- | ------------------ | -------------------- | ----------- |
+| 1   | [Task Description] | [Estimated Time]     | [Assignee]  |
+| 2  | [Task Description] | [Estimated Time]     | [Assignee]  |
+
+### Alternatively, include image of the project board with tasks and status:
+
+### Burn-up Chart (Velocity):
+
+
+### Times for Team/Individual:
+
+| Team Member | Logged Hours |
+| ----------- | ------------ |
+| [Name]      | [Hours]      |
+| [Name]      | [Hours]      |
+| [Name]      | [Hours]      |
+
+Clockify Times:
+
+
+
+### Completed Tasks:
+
+| Task ID | Description        | Completed By |
+| ------- | ------------------ | ------------ |
+| [#ID]   | [Task Description] | [Assignee]   |
+| [#ID]   | [Task Description] | [Assignee]   |
+
+### In Progress Tasks/ To do:
+
+| Task ID | Description        | Assigned To |
+| ------- | ------------------ | ----------- |
+| [#ID]   | [Task Description] | [Assignee]  |
+| [#ID]   | [Task Description] | [Assignee]  |
+
+### Test Report / Testing Status:
+
+N/A
+
+### Overview:
+
+The team focused on [Summary of work done]. The Kanban Board has been populated with user stories and tasks, milestones have been added, and the dashboard visuals creation has been completed. The next cycle will focus on [Tasks for the next cycle]
+
