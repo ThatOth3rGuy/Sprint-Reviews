@@ -88,6 +88,54 @@ At this point, design is finished and we're focused on finishing 3 features by F
     </tr>
 </table>
 
+## Wednesday - June 12, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%205.2.png)
+
+### Cycle Review
+
+Not much to talk about during this cycle meeting. We just need to get to work to finish the 3 features by Friday and try our best to have the testing set up so we can test the features by then too.
+
+### Current Tasks
+  * #1: Create landing page
+  * #2: Create registration pages
+  * #3: Help finish the login pages
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create Landing Page
+        </td>
+        <!-- Status -->
+        <td>Done
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create registration pages
+        </td>
+        <!-- Status -->
+        <td>Done
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Finish login pages
+        </td>
+        <!-- Status -->
+        <td>Done
+        </td>
+    </tr>
+</table>
+
 # Week 4
 ## Monday - June 3, 2024
 
