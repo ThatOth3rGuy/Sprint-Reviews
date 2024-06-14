@@ -9,11 +9,6 @@ const InstructorLogin: NextPage = () => {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleSignUpClick = async () => {
-    // Redirect to the instructor dashboard
-    router.push('/instructor/registration');
-  }
-
   const handleSignInClick = async () => {
     setError('');
 
@@ -27,7 +22,6 @@ const InstructorLogin: NextPage = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
         // Redirect to the instructor dashboard
         router.push('/instructor/dashboard');
       } else {
@@ -69,7 +63,7 @@ const InstructorLogin: NextPage = () => {
       <div className={styles.forgotPassword}>I Forgot My Password</div>
       <div className={styles.signUpPrompt}>
         <span className={styles.signUpText}>Don’t have an account yet?<br/></span>
-        <span className={styles.signUpLink} onClick={handleSignUpClick}>Sign up</span>
+        <span className={styles.signUpLink} onClick={handleSignInClick}>Sign up</span>
       </div>
       <div className={styles.signInButton} onClick={handleSignInClick}>
         <div className={styles.signInText}>Sign In</div>
