@@ -9,6 +9,11 @@ const StudentLogin: NextPage = () => {
   const [error, setError] = useState('');
   const router = useRouter();
 
+  const handleBackClick = async () => {
+    // Redirect to the landing page
+    router.push('/');
+  }
+
   const handleSignUpClick = async () => {
     // Redirect to the instructor dashboard
     router.push('/student/registration');
@@ -73,6 +78,7 @@ const StudentLogin: NextPage = () => {
       <div className={styles.signInButton}>
         <div className={styles.signInText} onClick={handleSignInClick}>Sign In</div>
       </div>
+      <img className={styles.backIcon} alt="Back" src="/images/Back-Arrow.png" onClick={handleBackClick}/>
     </div>
   );
 };

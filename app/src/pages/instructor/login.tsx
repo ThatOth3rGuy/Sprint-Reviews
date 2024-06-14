@@ -9,6 +9,12 @@ const InstructorLogin: NextPage = () => {
   const [error, setError] = useState('');
   const router = useRouter();
 
+
+  const handleBackClick = async () => {
+    // Redirect to the landing page
+    router.push('/');
+  }
+
   const handleSignUpClick = async () => {
     // Redirect to the instructor dashboard
     router.push('/instructor/registration');
@@ -73,6 +79,7 @@ const InstructorLogin: NextPage = () => {
       <div className={styles.signInButton} onClick={handleSignInClick}>
         <div className={styles.signInText}>Sign In</div>
       </div>
+      <img className={styles.backIcon} alt="Back" src="/images/Back-Arrow.png" onClick={handleBackClick}/>
       {error && <div className={styles.error}>{error}</div>}
     </div>
   );

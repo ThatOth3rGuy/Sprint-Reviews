@@ -150,3 +150,14 @@
     font-family: 'Inria Serif', serif;
     font-weight: bold;
   }
+
+  .backIcon {
+    position: absolute;
+    top: 9px;
+    left: 0px;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    cursor: pointer;
+  }
+  
