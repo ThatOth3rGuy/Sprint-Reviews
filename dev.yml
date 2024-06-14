@@ -16,7 +16,7 @@ services:
       - ./app/public:/app/public
     restart: always
     ports:
-      - 3001:3000
+      - "3001:3000"
     networks:
       - my_network
   
@@ -33,7 +33,24 @@ services:
       - my_network
     working_dir: /test
     
+  db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=SprintRunners
+      - MYSQL_DATABASE=mydb
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - my_network
 
+volumes:
+  db_data:
+  # Add more containers below OUR DB BUILD***
+
+
+# Define a network, which allows containers to communicate
+# with each other, by using their container name as a hostname
 networks:
   my_network:
     external: true
