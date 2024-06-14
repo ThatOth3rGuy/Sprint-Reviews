@@ -21,6 +21,7 @@ export async function query(sql: string, values: any[] = []) {
   }
 }
 
+
 export async function addInstructorToDatabase(firstName: string, lastName: string, email: string, password: string, role: string) {
   const sql = `
     INSERT INTO user (firstName, lastName, email, pwd, userRole)
