@@ -25,7 +25,7 @@ First, run the development server:
 
 docker network create my_network
 
-# Build dev
+# Build dev here
 docker compose -f dev.yml build 
 # IF YOU WISH TO BUILD BOTH THE DEV AND TEST CONTAINERS
 # Otherwise:
