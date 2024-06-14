@@ -6,10 +6,39 @@ import { useState } from 'react';
 const InstructorLogin: NextPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleSignUpClick = () => {
-    router.push('/student');
+  const handleSignUpClick = async () => {
+    // Redirect to the instructor dashboard
+    router.push('/instructor/registration');
+  }
+
+  const handleSignInClick = async () => {
+    setError('');
+
+    try {
+      const response = await fetch('/api/auth/instructorLogin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Redirect to the instructor dashboard
+        router.push('/instructor/dashboard');
+      } else {
+        // Handle error response
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to authenticate');
+      }
+    } catch (error) {
+      // Handle network or other errors
+      setError('An error occurred. Please try again.');
+    }
   };
 
   return (
@@ -42,9 +71,10 @@ const InstructorLogin: NextPage = () => {
         <span className={styles.signUpText}>Don’t have an account yet?<br/></span>
         <span className={styles.signUpLink} onClick={handleSignUpClick}>Sign up</span>
       </div>
-      <div className={styles.signInButton}>
+      <div className={styles.signInButton} onClick={handleSignInClick}>
         <div className={styles.signInText}>Sign In</div>
       </div>
+      {error && <div className={styles.error}>{error}</div>}
     </div>
   );
 };
