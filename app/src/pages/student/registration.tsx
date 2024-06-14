@@ -30,7 +30,7 @@ const SignUp: NextPage = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ firstName, lastName, email, password, role: 'students', institution })
+                body: JSON.stringify({ firstName, lastName, email, password, role: 'student', institution })
             });
 
             if (response.ok) {
