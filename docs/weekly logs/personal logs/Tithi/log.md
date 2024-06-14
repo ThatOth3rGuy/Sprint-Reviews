@@ -1,92 +1,32 @@
-# Personal Log For Week 1 and Week 2
+# Weekly Personal Logs
 
-## Week 1
+## Personal Log For Week 5
 
-This week is an introduction week. For this week, we discussed the format of the course, made our teams, and discussed project options.
-
-## Week 2
-
-### 05/19/24
+### 06/10/2024
 
 Topics Covered:
 
-* did team introduction
-* decided which order of projects we wanted to do
-* decided team name
-
-### 05/22/2024
-
-Topics Covered:
-
-* met in person and discussed github integration with MS Teams for activity tracking and PR's
-
-### 05/24/2024
-
-Topics Covered:
-
-* discussed project proposal and how to split it up between each team member
-
-*Action Items*
-| Task | Due By | Status |
-| ------- | ------- | ------- |
-| All Requirements and sub tasks section of proposal document| 05/27/2024 | Complete |
-
----
-
-# Personal Log For Week 3
-
-### 05/27/24
-
-Topics Covered:
-
-* proposal video- how we will record and who will speak in which part
-* assumption/risks portion of proposal
-* reviewed current version of proposal document and discussed any changes that needed to be added
-* discussed tech stack options: which backend framework to use with React.js, which API's we might want to use
-
-*Action Items*
+* automating tests to run with docker
+* having 5 key pages made: login for both student and instructor, dashboards, landing page, authentication setup
 
 | Task | Due By | Status |
 | ------- | ------- | ------- |
-| Record video for my portion of the proposal | 05/28/2024 | Complete |
-| Edit proposal document | 05/28/2024 | Complete |
-| Create presentation | 05/28/2024 | Complete |
+| Make student and instructor dashboards | 06/12/2024 | Complete |
+| Forgot password functionality research | 06/12/2024 | Complete |
 
-### 05/29/2024
+![week 4 time tracking](img/week4.png)
 
-Topics Covered:
+#### Weekly Cycle Review
 
-* reviewed project video- decided to rerecord my section of the video due to sound issues
-* reviewed assumptions and risks section
-* talked about some minor things to update on the tech stack
-* discussed how cyclic meetings would proceed moving forward with the design and development phase
+* Eric and I had some issues setting up the database, it was creating a docker container but the connection was not being made with the framework
+* There were quite a bit of issues with setting up the testing framework as well so Brendan is taking over that aspect
+* I was able to get some of the navbar setup for the dashboard but I still have quite a few components to make before it can be called complete
 
-*Action Items*
+### 06/12/2024
 
-| Task | Due By | Status |
-| ------- | ------- | ------- |
-| Rerecord functional requirements part of video | 05/29/2024 | Complete |
-| Install docker and npm | 06/01/2024 | Complete |
-| Make design demo | 05/31/2024 | Complete |
-| Create personal logs section on github | 05/31/2024 | Complete |
-| Write weekly log | 05/31/2024 | Complete |
+### 06/14/2024
 
-### 05/31/2024
-
-Topics Covered:
-
-* reviewed dfd diagrams, er diagrams, system architecture, wireframe, and basic UI design and discussed any changes we wanted to add
-* decided monday meeting time and location for task updates
-
-*Action Items*
-
-| Task | Due By | Status |
-| ------- | ------- | ------- |
-| Complete detailed UI design | 06/05/2024 | WIP |
-
----
-
-# Personal Log For Week 4
+## Personal Log For Week 4
 
 ### 06/03/24
 
@@ -142,28 +82,90 @@ Topics Covered:
 | Record UI walkthrough | 06/07/2024 | Complete |
 | Setup database and tests with Eric | 06/10/2024 | Complete |
 
-# Personal Log For Week 5
+---
 
-### 06/10/2024
+## Personal Log For Week 3
+
+### 05/27/24
 
 Topics Covered:
 
-* automating tests to run with docker
-* having 5 key pages made: login for both student and instructor, dashboards, landing page, authentication setup
+* proposal video- how we will record and who will speak in which part
+* assumption/risks portion of proposal
+* reviewed current version of proposal document and discussed any changes that needed to be added
+* discussed tech stack options: which backend framework to use with React.js, which API's we might want to use
+
+*Action Items*
 
 | Task | Due By | Status |
 | ------- | ------- | ------- |
-| Make student and instructor dashboards | 06/12/2024 | Complete |
-| Forgot password functionality research | 06/12/2024 | Complete |
+| Record video for my portion of the proposal | 05/28/2024 | Complete |
+| Edit proposal document | 05/28/2024 | Complete |
+| Create presentation | 05/28/2024 | Complete |
 
-![week 4 time tracking](img/week4.png)
+### 05/29/2024
 
-#### Weekly Cycle Review
+Topics Covered:
 
-* Eric and I had some issues setting up the database, it was creating a docker container but the connection was not being made with the framework
-* There were quite a bit of issues with setting up the testing framework as well so Brendan is taking over that aspect
-* I was able to get some of the navbar setup for the dashboard but I still have quite a few components to make before it can be called complete
+* reviewed project video- decided to rerecord my section of the video due to sound issues
+* reviewed assumptions and risks section
+* talked about some minor things to update on the tech stack
+* discussed how cyclic meetings would proceed moving forward with the design and development phase
 
-### 06/12/2024
+*Action Items*
 
-### 06/14/2024
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Rerecord functional requirements part of video | 05/29/2024 | Complete |
+| Install docker and npm | 06/01/2024 | Complete |
+| Make design demo | 05/31/2024 | Complete |
+| Create personal logs section on github | 05/31/2024 | Complete |
+| Write weekly log | 05/31/2024 | Complete |
+
+### 05/31/2024
+
+Topics Covered:
+
+* reviewed dfd diagrams, er diagrams, system architecture, wireframe, and basic UI design and discussed any changes we wanted to add
+* decided monday meeting time and location for task updates
+
+*Action Items*
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Complete detailed UI design | 06/05/2024 | WIP |
+
+---
+
+## Personal Log For Week 2
+
+### 05/19/24
+
+Topics Covered:
+
+* did team introduction
+* decided which order of projects we wanted to do
+* decided team name
+
+### 05/22/2024
+
+Topics Covered:
+
+* met in person and discussed github integration with MS Teams for activity tracking and PR's
+
+### 05/24/2024
+
+Topics Covered:
+
+* discussed project proposal and how to split it up between each team member
+
+*Action Items*
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| All Requirements and sub tasks section of proposal document| 05/27/2024 | Complete |
+
+---
+
+## Personal Log For Week 1
+
+This week is an introduction week. For this week, we discussed the format of the course, made our teams, and discussed project options.
