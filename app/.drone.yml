@@ -1,0 +1,46 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: build_app
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: DOCKER_USERNAME
+    password:
+      from_secret: DOCKER_PASSWORD
+    repo: team-3-capstone-sprint-runners
+    tags: latest
+    dockerfile: ./app/Dockerfile
+    context: ./app
+
+- name: build_playwright_tests
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: DOCKER_USERNAME
+    password:
+      from_secret: DOCKER_PASSWORD
+    repo: team-3-capstone-sprint-runners
+    tags: playwright-tests
+    dockerfile: ./test/Dockerfile
+    context: ./test
+
+- name: test
+  image: team-3-capstone-sprint-runners:playwright-tests
+  commands:
+  - npm install
+  - npm run test
+
+services:
+- name: app
+  image: team-3-capstone-sprint-runners:latest
+  environment:
+    ENV_VARIABLE:
+      from_secret: ENV_VARIABLE
+    NEXT_PUBLIC_ENV_VARIABLE:
+      from_secret: NEXT_PUBLIC_ENV_VARIABLE
+  ports:
+  - host: 3001
+    container: 3000
