@@ -6,18 +6,18 @@ test.describe('Role selection page', () => {
   test('should redirect to the student page', async ({ page }) => {
     await page.goto(`${baseURL}`); // Navigate to the base URL
     await page.click('text=Student'); // Click on the "Student" button
-    await expect(page).toHaveURL(`${baseURL}/home/student`); // Check if redirected correctly
+    await expect(page).toHaveURL(`${baseURL}/student/login`); // Check if redirected correctly
   });
 
   test('should redirect to the instructor page', async ({ page }) => {
     await page.goto(`${baseURL}`); // Navigate to the base URL
     await page.click('text=Instructor'); // Click on the "Instructor" button
-    await expect(page).toHaveURL(`${baseURL}/home/instructor`); // Check if redirected correctly
+    await expect(page).toHaveURL(`${baseURL}/instructor/login`); // Check if redirected correctly
   });
 });
 
 test.describe('Student page content', () => {
-  const studentPageURL = 'http://localhost:3000/home/student'; // Adjust this URL as needed
+  const studentPageURL = 'http://localhost:3000/student/login'; // Adjust this URL as needed
 
   test('should display student page correctly', async ({ page }) => {
     await page.goto(studentPageURL); // Navigate to the student page
@@ -27,7 +27,7 @@ test.describe('Student page content', () => {
 });
 
 test.describe('Instructor page content', () => {
-  const instructorPageURL = 'http://localhost:3000/home/instructor'; // Adjust this URL as needed
+  const instructorPageURL = 'http://localhost:3000/instructor/login'; // Adjust this URL as needed
 
   test('should display instructor page correctly', async ({ page }) => {
     await page.goto(instructorPageURL); // Navigate to the instructor page
