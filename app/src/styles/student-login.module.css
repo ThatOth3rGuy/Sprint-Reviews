@@ -136,6 +136,7 @@
     border: 1px solid #737373;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow */
+    cursor: pointer;
   }
   
   .signInText {

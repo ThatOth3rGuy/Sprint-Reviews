@@ -59,3 +59,16 @@ export async function authenticateInstructor(email: string, password: string): P
     throw error;
   }
 }
+
+export async function authenticateStudent(email: string, password: string): Promise<boolean> {
+  const sql = `
+    SELECT * FROM user WHERE email = ? AND pwd = ? AND userRole = 'student'
+  `;
+  try {
+    const rows = await query(sql, [email, password]);
+    return rows.length > 0;
+  } catch (error) {
+    console.error('Error in authenticateStudent:', error); // Log the error
+    throw error;
+  }
+}
