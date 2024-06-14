@@ -52,7 +52,7 @@ This was the last week of planning, after this our focus is going to be coding a
 ## Monday - June 10, 2024
 
 ### Timesheet
-![Clockify Timesheet](./images/EricClockify%205.1.png)
+![Clockify Timesheet](./images/EricClockify%205.2.png)
 
 ### Cycle Review
 
@@ -88,10 +88,10 @@ At this point, design is finished and we're focused on finishing 3 features by F
     </tr>
 </table>
 
-## Wednesday - June 12, 2024
+## Wednesday - June 13, 2024
 
 ### Timesheet
-![Clockify Timesheet](./images/EricClockify%205.2.png)
+![Clockify Timesheet](./images/EricClockify%205.3.png)
 
 ### Cycle Review
 
