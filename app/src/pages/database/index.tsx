@@ -31,6 +31,7 @@ export default function Home() {
               <p>Email: {user.email}</p>
               <p>Role: {user.userRole}</p>
               <p>Institution: {user.institution}</p>
+              <p>Password: {user.pwd}</p>
             </div>
           </li>
         ))}
