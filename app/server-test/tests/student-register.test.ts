@@ -1,26 +1,26 @@
-import { chromium, Browser, Page } from 'playwright';
+import { test, expect, chromium, Browser, Page } from '@playwright/test';
 
 let browser: Browser;
 let page: Page;
 
-beforeAll(async () => {
+test.beforeAll(async () => {
   browser = await chromium.launch();
 });
 
-afterAll(async () => {
+test.afterAll(async () => {
   await browser.close();
 });
 
-beforeEach(async () => {
+test.beforeEach(async () => {
   page = await browser.newPage();
 });
 
-afterEach(async () => {
+test.afterEach(async () => {
   await page.close();
 });
 
 test('should register a new student and redirect to login page', async () => {
-  await page.goto('http://localhost:3000/instructor/registration');
+  await page.goto('http://localhost:3000/student/registration');
 
   // Fill all text inputs with test strings
   await page.fill('input[placeholder="First Name"]', 'Test');
@@ -37,5 +37,5 @@ test('should register a new student and redirect to login page', async () => {
   ]);
 
   // Expected result is to redirect to the login page
-  expect(page.url()).toBe('http://localhost:3000/instructor/login');
+  expect(page.url()).toBe('http://localhost:3000/student/login');
 });
