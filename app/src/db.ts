@@ -11,16 +11,15 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-export async function query(sql: string, values: any[] = []) {
+export async function query(sql: string, values: any[] = []): Promise<any[]> {
   try {
     const [rows] = await pool.execute(sql, values);
-    return rows;
+    return rows as any[];
   } catch (error) {
     console.error('Database query error:', error);
     throw error;
   }
 }
-
 
 export async function addInstructorToDatabase(firstName: string, lastName: string, email: string, password: string, role: string) {
   const sql = `
@@ -44,6 +43,32 @@ export async function addStudentToDatabase(firstName: string, lastName: string, 
     await query(sql, [firstName, lastName, email, password, role, institution]);
   } catch (error) {
     console.error('Error in addUserToDatabase:', error); // Log the error
+    throw error;
+  }
+}
+
+export async function authenticateInstructor(email: string, password: string): Promise<boolean> {
+  const sql = `
+    SELECT * FROM user WHERE email = ? AND pwd = ? AND userRole = 'instructor'
+  `;
+  try {
+    const rows = await query(sql, [email, password]);
+    return rows.length > 0;
+  } catch (error) {
+    console.error('Error in authenticateInstructor:', error); // Log the error
+    throw error;
+  }
+}
+
+export async function authenticateStudent(email: string, password: string): Promise<boolean> {
+  const sql = `
+    SELECT * FROM user WHERE email = ? AND pwd = ? AND userRole = 'student'
+  `;
+  try {
+    const rows = await query(sql, [email, password]);
+    return rows.length > 0;
+  } catch (error) {
+    console.error('Error in authenticateStudent:', error); // Log the error
     throw error;
   }
 }

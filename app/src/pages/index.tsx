@@ -9,12 +9,12 @@ const Landing: NextPage = () => {
 
   const handleStudentClick = () => {
     // Redirect user to login page
-    router.push('/student/registration');
+    router.push('/student/login');
   }
 
   const handleInstructorClick = () => {
     // Redirect user to login page
-    router.push('/instructor/registration');
+    router.push('/instructor/login');
   }
 
     return (
