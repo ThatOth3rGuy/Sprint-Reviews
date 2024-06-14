@@ -40,6 +40,8 @@ Topics Covered:
 * I was able to get a basic navbar and page header component built for student and instructor, and I was also able to get a very basic dashboard setup with these components
 * We had a meeting today for discussing features and trying to solve our testing automation issue, we also did our integration and pull requests during our meeting
 
+![week 5 time tracking](img/week5.2.png)
+
 #### Upcoming Cycle Goals
 
 * I want to have a dynamic header page for all users and I want to have at least two separate pages built by our Monday meeting
