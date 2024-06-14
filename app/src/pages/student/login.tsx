@@ -1,9 +1,9 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import styles from '../../styles/instructorLogin.module.css';
+import styles from '../../styles/student-login.module.css';
 import { useState } from 'react';
 
-const InstructorLogin: NextPage = () => {
+const StudentLogin: NextPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
@@ -17,7 +17,7 @@ const InstructorLogin: NextPage = () => {
       <img className={styles.img1} src="/images/Logo.png" alt="Logo" /> {/* Use relative path */}
       <div className={styles.horizontalLine}></div>
       <div className={styles.loginButton}>
-        <div className={styles.loginText}>Instructor Login</div>
+        <div className={styles.loginText}>Student Login</div>
       </div>
       <div className={styles.emailInput}>
         <input 
@@ -49,4 +49,6 @@ const InstructorLogin: NextPage = () => {
   );
 };
 
-export default InstructorLogin;
+export default StudentLogin;
+
+
