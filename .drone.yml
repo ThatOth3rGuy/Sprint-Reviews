@@ -3,8 +3,8 @@ type: docker
 name: default
 
 steps:
-- name: build_app
-  image: docker:dind
+- name: build_app  
+  image: node:latest
   volumes:
     - name: dockersock
       path: /var/run
@@ -12,7 +12,7 @@ steps:
     - docker build -f ./app/Dockerfile -t app:latest ./app
 
 - name: build_playwright_tests
-  image: docker:dind
+  image: node:latest
   volumes:
     - name: dockersock
       path: /var/run
