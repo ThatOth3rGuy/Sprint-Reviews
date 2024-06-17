@@ -2,54 +2,36 @@ kind: pipeline
 type: docker
 name: default
 
+steps:
+- name: build_app
+  image: docker:dind
+  volumes:
+    - name: dockersock
+      path: /var/run
+  commands:
+    - docker build -f ./app/Dockerfile -t app:latest ./app
+
+- name: build_playwright_tests
+  image: docker:dind
+  volumes:
+    - name: dockersock
+      path: /var/run
+  commands:
+    - docker build -f ./test/Dockerfile -t playwright-tests:latest .
+
+- name: run_tests
+  image: playwright-tests:latest
+  commands:
+    - npx playwright test
+
 services:
-  app:
-    image: docker:dind
-    build:
-      context: ./app
-      dockerfile: Dockerfile
-    volumes:
-      - ./app/src:/app/src
-      - ./app/public:/app/public
-      - name: dockersock
-        path: /var/run
-    ports:
-      - "3001:3000"
-    networks:
-      - my_network
-
-  playwright-tests:
-    image: docker:dind
-    build:
-      context: .
-      dockerfile: ./test/Dockerfile
-    volumes:
-      - ./test:/tests
-      - name: dockersock
-        path: /var/run
-    depends_on:
-      - app
-    networks:
-      - my_network
-    working_dir: /test
-
-  db:
-    image: mysql:latest
-    environment:
-      - MYSQL_ROOT_PASSWORD=SprintRunners
-      - MYSQL_DATABASE=mydb
-    volumes:
-      - db_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    networks:
-      - my_network
+- name: db
+  image: mysql:latest
+  environment:
+    - MYSQL_ROOT_PASSWORD=SprintRunners
+    - MYSQL_DATABASE=mydb
 
 volumes:
-  db_data:
-  dockersock:
-    host:
-      path: /var/run
-
-networks:
-  my_network:
-    external: true
+- name: dockersock
+  host:
+    path: /var/run
