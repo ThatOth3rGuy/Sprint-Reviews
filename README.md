@@ -1,3 +1,4 @@
+[![Build Status](https://droneci.ok.ubc.ca/api/badges/UBCO-COSC499-Summer-2024/team-3-capstone-sprint-runners/status.svg)](https://droneci.ok.ubc.ca/UBCO-COSC499-Summer-2024/team-3-capstone-sprint-runners)
 # With Docker Compose
 
 This example contains everything needed to get a Next.js development and production environment up and running with Docker Compose.
@@ -67,3 +68,7 @@ docker kill $(docker ps -aq) && docker rm $(docker ps -aq)
 # Free space
 docker system prune -af --volumes
 ```
+
+
+
+
