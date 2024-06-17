@@ -8,7 +8,7 @@ export default function Page() {
       <br />
       <br />
       <br />
-      <StudentHeader title="Dashboard"/>
+      <StudentHeader/>
       <StudentNavbar/>
     </>
   );
