@@ -1,5 +1,5 @@
 
-
+# Pipeline code 
 ```yml
 kind: pipeline
 type: docker
@@ -17,7 +17,7 @@ steps:
   image: node:latest
   commands:
     - cd test
-    - npm install
+    - npx playwright install
     - npx playwright test
 
 services:
@@ -26,5 +26,4 @@ services:
   environment:
     MYSQL_ROOT_PASSWORD: SprintRunners
     MYSQL_DATABASE: mydb
-
 ```
