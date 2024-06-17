@@ -6,15 +6,18 @@ type: docker
 name: default
 
 steps:
-- name: build_and_run_compose
-  image: tonglil/drone-docker-compose
-  settings:
-    compose_file: dev.yml
-    services: [app, playwright-tests]
-
-- name: run_tests
-  image: playwright-tests:latest
+- name: install_dependencies_and_build_app
+  image: node:latest
   commands:
+    - cd app
+    - npm install
+    - npm run build
+
+- name: install_dependencies_and_run_tests
+  image: node:latest
+  commands:
+    - cd test
+    - npm install
     - npx playwright test
 
 services:
@@ -23,4 +26,5 @@ services:
   environment:
     MYSQL_ROOT_PASSWORD: SprintRunners
     MYSQL_DATABASE: mydb
+
 ```
