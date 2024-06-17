@@ -14,7 +14,7 @@ steps:
   image: node:latest
   commands:
     - cd test
-    - npm install
+    - npx playwright install
     - npx playwright test
 
 services:
