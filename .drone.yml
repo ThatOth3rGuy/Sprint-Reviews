@@ -9,9 +9,9 @@ steps:
     dockerfile: ./app/Dockerfile
     repo: app
     tags: latest
-  commands:
-    - docker compose -f dev.yml build
-    - docker compose -f dev.yml up
+  # commands:
+  #   - docker compose -f dev.yml build
+  #   - docker compose -f dev.yml up
 
 - name: build_playwright_tests
   image: plugins/docker
