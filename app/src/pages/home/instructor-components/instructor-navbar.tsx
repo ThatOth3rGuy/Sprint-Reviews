@@ -8,11 +8,6 @@ import { useRouter } from "next/router";
 const InstructorNavbar: NextPage = () => {
   const router = useRouter();
 
-  const handleLogoutClick = () => {
-    // Redirect user to login page
-    router.push("/instructor/login");
-  };
-
   const handleNavigation = (path: string) => {
     router.push(path);
   };
@@ -43,7 +38,7 @@ const InstructorNavbar: NextPage = () => {
       >
         Settings
       </div>
-      <div className={style.logoutWrapper} onClick={handleLogoutClick}>
+      <div className={style.logoutWrapper}>
         <div
           className={style.navButton}
           onClick={() => handleNavigation("/instructor/login")}
