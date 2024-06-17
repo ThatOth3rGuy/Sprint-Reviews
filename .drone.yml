@@ -3,22 +3,11 @@ type: docker
 name: default
 
 steps:
-- name: build_app
-  image: plugins/docker
+- name: build_and_run_compose
+  image: tonglil/drone-docker-compose
   settings:
-    dockerfile: ./app/Dockerfile
-    repo: app
-    tags: latest
-  # commands:
-  #   - docker compose -f dev.yml build
-  #   - docker compose -f dev.yml up
-
-- name: build_playwright_tests
-  image: plugins/docker
-  settings:
-    dockerfile: ./test/Dockerfile
-    repo: playwright-tests
-    tags: latest
+    compose_file: dev.yml
+    services: [app, playwright-tests]
 
 - name: run_tests
   image: playwright-tests:latest
