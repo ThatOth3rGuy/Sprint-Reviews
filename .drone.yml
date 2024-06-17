@@ -3,21 +3,22 @@ type: docker
 name: default
 
 steps:
-- name: build_app  
-  image: node:latest
-  volumes:
-    - name: dockersock
-      path: /var/run
+- name: build_app
+  image: plugins/docker
+  settings:
+    dockerfile: ./app/Dockerfile
+    repo: app
+    tags: latest
   commands:
-    - docker build -f ./app/Dockerfile -t app:latest ./app
+    - docker compose -f dev.yml build
+    - docker compose -f dev.yml up
 
 - name: build_playwright_tests
-  image: node:latest
-  volumes:
-    - name: dockersock
-      path: /var/run
-  commands:
-    - docker build -f ./test/Dockerfile -t playwright-tests:latest .
+  image: plugins/docker
+  settings:
+    dockerfile: ./test/Dockerfile
+    repo: playwright-tests
+    tags: latest
 
 - name: run_tests
   image: playwright-tests:latest
@@ -30,9 +31,3 @@ services:
   environment:
     MYSQL_ROOT_PASSWORD: SprintRunners
     MYSQL_DATABASE: mydb
-volumes:
-- name: dockersock
-  host:
-    path: /var/run
-
-
