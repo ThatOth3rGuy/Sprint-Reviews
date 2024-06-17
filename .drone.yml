@@ -32,6 +32,6 @@ services:
     MYSQL_DATABASE: mydb
 
 volumes:
-  dockersock:
-    host:
-      path: /var/run
+- name: dockersock
+  host:
+    path: /var/run
