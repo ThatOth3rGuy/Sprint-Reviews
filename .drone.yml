@@ -31,7 +31,4 @@ services:
     MYSQL_ROOT_PASSWORD: SprintRunners
     MYSQL_DATABASE: mydb
 
-volumes:
-- name: dockersock
-  host:
-    path: /var/run
+
