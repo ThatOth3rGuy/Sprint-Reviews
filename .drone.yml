@@ -28,10 +28,10 @@ services:
 - name: db
   image: mysql:latest
   environment:
-    - MYSQL_ROOT_PASSWORD=SprintRunners
-    - MYSQL_DATABASE=mydb
+    MYSQL_ROOT_PASSWORD: SprintRunners
+    MYSQL_DATABASE: mydb
 
 volumes:
-- name: dockersock
-  host:
-    path: /var/run
+  dockersock:
+    host:
+      path: /var/run
