@@ -13,19 +13,23 @@ const StudentNavbar: NextPage = () => {
     router.push('/student/login');
   }
 
+  const handleNavigation = (path: string) => {
+    router.push(path);
+  }
+
   return (
     <nav className={style.navbar}>
-      <div className={style.navButton}>
-        <Link href="#">Home</Link>
+      <div className={style.navButton} onClick={() => handleNavigation('/student/dashboard')}>
+        Home
       </div>
-      <div className={style.navButton}>
-        <Link href="#">Assignments</Link>
+      <div className={style.navButton} onClick={() => handleNavigation('/student/all-assignments')}>
+        Assignments
       </div>
-      <div className={style.navButton}>
-        <Link href="#">Grades</Link>
+      <div className={style.navButton} onClick={() => handleNavigation('/student/grades')}>
+        Grades
       </div>
-      <div className={style.navButton}>
-        <Link href="#">Settings</Link>
+      <div className={style.navButton} onClick={() => handleNavigation('/student/settings')}>
+        Settings
       </div>
       <div className={style.logoutWrapper}>
         <div className={style.navButton} onClick={handleLogoutClick}>

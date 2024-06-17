@@ -8,7 +8,8 @@ export default function Page() {
       <br />
       <br />
       <br />
-      <StudentHeader title="Dashboard"/>
+      <StudentHeader title="Course Name"
+      addLink={[{href: "#", title: "Assignments"}, {href: "#", title: "Peer Feedback"}]}/>
       <StudentNavbar/>
     </>
   );
