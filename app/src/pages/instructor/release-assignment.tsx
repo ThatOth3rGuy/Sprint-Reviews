@@ -9,8 +9,8 @@ export default function Page() {
       <br />
       <br />
       <br />
-      <InstructorHeader title="Course Name"
-      addLink={[{href: "#", title: "Create Assignment"}, {href: "#", title: "Release Assignment"}]}/>
+      <InstructorHeader title="Assignments"
+      addLink={[{href: "./create-assignment", title: "Create Assignment"}, {href: "#", title: "Release Assignment"}]}/>
       <InstructorNavbar/>
     </>
   );

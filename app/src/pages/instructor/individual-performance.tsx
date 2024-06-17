@@ -10,7 +10,7 @@ export default function Page() {
       <br />
       <br />
       <InstructorHeader title="Grades"
-      addLink={[{href: "#", title: "Overall Performance"}, {href: "#", title: "Individual Performance"}]}/>
+      addLink={[{href: "#", title: "Overall Performance"}, {href: "./individual-performance", title: "Individual Performance"}]}/>
       <InstructorNavbar/>
     </>
   );

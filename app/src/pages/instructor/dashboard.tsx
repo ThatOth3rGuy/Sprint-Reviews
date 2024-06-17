@@ -8,7 +8,7 @@ export default function Page() {
       <br />
       <br />
       <br />
-      <InstructorHeader />
+      <InstructorHeader title="Dashboard"/>
       <InstructorNavbar />
       <InstructorCourseCard />
       <InstructorCourseCard />

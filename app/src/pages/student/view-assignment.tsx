@@ -9,7 +9,7 @@ export default function Page() {
       <br />
       <br />
       <StudentHeader title="Course Name"
-      addLink={[{href: "#", title: "View All"}, {href: "#", title: "Peer Evaluations"}]}/>
+      addLink={[{href: "./all-assignments", title: "View All"}, {href: "./peer-eval-assignments", title: "Peer Evaluations"}]}/>
       <StudentNavbar/>
     </>
   );
