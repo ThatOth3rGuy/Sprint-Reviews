@@ -1,32 +1,15 @@
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useState } from 'react';
 import StudentHeader from '../home/student-components/student-header';
 import StudentNavbar from '../home/student-components/student-navbar';
+import { useSessionValidation } from '../api/auth/checkSession';
+
 
 function Page() {
-  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
 
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const response = await fetch('/api/auth/getSession');
-        const data = await response.json();
-        if (!data || data.user.role !== 'student') {
-          router.push('/student/login');
-        } else {
-          setSession(data);
-        }
-      } catch (error) {
-        console.error('Failed to fetch session:', error);
-        router.push('/student/login');
-      }
-      setLoading(false);
-    };
-
-    checkSession();
-  }, [router]);
+  // Use the session validation hook to check if the user is logged in
+  useSessionValidation('student', setLoading, setSession);
 
   if (loading) {
     return <p>Loading...</p>;
