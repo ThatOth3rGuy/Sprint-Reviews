@@ -15,7 +15,7 @@ const StudentLogin: NextPage = () => {
   }
 
   const handleSignUpClick = async () => {
-    // Redirect to the instructor dashboard
+    // Redirect to the student dashboard
     router.push('/student/registration');
   }
 
@@ -32,7 +32,7 @@ const StudentLogin: NextPage = () => {
       });
 
       if (response.ok) {
-        // Redirect to the instructor dashboard
+        // Redirect to the student dashboard
         router.push('/student/dashboard');
       } else {
         // Handle error response
