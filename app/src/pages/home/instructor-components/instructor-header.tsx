@@ -3,7 +3,17 @@ import { useState } from "react";
 import Link from "next/link";
 import style from "../../../styles/instructor-components.module.css";
 
-const InstructorHeader: NextPage = () => {
+interface LinkProps {
+  href: string;
+  title: string;
+}
+
+interface InstructorHeaderProps {
+  title: string;
+  addLink?: LinkProps[];
+}
+
+const InstructorHeader: NextPage<InstructorHeaderProps> = ({ title, addLink }) => {
   const [isProfileOpen, setProfileOpen] = useState(false);
   const [isCourseOpen, setCourseOpen] = useState(false);
 
@@ -14,10 +24,15 @@ const InstructorHeader: NextPage = () => {
     <header className={style.header}>
       <div className={style.navTitle}>
         <h1>
-          <i>Dashboard</i>
+          <i>{title}</i>
         </h1>
-        {/*  TODO: add function to change name of page based on current page */}
+
       </div>
+      {addLink && addLink.map((link, index) => (
+        <div key={index} className={style.navItem}>
+          <Link href={link.href}><h3>{link.title}</h3></Link>
+        </div>
+      ))}
 
       <div
         className={style.navItem}

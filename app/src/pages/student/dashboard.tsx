@@ -37,8 +37,8 @@ function Page() {
       <br />
       <br />
       <br />
-      <StudentHeader />
-      <StudentNavbar />
+      <StudentHeader title="Dashboard"/>
+      <StudentNavbar/>
     </>
   );
 }
