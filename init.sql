@@ -1,9 +1,9 @@
 -- init.sql
 -- script for initializing the db.
-
 CREATE DATABASE IF NOT EXISTS mydb;
 USE mydb;
 
+-- Table for storing users, which are separated into students and instructors
 CREATE TABLE IF NOT EXISTS user (
     userID INT AUTO_INCREMENT PRIMARY KEY,
     firstName VARCHAR(50),
@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS user (
     institution VARCHAR(100)
 );
 
+-- Table for storing student, connected to the user table
 CREATE TABLE IF NOT EXISTS student (
     userID INT PRIMARY KEY,
     studentID INT,
@@ -23,6 +24,7 @@ CREATE TABLE IF NOT EXISTS student (
     FOREIGN KEY (userID) REFERENCES user(userID)
 );
 
+-- Table for storing instructor information, connected to the user table
 CREATE TABLE IF NOT EXISTS instructor (
     userID INT PRIMARY KEY,
     isAdmin BOOLEAN,
@@ -30,6 +32,7 @@ CREATE TABLE IF NOT EXISTS instructor (
     FOREIGN KEY (userID) REFERENCES user(userID)
 );
 
+-- Table for storing classes
 CREATE TABLE IF NOT EXISTS class (
     classID INT PRIMARY KEY,
     className VARCHAR(100),
@@ -39,6 +42,7 @@ CREATE TABLE IF NOT EXISTS class (
     FOREIGN KEY (instructorID) REFERENCES instructor(userID)
 );
 
+-- Table for storing assignment information
 CREATE TABLE IF NOT EXISTS assignment (
     assignmentID INT PRIMARY KEY,
     title VARCHAR(100),
@@ -50,6 +54,7 @@ CREATE TABLE IF NOT EXISTS assignment (
     FOREIGN KEY (classID) REFERENCES class(classID)
 );
 
+-- Table for storing submission information between students and assignments
 CREATE TABLE IF NOT EXISTS Submission (
     submissionID INT PRIMARY KEY,
     assignmentID INT,
@@ -59,6 +64,7 @@ CREATE TABLE IF NOT EXISTS Submission (
     FOREIGN KEY (studentID) REFERENCES student(userID)
 );
 
+-- Table for storing feedback information between students and assignments
 CREATE TABLE IF NOT EXISTS Feedback (
     feedbackID INT PRIMARY KEY,
     assignmentID INT,
@@ -68,6 +74,7 @@ CREATE TABLE IF NOT EXISTS Feedback (
     FOREIGN KEY (otherStudentID) REFERENCES student(userID)
 );
 
+-- Table for storing enrollment information to connect students to classes
 CREATE TABLE IF NOT EXISTS Enrollment (
     studentID INT,
     classID INT,
@@ -76,5 +83,17 @@ CREATE TABLE IF NOT EXISTS Enrollment (
     FOREIGN KEY (classID) REFERENCES class(classID)
 );
 
+-- Insert a sample user (student) into the user table
 INSERT INTO user (firstName, lastName, email, pwd, userRole, institution)
 VALUES ('John', 'Doe', 'john.doe@example.com', 'password123', 'student', 'Example University');
+
+-- Insert a sample user (instructor) into the user table
+INSERT INTO user (firstName, lastName, email, pwd, userRole, institution)
+VALUES ('Admin', 'Admin', 'admin@example.com', 'password', 'instructor', 'Example University');
+
+-- Get the userID of the newly inserted instructor
+SET @userID = LAST_INSERT_ID();
+
+-- Insert the instructor into the instructor table with isAdmin set to true
+INSERT INTO instructor (userID, isAdmin, departments)
+VALUES (@userID, true, 'Computer Science');
