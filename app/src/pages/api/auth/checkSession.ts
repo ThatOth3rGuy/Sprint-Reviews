@@ -8,19 +8,29 @@ export async function checkSession(role: string) {
   try {
     const response = await fetch('/api/auth/getSession');
     if (!response.ok) {
-      throw new Error('Failed to fetch session');
+      const data = await response.json();
+      if (data.message === 'Session has expired') {
+        throw new Error('Session has expired');
+      } else {
+        throw new Error('Failed to fetch session');
+      }
     }
     const data = await response.json();
-    if (data.user.role == 'admin' && role == 'instructor') { //If an admin is trying to access an instructor page
+    if (data.user.role === 'admin' && role === 'instructor') {
+      // If an admin is trying to access an instructor page
       return { isValid: true, session: data };
-    }
-    else if (!data || data.user.role !== role) {
+    } else if (!data || data.user.role !== role) {
       return { isValid: false, session: null };
     }
     return { isValid: true, session: data };
-  } catch (error) { 
-    console.error('Failed to fetch session:', error);
-    return { isValid: false, session: null };
+  } catch (error: any) {
+    if (error.message === 'Session has expired') {
+      console.error('Session has expired:', error);
+      return { isValid: false, session: null, reason: 'Session has expired' };
+    } else {
+      console.error('Failed to fetch session:', error);
+      return { isValid: false, session: null };
+    }
   }
 }
 
@@ -29,12 +39,12 @@ export async function useSessionValidation(role: string, setLoading: (loading: b
   const router = useRouter();
 
   const verifySession = useCallback(async () => {
-    const { isValid, session } = await checkSession(role);
+    const { isValid, session, reason } = await checkSession(role);
     if (!isValid) {
-      if (role.trim() == 'admin') {
-        router.push('/instructor/login');
-      } else{
-        router.push('/' + role + '/login');
+      if (role.trim() === 'admin') {
+        router.push(`/instructor/login?reason=${reason || ''}`);
+      } else {
+        router.push(`/${role}/login?reason=${reason || ''}`);
       }
     } else {
       setSession(session);

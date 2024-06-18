@@ -56,6 +56,13 @@ export async function getSession(req: NextApiRequest): Promise<any> {
   const cookies = req.headers?.cookie ? cookie.parse(req.headers.cookie) : {};
   const session = cookies.session;
   if (!session) return null;
+
+  // Check if the session has expired
+  const parsed = await decrypt(session);
+  if (new Date(parsed.expires) < new Date()) {
+    throw new Error('Session has expired');
+  }
+
   return await decrypt(session);
 }
 
