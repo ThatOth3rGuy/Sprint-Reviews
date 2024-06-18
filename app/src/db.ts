@@ -72,3 +72,25 @@ export async function authenticateStudent(email: string, password: string): Prom
     throw error;
   }
 }
+export async function addAssignmentToDatabase(title: string, description: string, dueDate: string, classID: number) {
+  const sql = `
+    INSERT INTO assignment (title, description, deadline, classID)
+    VALUES (?, ?, ?, ?)
+  `;
+  try {
+    await query(sql, [title, description, new Date(dueDate), classID]);
+  } catch (error) {
+    console.error('Error in addAssignmentToDatabase:', error); // Log the error
+    throw error;
+  }
+}
+export async function getAssignments(): Promise<any[]> {
+  const sql = 'SELECT * FROM assignment';
+  try {
+    const rows = await query(sql);
+    return rows as any[];
+  } catch (error) {
+    console.error('Database query error:', error);
+    throw error;
+  }
+}
