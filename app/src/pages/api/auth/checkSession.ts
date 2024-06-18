@@ -31,7 +31,11 @@ export async function useSessionValidation(role: string, setLoading: (loading: b
   const verifySession = useCallback(async () => {
     const { isValid, session } = await checkSession(role);
     if (!isValid) {
-      router.push('/' + role + '/login');
+      if (role.trim() == 'admin') {
+        router.push('/instructor/login');
+      } else{
+        router.push('/' + role + '/login');
+      }
     } else {
       setSession(session);
     }

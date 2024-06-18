@@ -2,6 +2,8 @@
 import { NextRequest } from 'next/server';
 import { updateSessionInMiddleware } from './src/lib';
 
+console.log("Middleware is running");
+
 export async function middleware(request: NextRequest) {
   return await updateSessionInMiddleware(request);
 }
