@@ -1,7 +1,6 @@
-import type { NextPage, NextApiResponse } from "next";
+import type { NextPage } from "next";
 import style from "../../../styles/student-components.module.css";
 import { useRouter } from "next/router";
-import { logout } from "../../../lib";
 
 //TODO: Add logo and images per button
 
