@@ -1,6 +1,6 @@
-import InstructorCourseCard from "../home/instructor-components/instructor-course";
-import InstructorNavbar from "../home/instructor-components/instructor-navbar";
-import InstructorHeader from "../home/instructor-components/instructor-header";
+import InstructorCourseCard from "../components/instructor-components/instructor-course";
+import InstructorNavbar from "../components/instructor-components/instructor-navbar";
+import InstructorHeader from "../components/instructor-components/instructor-header";
 
 export default function Page() {
   return (

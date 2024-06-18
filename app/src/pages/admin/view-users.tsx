@@ -1,5 +1,5 @@
-import InstructorNavbar from "../home/instructor-components/instructor-navbar";
-import InstructorHeader from "../home/instructor-components/instructor-header";
+import InstructorNavbar from "../components/instructor-components/instructor-navbar";
+import InstructorHeader from "../components/instructor-components/instructor-header";
 
 export default function Page() {
   return (
