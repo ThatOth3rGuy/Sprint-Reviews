@@ -1,3 +1,4 @@
+// This is the main file for creating/updating session data to check the user's state and role
 import { SignJWT, jwtVerify } from 'jose';
 import cookie from 'cookie';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -22,6 +23,7 @@ export async function decrypt(input: string): Promise<any> {
   return payload;
 }
 
+// This function is used to create a session for the user during the login process
 export async function login({ email, role }: { email: string; role: string }, res: NextApiResponse) {
   const user = { email, role };
   const expires = new Date(Date.now() + 10 * 60 * 1000); // Each session expires in 10 minutes
@@ -37,6 +39,7 @@ export async function login({ email, role }: { email: string; role: string }, re
   );
 }
 
+// Remove the current session data
 export async function logout(res: NextApiResponse) {
   res.setHeader(
     'Set-Cookie',
@@ -48,6 +51,7 @@ export async function logout(res: NextApiResponse) {
   );
 }
 
+// Returns session data if it exists
 export async function getSession(req: NextApiRequest): Promise<any> {
   const cookies = req.headers?.cookie ? cookie.parse(req.headers.cookie) : {};
   const session = cookies.session;
@@ -55,13 +59,14 @@ export async function getSession(req: NextApiRequest): Promise<any> {
   return await decrypt(session);
 }
 
+// Update the session data
 export async function updateSession(req: NextApiRequest, res: NextApiResponse) {
   const cookies = req.headers?.cookie ? cookie.parse(req.headers.cookie) : {};
   const session = cookies.session;
   if (!session) return;
 
   const parsed = await decrypt(session);
-  parsed.expires = new Date(Date.now() + 10 * 1000);
+  parsed.expires = new Date(Date.now() + 10 * 60 * 1000); // Session expires in 10 minutes
   const updatedSession = await encrypt(parsed);
 
   res.setHeader(
@@ -74,12 +79,13 @@ export async function updateSession(req: NextApiRequest, res: NextApiResponse) {
   );
 }
 
+// Update the session date (this function is called each time any request is made)
 export async function updateSessionInMiddleware(request: NextRequest) {
   const sessionCookie = request.cookies.get('session')?.value;
   if (!sessionCookie) return NextResponse.next();
 
   const parsed = await decrypt(sessionCookie);
-  parsed.expires = new Date(Date.now() + 10 * 1000);
+  parsed.expires = new Date(Date.now() + 10 * 60 * 1000); // Session expires in 10 minutes
   const updatedSession = await encrypt(parsed);
 
   const response = NextResponse.next();
