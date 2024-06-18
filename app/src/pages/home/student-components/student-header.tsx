@@ -3,20 +3,35 @@ import { useState } from "react";
 import Link from "next/link";
 import style from "../../../styles/student-components.module.css";
 
-const StudentHeader: NextPage = () => {
+interface LinkProps {
+  href: string;
+  title: string;
+}
+
+interface StudentHeaderProps {
+  title: string;
+  addLink?: LinkProps[];
+}
+
+const StudentHeader: NextPage<StudentHeaderProps> = ({ title, addLink }) => {
   const [isProfileOpen, setProfileOpen] = useState(false);
   const [isCourseOpen, setCourseOpen] = useState(false);
 
   const toggleProfileDropdown = () => setProfileOpen(!isProfileOpen);
   const toggleCourseDropdown = () => setCourseOpen(!isCourseOpen);
   
-  
   return (
     <header className={style.header} >
       <div className={style.navTitle}>
-        <h1><i>Dashboard</i></h1>{/*  TODO: add function to change name of page based on current page */}
+        <h1><i>{title}</i></h1>
       </div>
 
+      {addLink && addLink.map((link, index) => (
+        <div key={index} className={style.navItem}>
+          <Link href={link.href}><h3>{link.title}</h3></Link>
+        </div>
+      ))}
+      
       <div
         className={style.navItem}
         onMouseEnter={() => setCourseOpen(true)}
@@ -33,7 +48,6 @@ const StudentHeader: NextPage = () => {
         className={style.navItem}
         onMouseEnter={() => setProfileOpen(true)}
         onMouseLeave={() => setProfileOpen(false)}
-        
       >
         <button onClick={toggleProfileDropdown}>Profile</button>
         {isProfileOpen && (
@@ -43,6 +57,7 @@ const StudentHeader: NextPage = () => {
           </div>
         )}
       </div>
+      
     </header>
   );
 };

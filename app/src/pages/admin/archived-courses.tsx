@@ -1,4 +1,3 @@
-import InstructorCourseCard from "../home/instructor-components/instructor-course";
 import InstructorNavbar from "../home/instructor-components/instructor-navbar";
 import InstructorHeader from "../home/instructor-components/instructor-header";
 
@@ -8,10 +7,9 @@ export default function Page() {
       <br />
       <br />
       <br />
-      <InstructorHeader title="Dashboard"/>
+      <InstructorHeader title="Archived Courses"
+      addLink={[{href: "./view-users", title: "View Users"}, {href: "./join-requests", title: "Join Requests"}, {href: "./archived-courses", title: "Archived Courses"}]}/>
       <InstructorNavbar />
-      <InstructorCourseCard />
-      <InstructorCourseCard />
     </>
   );
 }
