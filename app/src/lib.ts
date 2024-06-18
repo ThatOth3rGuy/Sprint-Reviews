@@ -3,6 +3,7 @@ import cookie from 'cookie';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextRequest, NextResponse } from 'next/server';
 
+// Take the secret key from the .env file, if it doesn't exist default to 'secret'
 const secretKey = process.env.SECRET_KEY || 'secret';
 const key = new TextEncoder().encode(secretKey);
 
@@ -21,9 +22,9 @@ export async function decrypt(input: string): Promise<any> {
   return payload;
 }
 
-export async function login({ email, password, role }: { email: string; password: string; role: string }, res: NextApiResponse) {
-  const user = { email, name: 'John', role };
-  const expires = new Date(Date.now() + 10 * 1000);
+export async function login({ email, role }: { email: string; role: string }, res: NextApiResponse) {
+  const user = { email, role };
+  const expires = new Date(Date.now() + 10 * 60 * 1000); // Each session expires in 10 minutes
   const session = await encrypt({ user, expires });
 
   res.setHeader(

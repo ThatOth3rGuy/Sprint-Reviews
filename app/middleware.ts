@@ -1,3 +1,4 @@
+// This file is used to update the session each time a request on the app is made
 import { NextRequest } from 'next/server';
 import { updateSessionInMiddleware } from './src/lib';
 
