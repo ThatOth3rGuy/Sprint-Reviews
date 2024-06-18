@@ -17,7 +17,7 @@ const InstructorNavbar: NextPage = () => {
         method: 'POST',
       });
       if (response.ok) {
-        router.push('/student/login');
+        router.push('/instructor/login');
       } else {
         console.error('Failed to log out');
       }

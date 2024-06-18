@@ -3,7 +3,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useCallback } from 'react';
 
-
+// Check that an active session exists, and the user's role matches the page's role
 export async function checkSession(role: string) {
   try {
     const response = await fetch('/api/auth/getSession');
@@ -11,23 +11,27 @@ export async function checkSession(role: string) {
       throw new Error('Failed to fetch session');
     }
     const data = await response.json();
-    if (!data || data.user.role !== role) {
+    if (data.user.role == 'admin' && role == 'instructor') { //If an admin is trying to access an instructor page
+      return { isValid: true, session: data };
+    }
+    else if (!data || data.user.role !== role) {
       return { isValid: false, session: null };
     }
     return { isValid: true, session: data };
-  } catch (error) {
+  } catch (error) { 
     console.error('Failed to fetch session:', error);
     return { isValid: false, session: null };
   }
 }
 
+// Use session data to ensure user is logged in, if not send them to their specific login page
 export async function useSessionValidation(role: string, setLoading: (loading: boolean) => void, setSession: (session: any) => void) {
   const router = useRouter();
 
   const verifySession = useCallback(async () => {
     const { isValid, session } = await checkSession(role);
     if (!isValid) {
-    router.push('/' + role + '/login');
+      router.push('/' + role + '/login');
     } else {
       setSession(session);
     }

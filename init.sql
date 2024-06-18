@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS assignment (
 );
 
 -- Table for storing submission information between students and assignments
-CREATE TABLE IF NOT EXISTS Submission (
+CREATE TABLE IF NOT EXISTS submission (
     submissionID INT PRIMARY KEY,
     assignmentID INT,
     content TEXT,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS Submission (
 );
 
 -- Table for storing feedback information between students and assignments
-CREATE TABLE IF NOT EXISTS Feedback (
+CREATE TABLE IF NOT EXISTS feedback (
     feedbackID INT PRIMARY KEY,
     assignmentID INT,
     content TEXT,
@@ -89,7 +89,7 @@ VALUES ('John', 'Doe', 'john.doe@example.com', 'password123', 'student', 'Exampl
 
 -- Insert a sample user (instructor) into the user table
 INSERT INTO user (firstName, lastName, email, pwd, userRole, institution)
-VALUES ('Admin', 'Admin', 'admin@example.com', 'password', 'instructor', 'Example University');
+VALUES ('Admin', 'Instructor', 'admin@gmail.com', 'password', 'instructor', 'Example University');
 
 -- Get the userID of the newly inserted instructor
 SET @userID = LAST_INSERT_ID();

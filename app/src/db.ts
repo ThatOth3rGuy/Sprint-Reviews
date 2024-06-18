@@ -49,13 +49,16 @@ export async function addStudentToDatabase(firstName: string, lastName: string, 
 
 export async function authenticateAdmin(email: string, password: string): Promise<boolean> {
   const sql = `
-    SELECT * FROM user WHERE email = ? AND pwd = ? AND userRole = 'instructor' AND isAdmin = true
+    SELECT u.* 
+    FROM user u
+    JOIN instructor i ON u.userID = i.userID
+    WHERE u.email = ? AND u.pwd = ? AND u.userRole = 'instructor' AND i.isAdmin = true
   `;
   try {
     const rows = await query(sql, [email, password]);
     return rows.length > 0;
   } catch (error) {
-    console.error('Error in authenticateInstructor:', error); // Log the error
+    console.error('Error in authenticateAdmin:', error); // Log the error
     throw error;
   }
 }
