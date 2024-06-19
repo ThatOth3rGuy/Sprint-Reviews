@@ -61,7 +61,7 @@
   .textbox {
     width: 80%;
     padding: 10px;
-    margin-bottom: 20px;
+    margin-bottom: -20px;
     font-size: 16px;
     border-radius: 5px;
     border: 1px solid #ccc;

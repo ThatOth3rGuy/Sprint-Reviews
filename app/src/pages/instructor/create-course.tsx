@@ -32,7 +32,7 @@ const Courses: NextPage = () => {
           <i style={{width: "368px", position: "relative", fontSize: "35px", display: "flex", fontWeight: "700", fontFamily: "'Inria Serif'", color: "#04124b", textAlign: "left", alignItems: "center", height: "22px",}}>Create a Course</i>
           <input type="text" placeholder="Course Name" className={styles.textbox} value={courseName} onChange={e => setTitle(e.target.value)} />          
           <input type="text" placeholder="Institution Name" className={styles.textbox} value={courseName} onChange={e => setDescription(e.target.value)} />
-          <p>Upload Student List: 
+          <p>Upload Student List: {' '}
           <input type="file" onChange={handleFileUpload} /></p>          
           <div className={styles.button} onClick={onCreateCourseButtonClick}>
             <div />
@@ -40,7 +40,6 @@ const Courses: NextPage = () => {
           </div>
         </div>
       </div>
-
     </>
   );
 }
