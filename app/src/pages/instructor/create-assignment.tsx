@@ -53,7 +53,7 @@ const Assignments: NextPage = () => {
         title="Assignments"
         addLink={[
           { href: "./create-assignment", title: "Create Assignment" },
-          { href: "#", title: "Release Assignment" },
+          { href: "./release-assignment", title: "Release Assignment" },
         ]}
       />
       <InstructorNavbar />
