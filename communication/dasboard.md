@@ -4,13 +4,17 @@
 <div style="width: 100%;">
 <p float="left">
     <h3>Feature Development Table</h3>
-        <img src="./images/13062024W5.png" width="max" />
+    <h4> Completed Features: </h4>
+        <img src="./images/week6Done.png" width="max" />
+    <h4> In Progress Features: </h4>
+        <img src="./images/week6Inprogress.png" width="max" />
+    <h4> ToDo Features: </h4>
+        <img src="./images/week6Todo.png" width="max" />
     <h3>Burnup</h3>
-        <img src="./images/burnUpW5.png" width="max" />
-    <h3>In Review/Completed</h3>
-        <img src="./images/inReview.png" width="max" />
-    <h3>Additional Items: </h3>
-  <img src="./images/sysSetup.png" width="max" />
+        <img src="./images/week6Burnup.png" width="max" />
+        <h3>Additional Items: </h3>
+    <h4>Clokify for the week:</h4>
+ <img src="./images/week6Clokify.png" width="max" />
 </p>
 
 </div>
