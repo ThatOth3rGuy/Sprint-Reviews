@@ -3,8 +3,49 @@
 # Weekly Team Logs
 
 ## Week 5 
-## June 12(Wed) - June 14(Fri)
 
+## June 12(Wed) - June 19(Fri)
+
+### Features in the Project Plan Cycle: 
+
+- Landing Page
+- Student/Instructor Login page
+- Student/Instructor Sign Up
+- Database Integration
+- Student and Instructor Dashboard
+- State Management (instrcuctor\Student states)
+
+###  Tasks from the Project Board:
+![week5-done](./Images/week6Kanban.png)
+
+
+### Tasks for Next Cycle:
+
+![week5-done](./Images/week6Todo.png)
+
+### Burn-up Chart (Velocity):
+![week5-done](./Images/week6Burnup.png)
+
+### Times for Team/Individual:
+
+
+Clockify Times:
+![week5-done](./Images/week6Clokify.png)
+![week5-done](./Images/week6Clokify2.png)
+
+
+
+### Completed Tasks:
+![week5-done](./Images/week6Done.png)
+
+### In Progress Tasks/ To do:
+![week5-done](./Images/week6Inprogress.png)
+
+### Overview:
+
+The team focused on the  mini-presentation and got 3 full stack Features to work with our entire setup. The Kanban Board has been populated with user stories and tasks, milestones have been added, and the dashboard visuals creation has been completed. The next cycle will focus on Assignment Creation and Classroom Creation for Instrcutor, and Students to submit and view assignments(they will need to follow th file restrictions)
+
+## June 12(Wed) - June 14(Fri)
 ### Features in the Project Plan Cycle: 
 
 - F1: Reverse Proxy for Student/Instructor pages
