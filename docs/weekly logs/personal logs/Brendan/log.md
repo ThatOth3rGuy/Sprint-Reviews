@@ -440,3 +440,79 @@
         </td>
     </tr>
 </table>
+
+#
+# Week 6
+## Wednesday - June 19, 2024
+**Timesheet Tracking (Friday-Tuesday)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_06_07_2024-06_09_2024.pdf)
+### Cycle Review
+    After Friday's presentation, we all decided to take part of the weekend to rest and recharge after a long couple weeks. I was especially burnt out, and spent part of the weekend sleeping. We had a short meeting after the class presentations to sort out workflow and the plan moving forward, which we turned into a long meeting Sunday. The beginning of the cycle was not incredibly productive for the project, but allowed us to spend time reorganizing ourselves and put together a solid branching workflow and feature breakdown moving forward to maximize our weekly output until the project is completed. Sunday, the team met for a few hours to thoroughly breakdown each of our intended features, sub-divide those features into smaller chunks we can work on in parallel. As such, I spent the majority of the cycle putting together the timelines, workflow, task breakdown, and starting to assign those tasks among the team, myself included. Our goal for the cycle (Sunday-Wednesday Morning) was to complete the base system dashboard navigation, being all the corresponding pages it links to, and have atleast one (hopefully two) features completed so a demo could be provided Wednesday's meeting. I believe we will have one feature complete for Wednesday morning, and have another in progress. We are mostly on track with little roadblocks, I do believe we will be able to complete the majority of our features in time for the MVP Presentation. I was not able to get entirely as much completed this cycle as I would have liked, however I did manage to get a large amount of PM work done. My goal for the next cycle and each one moving forward is to maintain the project boards keeping proper track of our team workflow to hopefully avoid any further slowdowns. Aside from that I plan to have all my current tasks done by Friday, ensuring the next feature is started while this one is finished. If we can get 3-4 features doen each week. Lastly, I hope to have all the testing and docker framework working properly in our project by the end of Friday, so we can properly complete integration testing going forward.
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Re-organize future project workflow (github project board/issues)
+  * #3: Refine Docker Environment and Testing Framework For Future Development
+  * #4: Create Feature Definition and Sub-divisions For Team Division
+  * #5: Complete Student List Uploading (csv) and verification for Course Registration Feature
+  * #6: **Sleep?**
+
+### Progress Update: Fri-Mon
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Re-organize Github Project Workflow/Branching
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Ongoing
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Feature breakdown/sub-division for parallel task work
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Update Docker and Testing Setup w/ CI for Ongoing Development
+        </td>
+        <!-- Status -->
+        <td>To-Do
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Add Student List via csv for Instructor Course Creation with Verification
+        </td>
+        <!-- Status -->
+        <td>In-Progress*
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Sleep?
+        </td>
+        <!-- Status -->
+        <td>N/A
+        </td>
+    </tr>
+</table>
+
+*\* currently working on locally. Has not been pushed, with not enough to demo Wednesday*
