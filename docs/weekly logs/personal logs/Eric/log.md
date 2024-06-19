@@ -1,5 +1,110 @@
 # Weekly Logs
 
+# Week 6
+
+## Friday - June 14, 2024
+
+### Cycle Review
+
+After the presentation we decided to take a bit of a break over the weekend so this week really started on Sunday.
+
+## Sunday - June 16, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%206.1.png)
+
+### Cycle Review
+    
+Our Monday meeting was moved to Sunday, where we sat down and went over every feature we need to implement in the entire project, breaking them down into subfeatures and setting up a general plan for when to complete them all. After that we divied up some of the features and worked on them until the Wednesday meeting
+
+### Current Tasks
+  * 1: Set up session management
+  * 2: Create Assignment subfeatures
+  * 3: Course Registration subfeatures
+
+### Progress Update: Fri-Tue
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Set up session management
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create Assignment features
+        </td>
+        <!-- Status -->
+        <td>Todo / Being implemented by Yatharth & Tithi
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Course Registration features
+        </td>
+        <!-- Status -->
+        <td>Todo
+        </td>
+    </tr>
+</table>
+
+## Wednesday - June 19, 2024
+
+### Timesheet
+![Clockify Timesheet]()
+
+### Cycle Review
+    
+---
+
+### Current Tasks
+  * 1: ---
+  * 2: ---
+  * 3: ---
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> ---
+        </td>
+        <!-- Status -->
+        <td>Todo
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> ---
+        </td>
+        <!-- Status -->
+        <td>Todo
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> ---
+        </td>
+        <!-- Status -->
+        <td>Todo
+        </td>
+    </tr>
+</table>
+
+
 # Week 5
 ## Friday - June 7, 2024
 
@@ -11,9 +116,9 @@
 This was the last week of planning, after this our focus is going to be coding and implementing features. The last thing to do for planning is create and submit the deisgn presentation video. After that we've split our first focus of features throughout the group. Starting with the database & testing setup (Me and Tithi), and the Reverse Proxy & CI setup (Brendan, Yatharth, and Divya)
 
 ### Current Tasks
-  * #1: Set up the database 
-  * #2: Implement Jest framework
-  * #3: Create Jest testing for the database setup
+  * 1: Set up the database 
+  * 2: Implement Jest framework
+  * 3: Create Jest testing for the database setup
 
 ### Progress Update: Fri-Mon
 <table>
@@ -59,8 +164,8 @@ This was the last week of planning, after this our focus is going to be coding a
 At this point, design is finished and we're focused on finishing 3 features by Friday. Most of the setup is complete, but the testing still isn't working. We're letting Brendan and Yatharth focus on getting the testing working while the rest of us work on implementing some features. It was decided that the 3 features we'll have done by Friday are the Reverse Proxy for changing between Instructor/Student view, the Create Account/Login with authentication, and the main dashboard view once a user is logged in.
 
 ### Current Tasks
-  * #1: Create landing page
-  * #2: Create log in pages
+  * 1: Create landing page
+  * 2: Create log in pages
 
 ### Progress Update: Mon-Wed
 <table>
@@ -98,9 +203,9 @@ At this point, design is finished and we're focused on finishing 3 features by F
 Not much to talk about during this cycle meeting. We just need to get to work to finish the 3 features by Friday and try our best to have the testing set up so we can test the features by then too.
 
 ### Current Tasks
-  * #1: Create landing page
-  * #2: Create registration pages
-  * #3: Help finish the login pages
+  * 1: Create landing page
+  * 2: Create registration pages
+  * 3: Help finish the login pages
 
 ### Progress Update: Wed-Fri
 <table>
@@ -147,10 +252,10 @@ Not much to talk about during this cycle meeting. We just need to get to work to
 Several tasks were assigned to each of the team during Friday's meeting. By the time of the meeting, each of us accomplished a significant amount of work either completing or nearly completing what was assigned. Though review on all of the work is required, it seems we managed to reach all of our goals for the weekend cycle. Managing the project boards and working on the system architecture design, tasks are being completed on time and everyone is contributing effectively. With the database design done and ready for review and the framework setup underway, the goal for this next cycle is to finish the framework setup and add all use cases to the kanban board.
 
 ### Current Tasks
-  * #1: Create ER Diagram and explanation
-  * #2: Implement Nextjs framework
-  * #3: Review other team's project proposals
-  * #4: Add all Use Cases to kanban board
+  * 1: Create ER Diagram and explanation
+  * 2: Implement Nextjs framework
+  * 3: Review other team's project proposals
+  * 4: Add all Use Cases to kanban board
 
 ### Progress Update: Fri-Mon
 <table>
@@ -205,10 +310,10 @@ Several tasks were assigned to each of the team during Friday's meeting. By the 
 From Monday to Wednesday's Meeting, not much to complete for tasks. After completing Database Design (ER Diagram) and explanation of the design, it will need to be reviewed and then make necessary changes. If changes are needed, that will be high priority to complete for document submission Wednesday night. With all design document tasks nearly complete by everyone assigned to them, all we have left is mainly the UI design. This will likely be finalized during our meeting by Tithi. Evaluations of other team's proposals will need to be completed. With the Nextjs framework set up and running on my laptop, I need to help the rest of the team make sure it works for them, and then work with Brendan to implement it properly with Docker. Once all that is done, we just need to set up testing before we can start committing to coding features.
 
 ### Current Tasks
-  * #1: Implement Nextjs framework
-  * #2: Add all use cases to kanban board
-  * #3: Help the rest of the team have their Nextjs frameworks running
-  * #4: Evaluate other project proposals
+  * 1: Implement Nextjs framework
+  * 2: Add all use cases to kanban board
+  * 3: Help the rest of the team have their Nextjs frameworks running
+  * 4: Evaluate other project proposals
 
 ### Progress Update: Mon-Wed
 <table>
@@ -260,9 +365,9 @@ From Monday to Wednesday's Meeting, not much to complete for tasks. After comple
 On Wednesday's meeting we spent a large amount of time reviewing the UI design on Figma making sure we are all on the same page about everything. After that the main goals until Friday are to get the Nextjs framework, docker, and drone CI all set up. As well as that we need the design video finished by the end of Friday. My main tasks are to finish the framework setup and make sure it works for everyone, and then work with Brendan to get the framework running with Docker. I'll also be making the database Schema in this time.
 
 ### Current Tasks
-  * #1: Help the rest of the team implement their Nextjs frameworks
-  * #2: Create the database schema
-  * #3: Implement the Nextjs framework together with docker
+  * 1: Help the rest of the team implement their Nextjs frameworks
+  * 2: Create the database schema
+  * 3: Implement the Nextjs framework together with docker
 
 ### Progress Update: Wed-Fri
 <table>
