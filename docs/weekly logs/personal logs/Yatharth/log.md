@@ -2,6 +2,103 @@
 ------------------------------------
 
 # Week 5
+## Wednesday (6/19/2024)
+
+### Timesheet Week 5 (06/012/2024 - 06/19/2024)
+![alt text](images/week5Wed.png)
+
+
+### Current Tasks (Complete by the end of the day)
+  * Student View of Assignments
+  * Fix to run Drone with tests
+  * Any other meeting items/feedback
+
+
+### Progress Update 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+  <tr>
+        <!-- Task/Issue # -->
+        <td> Submit Assignments received by the instructor
+        </td>
+        <!-- Status -->
+        <td> To start
+        </td>
+    </tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> Submit Assignments with file restrictions
+        </td>
+        <!-- Status -->
+        <td> To start
+        </td>
+    </tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> View Assignments from Creation Form
+        </td>
+        <!-- Status -->
+        <td> In progress/Portion Completed
+        </td>
+    </tr> 
+  <tr>
+        <!-- Task/Issue # -->
+        <td> Assignment Creation Form
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr> 
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Drone CI integration 
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>   
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Dashboard Creation help 
+        </td>
+        <!-- Status -->
+        <td> Done 
+        </td>
+    </tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> Create and Update Weekly Dashboard
+        </td>
+        <!-- Status -->
+        <td> Done 
+        </td>
+    </tr>    
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Write tests for all configurations 
+        </td>
+        <!-- Status -->
+        <td> In progress
+        </td>
+   
+    
+</table>
+
+### Weekly Goal Review
+- Authorization API is working but needs to be redone to work with other API than oAuth
+- Assignment Creation form for the instructor is ready to be tested and integrated
+-  View of assignment to instructor page for now.
+
+### Next Cycle Goals
+ - View assignments for students
+ - Submit assignments with restrictions for students
+ - Instrcutor receives submitted assignments 
+
 ## Friday (6/14/2024)
 
 ### Timesheet Week 5 (06/012/2024 - 06/14/2024)
