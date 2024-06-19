@@ -1,5 +1,24 @@
 # Weekly Personal Logs
 
+## Personal Log For Week 6
+
+### 06/19/2024
+
+Topics Covered:
+
+* feature breakdown
+* testing drone with docker and working on features for mini-presentation
+* feature task split between members
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Making page templates for all UI pages on Figma | 06/18/2024 | Complete |
+| Setting up system navigation among all pages | 06/18/2024 | Complete |
+| Upload file function on assignment creation for instructor  | 06/18/2024 | Complete |
+| File viewer api for students to view assignment | 06/18/2024 | WIP |
+
+![week 6 time tracking](img/week6.1.png)
+
 ## Personal Log For Week 5
 
 ### 06/10/2024
