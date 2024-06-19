@@ -8,13 +8,13 @@
 
 .rectangle {
   width: 50%;
+  height: 75%;
   position: relative;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 25px;
   background-color: #fff;
   border: 1px solid #04124b;
   box-sizing: border-box;
-  height: 648px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -71,8 +71,8 @@
   width: "100%";
   position: "relative";
   height: "73px";
-  textAlign: "left";
-  fontSize: "25px";
+  text-align: "left";
+  font-style: "25px";
   color: "#04124b";
-  fontFamily: "'Inria Serif'",;
+  font-style: "'Inria Serif'",;
 }

@@ -9,6 +9,7 @@ import InstructorNavbar from "../home/instructor-components/instructor-navbar";
 
 const Assignments: NextPage = () => {
   const [file, setFile] = useState<File | null>(null);
+  const [fileContent, setFileContent] = useState<string | null>(null);
   const [dueDate, setDueDate] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -20,31 +21,14 @@ const Assignments: NextPage = () => {
       return;
     }
     const selectedFile = event.target.files[0];
-    setFile(selectedFile);
-  }
-
-  async function createAssignment() {
-    if (!file) {
-      console.error("No file selected.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const response = await fetch("/api/create-assignment", {
-        method: "POST",
-        body: formData,
-      });
-      if (response.ok) {
-        console.log("Assignment created successfully");
-      } else {
-        console.error("Error creating assignment");
+    setFile(selectedFile); // Store the File object in state
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      if (e.target) {
+        setFileContent(e.target.result as string); // Store the file content as a string in state
       }
-    } catch (error) {
-      console.error("Error uploading file:", error);
-    }
+    };
+    reader.readAsText(selectedFile);
   }
 
   const onCreateAssignmentButtonClick = useCallback(async () => {
@@ -53,7 +37,7 @@ const Assignments: NextPage = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ title, description, dueDate, classID: Number(classID) }),
+      body: JSON.stringify({ title, description, dueDate, classID: Number(classID), file: fileContent }),
     });
 
     if (response.ok) {
@@ -61,7 +45,7 @@ const Assignments: NextPage = () => {
     } else {
       console.error('An error occurred while creating the assignment');
     }
-  }, [title, description, dueDate, classID, router]);
+  }, [title, description, dueDate, classID, fileContent, router]);
 
   return (
     <>
@@ -89,11 +73,6 @@ const Assignments: NextPage = () => {
         </div>
       </div>
 
-      {/* Display the file upload input */}
-      <div style={{ textAlign: "center" }}>
-        
-        
-      </div>
     </>
   );
 }

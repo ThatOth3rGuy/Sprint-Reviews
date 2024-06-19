@@ -72,13 +72,13 @@ export async function authenticateStudent(email: string, password: string): Prom
     throw error;
   }
 }
-export async function addAssignmentToDatabase(title: string, description: string, dueDate: string, classID: number) {
+export async function addAssignmentToDatabase(title: string, description: string, dueDate: string, classID: number, file:string) {
   const sql = `
     INSERT INTO assignment (title, description, deadline, classID)
     VALUES (?, ?, ?, ?)
   `;
   try {
-    await query(sql, [title, description, new Date(dueDate), classID]);
+    await query(sql, [title, description, new Date(dueDate), classID, file]);
   } catch (error) {
     console.error('Error in addAssignmentToDatabase:', error); // Log the error
     throw error;
