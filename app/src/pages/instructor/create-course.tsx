@@ -12,7 +12,6 @@ const Courses: NextPage = () => {
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [courseName, setTitle] = useState('');
   const [institutionName, setDescription] = useState('');
-  const [instructorID, setInstructorID] = useState(''); //Get this instructorID from the session
   const router = useRouter();
 
   async function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
@@ -21,12 +20,46 @@ const Courses: NextPage = () => {
 
   const onCreateCourseButtonClick = useCallback(async () => {
     // Get the instructor ID from the session
+    const instructorID = '1'; // Get this instructor ID from the session
 
     // Call API to create course with name and instructor ID
+    const createCourseResponse = await fetch('/api/createCourse', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: courseName,
+        instructorID: instructorID,
+      }),
+    });
+
+    if (createCourseResponse.ok) {
+      const courseData = await createCourseResponse.json();
+      const courseId = courseData.id;
 
     // Call API to add students to the course with institutionName and fileContent
+    if (fileContent) {
+      await fetch(`/api/courses/${courseId}/students`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          students: fileContent.split('\n'), // Assuming fileContent contains a list of student emails or IDs separated by new lines
+          institutionName: institutionName,
+        }),
+      });
+    }
 
-  }, [courseName, instructorID, fileContent, institutionName, router]);
+    // Redirect to another page after successful creation
+    router.push('/instructor/dashboard'); //This link should be to the newly created courses page
+  } else {
+    // Handle errors
+    console.error('Failed to create course');
+  }
+  
+  }, [courseName, fileContent, institutionName, router]);
 
   return (
     <>
