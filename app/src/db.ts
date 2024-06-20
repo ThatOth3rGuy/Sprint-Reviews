@@ -2,7 +2,7 @@
 import mysql from 'mysql2/promise';
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'db',
+  host: process.env.DB_HOST || 'db', // Replace this if running on localhost, else if running on docker container, use 'db'
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || 'SprintRunners',
   database: process.env.DB_NAME || 'mydb',
@@ -74,8 +74,8 @@ export async function authenticateStudent(email: string, password: string): Prom
 }
 export async function addAssignmentToDatabase(title: string, description: string, dueDate: string, classID: number, file:string) {
   const sql = `
-    INSERT INTO assignment (title, description, deadline, classID)
-    VALUES (?, ?, ?, ?)
+    INSERT INTO assignment (title, description, deadline, classID, file)
+    VALUES (?, ?, ?, ?, ?)
   `;
   try {
     await query(sql, [title, description, new Date(dueDate), classID, file]);
@@ -84,8 +84,19 @@ export async function addAssignmentToDatabase(title: string, description: string
     throw error;
   }
 }
+
 export async function getAssignments(): Promise<any[]> {
   const sql = 'SELECT * FROM assignment';
+  try {
+    const rows = await query(sql);
+    return rows as any[];
+  } catch (error) {
+    console.error('Database query error:', error);
+    throw error;
+  }
+}
+export async function getClasses(): Promise<any[]> {
+  const sql = 'SELECT * FROM class';
   try {
     const rows = await query(sql);
     return rows as any[];

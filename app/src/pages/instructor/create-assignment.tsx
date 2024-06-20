@@ -2,10 +2,15 @@
 import type { NextPage } from 'next';
 import styles from '../../styles/instructor-assignments-creation.module.css';
 import { useRouter } from 'next/router';
-import React, { ChangeEvent, useCallback, useState } from "react";
+import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
 
 import InstructorHeader from "../home/instructor-components/instructor-header";
 import InstructorNavbar from "../home/instructor-components/instructor-navbar";
+
+interface Class {
+  classID: number;
+  className: string;
+}
 
 const Assignments: NextPage = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -13,9 +18,26 @@ const Assignments: NextPage = () => {
   const [dueDate, setDueDate] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [classID, setClassID] = useState('');
+  const [classID, setClassID] = useState<string>('');
+  const [classes, setClasses] = useState<Class[]>([]);
   const router = useRouter();
 
+  useEffect(() => {
+    fetch('/api/getClasses4assign')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        setClasses(data);
+      })
+      .catch(error => {
+        console.error('There has been a problem with your fetch operation:', error);
+      });
+  }, []);
   async function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
     if (!event.target.files || event.target.files.length === 0) {
       return;
@@ -63,7 +85,14 @@ const Assignments: NextPage = () => {
           <input type="text" placeholder="Assignment Title" className={styles.textbox} value={title} onChange={e => setTitle(e.target.value)} />          
           <textarea placeholder="Assignment Description" className={styles.textbox} value={description} onChange={e => setDescription(e.target.value)}></textarea>
           <input type="date" className={styles.textbox} value={dueDate} onChange={e => setDueDate(e.target.value)} />
-          <input type="number" placeholder="Class ID" className={styles.textbox} value={classID} onChange={e => setClassID(e.target.value)} />
+          {/* <input type="number" placeholder="Class ID" className={styles.textbox} value={classID} onChange={e => setClassID(e.target.value)} /> */}
+          <select className={styles.textbox} value={classID} onChange={e => setClassID(e.target.value)}>
+            {classes.map((classItem) => (
+              <option key={classItem.classID} value={classItem.classID.toString()}>
+                {classItem.className}
+              </option>
+            ))}
+          </select>
           <p>Upload Rubric: 
           <input type="file" onChange={handleFileUpload} /></p>          
           <div className={styles.button} onClick={onCreateAssignmentButtonClick}>
