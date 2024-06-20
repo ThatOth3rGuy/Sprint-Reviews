@@ -86,3 +86,16 @@ export async function createCourse(courseName: string, instructorID: number) {
     throw error;
   }
 }
+
+export async function getCourse(courseID: string): Promise<any> {
+  const sql = `
+    SELECT * FROM course WHERE courseID = ?
+  `;
+  try {
+    const rows = await query(sql, [courseID]);
+    return rows[0];
+  } catch (error) {
+    console.error('Error in getCourse:', error);
+    throw error;
+  }
+}

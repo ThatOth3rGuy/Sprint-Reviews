@@ -39,21 +39,10 @@ const Courses: NextPage = () => {
       const courseId = courseData.id;
 
     // Call API to add students to the course with institutionName and fileContent
-    if (fileContent) {
-      await fetch(`/api/courses/${courseId}/students`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          students: fileContent.split('\n'), // Assuming fileContent contains a list of student emails or IDs separated by new lines
-          institutionName: institutionName,
-        }),
-      });
-    }
 
-    // Redirect to another page after successful creation
-    router.push('/instructor/dashboard'); //This link should be to the newly created courses page
+
+    // Redirect to course page after successful creation
+    router.push(`/instructor/course-dashboard/${courseId}`); // Redirect to specific course-dashboard page
   } else {
     // Handle errors
     console.error('Failed to create course');
