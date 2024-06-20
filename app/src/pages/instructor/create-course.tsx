@@ -12,6 +12,7 @@ const Courses: NextPage = () => {
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [courseName, setTitle] = useState('');
   const [institutionName, setDescription] = useState('');
+  const [instructorID, setInstructorID] = useState(''); //Get this instructorID from the session
   const router = useRouter();
 
   async function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
@@ -19,8 +20,13 @@ const Courses: NextPage = () => {
   }
 
   const onCreateCourseButtonClick = useCallback(async () => {
-    // Handle course creation here
-  }, [courseName, institutionName, fileContent, router]);
+    // Get the instructor ID from the session
+
+    // Call API to create course with name and instructor ID
+
+    // Call API to add students to the course with institutionName and fileContent
+
+  }, [courseName, instructorID, fileContent, institutionName, router]);
 
   return (
     <>

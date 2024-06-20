@@ -33,7 +33,6 @@ CREATE TABLE IF NOT EXISTS instructor (
 CREATE TABLE IF NOT EXISTS class (
     classID INT PRIMARY KEY,
     className VARCHAR(100),
-    description TEXT,
     isArchived BOOLEAN,
     instructorID INT,
     FOREIGN KEY (instructorID) REFERENCES instructor(userID)
