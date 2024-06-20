@@ -12,11 +12,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const isAdmin = await authenticateAdmin(email, password);
       if (isAdmin) {
         // Create session for this admin user before authenticating
-        await login({ email, role: 'admin' }, res);
+        await login({ email, password, role: 'admin' }, res);
         res.status(200).json({ message: 'Authenticated' });
       } else if (isAuthenticated) {
         // Create session for this user before authenticating
-        await login({ email, role: 'instructor' }, res);
+        await login({ email, password, role: 'instructor' }, res);
         res.status(200).json({ message: 'Authenticated' });
       } else {
         res.status(401).json({ message: 'Invalid email or password' });

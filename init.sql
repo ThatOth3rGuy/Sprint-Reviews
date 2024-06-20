@@ -34,9 +34,8 @@ CREATE TABLE IF NOT EXISTS instructor (
 
 -- Table for storing classes
 CREATE TABLE IF NOT EXISTS class (
-    classID INT PRIMARY KEY,
+    classID INT AUTO_INCREMENT PRIMARY KEY,
     className VARCHAR(100),
-    description TEXT,
     isArchived BOOLEAN,
     instructorID INT,
     FOREIGN KEY (instructorID) REFERENCES instructor(userID)
@@ -44,7 +43,7 @@ CREATE TABLE IF NOT EXISTS class (
 
 -- Table for storing assignment information
 CREATE TABLE IF NOT EXISTS assignment (
-    assignmentID INT PRIMARY KEY,
+    assignmentID INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100),
     description TEXT,
     rubric TEXT,
@@ -56,7 +55,7 @@ CREATE TABLE IF NOT EXISTS assignment (
 
 -- Table for storing submission information between students and assignments
 CREATE TABLE IF NOT EXISTS submission (
-    submissionID INT PRIMARY KEY,
+    submissionID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT,
     content TEXT,
     studentID INT,
@@ -66,7 +65,7 @@ CREATE TABLE IF NOT EXISTS submission (
 
 -- Table for storing feedback information between students and assignments
 CREATE TABLE IF NOT EXISTS feedback (
-    feedbackID INT PRIMARY KEY,
+    feedbackID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT,
     content TEXT,
     otherStudentID INT,

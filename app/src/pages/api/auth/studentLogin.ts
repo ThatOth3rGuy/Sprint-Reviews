@@ -11,7 +11,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const isAuthenticated = await authenticateStudent(email, password);
       if (isAuthenticated) {
         // Create session for this user before authenticating
-        await login({ email, role: 'student' }, res);
+        await login({ email, password, role: 'student' }, res);
         res.status(200).json({ message: 'Authenticated' });
       } else {
         res.status(401).json({ message: 'Invalid email or password' });
