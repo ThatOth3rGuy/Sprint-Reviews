@@ -46,7 +46,7 @@ services:
     networks:
       - my_network
     ports:
-      - "3306:3306" # Exposing port for MySQL, MySQL Workbench and well our entire system too 
+      - "3307:3306" # Exposing port for MySQL, MySQL Workbench and well our entire system too 
 
 volumes:
   db_data:
