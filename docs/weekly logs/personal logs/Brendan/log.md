@@ -581,3 +581,4 @@
 * Meet and greet 
 * Team formations
 * Course expectations and intro
+
