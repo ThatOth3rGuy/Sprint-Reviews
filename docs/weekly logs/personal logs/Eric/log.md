@@ -59,16 +59,16 @@ Our Monday meeting was moved to Sunday, where we sat down and went over every fe
 ## Wednesday - June 19, 2024
 
 ### Timesheet
-![Clockify Timesheet]()
+![Clockify Timesheet](./images/EricClockify%206.2.png)
 
 ### Cycle Review
     
----
+Not much to talk about for this cycle, it was just continuing on with the tasks we've been working on from the start of the week.
 
 ### Current Tasks
-  * 1: ---
-  * 2: ---
-  * 3: ---
+  * 1: Instructor Course Creation
+  * 2: Instructor Course dashboard view
+  * 3: Adding students to course
 
 ### Progress Update: Wed-Fri
 <table>
@@ -80,26 +80,26 @@ Our Monday meeting was moved to Sunday, where we sat down and went over every fe
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> ---
+        <td> Instructor Course Creation
         </td>
         <!-- Status -->
-        <td>Todo
+        <td> In Progress
         </td>
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> ---
+        <td> Instructor Course dashboard view
         </td>
         <!-- Status -->
-        <td>Todo
+        <td> In Progress
         </td>
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> ---
+        <td> Adding students to course
         </td>
         <!-- Status -->
-        <td>Todo
+        <td> Todo
         </td>
     </tr>
 </table>
