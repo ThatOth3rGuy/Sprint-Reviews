@@ -72,23 +72,56 @@ export async function authenticateStudent(email: string, password: string): Prom
     throw error;
   }
 }
-export async function addAssignmentToDatabase(title: string, description: string, dueDate: string, classID: number, file:string) {
+export async function addAssignmentToDatabase(
+  title: string, 
+  description: string, 
+  dueDate: string, 
+  file: string, 
+  groupAssignment: boolean, 
+  classID: number
+) {
+  if (!Number.isInteger(classID)) {
+    throw new Error('Invalid classID');
+  }
+
   const sql = `
-    INSERT INTO assignment (title, description, deadline, classID, file)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO assignment (title, description, deadline, rubric, groupAssignment, classID)
+    VALUES (?, ?, ?, ?, ?, ?)
   `;
+
   try {
-    await query(sql, [title, description, new Date(dueDate), classID, file]);
-  } catch (error) {
-    console.error('Error in addAssignmentToDatabase:', error); // Log the error
+    // Check if the classID exists in the class table
+    const classCheckSql = 'SELECT COUNT(*) as count FROM class WHERE classID = ?';
+    const classCheckResult = await query(classCheckSql, [classID]);
+    
+    console.log('Class check result:', classCheckResult);
+
+    if (!classCheckResult || !Array.isArray(classCheckResult) || classCheckResult.length === 0) {
+      throw new Error(`Unexpected result when checking for class with ID ${classID}`);
+    }
+
+    const count = classCheckResult[0].count;
+
+    if (count === 0) {
+      throw new Error(`No class found with ID ${classID}`);
+    }
+
+    // If the class exists, proceed with the insert
+    const insertResult = await query(sql, [title, description, new Date(dueDate), file, groupAssignment, classID]);
+    console.log('Insert result:', insertResult);
+
+    return insertResult;
+  } catch (error: any) {
+    console.error('Error in addAssignmentToDatabase:', error);
     throw error;
   }
 }
 
 export async function getAssignments(): Promise<any[]> {
-  const sql = 'SELECT * FROM assignment';
+  const sql = 'SELECT assignmentID, title, description, DATE_FORMAT(deadline, "%Y-%m-%dT%H:%i:%s.000Z") as deadline FROM assignment';
   try {
     const rows = await query(sql);
+    console.log('Fetched assignments:', rows);
     return rows as any[];
   } catch (error) {
     console.error('Database query error:', error);
@@ -102,6 +135,76 @@ export async function getClasses(): Promise<any[]> {
     return rows as any[];
   } catch (error) {
     console.error('Database query error:', error);
+    throw error;
+  }
+}
+// Add these functions to your existing db.ts file
+
+export async function submitAssignment(assignmentID: number, studentID: number, file: Buffer) {
+  const sql = `
+    INSERT INTO submissions (assignmentID, studentID, submissionDate, file)
+    VALUES (?, ?, NOW(), ?)
+  `;
+  try {
+    await query(sql, [assignmentID, studentID, file]);
+  } catch (error) {
+    console.error('Error in submitAssignment:', error);
+    throw error;
+  }
+}
+
+export async function getAssignmentsWithSubmissions() {
+  const sql = `
+    SELECT 
+      a.assignmentID, 
+      a.title, 
+      a.description, 
+      DATE_FORMAT(a.deadline, '%Y-%m-%dT%H:%i:%s.000Z') as deadline,
+      a.rubric,
+      a.file,
+      s.studentID,
+      DATE_FORMAT(s.submissionDate, '%Y-%m-%dT%H:%i:%s.000Z') as submissionDate,
+      s.file as submissionFile
+    FROM 
+      assignment a
+    LEFT JOIN 
+      submissions s ON a.assignmentID = s.assignmentID
+  `;
+  try {
+    const rows = await query(sql);
+    
+    // Group submissions by assignment
+    const assignments = rows.reduce((acc, row) => {
+      const assignment = acc.find((a: { assignmentID: any; }) => a.assignmentID === row.assignmentID);
+      if (assignment) {
+        if (row.studentID) {
+          assignment.submissions.push({
+            studentID: row.studentID,
+            submissionDate: row.submissionDate,
+            file: row.submissionFile
+          });
+        }
+      } else {
+        acc.push({
+          assignmentID: row.assignmentID,
+          title: row.title,
+          description: row.description,
+          deadline: row.deadline,
+          rubric: row.rubric,
+          file: row.file,
+          submissions: row.studentID ? [{
+            studentID: row.studentID,
+            submissionDate: row.submissionDate,
+            file: row.submissionFile
+          }] : []
+        });
+      }
+      return acc;
+    }, []);
+
+    return assignments;
+  } catch (error) {
+    console.error('Error in getAssignmentsWithSubmissions:', error);
     throw error;
   }
 }
