@@ -15,9 +15,25 @@ Topics Covered:
 | Making page templates for all UI pages on Figma | 06/18/2024 | Complete |
 | Setting up system navigation among all pages | 06/18/2024 | Complete |
 | Upload file function on assignment creation for instructor  | 06/18/2024 | Complete |
-| File viewer api for students to view assignment | 06/18/2024 | WIP |
+| File viewer api for students to view assignment | 06/21/2024 | WIP |
 
 ![week 6 time tracking](img/week6.1.png)
+
+### 06/21/2024
+
+Topics Covered:
+
+* researching on options uploading file to db and ui api options for it
+* researching pdf viewer options for student view assignments
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| File viewer api for students to view assignment | 06/21/2024 | WIP |
+| Student view and submit assignment page | 06/21/2024 | WIP |
+
+#### Cycle Review
+
+This week was a little less work heavy in terms of hours spent. I think I completed a decent amount of work for the features we need done for tomorrow. I will have the student view and upload done by the end of day tomorrow so we can move onto testing the features over the weekend. We did have some issues working with the database this week so I was helping Yatharth with breaking down and fixing the issue. The goal is to be done with the assignment creation, course creation, assignment submission, and course registration by next Wednesday.
 
 ## Personal Log For Week 5
 
