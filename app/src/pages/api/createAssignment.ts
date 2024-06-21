@@ -18,7 +18,7 @@ import { query } from "@/db";
 // }
 export async function handler(title: string, description: string, dueDate: string, classID: number, file:string) {
   const sql = `
-    INSERT INTO assignment (title, description, deadline, classID, file)
+    INSERT INTO assignment (title, description, deadline, classID, rubric)
     VALUES (?, ?, ?, ?, ?)
   `;
   try {
