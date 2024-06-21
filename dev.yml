@@ -19,6 +19,8 @@ services:
       - "3001:3000"
     networks:
       - my_network
+    depends_on:
+      - db
   
   playwright-tests:
     container_name: playwright-tests
@@ -43,6 +45,8 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - my_network
+    ports:
+      - "3307:3306" # Exposing port for MySQL, MySQL Workbench and well our entire system too 
 
 volumes:
   db_data:
