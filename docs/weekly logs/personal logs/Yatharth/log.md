@@ -1,7 +1,84 @@
  # Weekly Logs 
 ------------------------------------
+# Week 6 Summary
+## Friday (6/21/2024)
 
-# Week 5
+### Timesheet Week 5 (06/012/2024 - 06/14/2024)
+![alt text](images/week5Wed.png)
+
+
+### Current Tasks (Complete by the end of the day)
+  * Assignment Creation/Submission system ready for testing
+  * Research and decide on authenticator to be implemented
+  * Start on Authenticator setup and handle front-end restrictions
+
+
+### Progress Update 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+  <tr>
+        <!-- Task/Issue # -->
+        <td> Submit Assignments received by the instructor
+        </td>
+        <!-- Status -->
+        <td> In progress
+        </td>
+    </tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> Submit Assignments with file restrictions
+        </td>
+        <!-- Status -->
+        <td> In progress
+        </td>
+    </tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> View Assignments from Creation Form
+        </td>
+        <!-- Status -->
+        <td> In progress/Portion Completed
+        </td>
+    </tr><tr>
+        <!-- Task/Issue # -->
+        <td> Fix MySql connection to System 
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+  <tr>
+        <!-- Task/Issue # -->
+        <td> Assignment Creation Form working with Database
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>       
+     
+    
+</table>
+
+### Weekly Goal Review
+- We split the features down into sub features and are making it work in isolations following these steps in our developemnt:
+    1. Divide the feature into different components 
+    1. Split into even sub components worked by two people 
+    1. Then we do PR on the code 
+    1. Once approoved we will integrate it in pairs and test it (end-to-end,database etc.) before merging to development
+- I have rectified the database associated with Tithi to ensure its compatibility with the system. Initially, it was functioning as an isolated container, unable to interact with the system. Upon investigation, I discovered that the ports were not exposed to the system. By addressing this issue, I was able to activate the dynamic database GUI. For this purpose, I opted for MySQL Workbench. 
+-  I got the assignment creation form to input all text and date tye, still working on apllying file restrictions with Tithi as we are working on the Assignment creation and Submission system as mentioned in the DFD
+-
+
+### Next Cycle Goals
+  * Get all of the above tested and ready to go in the owen to cook or deploy in PM terms. 
+  * State management of users on site need to work with authenticator API  
+  * For Any goals after Friday's meeting go here.
+# Week 5 Summary
 ## Wednesday (6/19/2024)
 
 ### Timesheet Week 5 (06/012/2024 - 06/19/2024)
