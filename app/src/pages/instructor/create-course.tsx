@@ -29,7 +29,7 @@ const Courses: NextPage = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: courseName,
+        courseName: courseName,
         instructorID: instructorID,
       }),
     });
