@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import Link from "next/link";
 import style from "../../../styles/student-components.module.css";
 import { useRouter } from "next/router";
 
@@ -10,6 +9,21 @@ const StudentNavbar: NextPage = () => {
 
   const handleNavigation = (path: string) => {
     router.push(path);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+      });
+      if (response.ok) {
+        router.push('/student/login');
+      } else {
+        console.error('Failed to log out');
+      }
+    } catch (error) {
+      console.error('Failed to log out', error);
+    }
   };
 
   return (
@@ -41,7 +55,7 @@ const StudentNavbar: NextPage = () => {
       <div className={style.logoutWrapper}>
         <div
           className={style.navButton}
-          onClick={() => handleNavigation("/student/login")}
+          onClick={() => handleLogout()}
         >
           Logout
         </div>

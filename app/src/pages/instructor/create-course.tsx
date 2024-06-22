@@ -3,16 +3,20 @@ import type { NextPage } from 'next';
 import styles from '../../styles/instructor-courses-creation.module.css';
 import { useRouter } from 'next/router';
 import React, { ChangeEvent, useCallback, useState } from "react";
-
-import InstructorHeader from "../home/instructor-components/instructor-header";
-import InstructorNavbar from "../home/instructor-components/instructor-navbar";
+import InstructorHeader from "../components/instructor-components/instructor-header";
+import InstructorNavbar from "../components/instructor-components/instructor-navbar";
+import { useSessionValidation } from '../api/auth/checkSession';
 
 const Courses: NextPage = () => {
-  const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<any>(null);
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [courseName, setTitle] = useState('');
   const [institutionName, setDescription] = useState('');
   const router = useRouter();
+
+  // Use the session validation hook to check if the user is logged in
+  useSessionValidation('instructor', setLoading, setSession);
 
   async function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
       //Handle student list upload here
@@ -50,6 +54,10 @@ const Courses: NextPage = () => {
   
   }, [courseName, fileContent, institutionName, router]);
 
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+  
   return (
     <>
       <InstructorHeader

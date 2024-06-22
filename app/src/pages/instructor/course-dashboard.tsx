@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import InstructorHeader from "../home/instructor-components/instructor-header";
-import InstructorNavbar from "../home/instructor-components/instructor-navbar";
+import InstructorHeader from "../components/instructor-components/instructor-header";
+import InstructorNavbar from "../components/instructor-components/instructor-navbar";
+import { useSessionValidation } from '../api/auth/checkSession';
 
 interface CourseData {
   courseID: string;
@@ -9,10 +10,15 @@ interface CourseData {
 }
 
 export default function Page() {
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<any>(null);
   const router = useRouter();
   const { courseID } = router.query;
 
   const [courseData, setCourseData] = useState<CourseData | null>(null);
+
+  // Use the session validation hook to check if the user is logged in
+  useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
     if (courseID) {
@@ -24,7 +30,7 @@ export default function Page() {
     }
   }, [courseID]);
 
-  if (!courseData) {
+  if (!courseData || loading) {
     return <div>Loading...</div>;
   }
 
