@@ -2,9 +2,9 @@
 import type { NextPage } from 'next';
 import styles from '../../styles/instructor-courses-creation.module.css';
 import { useRouter } from 'next/router';
-import React, { ChangeEvent, useCallback, useState } from "react";
-import InstructorHeader from "../components/instructor-components/instructor-header";
-import InstructorNavbar from "../components/instructor-components/instructor-navbar";
+import React, { ChangeEvent, useCallback, useState } from 'react';
+import InstructorHeader from '../components/instructor-components/instructor-header';
+import InstructorNavbar from '../components/instructor-components/instructor-navbar';
 import { useSessionValidation } from '../api/auth/checkSession';
 
 const Courses: NextPage = () => {
@@ -18,13 +18,26 @@ const Courses: NextPage = () => {
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
 
+  // Function to handle file upload
   async function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
-      //Handle student list upload here
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setFileContent(e.target?.result as string);
+      };
+      reader.readAsText(file);
+    }
   }
 
+  // Function to create a course
   const onCreateCourseButtonClick = useCallback(async () => {
-    // Get the instructor ID from the session
-    const instructorID = '1'; // Get this instructor ID from the session
+    if (!session || !session.user || !session.user.userID) {
+      console.error('No instructor ID found in session');
+      return;
+    }
+
+    const instructorID = session.user.userID;
 
     // Call API to create course with name and instructor ID
     const createCourseResponse = await fetch('/api/createCourse', {
@@ -42,20 +55,29 @@ const Courses: NextPage = () => {
       const courseData = await createCourseResponse.json();
       const courseId = courseData.courseId;
 
-    // Call API to add students to the course with institutionName and fileContent
+      // Call API to add students to the course with institutionName and fileContent
+      await fetch('/api/addStudentsToCourse', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          courseId: courseId,
+          institutionName: institutionName,
+          students: fileContent,
+        }),
+      });
 
-
-    // Redirect to course page after successful creation
-    router.push({
-      pathname: '/instructor/course-dashboard',
-      query: { courseId }
-    });
-  } else {
-    // Handle errors
-    console.error('Failed to create course');
-  }
-  
-  }, [courseName, fileContent, institutionName, router]);
+      // Redirect to course page after successful creation
+      router.push({
+        pathname: '/instructor/course-dashboard',
+        query: { courseId },
+      });
+    } else {
+      // Handle errors
+      console.error('Failed to create course');
+    }
+  }, [courseName, fileContent, institutionName, router, session]);
 
   if (loading) {
     return <p>Loading...</p>;
