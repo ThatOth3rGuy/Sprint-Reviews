@@ -6,14 +6,14 @@ import { useSessionValidation } from '../api/auth/checkSession';
 
 interface CourseData {
   courseID: string;
-  name: string;
+  courseName: string;
 }
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const router = useRouter();
-  const { courseID } = router.query;
+  const { courseId } = router.query;
 
   const [courseData, setCourseData] = useState<CourseData | null>(null);
 
@@ -21,14 +21,17 @@ export default function Page() {
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
-    if (courseID) {
+    if (courseId) {
       // Fetch course data from the database using the courseID
-      fetch(`/api/courses/${courseID}`)
+      fetch(`/api/courses/${courseId}`)
         .then((response) => response.json())
-        .then((data: CourseData) => setCourseData(data))
+        .then((data: CourseData) => {
+          console.log("Fetched course data:", data);
+          setCourseData(data);
+        })
         .catch((error) => console.error('Error fetching course data:', error));
     }
-  }, [courseID]);
+  }, [courseId]);
 
   if (!courseData || loading) {
     return <div>Loading...</div>;
@@ -40,13 +43,13 @@ export default function Page() {
       <br />
       <br />
       <InstructorHeader 
-        title={courseData.name}
+        title={courseData.courseName}
         addLink={[
-          { href: `/${courseID}/create-assignment`, title: "Create Assignment" }, 
-          { href: `/${courseID}/release-assignment`, title: "Release Assignment" }
+          { href: `/instructor/create-assignment?courseId=${courseId}`, title: "Create Assignment" }, 
+          { href: `/instructor/release-assignment?courseId=${courseId}`, title: "Release Assignment" }
         ]}
       />
-      <InstructorNavbar/>
+      <InstructorNavbar />
     </>
   );
 }

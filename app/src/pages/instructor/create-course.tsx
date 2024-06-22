@@ -1,4 +1,4 @@
-// create-assignment.tsx
+// create-course.tsx
 import type { NextPage } from 'next';
 import styles from '../../styles/instructor-courses-creation.module.css';
 import { useRouter } from 'next/router';
@@ -40,13 +40,16 @@ const Courses: NextPage = () => {
 
     if (createCourseResponse.ok) {
       const courseData = await createCourseResponse.json();
-      const courseId = courseData.id;
+      const courseId = courseData.courseId;
 
     // Call API to add students to the course with institutionName and fileContent
 
 
     // Redirect to course page after successful creation
-    router.push(`/instructor/course-dashboard/${courseId}`); // Redirect to specific course-dashboard page
+    router.push({
+      pathname: '/instructor/course-dashboard',
+      query: { courseId }
+    });
   } else {
     // Handle errors
     console.error('Failed to create course');
@@ -57,7 +60,7 @@ const Courses: NextPage = () => {
   if (loading) {
     return <p>Loading...</p>;
   }
-  
+
   return (
     <>
       <InstructorHeader
