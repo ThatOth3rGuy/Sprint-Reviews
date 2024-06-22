@@ -15,7 +15,26 @@ const Courses: NextPage = () => {
   const router = useRouter();
 
   async function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
-      //Handle student list upload here
+    // Handle student list upload here
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const fileContent = e.target?.result as string;
+        setFileContent(fileContent);
+        const enrollStudentsResponse = await fetch('/api/enrollStudents', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            institutionName: institutionName,
+            fileContent: fileContent,
+          }),
+        });
+      };
+      reader.readAsText(file);
+    }
   }
 
   const onCreateCourseButtonClick = useCallback(async () => {
@@ -39,8 +58,7 @@ const Courses: NextPage = () => {
       const courseId = courseData.id;
 
     // Call API to add students to the course with institutionName and fileContent
-
-
+    
     // Redirect to course page after successful creation
     router.push(`/instructor/course-dashboard/${courseId}`); // Redirect to specific course-dashboard page
   } else {
