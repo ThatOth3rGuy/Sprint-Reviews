@@ -1,0 +1,230 @@
+.assignmentsChild {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0%;
+    right: 0%;
+    bottom: 0%;
+    left: 0%;
+    background-color: #90ab93;
+}
+.assignments1 {
+    position: absolute;
+    top: 60.3px;
+    left: 4.04px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 177px;
+    height: 40px;
+}
+.courseCardChild {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0%;
+    right: 0%;
+    bottom: 0%;
+    left: 0%;
+    border-radius: 25px;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+}
+.courseCardItem {
+    position: absolute;
+    height: 77.91%;
+    width: 80.21%;
+    top: 11.04%;
+    right: 17.41%;
+    bottom: 11.04%;
+    left: 2.37%;
+    border-radius: 15px;
+    background: linear-gradient(270deg, rgba(217, 217, 217, 0.05), #90ab93);
+}
+.course1 {
+    position: absolute;
+    height: 24.54%;
+    width: 23.48%;
+    top: 37.42%;
+    left: 5.54%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.instructor {
+    position: absolute;
+    height: 24.54%;
+    width: 27.18%;
+    top: 37.42%;
+    left: 70.45%;
+    font-size: 25px;
+    display: flex;
+    font-weight: 700;
+    color: #90ab93;
+    align-items: center;
+    justify-content: center;
+}
+.courseCard {
+    position: absolute;
+    top: 228px;
+    left: 235px;
+    width: 758px;
+    height: 163px;
+    cursor: pointer;
+}
+.courseCard1 {
+    position: absolute;
+    top: 624px;
+    left: 235px;
+    width: 758px;
+    height: 163px;
+    cursor: pointer;
+}
+.courseCard2 {
+    position: absolute;
+    top: 822px;
+    left: 235px;
+    width: 758px;
+    height: 163px;
+    cursor: pointer;
+}
+.courseCard3 {
+    position: absolute;
+    top: 426px;
+    left: 235px;
+    width: 758px;
+    height: 163px;
+    cursor: pointer;
+}
+.pendingAssignmentsChild {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 25px;
+    background-color: #fcf9f7;
+    border: 1px solid #627264;
+    box-sizing: border-box;
+    width: 364px;
+    height: 745px;
+}
+.pendingAssignmentsItem {
+    position: absolute;
+    top: 12.97px;
+    left: 13.04px;
+    border-radius: 15px;
+    background-color: #90ab93;
+    border: 1px solid #cdaf75;
+    box-sizing: border-box;
+    width: 338.1px;
+    height: 58.9px;
+}
+.pendingAssignments1 {
+    position: absolute;
+    top: 12.97px;
+    left: 31.11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 302px;
+    height: 58.9px;
+}
+.assignment {
+    position: absolute;
+    height: 56%;
+    width: 48.14%;
+    top: 0%;
+    left: 0%;
+    display: flex;
+    align-items: center;
+}
+.due010101 {
+    position: absolute;
+    height: 56%;
+    width: 48.14%;
+    top: 0%;
+    left: 51.85%;
+    font-size: 20px;
+    display: flex;
+    text-align: right;
+    align-items: center;
+}
+.course {
+    position: absolute;
+    height: 22.67%;
+    width: 48.14%;
+    top: 56%;
+    left: 0%;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+}
+.assignmentDetailsChild {
+    position: absolute;
+    height: 1.33%;
+    width: 99.04%;
+    top: 98.67%;
+    right: 0.32%;
+    bottom: 0%;
+    left: 0.64%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+    object-fit: contain;
+}
+.assignmentDetails {
+    position: absolute;
+    top: 87px;
+    left: 26px;
+    width: 312px;
+    height: 75px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 22px;
+    color: #000;
+}
+.pendingAssignments {
+    position: absolute;
+    top: 220px;
+    left: 1042px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    width: 364px;
+    height: 745px;
+    font-size: 30px;
+    color: #f0f8f1;
+}
+.assignmentDetails1 {
+    position: absolute;
+    top: 398px;
+    left: 1068px;
+    width: 312px;
+    height: 75px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 22px;
+    color: #000;
+}
+.breadcrumbs {
+    position: absolute;
+    top: 184px;
+    left: 235px;
+    font-size: 22px;
+    display: flex;
+    color: #627264;
+    align-items: center;
+    justify-content: center;
+    width: 151px;
+    height: 25px;
+}
+.studentHome {
+    width: 100%;
+    position: relative;
+    background-color: #fcf9f7;
+    height: 1024px;
+    overflow: hidden;
+    text-align: center;
+    font-size: 40px;
+    color: #fff;
+    font-family: 'Inria Serif';
+}
+

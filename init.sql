@@ -3,6 +3,16 @@
 CREATE DATABASE IF NOT EXISTS mydb;
 USE mydb;
 
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS student;
+DROP TABLE IF EXISTS instructor;
+DROP TABLE IF EXISTS course;
+DROP TABLE IF EXISTS class;
+DROP TABLE IF EXISTS assignment;
+DROP TABLE IF EXISTS submission;
+DROP TABLE IF EXISTS feedback;
+DROP TABLE IF EXISTS Enrollment;
+
 -- Table for storing users, which are separated into students and instructors
 CREATE TABLE IF NOT EXISTS user (
     userID INT AUTO_INCREMENT PRIMARY KEY,
@@ -32,10 +42,10 @@ CREATE TABLE IF NOT EXISTS instructor (
     FOREIGN KEY (userID) REFERENCES user(userID)
 );
 
--- Table for storing classes
-CREATE TABLE IF NOT EXISTS class (
-    classID INT AUTO_INCREMENT PRIMARY KEY,
-    className VARCHAR(100),
+-- Table for storing courses
+CREATE TABLE IF NOT EXISTS course (
+    courseID INT AUTO_INCREMENT PRIMARY KEY,
+    courseName VARCHAR(100),
     isArchived BOOLEAN,
     instructorID INT,
     FOREIGN KEY (instructorID) REFERENCES instructor(userID)
@@ -49,8 +59,8 @@ CREATE TABLE IF NOT EXISTS assignment (
     rubric TEXT,
     deadline DATETIME,
     groupAssignment BOOLEAN,
-    classID INT,
-    FOREIGN KEY (classID) REFERENCES class(classID)
+    courseID INT,
+    FOREIGN KEY (courseID) REFERENCES course(courseID)
 );
 
 -- Table for storing submission information between students and assignments
@@ -73,13 +83,13 @@ CREATE TABLE IF NOT EXISTS feedback (
     FOREIGN KEY (otherStudentID) REFERENCES student(userID)
 );
 
--- Table for storing enrollment information to connect students to classes
-CREATE TABLE IF NOT EXISTS Enrollment (
+-- Table for storing enrollment information to connect students to courses
+CREATE TABLE IF NOT EXISTS enrollment (
     studentID INT,
-    classID INT,
-    PRIMARY KEY (studentID, classID),
+    courseID INT,
+    PRIMARY KEY (studentID, courseID),
     FOREIGN KEY (studentID) REFERENCES student(userID),
-    FOREIGN KEY (classID) REFERENCES class(classID)
+    FOREIGN KEY (courseID) REFERENCES course(courseID)
 );
 
 -- Insert a sample user (student) into the user table
