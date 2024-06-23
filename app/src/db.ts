@@ -99,7 +99,7 @@ export async function getCourse(courseID: string): Promise<any> {
     throw error;
   }
 }
-  // Will need addStudent function to store students based on classID and assigned value
+  // grab all students from the database matching the first and last name
 export async function getStudents(firstName:string, lastName:string) {
   const sql = `
     SELECT * FROM user WHERE firstName = ? AND lastName = ? AND userRole = 'student'
@@ -111,6 +111,20 @@ export async function getStudents(firstName:string, lastName:string) {
     }
   } catch (error) {
     console.error('Error in getStudents:', error);
+    throw error;
+  }
+}
+//  enroll student in a course
+export async function enrollStudent(studentID: string, courseID: string) {
+  const sql = `
+    INSERT INTO course_enrollment (studentID, courseID)
+    VALUES (?, ?)
+  `;
+  try {
+    const result = await query(sql, [studentID, courseID]);
+    return result.insertId;
+  } catch (error) {
+    console.error('Error in enrollStudent:', error);
     throw error;
   }
 }
