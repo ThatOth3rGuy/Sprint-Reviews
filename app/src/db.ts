@@ -4,7 +4,7 @@ import mysql from 'mysql2/promise';
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'db', // Replace this if running on localhost, else if running on docker container, use 'db'
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || 'SprintRunners',
+  password: process.env.DB_PASSWORD || 'SprintRunners', // SprintRunners
   database: process.env.DB_NAME || 'mydb',
   waitForConnections: true,
   connectionLimit: 10,
@@ -78,36 +78,37 @@ export async function addAssignmentToDatabase(
   dueDate: string, 
   file: string, 
   groupAssignment: boolean, 
-  classID: number
+  courseID: number,
+  allowedFileTypes: string[]
 ) {
-  if (!Number.isInteger(classID)) {
-    throw new Error('Invalid classID');
+  if (!Number.isInteger(courseID)) {
+    throw new Error('Invalid courseID');
   }
-
+  const allowedFileTypesString = allowedFileTypes.join(',');
   const sql = `
-    INSERT INTO assignment (title, description, deadline, rubric, groupAssignment, classID)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO assignment (title, description, deadline, rubric, groupAssignment, courseID, allowedFileTypes)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 
   try {
     // Check if the classID exists in the class table
-    const classCheckSql = 'SELECT COUNT(*) as count FROM class WHERE classID = ?';
-    const classCheckResult = await query(classCheckSql, [classID]);
+    const classCheckSql = 'SELECT COUNT(*) as count FROM course WHERE courseID = ?';
+    const classCheckResult = await query(classCheckSql, [courseID]);
     
     console.log('Class check result:', classCheckResult);
 
     if (!classCheckResult || !Array.isArray(classCheckResult) || classCheckResult.length === 0) {
-      throw new Error(`Unexpected result when checking for class with ID ${classID}`);
+      throw new Error(`Unexpected result when checking for class with ID ${courseID}`);
     }
 
     const count = classCheckResult[0].count;
 
     if (count === 0) {
-      throw new Error(`No class found with ID ${classID}`);
+      throw new Error(`No class found with ID ${courseID}`);
     }
 
     // If the class exists, proceed with the insert
-    const insertResult = await query(sql, [title, description, new Date(dueDate), file, groupAssignment, classID]);
+    const insertResult = await query(sql, [title, description, new Date(dueDate), file, groupAssignment, courseID, allowedFileTypesString]);
     console.log('Insert result:', insertResult);
 
     return insertResult;
@@ -128,8 +129,8 @@ export async function getAssignments(): Promise<any[]> {
     throw error;
   }
 }
-export async function getClasses(): Promise<any[]> {
-  const sql = 'SELECT * FROM class';
+export async function getCourses(): Promise<any[]> {
+  const sql = 'SELECT * FROM course';
   try {
     const rows = await query(sql);
     return rows as any[];

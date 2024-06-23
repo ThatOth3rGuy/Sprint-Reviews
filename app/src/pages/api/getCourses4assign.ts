@@ -1,14 +1,14 @@
-//getClasses4assign.ts
+//getcourses4assign.ts
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getClasses } from '../../db';
+import { getCourses} from '../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     try {
-      const classes = await getClasses();
-      res.status(200).json(classes);
+      const courses = await getCourses();
+      res.status(200).json(courses);
     } catch (error) {
-      res.status(500).json({ message: 'An error occurred while fetching the classes.' });
+      res.status(500).json({ message: 'An error occurred while fetching the courses.' });
     }
   } else {
     res.status(405).json({ message: 'Method not allowed.' });
