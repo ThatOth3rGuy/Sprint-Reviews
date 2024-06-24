@@ -117,7 +117,7 @@ export async function getStudents(firstName:string, lastName:string) {
 //  enroll student in a course
 export async function enrollStudent(studentID: string, courseID: string) {
   const sql = `
-    INSERT INTO course_enrollment (studentID, courseID)
+    INSERT INTO enrollment (studentID, courseID)
     VALUES (?, ?)
   `;
   try {

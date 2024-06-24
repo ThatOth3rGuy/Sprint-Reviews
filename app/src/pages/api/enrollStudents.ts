@@ -5,8 +5,10 @@ import { enrollStudent } from '../../db';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const { studentIDs, courseID } = req.body;
+        console.log('Enrolling students', studentIDs, 'in course', courseID);
         try {
             for (const studentId of studentIDs) {
+                console.log('Enrolling student', studentId, 'in course', courseID);
                 await enrollStudent(studentId, courseID);
             }
             res.status(201).json({ courseID, studentIDs });

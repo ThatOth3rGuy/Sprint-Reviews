@@ -52,24 +52,24 @@ const Courses: NextPage = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: courseName,
+        courseName: courseName,
         instructorID: instructorID,
       }),
     });
     // If course creation is successful, get the course ID and enroll students
     if (createCourseResponse.ok) {
       const courseData = await createCourseResponse.json();
-      const courseId = courseData.id;
+      const courseId = courseData.courseId;
 
     // Call API to add students to the course with institutionName and fileContent
-      const enrollStudentsResponse = await fetch(`/api/enrollStudents/${courseId}`, { // Call the enrollStudents API
+      const enrollStudentsResponse = await fetch(`/api/enrollStudents`, { // Call the enrollStudents API
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        students: students, // Send the students array
-        courseId: courseId, // Send the course ID
+        studentIDs: students, // Send the students array
+        courseID: courseId, // Send the course ID
       }),
     });
 
@@ -79,7 +79,7 @@ const Courses: NextPage = () => {
       console.error('Failed to enroll students');
     }
     // Redirect to course page after successful creation
-    router.push(`/instructor/course-dashboard/${courseId}`); // Redirect to specific course-dashboard page
+    //router.push(`/instructor/course-dashboard/${courseId}`); // Redirect to specific course-dashboard page
   } else {
     // Handle errors
     console.error('Failed to create course');
