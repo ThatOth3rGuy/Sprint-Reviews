@@ -1,22 +1,12 @@
-.assignmentsChild {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: #90ab93;
-}
 .assignments1 {
     position: absolute;
-    top: 60.3px;
-    left: 4.04px;
+    top: 5%;
+    left: 1%;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 177px;
-    height: 40px;
+    width: 20%;
+    height: 5%;
 }
 .courseCardChild {
     position: absolute;
@@ -31,21 +21,19 @@
 }
 .courseCardItem {
     position: absolute;
-    height: 77.91%;
-    width: 80.21%;
-    top: 11.04%;
-    right: 17.41%;
-    bottom: 11.04%;
-    left: 4%;
+    height: 70%;
+    width: 80%;
+    top: 12.5%;
+    left: 2.8%;
     border-radius: 15px;
     background: linear-gradient(270deg, rgba(217, 217, 217, 0.05), #90ab93);
 }
-.course1 {
-    position: absolute;
+.courseName {
+    position: relative;
     height: 24.54%;
-    width: 23.48%;
-    top: 37.42%;
-    left: 5.54%;
+    width: 40%;
+    top: 0%;
+    left: -30%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -56,7 +44,7 @@
     width: 27.18%;
     top: 37.42%;
     left: 70.45%;
-    font-size: 25px;
+    font-size: 2.2vw;
     display: flex;
     font-weight: 700;
     color: #90ab93;
@@ -64,36 +52,18 @@
     justify-content: center;
 }
 .courseCard {
-    position: absolute;
-    top: 228px;
-    left: 235px;
-    width: 758px;
+    position: relative; /* Change to relative for proper layout */
+    top: 15%;
+    right: 15%;
+    margin: 20px auto; /* Add margin for spacing */
+    width: 50%; /* Adjust width */
+    max-width: 758px; /* Ensure max width */
     height: 163px;
     cursor: pointer;
-}
-.courseCard1 {
-    position: absolute;
-    top: 624px;
-    left: 235px;
-    width: 758px;
-    height: 163px;
-    cursor: pointer;
-}
-.courseCard2 {
-    position: absolute;
-    top: 822px;
-    left: 235px;
-    width: 758px;
-    height: 163px;
-    cursor: pointer;
-}
-.courseCard3 {
-    position: absolute;
-    top: 426px;
-    left: 235px;
-    width: 758px;
-    height: 163px;
-    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd; /* Add border for visibility */
 }
 .pendingAssignmentsChild {
     position: absolute;
@@ -103,35 +73,36 @@
     background-color: #fcf9f7;
     border: 1px solid #627264;
     box-sizing: border-box;
-    width: 364px;
-    height: 745px;
+    width: 40%;
+    height: 73vh;
 }
 .pendingAssignmentsItem {
     position: absolute;
-    top: 12.97px;
-    left: 13.04px;
+    top: 1.5%;
+    left: 1.5%;
     border-radius: 15px;
     background-color: #90ab93;
     border: 1px solid #cdaf75;
     box-sizing: border-box;
-    width: 338.1px;
-    height: 58.9px;
+    width: 37%;
+    height: 8%;
 }
 .pendingAssignments1 {
     position: absolute;
-    top: 12.97px;
-    left: 31.11px;
+    top: 1.5%;
+    left: 6%;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 302px;
-    height: 58.9px;
+    width: 30%;
+    height: 7%;
+    font-size: 1.8vw;
 }
 .assignment {
     position: absolute;
     height: 56%;
     width: 48.14%;
-    top: 0;
+    top: 20%;
     left: 0;
     display: flex;
     align-items: center;
@@ -140,9 +111,8 @@
     position: absolute;
     height: 56%;
     width: 48.14%;
-    top: 0;
+    top: 20%;
     left: 51.85%;
-    font-size: 20px;
     display: flex;
     text-align: right;
     align-items: center;
@@ -151,96 +121,69 @@
     position: absolute;
     height: 22.67%;
     width: 48.14%;
-    top: 56%;
+    top: 90%;
     left: 0;
-    font-size: 15px;
     display: flex;
     align-items: center;
 }
-.assignmentDetailsChild {
-    position: absolute;
-    height: 1.33%;
-    width: 99.04%;
-    top: 98.67%;
-    right: 0.32%;
-    bottom: 0;
-    left: 0.64%;
-    max-width: 100%;
-    overflow: hidden;
-    object-fit: contain;
-}
 .assignmentDetails {
     position: absolute;
-    top: 87px;
-    left: 26px;
-    width: 312px;
-    height: 75px;
+    top: 12%;
+    left: 2.6%;
+    width: 32%;
+    height: 7.5%;
     cursor: pointer;
     text-align: left;
-    font-size: 22px;
+    font-size: 1.5vw;
     color: #000;
 }
 .pendingAssignments {
-    position: absolute;
-    top: 220px;
-    left: 1042px;
+    position: relative;
+    top: -50%;
+    left: 65%;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    width: 364px;
-    height: 745px;
-    font-size: 30px;
+    width: 80%;
+    height: 73vh;
+    font-size: 3vw;
     color: #f0f8f1;
 }
 .assignmentDetails1 {
     position: absolute;
-    top: 398px;
-    left: 1068px;
-    width: 312px;
-    height: 75px;
+    top: 42%;
+    left: 66.8%;
+    width: 32%;
+    height: 7.5%;
     cursor: pointer;
     text-align: left;
-    font-size: 22px;
+    font-size: 1.5vw;
     color: #000;
 }
 .breadcrumbs {
-    position: absolute;
-    top: 184px;
-    left: 235px;
-    font-size: 22px;
+    position: relative;
+    top: 15%;
+    right: 37.5%;
+    margin-bottom: 20px;
+    font-size: 18px;
     display: flex;
     color: #627264;
-    align-items: center;
+    align-items: left;
     justify-content: center;
-    width: 151px;
+    width: 100%;
     height: 25px;
 }
 .studentHome {
     width: 100%;
     position: relative;
     background-color: #fcf9f7;
-    height: 1024px;
+    height: 102.4vh;
     overflow: hidden;
     text-align: center;
-    font-size: 40px;
+    font-size: 3vw;
     color: #fff;
     font-family: 'Inria Serif';
 }
 
 /* Responsive Styles */
-@media (max-width: 1200px) {
-    .courseCard, .courseCard1, .courseCard2, .courseCard3 {
-        width: 100%;
-        left: 0;
-    }
-    .pendingAssignments {
-        top: auto;
-        left: auto;
-        right: 0;
-        bottom: 0;
-        width: 100%;
-        height: auto;
-    }
-}
-
 @media (max-width: 768px) {
     .assignments1, .pendingAssignments1 {
         width: 100%;
@@ -251,7 +194,7 @@
         left: 0;
         text-align: center;
     }
-    .courseCard, .courseCard1, .courseCard2, .courseCard3 {
+    .courseCard {
         width: 100%;
         left: 0;
     }
@@ -259,9 +202,9 @@
 
 @media (max-width: 480px) {
     .studentHome {
-        font-size: 30px;
+        font-size: 3vw;
     }
     .instructor {
-        font-size: 20px;
+        font-size: 2vw;
     }
 }

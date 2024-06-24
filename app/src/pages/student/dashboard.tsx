@@ -1,3 +1,4 @@
+// student/dashboard.tsx
 import { useState, useEffect, useCallback } from 'react';
 import StudentHeader from '../components/student-components/student-header';
 import StudentNavbar from '../components/student-components/student-navbar';
@@ -9,7 +10,7 @@ import { useRouter } from 'next/router';
 interface Course {
   courseID: number;
   courseName: string;
-  instructorName: string;
+  instructorFirstName: string;
 }
 
 function Page() {
@@ -22,7 +23,6 @@ function Page() {
   useSessionValidation('student', setLoading, setSession);
 
   useEffect(() => {
-	// Fetch the courses for the student based on the session
     const fetchCourses = async () => {
       if (session) {
         try {
@@ -53,17 +53,16 @@ function Page() {
     return <p>Loading...</p>;
   }
 
-  console.log(courses);
-
   return (
     <>
       <div className={styles.studentHome}>
+	  <b className={styles.breadcrumbs}>Breadcrumbs</b>
         {courses.map((course) => (
           <div key={course.courseID} className={styles.courseCard} onClick={() => onCoursesContainerClick(course.courseID)}>
             <img className={styles.courseCardChild} alt="" src="/CourseCard-outline.svg" />
             <div className={styles.courseCardItem} />
-            <b className={styles.course1}>{course.courseName}</b>
-            <i className={styles.instructor}>{course.instructorName}</i>
+            <b className={styles.courseName}>{course.courseName}</b>
+            <i className={styles.instructor}>{course.instructorFirstName}</i>
           </div>
         ))}
         <div className={styles.pendingAssignments}>
@@ -74,20 +73,14 @@ function Page() {
             <b className={styles.assignment}>Assignment</b>
             <b className={styles.due010101}>Due: 01/01/01</b>
             <b className={styles.course}>Course</b>
-            <img className={styles.assignmentDetailsChild} alt="" src="/Line.svg" />
           </div>
         </div>
         <div className={styles.assignmentDetails1} onClick={onAssignmentsContainerClick}>
           <b className={styles.assignment}>Assignment</b>
           <b className={styles.due010101}>Due: 01/01/01</b>
           <b className={styles.course}>Course</b>
-          <img className={styles.assignmentDetailsChild} alt="" src="/Line.svg" />
         </div>
-        <b className={styles.breadcrumbs}>Breadcrumbs</b>
       </div>
-      <br />
-      <br />
-      <br />
       <StudentHeader title="Dashboard" />
       <StudentNavbar />
     </>
