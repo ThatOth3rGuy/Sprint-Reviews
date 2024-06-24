@@ -4,11 +4,6 @@ CREATE DATABASE IF NOT EXISTS mydb;
 USE mydb;
 
 
-
-
-
-
-
 DROP TABLE IF EXISTS user;
 -- Table for storing users, which are separated into students and instructors
 CREATE TABLE IF NOT EXISTS user (
@@ -66,12 +61,14 @@ CREATE TABLE IF NOT EXISTS assignment (
 );
 
 DROP TABLE IF EXISTS submission;
--- Table for storing submission information between students and assignments
 CREATE TABLE IF NOT EXISTS submission (
     submissionID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT,
-    content TEXT,
     studentID INT,
+    fileName VARCHAR(255),
+    fileContent LONGBLOB,
+    fileType VARCHAR(100),
+    submissionDate DATETIME,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
     FOREIGN KEY (studentID) REFERENCES student(userID)
 );

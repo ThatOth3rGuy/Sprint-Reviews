@@ -1,5 +1,7 @@
 // db.ts
 import mysql from 'mysql2/promise';
+import fs from 'fs/promises';
+import path from 'path';
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'db', // Replace this if running on localhost, else if running on docker container, use 'db'
@@ -139,20 +141,20 @@ export async function getCourses(): Promise<any[]> {
     throw error;
   }
 }
-// Add these functions to your existing db.ts file
 
-export async function submitAssignment(assignmentID: number, studentID: number, file: Buffer) {
-  const sql = `
-    INSERT INTO submissions (assignmentID, studentID, submissionDate, file)
-    VALUES (?, ?, NOW(), ?)
-  `;
-  try {
-    await query(sql, [assignmentID, studentID, file]);
-  } catch (error) {
-    console.error('Error in submitAssignment:', error);
-    throw error;
-  }
-}
+
+// export async function submitAssignment(assignmentID: number, studentID: number, file: Buffer) {
+//   const sql = `
+//     INSERT INTO submissions (assignmentID, studentID, submissionDate, file)
+//     VALUES (?, ?, NOW(), ?)
+//   `;
+//   try {
+//     await query(sql, [assignmentID, studentID, file]);
+//   } catch (error) {
+//     console.error('Error in submitAssignment:', error);
+//     throw error;
+//   }
+// }
 
 export async function getAssignmentsWithSubmissions() {
   const sql = `
@@ -234,6 +236,50 @@ export async function getAssignmentForStudentView(assignmentId: number) {
     return assignment;
   } catch (error) {
     console.error('Error in getAssignmentForStudentView:', error);
+    throw error;
+  }
+}
+
+export async function submitAssignment(assignmentID: number, studentID: number, file: Express.Multer.File) {
+  const sql = `
+    INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate)
+    VALUES (?, ?, ?, ?, ?, NOW())
+  `;
+
+  try {
+    const fileContent = await fs.readFile(file.path);
+    const fileName = file.originalname;
+    const fileType = file.mimetype;
+
+    await query(sql, [assignmentID, studentID, fileName, fileContent, fileType]);
+
+    // Delete the temporary file after it's been saved to the database
+    await fs.unlink(file.path);
+
+    return { success: true, message: 'Assignment submitted successfully' };
+  } catch (error) {
+    console.error('Error in submitAssignment:', error);
+    throw error;
+  }
+}
+
+export async function getSubmissionFile(submissionID: number) {
+  const sql = `
+    SELECT fileName, fileContent, fileType
+    FROM submission
+    WHERE submissionID = ?
+  `;
+
+  try {
+    const rows = await query(sql, [submissionID]);
+    if (rows.length === 0) {
+      throw new Error('Submission not found');
+    }
+
+    const { fileName, fileContent, fileType } = rows[0];
+    return { fileName, fileContent, fileType };
+  } catch (error) {
+    console.error('Error in getSubmissionFile:', error);
     throw error;
   }
 }
