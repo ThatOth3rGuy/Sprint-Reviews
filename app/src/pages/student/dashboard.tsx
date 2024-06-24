@@ -23,25 +23,25 @@ function Page() {
   return (<>
       		<div className={styles.studentHome}>
           <div className={styles.courseCard} onClick={onAssignmentsContainerClick}>
-        				<img className={styles.courseCardChild} alt="" src="Rectangle 7.svg" />
+                <img className={styles.courseCardChild} alt="" src="/CourseCard-outline.svg" />
         				<div className={styles.courseCardItem} />
         				<b className={styles.course1}>Course 1</b>
         				<i className={styles.instructor}>Instructor</i>
       			</div>
       			<div className={styles.courseCard1} onClick={onAssignmentsContainerClick}>
-        				<img className={styles.courseCardChild} alt="" src="Rectangle 7.svg" />
+        				<img className={styles.courseCardChild} alt="" src="/CourseCard-outline.svg" />
         				<div className={styles.courseCardItem} />
         				<b className={styles.course1}>Course 1</b>
         				<i className={styles.instructor}>Instructor</i>
       			</div>
       			<div className={styles.courseCard2} onClick={onAssignmentsContainerClick}>
-        				<img className={styles.courseCardChild} alt="" src="Rectangle 7.svg" />
+            <img className={styles.courseCardChild} alt="" src="/CourseCard-outline.svg" />
         				<div className={styles.courseCardItem} />
         				<b className={styles.course1}>Course 1</b>
         				<i className={styles.instructor}>Instructor</i>
       			</div>
       			<div className={styles.courseCard3} onClick={onAssignmentsContainerClick}>
-        				<img className={styles.courseCardChild} alt="" src="Rectangle 7.svg" />
+            <img className={styles.courseCardChild} alt="" src="/CourseCard-outline.svg" />
         				<div className={styles.courseCardItem} />
         				<b className={styles.course1}>Course 1</b>
         				<i className={styles.instructor}>Instructor</i>
@@ -54,14 +54,14 @@ function Page() {
           					<b className={styles.assignment}>Assignment</b>
           					<b className={styles.due010101}>Due: 01/01/01</b>
           					<b className={styles.course}>Course</b>
-          					<img className={styles.assignmentDetailsChild} alt="" src="Line 4.svg" />
+          					<img className={styles.assignmentDetailsChild} alt="" src="/Line.svg" />
         				</div>
       			</div>
       			<div className={styles.assignmentDetails1} onClick={onAssignmentsContainerClick}>
         				<b className={styles.assignment}>Assignment</b>
         				<b className={styles.due010101}>Due: 01/01/01</b>
         				<b className={styles.course}>Course</b>
-        				<img className={styles.assignmentDetailsChild} alt="" src="Line 4.svg" />
+        				<img className={styles.assignmentDetailsChild} alt="" src="/Line.svg" />
       			</div>
       			<b className={styles.breadcrumbs}>Breadcrumbs</b>
           </div>
