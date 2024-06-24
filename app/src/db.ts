@@ -88,3 +88,20 @@ export async function authenticateStudent(email: string, password: string): Prom
     throw error;
   }
 }
+
+export async function getCoursesByStudentID(studentID: number): Promise<any[]> {
+  const sql = `SELECT c.courseID, c.courseName, u.firstName AS instructorFirstName
+FROM enrollment e
+JOIN course c ON e.courseID = c.courseID
+JOIN instructor i
+JOIN  user u ON i.userID = u.userID
+WHERE e.studentID = ?`;
+  try {
+    console.log('Fetching courses for student:', studentID);
+    const rows = await query(sql, [studentID]);
+    return rows;
+  } catch (error) {
+    console.error('Error fetching courses for student:', error);
+    throw error;
+  }
+}

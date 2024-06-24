@@ -2,10 +2,10 @@
     position: absolute;
     height: 100%;
     width: 100%;
-    top: 0%;
-    right: 0%;
-    bottom: 0%;
-    left: 0%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     background-color: #90ab93;
 }
 .assignments1 {
@@ -22,14 +22,12 @@
     position: absolute;
     height: 100%;
     width: 100%;
-    top: 0%;
-    right: 0%;
-    bottom: 0%;
-    left: 0%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     border-radius: 25px;
-    max-width: 100%;
     overflow: hidden;
-    max-height: 100%;
 }
 .courseCardItem {
     position: absolute;
@@ -38,7 +36,7 @@
     top: 11.04%;
     right: 17.41%;
     bottom: 11.04%;
-    left: 2.37%;
+    left: 4%;
     border-radius: 15px;
     background: linear-gradient(270deg, rgba(217, 217, 217, 0.05), #90ab93);
 }
@@ -99,8 +97,8 @@
 }
 .pendingAssignmentsChild {
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     border-radius: 25px;
     background-color: #fcf9f7;
     border: 1px solid #627264;
@@ -133,8 +131,8 @@
     position: absolute;
     height: 56%;
     width: 48.14%;
-    top: 0%;
-    left: 0%;
+    top: 0;
+    left: 0;
     display: flex;
     align-items: center;
 }
@@ -142,7 +140,7 @@
     position: absolute;
     height: 56%;
     width: 48.14%;
-    top: 0%;
+    top: 0;
     left: 51.85%;
     font-size: 20px;
     display: flex;
@@ -154,7 +152,7 @@
     height: 22.67%;
     width: 48.14%;
     top: 56%;
-    left: 0%;
+    left: 0;
     font-size: 15px;
     display: flex;
     align-items: center;
@@ -165,11 +163,10 @@
     width: 99.04%;
     top: 98.67%;
     right: 0.32%;
-    bottom: 0%;
+    bottom: 0;
     left: 0.64%;
     max-width: 100%;
     overflow: hidden;
-    max-height: 100%;
     object-fit: contain;
 }
 .assignmentDetails {
@@ -228,3 +225,43 @@
     font-family: 'Inria Serif';
 }
 
+/* Responsive Styles */
+@media (max-width: 1200px) {
+    .courseCard, .courseCard1, .courseCard2, .courseCard3 {
+        width: 100%;
+        left: 0;
+    }
+    .pendingAssignments {
+        top: auto;
+        left: auto;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .assignments1, .pendingAssignments1 {
+        width: 100%;
+        left: 0;
+    }
+    .assignmentDetails, .assignmentDetails1, .breadcrumbs {
+        width: 100%;
+        left: 0;
+        text-align: center;
+    }
+    .courseCard, .courseCard1, .courseCard2, .courseCard3 {
+        width: 100%;
+        left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .studentHome {
+        font-size: 30px;
+    }
+    .instructor {
+        font-size: 20px;
+    }
+}
