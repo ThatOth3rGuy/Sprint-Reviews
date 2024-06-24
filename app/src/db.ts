@@ -115,16 +115,16 @@ export async function getStudents(firstName:string, lastName:string) {
   }
 }
 //  enroll student in a course
-export async function enrollStudent(studentID: string, courseID: string) {
+export async function enrollStudent(userID: string, courseID: string): Promise<void> {
   const sql = `
     INSERT INTO enrollment (studentID, courseID)
     VALUES (?, ?)
   `;
   try {
-    const result = await query(sql, [studentID, courseID]);
-    return result.insertId;
+    const result = await query(sql, [userID, courseID]);
   } catch (error) {
-    console.error('Error in enrollStudent:', error);
-    throw error;
+    const err = error as Error;
+    console.error(`Error enrolling student ${userID} in course ${courseID}:`, err.message);
+    throw err;
   }
 }
