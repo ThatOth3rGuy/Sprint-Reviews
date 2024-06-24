@@ -54,7 +54,9 @@ const ViewAssignments = () => {
         <ul>
           {assignments.map((assignment) => (
             <li key={assignment.assignmentID}>
-              <h2>{assignment.title}</h2>
+              <Link href={`/student/assignment/${assignment.assignmentID}`}>
+                <a><h2>{assignment.title}</h2></a>
+              </Link>
               <p>{assignment.description}</p>
               <p>Due date: {formatDate(assignment.deadline)}</p>
               {assignment.rubric && <p>Rubric: {assignment.rubric}</p>}

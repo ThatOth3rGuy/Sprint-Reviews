@@ -209,3 +209,31 @@ export async function getAssignmentsWithSubmissions() {
     throw error;
   }
 }
+
+export async function getAssignmentForStudentView(assignmentId: number) {
+  const sql = `
+    SELECT 
+      assignmentID, 
+      title, 
+      description, 
+      DATE_FORMAT(deadline, '%Y-%m-%dT%H:%i:%s.000Z') as deadline,
+      rubric,
+      groupAssignment,
+      courseID,
+      allowedFileTypes
+    FROM assignment 
+    WHERE assignmentID = ?
+  `;
+  try {
+    const rows = await query(sql, [assignmentId]);
+    if (rows.length === 0) {
+      return null;
+    }
+    const assignment = rows[0];
+    assignment.allowedFileTypes = assignment.allowedFileTypes ? assignment.allowedFileTypes.split(',') : [];
+    return assignment;
+  } catch (error) {
+    console.error('Error in getAssignmentForStudentView:', error);
+    throw error;
+  }
+}
