@@ -15,7 +15,7 @@ COPY . .
 # Step 5: Move to the specific server-test directory within the app
 WORKDIR /app/server-test
 
-# COPY package.json package-lock.json* ./
+COPY package.json package-lock.json* ./ 
 
 # Step 6: Install Playwright and project dependencies
 RUN npm install -D @playwright/test@latest && npm install
@@ -26,4 +26,4 @@ RUN npx playwright install --with-deps chromium firefox webkit
 # Step 8: Optional Change working directory to tests directory to run tests from there
 
 # Command to run tests can be specified here if needed, e.g.,
-CMD ["npx", "playwright", "test", "tests/"]
+CMD ["npx", "playwright", "test"]
