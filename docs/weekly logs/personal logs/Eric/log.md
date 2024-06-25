@@ -1,5 +1,101 @@
 # Weekly Logs
 
+# Week 7
+
+## Friday - June 21, 2024
+
+### Cycle Review
+
+...
+
+### Current Tasks
+  * 1: Instructor course creation
+  * 2: Student course registration
+  * 3: Course enrollment via student list (helping Brendan)
+
+### Progress Update: Fri-Tue
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Instructor course creation
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Student course registration
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Course enrollment via student list (helping Brendan)
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
+## Wednesday - June 19, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%207.2.png)
+
+### Cycle Review
+    
+Not much to talk about for this cycle, it was just continuing on with the tasks we've been working on from the start of the week.
+
+### Current Tasks
+  * 1: Instructor Course Creation
+  * 2: Instructor Course dashboard view
+  * 3: Adding students to course
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Instructor Course Creation
+        </td>
+        <!-- Status -->
+        <td> In Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Instructor Course dashboard view
+        </td>
+        <!-- Status -->
+        <td> In Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Adding students to course
+        </td>
+        <!-- Status -->
+        <td> Todo
+        </td>
+    </tr>
+</table>
+
+
 # Week 6
 
 ## Friday - June 14, 2024
