@@ -11,10 +11,10 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-export async function query(sql: string, values: any[] = []): Promise<any[]> {
+export async function query(sql: string, values: any[] = []): Promise<any> {
   try {
-    const [rows] = await pool.execute(sql, values);
-    return rows as any[];
+    const [result] = await pool.execute(sql, values);
+    return result;
   } catch (error) {
     console.error('Database query error:', error);
     throw error;
@@ -102,6 +102,32 @@ WHERE e.studentID = ?`;
     return rows;
   } catch (error) {
     console.error('Error fetching courses for student:', error);
+    throw error;
+  }
+}
+export async function createCourse(courseName: string, instructorID: number) {
+  const sql = `
+    INSERT INTO course (courseName, isArchived, instructorID)
+    VALUES (?, false, ?)
+  `;
+  try {
+    const result = await query(sql, [courseName, instructorID]);
+    return result.insertId; // Return the inserted course ID
+  } catch (error) {
+    console.error('Error in createCourse:', error); // Log the error
+    throw error;
+  }
+}
+
+export async function getCourse(courseID: string): Promise<any> {
+  const sql = `
+    SELECT * FROM course WHERE courseID = ?
+  `;
+  try {
+    const rows = await query(sql, [courseID]);
+    return rows[0];
+  } catch (error) {
+    console.error('Error in getCourse:', error);
     throw error;
   }
 }
