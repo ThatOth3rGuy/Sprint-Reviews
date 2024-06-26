@@ -2,7 +2,7 @@
 
 # Weekly Team Logs
 
-## June 12(Wed) - June 19(Fri)
+## June 19(Wed) - June 25(Tue)
 
 ### Features in the Project Plan Cycle: 
 
