@@ -2,6 +2,49 @@
 
 # Weekly Team Logs
 
+## June 12(Wed) - June 19(Fri)
+
+### Features in the Project Plan Cycle: 
+
+- Assignment Creation with file restriction option for Instrcutor
+- Assignment submission and view for Students
+- Course Creation for instcrutor
+- Student registration in course 
+
+###  Tasks from the Project Board:
+![week5-done](./Images/week6Kanban2.png)
+
+
+### Tasks for Next Cycle:
+
+![week5-done](./Images/week6Todo2.png)
+
+### Burn-up Chart (Velocity):
+![week5-done](./Images/week6Burnup2.png)
+
+### Times for Team/Individual:
+
+
+Clockify Times:
+
+![week5-done](./Images/week6Clokify2.png)
+
+
+
+### Completed Tasks:
+![week5-done](./Images/week6Done2.png)
+
+### In Progress Tasks/ To do:
+![week5-done](./Images/week6Inprogress2.png)
+
+### Overview:
+
+The team has made significant progress and has begun constructing the systems according to the data flow diagram (DFD). For a more comprehensive understanding, we have further divided the system into distinct features. We have established a main feature branch that further splits into sub-features.
+
+We have implemented the functionality for assignment creation by the instructor and submission by students (each submission is unique to the student’s ID). In addition, instructors can now create courses and add students to these courses using a .csv file.
+
+These two features operate independently. We have written tests for these features, some of which are still in progress. We have also set up the testing framework to execute these tests. However, end-to-end testing still needs to be conducted. 
+
 ## Week 5 
 
 ## June 12(Wed) - June 19(Fri)
