@@ -1,5 +1,5 @@
 # Weekly Team Dashboard
-## For Week 5 (06/12/2024) - (06/19/2024)
+## For Week 6 (06/19/2024) - (06/26/2024)
 
 <div style="width: 100%;">
 <p float="left">
@@ -14,7 +14,7 @@
         <img src="./images/week6Burnup.png" width="max" />
         <h3>Additional Items: </h3>
     <h4>Clokify for the week:</h4>
- <img src="./images/week6Clokify.png" width="max" />
+ <img src="./images/week6Clokify2.png" width="max" />
 </p>
 
 </div>
