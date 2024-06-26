@@ -1,6 +1,73 @@
  # Weekly Logs 
 ------------------------------------
 # Week 6 Summary
+## Wednesday (6/26/2024)
+
+### Timesheet Week 5 (06/19/2024 - 06/26/2024)
+![alt text](images/week6.png)
+
+
+### Current Tasks (Complete by the end of the day)
+  * Test the test framework and write tests for Assignment creation
+  * Start working on the instructor peer review form with upload of rubric handled 
+
+
+### Progress Update 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+  <tr>
+        <!-- Task/Issue # -->
+        <td> Peer Review form for instructor 
+        </td>
+        <!-- Status -->
+        <td> Todo
+        </td>
+    </tr>
+  <tr>
+        <!-- Task/Issue # -->
+        <td> Rubric Upload handling with restrictions 
+        </td>
+        <!-- Status -->
+        <td> ToDo
+        </td>
+    </tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> Submit Assignments with file restrictions
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> View Assignments from Creation Form
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+     
+    
+</table>
+
+### Weekly Goal Review
+- I mainly got the instructor assignment creation form to work with the database, where the instructor is exclusively creating assignments for a class and is being handled by the backend to add the information safely
+- I got the file upload rubric to convert to text with Tithi for the instructor
+- With Tithi, we got the students' submission of assignments to work with the instructor to create an assignment
+- I also had a final exam on Monday, so I finished the majority  of the components last week
+
+
+### Next Cycle Goals
+ * Peer review form for instructor to be created
+ * The form has rubric upload handling to be done, I will be doing that 
+ * Tests to be written for Assignment creation and submission for it to be ready to be tested and help get the DroneCi to work with tests
+   
 ## Friday (6/21/2024)
 
 ### Timesheet Week 5 (06/012/2024 - 06/14/2024)
