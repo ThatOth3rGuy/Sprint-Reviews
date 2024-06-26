@@ -4,9 +4,12 @@
 
 ## Friday - June 21, 2024
 
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%207.1.png)
+
 ### Cycle Review
 
-...
+We have the majority of the features we need to complete for the MVP made into issues, this split is simply working on finishing as much as we can. During this cycle meeting we also discussed and made a workaround to some database issues we're having, for the time being we can't use the init.sql schema to make any adjustments to the database.
 
 ### Current Tasks
   * 1: Instructor course creation
@@ -47,19 +50,19 @@
     </tr>
 </table>
 
-## Wednesday - June 19, 2024
+## Wednesday - June 26, 2024
 
 ### Timesheet
 ![Clockify Timesheet](./images/EricClockify%207.2.png)
 
 ### Cycle Review
     
-Not much to talk about for this cycle, it was just continuing on with the tasks we've been working on from the start of the week.
+During the meeting today we spent some time working on the testing framework. Automated testing finally works for Brendan but the rest of us are still having issues getting the tests to run. After that we figured out what the next few features we need to work on are, as the course/assignment features we've been working on are mostly finished.
 
 ### Current Tasks
-  * 1: Instructor Course Creation
-  * 2: Instructor Course dashboard view
-  * 3: Adding students to course
+  * 1: Admin dashboard page
+  * 2: Playwright testing
+  * 3: Pull requests and merging features from last week
 
 ### Progress Update: Wed-Fri
 <table>
@@ -71,26 +74,26 @@ Not much to talk about for this cycle, it was just continuing on with the tasks 
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> Instructor Course Creation
+        <td> 
         </td>
         <!-- Status -->
-        <td> In Progress
+        <td> 
         </td>
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> Instructor Course dashboard view
+        <td> 
         </td>
         <!-- Status -->
-        <td> In Progress
+        <td> 
         </td>
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> Adding students to course
+        <td> 
         </td>
         <!-- Status -->
-        <td> Todo
+        <td> 
         </td>
     </tr>
 </table>
