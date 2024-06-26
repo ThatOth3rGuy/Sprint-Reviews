@@ -1,5 +1,104 @@
 # Weekly Logs
 
+# Week 7
+
+## Friday - June 21, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%207.1.png)
+
+### Cycle Review
+
+We have the majority of the features we need to complete for the MVP made into issues, this split is simply working on finishing as much as we can. During this cycle meeting we also discussed and made a workaround to some database issues we're having, for the time being we can't use the init.sql schema to make any adjustments to the database.
+
+### Current Tasks
+  * 1: Instructor course creation
+  * 2: Student course registration
+  * 3: Course enrollment via student list (helping Brendan)
+
+### Progress Update: Fri-Tue
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Instructor course creation
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Student course registration
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Course enrollment via student list (helping Brendan)
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
+## Wednesday - June 26, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%207.2.png)
+
+### Cycle Review
+    
+During the meeting today we spent some time working on the testing framework. Automated testing finally works for Brendan but the rest of us are still having issues getting the tests to run. After that we figured out what the next few features we need to work on are, as the course/assignment features we've been working on are mostly finished.
+
+### Current Tasks
+  * 1: Admin dashboard page
+  * 2: Playwright testing
+  * 3: Pull requests and merging features from last week
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> 
+        </td>
+        <!-- Status -->
+        <td> 
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> 
+        </td>
+        <!-- Status -->
+        <td> 
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> 
+        </td>
+        <!-- Status -->
+        <td> 
+        </td>
+    </tr>
+</table>
+
+
 # Week 6
 
 ## Friday - June 14, 2024
