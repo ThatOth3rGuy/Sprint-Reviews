@@ -23,6 +23,7 @@ My Contributions since Friday's log:
 | Make student view and functionality for viewing all assignments | 06/23/2024 | Complete |
 | Make advanced options- restrictions section and functions for peer review page | 06/28/2024 | WIP |
 
+![week 7 time tracking](img/week7.png)
 
 ## Personal Log For Week 6
 
@@ -41,7 +42,7 @@ Topics Covered:
 | Upload file function on assignment creation for instructor  | 06/18/2024 | Complete |
 | File viewer api for students to view assignment | 06/21/2024 | WIP |
 
-![week 7 time tracking](img/week7.png)
+![week 6 time tracking](img/week6.1.png)
 
 ### 06/21/2024
 
