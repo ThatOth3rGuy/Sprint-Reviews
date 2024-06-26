@@ -1,6 +1,81 @@
 
 # Weekly Logs
 ------------------------------------
+# Week 7
+## Wednesday - June 26, 2024
+**Timesheet Tracking (Friday-Tuesday)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Summary_06_21_2024-06_25_2024.pdf)
+### Cycle Review
+    Over this last cycle, we managed to mostly complete our major features in assignments and class creation. Due to a slower paced week last week and busy schedules, we are slightly behind pace we originally planned. However, having completed two larger features, aside from some changes that need to be made once integrated, we will likely be able to reuse a decent amount of functions implemented. This will help speed up the development through the week and hopefully bring us back on pace. 
+
+    I managed to get the testing framework to run properly, allowing us to test the integration of features moving forward. We will have to start building tests for the features completed and ensure they are running as expected, however there are still existing issues in the testing framework through docker. I seem to be the only one able to run the playwright tests without error, and the rest of the team keeps encountering some. This will need to be investigated and resolved quickly, in the meantime I will likely be the one running such tests. After our early week meeting, we decided what needs to be done this week to make sure we have what is needed for the MVP, and I am continuing to create and assign sub-tasks for the features. Our goal for the remainder of the week is to complete the integration testing and modify the pushed features according to present issues (student list upload db queries and state management added to assignment pages), as well as complete the next assigned feature: The peer review form. With any luck we will be able to complete all this as well as have an admin dashboard up before the weekend. Having all this complete will keep us on pace, and have enough of our application ready to demo for the MVP next Friday. Honestly everyone has put in so much time and effort into this and I have no concerns about us not being ready.
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Complete Student List Uploading (csv) and verification for Course Registration Feature
+  * #3: Refine Docker Environment and Testing Framework For Future Development
+  * #4: Create Feature Definition and Sub-divisions on Project Board For Team Division
+  * #5: Run Integration Tests for pushed features (Resolve any issues found)
+  * #6: Complete Manual Student Entry option for Peer Review Assignment Form Feature
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Ongoing
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Feature breakdown/sub-division for parallel task work
+        </td>
+        <!-- Status -->
+        <td>Partly Complete (Recurring)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Update Docker and Testing Setup for Ongoing Development
+        </td>
+        <!-- Status -->
+        <td>Complete*
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Add Student List Upload via csv for Instructor Course Creation with Verification
+        </td>
+        <!-- Status -->
+        <td>Complete*
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create and Run Integration Tests on Pushed Features
+        </td>
+        <!-- Status -->
+        <td>To-do
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Complete Manual Student Entry Option for Peer Review Assignment Form
+        </td>
+        <!-- Status -->
+        <td>In-progress
+        </td>
+    </tr>
+</table>
+
+#
 # Week 6
 ## Friday - June 21, 2024
 **Timesheet Tracking (Wednesday-Thursday)**
