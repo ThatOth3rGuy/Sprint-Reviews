@@ -1,5 +1,29 @@
 # Weekly Personal Logs
 
+## Personal Log For Week 7
+
+### 06/26/2024
+
+Topics Covered:
+
+* task split for assignment creation, assignment view, course creation, and course registration.
+* get testing completely set up
+
+My Contributions since Friday's log:
+* made the upload file function, works with the instructor assignment creation form where instructor can upload a file with assignment details
+* made the student assignments view, it shows all assignments that the student has received, and students can click on an assignment to see more details and submit the assignment
+* worked with Yatharth on integrating the database to work with functions for file restrictions 
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Make upload file function to store assignment rubric in database | 06/23/2024 | Complete |
+| Make student view and functionality for viewing all assignments | 06/23/2024 | Complete |
+| Make student view and functionality for viewing selected assignment | 06/23/2024 | Complete |
+| Make student view and functionality for uploading a restricted file for assignment  | 06/23/2024 | Complete; just needs state management for uploading submission to database |
+| Make student view and functionality for viewing all assignments | 06/23/2024 | Complete |
+| Make advanced options- restrictions section and functions for peer review page | 06/28/2024 | WIP |
+
+
 ## Personal Log For Week 6
 
 ### 06/19/2024
@@ -17,7 +41,7 @@ Topics Covered:
 | Upload file function on assignment creation for instructor  | 06/18/2024 | Complete |
 | File viewer api for students to view assignment | 06/21/2024 | WIP |
 
-![week 6 time tracking](img/week6.1.png)
+![week 7 time tracking](img/week7.png)
 
 ### 06/21/2024
 
