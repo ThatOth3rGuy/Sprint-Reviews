@@ -4,7 +4,7 @@
 # Week 7
 ## Wednesday - June 26, 2024
 **Timesheet Tracking (Friday-Tuesday)**
-* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_06_21_2024-06_25_2024.pdf)
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Summary_06_21_2024-06_25_2024.pdf)
 ### Cycle Review
     Over this last cycle, we managed to mostly complete our major features in assignments and class creation. Due to a slower paced week last week and busy schedules, we are slightly behind pace we originally planned. However, having completed two larger features, aside from some changes that need to be made once integrated, we will likely be able to reuse a decent amount of functions implemented. This will help speed up the development through the week and hopefully bring us back on pace. 
 
