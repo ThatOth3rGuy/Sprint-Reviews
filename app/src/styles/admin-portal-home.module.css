@@ -1,0 +1,140 @@
+.breadcrumbs {
+    position: absolute;
+    top: 8%;
+    left: -33%;
+    font-size: 18px;
+    display: flex;
+    color: #627264;
+    text-align: left;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 2.5%;
+}
+.institution {
+    position: absolute;
+    height: 2.15%;
+    width: 17.5%;
+    top: 12.5%;
+    left: 16%;
+    font-size: 35px;
+    display: flex;
+    font-weight: 700;
+    align-items: center;
+}
+.filterButtonChild {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0%;
+    right: 0%;
+    bottom: 0%;
+    left: 0%;
+    border-radius: 15px;
+    background-color: #e7f6fe;
+    border: 1px solid #000;
+    box-sizing: border-box;
+}
+.filter1 {
+    position: absolute;
+    height: 60.45%;
+    width: 71.45%;
+    top: 17.53%;
+    left: 28.57%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.filterIcon {
+    position: absolute;
+    height: 100%;
+    width: 27.92%;
+    top: 0%;
+    right: 72.08%;
+    bottom: 0%;
+    left: 0%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+    object-fit: cover;
+}
+.filter {
+    position: absolute;
+    height: 70.97%;
+    width: 58.5%;
+    top: 16.13%;
+    right: 20.71%;
+    bottom: 12.9%;
+    left: 20.79%;
+}
+.filterButton {
+    position: absolute;
+    height: 100%;
+    width: 45.2%;
+    top: 0%;
+    right: 54.8%;
+    bottom: 0%;
+    left: 0%;
+}
+.sort1 {
+    position: absolute;
+    height: 60.45%;
+    width: 63.93%;
+    top: 17.53%;
+    left: 36.07%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.descendingSortingIcon {
+    position: absolute;
+    height: 100%;
+    width: 31.12%;
+    top: 0%;
+    right: 68.88%;
+    bottom: 0%;
+    left: 0%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+    object-fit: cover;
+}
+.sort {
+    position: absolute;
+    height: 70.97%;
+    width: 52.49%;
+    top: 16.13%;
+    right: 23.24%;
+    bottom: 12.9%;
+    left: 24.28%;
+}
+.sortButton {
+    position: absolute;
+    height: 100%;
+    width: 45.2%;
+    top: 0%;
+    right: 0%;
+    bottom: 0%;
+    left: 54.8%;
+}
+.filtersort {
+    position: absolute;
+    top: 12.5%;
+    left: 64%;
+    width: 20%;
+    height: 2.5%;
+    text-align: center;
+    font-size: 22px;
+}
+.adminHome {
+    width: 100%;
+    position: relative;
+    background-color: #fcf9f7;
+    height: 1024px;
+    overflow: hidden;
+    text-align: left;
+    font-size: 25px;
+    color: #04124b;
+    font-family: 'Inria Serif';
+}
+
