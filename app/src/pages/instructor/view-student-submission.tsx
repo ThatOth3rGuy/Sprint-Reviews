@@ -1,5 +1,6 @@
 import InstructorHeader from "../components/instructor-components/instructor-header";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
+import AdminNavbar from "../components/admin-components/admin-navbar";
 import { useState } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 
@@ -14,13 +15,28 @@ export default function Page() {
     return <p>Loading...</p>;
   }
 
+  // If the session exists, check if the user is an admin
+  if (!session || !session.user || !session.user.userID) {
+    console.error('No user found in session');
+    return;
+  }
+  const isAdmin = session.user.role === 'admin';
+
   return (
     <>
       <br />
       <br />
       <br />
       <InstructorHeader title="Assignments"/>
-      <InstructorNavbar/>
+      {isAdmin ? (
+        <>
+          <AdminNavbar />
+        </>
+      ) : (
+        <>
+          <InstructorNavbar />
+        </>
+      )}
     </>
   );
 }
