@@ -1,5 +1,5 @@
-import InstructorNavbar from "../components/instructor-components/instructor-navbar";
-import InstructorHeader from "../components/instructor-components/instructor-header";
+import AdminNavbar from "../components/admin-components/admin-navbar";
+import AdminHeader from "../components/admin-components/admin-header";
 import { useState } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 
@@ -19,9 +19,9 @@ export default function Page() {
       <br />
       <br />
       <br />
-      <InstructorHeader title="Archived Courses"
+      <AdminHeader title="Archived Courses"
       addLink={[{href: "./view-users", title: "View Users"}, {href: "./join-requests", title: "Join Requests"}, {href: "./archived-courses", title: "Archived Courses"}]}/>
-      <InstructorNavbar />
+      <AdminNavbar />
     </>
   );
 }
