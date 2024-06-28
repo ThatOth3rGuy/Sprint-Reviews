@@ -25,6 +25,17 @@ My Contributions since Friday's log:
 
 ![week 7 time tracking](img/week7.png)
 
+### 06/26/2024
+
+My Contributions since Wednesday's log:
+
+I didn't get much work done since the last meeting because I had a final exam on the 27th. I'm planning to spend some more time working this weekend to make up for not working on the project for the last couple of days. 
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Make advanced options- restrictions section and functions for peer review page | 06/28/2024 | WIP |
+| Work on tidying up the front-end design on the registration, login, dashboard, and assignment pages  | 06/29/2024 | WIP |
+
 ## Personal Log For Week 6
 
 ### 06/19/2024
