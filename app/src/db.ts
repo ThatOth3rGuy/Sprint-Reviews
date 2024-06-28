@@ -88,3 +88,29 @@ export async function authenticateStudent(email: string, password: string): Prom
     throw error;
   }
 }
+
+export async function getAllCourses(): Promise<any[]> {
+  const sql = `
+    SELECT 
+      course.courseName,
+      user.firstName AS instructorFirstName,
+      user.lastName AS instructorLastName,
+      COALESCE(AVG(submission.grade), 0) AS averageGrade
+    FROM course
+    JOIN instructor ON course.instructorID = instructor.userID
+    JOIN user ON instructor.userID = user.userID
+    LEFT JOIN assignment ON course.courseID = assignment.courseID
+    LEFT JOIN submission ON assignment.assignmentID = submission.assignmentID
+    GROUP BY course.courseID, user.userID
+  `;
+  try {
+    const rows = await query(sql);
+    return rows.map(row => ({
+      ...row,
+      averageGrade: row.averageGrade !== null ? parseFloat(row.averageGrade) : null,
+    }));
+  } catch (error) {
+    console.error('Error in fetchCourses:', error); // Log the error
+    throw error;
+  }
+}

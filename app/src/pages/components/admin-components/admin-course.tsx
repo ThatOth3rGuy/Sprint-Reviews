@@ -1,43 +1,24 @@
-import type { NextPage } from 'next';
-import { useState, useCallback } from 'react';
-import AdminCourseOptions from "./admin-course-options";
-import PortalPopup from "../../components/portal-popup";
+// /components/admin-components/admin-course.tsx
 import styles from '../../../styles/admin-course.module.css';
 
+interface AdminCourseCardProps {
+  courseName: string;
+  instructor: string;
+  averageGrade: number | null;
+}
 
-const CourseAdmin:NextPage = () => {
-  	const [isAdminCourseOptionsOpen, setAdminCourseOptionsOpen] = useState(false);
-  	
-  	const openAdminCourseOptions = useCallback(() => {
-    		setAdminCourseOptionsOpen(true);
-  	}, []);
-  	
-  	const closeAdminCourseOptions = useCallback(() => {
-    		setAdminCourseOptionsOpen(false);
-  	}, []);
-  	
-  	return (<>
-    		<div className={styles.courseAdmin}>
-      			<img className={styles.courseAdminChild} alt="" src="/Images/Course-Card outline.svg" />
-      			<b className={styles.assignment1}>Course</b>
-      			<i className={styles.dueDate}>Instructor</i>
-      			<i className={styles.gradePendingRelease}>Average Grade</i>
-      			<img className={styles.moreIcon} alt="" src="/Images/More.png" onClick={openAdminCourseOptions} />
-    		</div>
-    		{isAdminCourseOptionsOpen && (
-      			<PortalPopup
-        				overlayColor="rgba(113, 113, 113, 0.3)"
-        				placement="Centered"
-        				
-        				
-        				
-        				
-        				
-        				onOutsideClick={closeAdminCourseOptions}
-        				>
-        				<AdminCourseOptions onClose={closeAdminCourseOptions} />
-      			</PortalPopup>
-    		)}</>);
+const AdminCourseCard: React.FC<AdminCourseCardProps> = ({ courseName, instructor, averageGrade }) => {
+  return (
+    <div className={styles.courseAdmin}>
+      <img className={styles.courseAdminChild} alt="" src="/Images/Course-Card outline.svg" />
+      <b className={styles.assignment1}>{courseName}</b>
+      <i className={styles.instructor}>{instructor}</i>
+      <i className={styles.gradePendingRelease}> Avg: {' '}
+        {averageGrade !== null && averageGrade !== undefined ? averageGrade.toFixed(2) : 'N/A'}
+       %</i>
+      <img className={styles.moreIcon} alt="" src="/Images/More.png" />
+    </div>
+  );
 };
 
-export default CourseAdmin;
+export default AdminCourseCard;
