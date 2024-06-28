@@ -74,26 +74,26 @@ During the meeting today we spent some time working on the testing framework. Au
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> 
+        <td> Admin dashboard page
         </td>
         <!-- Status -->
-        <td> 
+        <td> In Progress
         </td>
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> 
+        <td> Playwright testing
         </td>
         <!-- Status -->
-        <td> 
+        <td> Todo
         </td>
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> 
+        <td> Pull requests and merging features from last week
         </td>
         <!-- Status -->
-        <td> 
+        <td> In progress
         </td>
     </tr>
 </table>
