@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import AdminCourseCard from "../components/admin-components/admin-course";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
@@ -20,25 +21,25 @@ export default function Page() {
 
   useSessionValidation('admin', setLoading, setSession);
 
-  useEffect(() => {
-    async function fetchCourses() {
-      try {
-        const response = await fetch('/api/getAllCourses');
-        if (!response.ok) {
-          throw new Error('Failed to fetch courses');
-        }
-        const data = await response.json();
-        setCourses(data);
-      } catch (error) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError(String(error));
-        }
-      } finally {
-        setLoading(false);
+  // Get all courses from database to display in course cards
+  useEffect(() => { async function fetchCourses() {
+    try {
+      const response = await fetch('/api/getAllCourses?isArchived=false');
+      if (!response.ok) {
+        throw new Error('Failed to fetch courses');
       }
+      const data = await response.json();
+      setCourses(data);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError(String(error));
+      }
+    } finally {
+      setLoading(false);
     }
+  }
 
     if (!loading) {
       fetchCourses();

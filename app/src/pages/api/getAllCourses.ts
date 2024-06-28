@@ -4,7 +4,8 @@ import { getAllCourses } from '../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const courses = await getAllCourses();
+    const { isArchived } = req.query;
+    const courses = await getAllCourses(isArchived === 'true');
     res.status(200).json(courses);
   } catch (error) {
     console.error('Error in getCourses API:', error); // Log the error

@@ -89,7 +89,7 @@ export async function authenticateStudent(email: string, password: string): Prom
   }
 }
 
-export async function getAllCourses(): Promise<any[]> {
+export async function getAllCourses(isArchived: boolean): Promise<any[]> {
   const sql = `
     SELECT 
       course.courseName,
@@ -101,16 +101,17 @@ export async function getAllCourses(): Promise<any[]> {
     JOIN user ON instructor.userID = user.userID
     LEFT JOIN assignment ON course.courseID = assignment.courseID
     LEFT JOIN submission ON assignment.assignmentID = submission.assignmentID
+    WHERE course.isArchived = ?
     GROUP BY course.courseID, user.userID
   `;
   try {
-    const rows = await query(sql);
+    const rows = await query(sql, [isArchived]);
     return rows.map(row => ({
       ...row,
       averageGrade: row.averageGrade !== null ? parseFloat(row.averageGrade) : null,
     }));
   } catch (error) {
-    console.error('Error in fetchCourses:', error); // Log the error
+    console.error('Error in getAllCourses:', error); // Log the error
     throw error;
   }
 }
