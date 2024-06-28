@@ -1,3 +1,4 @@
+//portal-home.tsx
 /* eslint-disable @next/next/no-img-element */
 import AdminCourseCard from "../components/admin-components/admin-course";
 import AdminNavbar from "../components/admin-components/admin-navbar";
@@ -5,8 +6,10 @@ import AdminHeader from "../components/admin-components/admin-header";
 import { useState, useEffect } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/admin-portal-home.module.css';
+import { useRouter } from 'next/router';
 
 interface Course {
+  courseID: number;
   courseName: string;
   instructorFirstName: string;
   instructorLastName: string;
@@ -18,28 +21,30 @@ export default function Page() {
   const [session, setSession] = useState<any>(null);
   const [courses, setCourses] = useState<Course[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useSessionValidation('admin', setLoading, setSession);
 
   // Get all courses from database to display in course cards
-  useEffect(() => { async function fetchCourses() {
-    try {
-      const response = await fetch('/api/getAllCourses?isArchived=false');
-      if (!response.ok) {
-        throw new Error('Failed to fetch courses');
+  useEffect(() => {
+    async function fetchCourses() {
+      try {
+        const response = await fetch('/api/getAllCourses?isArchived=false');
+        if (!response.ok) {
+          throw new Error('Failed to fetch courses');
+        }
+        const data = await response.json();
+        setCourses(data);
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError(String(error));
+        }
+      } finally {
+        setLoading(false);
       }
-      const data = await response.json();
-      setCourses(data);
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError(String(error));
-      }
-    } finally {
-      setLoading(false);
     }
-  }
 
     if (!loading) {
       fetchCourses();
@@ -53,6 +58,14 @@ export default function Page() {
   if (error) {
     return <p>Error: {error}</p>;
   }
+
+  const handleCourseClick = (courseID: number) => {
+    console.log("Clicked on course", courseID);
+    router.push({
+      pathname: '/instructor/course-dashboard',
+      query: { courseID },
+    });
+  };
 
   return (
     <>
@@ -82,6 +95,7 @@ export default function Page() {
             courseName={course.courseName}
             instructor={`${course.instructorFirstName} ${course.instructorLastName}`}
             averageGrade={course.averageGrade}
+            onClick={() => handleCourseClick(course.courseID)}
           />
         ))}
       </div>

@@ -92,6 +92,7 @@ export async function authenticateStudent(email: string, password: string): Prom
 export async function getAllCourses(isArchived: boolean): Promise<any[]> {
   const sql = `
     SELECT 
+      course.courseID,
       course.courseName,
       user.firstName AS instructorFirstName,
       user.lastName AS instructorLastName,
