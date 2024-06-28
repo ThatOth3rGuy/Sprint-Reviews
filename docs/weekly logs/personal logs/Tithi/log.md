@@ -35,6 +35,11 @@ I didn't get much work done since the last meeting because I had a final exam on
 | ------- | ------- | ------- |
 | Make advanced options- restrictions section and functions for peer review page | 06/28/2024 | WIP |
 | Work on tidying up the front-end design on the registration, login, dashboard, and assignment pages  | 06/29/2024 | WIP |
+| Work on connecting the backend for the peer-review page  | 06/29/2024 | WIP |
+
+#### Cycle Review And Goals
+
+As a team, we got a lot of work done for the project this week despite how busy we all were with exams and jobs and such. In terms of my contributions, I got a lot of my work done earlier this week so I could focus on my final exam that was on the 27th. Half of the assignments section is complete, the half that remains is the peer-review and peer-evaluation portion which we are planning to work on this weekend. I want to get my tasks for the weekend done by Friday or Saturday so we can do testing and begin the peer evaluation feature.
 
 ## Personal Log For Week 6
 
