@@ -2,6 +2,71 @@
 # Weekly Logs
 ------------------------------------
 # Week 7
+## Friday - June 28, 2024
+**Timesheet Tracking (Wednesday-Thursday)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_06_26_2024-06_27_2024.pdf)
+### Cycle Review
+    This mid-week cycle as short as it is, the team managed to get a good amount done. As the cycle is especially short for myself, I spent as much time as possible to work on what is needed. Unfortunately, a portion of that still won't work and as a team cannot find a solution. As such, our E2E testing has been tabled for the time being and over the next week will be testing manually on the server-side. So far, everything is working (or not working) reasonably as expected. Wednesday I spent time laying out of task breakdown for the week ahead to the MVP presentation, and will hopefully keep all of us on track. I do not believe we are off pace, however we will be meeting tomorrow (Friday) to discuss our progress and what we plan to present in a weeks time. Aside from PM duties and testing I have started and continued to work on the sub-feature I was tasked with, which will likely be working complete tomorrow. 
+
+    As a team we are making great progress with each feature. I continue to have no doubts in our team ability to meet all requirements by the deadlines. Despite how short this cycle is, we will hopefully have 1-2 more features complete going into the long weekend, with possibly 2 more by the MVP presentation. The goal for the next cycle is to complete the current feature we are working on, ensure integration is successful and complete most to all of the assignment pages for demo on Wednesday. That being said, as a long weekend for Canada Day... I think it's also important we have a little fun, especially with how hard the team has been working! We have put in many hours and will continue to until the deadline and project completion, but we are making great progress.
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Refine Docker Environment and Testing Framework For Future Development
+  * #3: Create Feature Definition and Sub-divisions on Project Board For Team Division
+  * #4: Run Integration Tests for pushed features (Resolve any issues found)
+  * #5: Complete Manual Student Entry option for Peer Review Assignment Form Feature
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Ongoing
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Feature breakdown/sub-division for parallel task work
+        </td>
+        <!-- Status -->
+        <td>Partly Complete (Recurring)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Update Docker and Testing Setup for Ongoing Development
+        </td>
+        <!-- Status -->
+        <td>Inconclusive
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create and Run Integration Tests on Pushed Features
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Complete Manual Student Entry Option for Peer Review Assignment Form
+        </td>
+        <!-- Status -->
+        <td>In-progress
+        </td>
+    </tr>
+</table>
+
+#
 ## Wednesday - June 26, 2024
 **Timesheet Tracking (Friday-Tuesday)**
 * ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Summary_06_21_2024-06_25_2024.pdf)
