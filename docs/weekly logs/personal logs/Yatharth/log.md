@@ -1,5 +1,59 @@
  # Weekly Logs 
 ------------------------------------
+# Week 7 Summary 
+## Friday (6/28/2024)
+
+### Timesheet Week 7 (06/26/2024 - 06/28/2024)
+![alt text](images/week7Fri.png)
+
+
+### Current Tasks (Complete by the end of the day)
+  * Assignment Creation/Submission system ready for testing
+  * Research and decide on an authenticator to be implemented
+  * Start on Authenticator setup and handle front-end restrictions
+
+
+### Progress Update 
+### Progress Update 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+  <tr>
+        <!-- Task/Issue # -->
+        <td> Peer Review form for instructor 
+        </td>
+        <!-- Status -->
+        <td> Portion Complete/Untested 
+        </td>
+    </tr>
+  <tr>
+        <!-- Task/Issue # -->
+        <td> Rubric Upload handling with restrictions 
+        </td>
+        <!-- Status -->
+        <td> Portion Complete 
+        </td>
+    </tr>
+ <tr>
+
+     
+    
+</table>
+
+### Weekly Goal Review
+ I mainly got the instructor assignment creation form to work with the database, where the instructor is exclusively creating assignments for a class and is being handled by the backend to add the information safely
+- Instructor peer review form is created and data is stored and retrievable from the database.
+- Instructor can create a dynamic rubric with grading criteria and input a grade, this is stored in the database
+- testing framework tested to work, has some issues but runs on few of our PCs so testing can be handled. 
+
+### Next Cycle Goals
+  * Need to get this to work for students so will work on that
+  * The randomizer and the anonymous system need to be created and worked on
+  * A Peer Group evaluation system needs to be made  
 # Week 6 Summary
 ## Wednesday (6/26/2024)
 
