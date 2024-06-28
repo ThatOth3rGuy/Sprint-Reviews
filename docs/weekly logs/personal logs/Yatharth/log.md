@@ -3,7 +3,7 @@
 # Week 7 Summary 
 ## Friday (6/28/2024)
 
-### Timesheet Week 5 (06/26/2024 - 06/28/2024)
+### Timesheet Week 7 (06/26/2024 - 06/28/2024)
 ![alt text](images/week7Fri.png)
 
 
