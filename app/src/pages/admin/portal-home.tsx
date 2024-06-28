@@ -60,7 +60,6 @@ export default function Page() {
   }
 
   const handleCourseClick = (courseID: number) => {
-    console.log("Clicked on course", courseID);
     router.push({
       pathname: '/instructor/course-dashboard',
       query: { courseID },
@@ -95,6 +94,7 @@ export default function Page() {
             courseName={course.courseName}
             instructor={`${course.instructorFirstName} ${course.instructorLastName}`}
             averageGrade={course.averageGrade}
+            courseID={course.courseID}
             onClick={() => handleCourseClick(course.courseID)}
           />
         ))}

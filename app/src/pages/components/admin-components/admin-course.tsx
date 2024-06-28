@@ -1,4 +1,3 @@
-// admin-course.tsx
 /* eslint-disable @next/next/no-img-element */
 import styles from '../../../styles/admin-course.module.css';
 import { useState, useCallback } from 'react';
@@ -9,10 +8,11 @@ interface AdminCourseCardProps {
   courseName: string;
   instructor: string;
   averageGrade: number | null;
+  courseID: number;
   onClick: () => void;
 }
 
-const AdminCourseCard: React.FC<AdminCourseCardProps> = ({ courseName, instructor, averageGrade, onClick }) => {
+const AdminCourseCard: React.FC<AdminCourseCardProps> = ({ courseName, instructor, averageGrade, courseID, onClick }) => {
   const [isAdminCourseOptionsOpen, setAdminCourseOptionsOpen] = useState(false);
 
   const openAdminCourseOptions = useCallback(() => {
@@ -39,7 +39,7 @@ const AdminCourseCard: React.FC<AdminCourseCardProps> = ({ courseName, instructo
           placement="Centered"
           onOutsideClick={closeAdminCourseOptions}
         >
-          <AdminCourseOptions onClose={closeAdminCourseOptions} />
+          <AdminCourseOptions onClose={closeAdminCourseOptions} courseID={courseID} />
         </PortalPopup>
       )}
     </div>

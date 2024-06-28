@@ -1,16 +1,21 @@
+// admin-course-options.tsx
+/* eslint-disable @next/next/no-img-element */
 import type { NextPage } from 'next';
 import { useState, useCallback } from 'react';
+import { useRouter } from 'next/router';
 import ConfirmDeleteCourse from "./confirm-delete-course";
 import PortalPopup from "../portal-popup";
 import styles from '../../../styles/admin-course-options.module.css';
 
 export type AdminCourseOptionsType = {
   className?: string;
+  courseID: number;
   onClose(): void;
 }
 
-const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ className = "" }) => {
+const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ className = "", courseID, onClose }) => {
   const [isConfirmDeleteCourseOpen, setConfirmDeleteCourseOpen] = useState(false);
+  const router = useRouter();
 
   const openConfirmDeleteCourse = useCallback(() => {
     setConfirmDeleteCourseOpen(true);
@@ -20,9 +25,26 @@ const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ className = "" }
     setConfirmDeleteCourseOpen(false);
   }, []);
 
-  const onArchiveContainerClick = useCallback(() => {
-    // Add your code here
-  }, []);
+  const onArchiveContainerClick = useCallback(async () => {
+    try {
+      const response = await fetch('/api/archiveCourse', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ courseID }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to archive course');
+      }
+
+      onClose(); // Close the popup after archiving
+      router.reload(); // Reload the page to refresh the state
+    } catch (error) {
+      console.error('Error archiving course:', error);
+    }
+  }, [courseID, onClose, router]);
 
   return (
     <>
