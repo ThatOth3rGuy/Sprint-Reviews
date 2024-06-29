@@ -36,13 +36,14 @@ const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ className = "", 
       });
 
       if (!response.ok) {
-        throw new Error('Failed to archive course');
+        throw new Error('Failed to toggle archive status');
       }
 
+      // Handle successful response
       onClose(); // Close the popup after archiving
       router.reload(); // Reload the page to refresh the state
     } catch (error) {
-      console.error('Error archiving course:', error);
+      console.error('Error toggling archive status:', error);
     }
   }, [courseID, onClose, router]);
 
@@ -51,7 +52,7 @@ const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ className = "", 
       <div className={[styles.adminCourseOptions, className].join(' ')}>
         <div className={styles.archive} onClick={onArchiveContainerClick}>
           <div className={styles.archiveChild} />
-          <b className={styles.archiveCourse}>Archive Course</b>
+          <b className={styles.archiveCourse}>Toggle Archive Status</b>
         </div>
         <div className={styles.delete} onClick={openConfirmDeleteCourse}>
           <div className={styles.deleteChild} />
@@ -68,7 +69,7 @@ const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ className = "", 
           placement="Centered"
           onOutsideClick={closeConfirmDeleteCourse}
         >
-          <ConfirmDeleteCourse onClose={closeConfirmDeleteCourse} />
+          <ConfirmDeleteCourse onClose={closeConfirmDeleteCourse} courseID={courseID} />
         </PortalPopup>
       )}
     </>

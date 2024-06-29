@@ -6,6 +6,7 @@ import AdminHeader from "../components/admin-components/admin-header";
 import { useState, useEffect } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/admin-portal-home.module.css';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 interface Course {
@@ -69,7 +70,12 @@ export default function Page() {
   return (
     <>
       <div className={styles.adminHome}>
-        <b className={styles.breadcrumbs}>Dashboard / Admin Portal</b>
+      <nav className={`${styles.breadcrumbsBase} ${styles.breadcrumbs}`}>
+
+          <Link href="/instructor/dashboard">Dashboard</Link>
+          {' / '}
+          <Link href="/admin/portal-home">Admin Portal</Link>
+        </nav>
         <div className={styles.filtersort}>
           <div className={styles.filterButton}>
             <div className={styles.filterButtonChild} />

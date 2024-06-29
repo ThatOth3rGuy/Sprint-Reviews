@@ -1,3 +1,4 @@
+// admin-course.tsx
 /* eslint-disable @next/next/no-img-element */
 import styles from '../../../styles/admin-course.module.css';
 import { useState, useCallback } from 'react';

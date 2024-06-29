@@ -1,5 +1,6 @@
 //archived-courses.tsx
 /* eslint-disable @next/next/no-img-element */
+import Link from 'next/link';
 import AdminCourseCard from "../components/admin-components/admin-course";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
@@ -69,7 +70,13 @@ export default function Page() {
   return (
     <>
       <div className={styles.adminHome}>
-        <b className={styles.breadcrumbs}>Dashboard / Admin Portal / Archived Courses</b>
+      <nav className={`${styles.breadcrumbsBase} ${styles.archivedBreadcrumbs}`}>
+          <Link href="/instructor/dashboard">Dashboard</Link>
+          {' / '}
+          <Link href="/admin/portal-home">Admin Portal</Link>
+          {' / '}
+          <Link href="/admin/archived-courses">Archived Courses</Link>
+        </nav>
         <div className={styles.filtersort}>
           <div className={styles.filterButton}>
             <div className={styles.filterButtonChild} />
