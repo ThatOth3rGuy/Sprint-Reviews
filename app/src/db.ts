@@ -131,3 +131,32 @@ export async function getCourse(courseID: string): Promise<any> {
     throw error;
   }
 }
+  // grab all students from the database matching the first and last name
+export async function getStudents(firstName:string, lastName:string) {
+  const sql = `
+    SELECT * FROM user WHERE firstName = ? AND lastName = ? AND userRole = 'student'
+  `;
+  try {
+    const rows = await query(sql, [firstName, lastName]);
+    if (rows.length > 0) {
+      return rows[0];
+    }
+  } catch (error) {
+    console.error('Error in getStudents:', error);
+    throw error;
+  }
+}
+//  enroll student in a course
+export async function enrollStudent(userID: string, courseID: string): Promise<void> {
+  const sql = `
+    INSERT INTO enrollment (studentID, courseID)
+    VALUES (?, ?)
+  `;
+  try {
+    const result = await query(sql, [userID, courseID]);
+  } catch (error) {
+    const err = error as Error;
+    console.error(`Error enrolling student ${userID} in course ${courseID}:`, err.message);
+    throw err;
+  }
+}
