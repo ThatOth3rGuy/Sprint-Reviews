@@ -11,10 +11,10 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-export async function query(sql: string, values: any[] = []): Promise<any[]> {
+export async function query(sql: string, values: any[] = []): Promise<any> {
   try {
-    const [rows] = await pool.execute(sql, values);
-    return rows as any[];
+    const [result] = await pool.execute(sql, values);
+    return result;
   } catch (error) {
     console.error('Database query error:', error);
     throw error;
@@ -47,6 +47,22 @@ export async function addStudentToDatabase(firstName: string, lastName: string, 
   }
 }
 
+export async function authenticateAdmin(email: string, password: string): Promise<boolean> {
+  const sql = `
+    SELECT u.* 
+    FROM user u
+    JOIN instructor i ON u.userID = i.userID
+    WHERE u.email = ? AND u.pwd = ? AND u.userRole = 'instructor' AND i.isAdmin = true
+  `;
+  try {
+    const rows = await query(sql, [email, password]);
+    return rows.length > 0;
+  } catch (error) {
+    console.error('Error in authenticateAdmin:', error); // Log the error
+    throw error;
+  }
+}
+
 export async function authenticateInstructor(email: string, password: string): Promise<boolean> {
   const sql = `
     SELECT * FROM user WHERE email = ? AND pwd = ? AND userRole = 'instructor'
@@ -69,6 +85,49 @@ export async function authenticateStudent(email: string, password: string): Prom
     return rows.length > 0;
   } catch (error) {
     console.error('Error in authenticateStudent:', error); // Log the error
+    throw error;
+  }
+}
+
+export async function getCoursesByStudentID(studentID: number): Promise<any[]> {
+  const sql = `SELECT c.courseID, c.courseName, u.firstName AS instructorFirstName
+FROM enrollment e
+JOIN course c ON e.courseID = c.courseID
+JOIN instructor i
+JOIN  user u ON i.userID = u.userID
+WHERE e.studentID = ?`;
+  try {
+    console.log('Fetching courses for student:', studentID);
+    const rows = await query(sql, [studentID]);
+    return rows;
+  } catch (error) {
+    console.error('Error fetching courses for student:', error);
+    throw error;
+  }
+}
+export async function createCourse(courseName: string, instructorID: number) {
+  const sql = `
+    INSERT INTO course (courseName, isArchived, instructorID)
+    VALUES (?, false, ?)
+  `;
+  try {
+    const result = await query(sql, [courseName, instructorID]);
+    return result.insertId; // Return the inserted course ID
+  } catch (error) {
+    console.error('Error in createCourse:', error); // Log the error
+    throw error;
+  }
+}
+
+export async function getCourse(courseID: string): Promise<any> {
+  const sql = `
+    SELECT * FROM course WHERE courseID = ?
+  `;
+  try {
+    const rows = await query(sql, [courseID]);
+    return rows[0];
+  } catch (error) {
+    console.error('Error in getCourse:', error);
     throw error;
   }
 }
