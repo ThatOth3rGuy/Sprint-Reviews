@@ -89,9 +89,6 @@ const Courses: NextPage = () => {
       } else {
         console.error('Failed to enroll students');
       }
-    } else {
-      console.error('Failed to create course');
-    }
 
       // Redirect to course page after successful creation
       router.push({
