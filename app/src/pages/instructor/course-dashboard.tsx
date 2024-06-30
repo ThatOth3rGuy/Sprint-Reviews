@@ -1,30 +1,39 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import InstructorHeader from "../home/instructor-components/instructor-header";
-import InstructorNavbar from "../home/instructor-components/instructor-navbar";
+import InstructorHeader from "../components/instructor-components/instructor-header";
+import InstructorNavbar from "../components/instructor-components/instructor-navbar";
+import { useSessionValidation } from '../api/auth/checkSession';
 
 interface CourseData {
   courseID: string;
-  name: string;
+  courseName: string;
 }
 
 export default function Page() {
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<any>(null);
   const router = useRouter();
-  const { courseID } = router.query;
+  const { courseId } = router.query;
 
   const [courseData, setCourseData] = useState<CourseData | null>(null);
 
+  // Use the session validation hook to check if the user is logged in
+  useSessionValidation('instructor', setLoading, setSession);
+
   useEffect(() => {
-    if (courseID) {
+    if (courseId) {
       // Fetch course data from the database using the courseID
-      fetch(`/api/courses/${courseID}`)
+      fetch(`/api/courses/${courseId}`)
         .then((response) => response.json())
-        .then((data: CourseData) => setCourseData(data))
+        .then((data: CourseData) => {
+          console.log("Fetched course data:", data);
+          setCourseData(data);
+        })
         .catch((error) => console.error('Error fetching course data:', error));
     }
-  }, [courseID]);
+  }, [courseId]);
 
-  if (!courseData) {
+  if (!courseData || loading) {
     return <div>Loading...</div>;
   }
 
@@ -34,13 +43,13 @@ export default function Page() {
       <br />
       <br />
       <InstructorHeader 
-        title={courseData.name}
+        title={courseData.courseName}
         addLink={[
-          { href: `/${courseID}/create-assignment`, title: "Create Assignment" }, 
-          { href: `/${courseID}/release-assignment`, title: "Release Assignment" }
+          { href: `/instructor/create-assignment?courseId=${courseId}`, title: "Create Assignment" }, 
+          { href: `/instructor/release-assignment?courseId=${courseId}`, title: "Release Assignment" }
         ]}
       />
-      <InstructorNavbar/>
+      <InstructorNavbar />
     </>
   );
 }

@@ -22,6 +22,16 @@ services:
     depends_on:
       - db
   
+  playwright-tests:
+    container_name: playwright-tests
+    build:
+      context: .
+      dockerfile: ./test/Dockerfile # Ensure you have a Dockerfile for Playwright setup
+    volumes:
+      - ./test:/tests # Assuming your tests are in the ./test directory
+    depends_on:
+      - db
+  
   # playwright-tests:
   #   container_name: playwright-tests
   #   build:
@@ -46,7 +56,7 @@ services:
     networks:
       - my_network
     ports:
-      - "3307:3306"
+      - "3307:3306" # Exposing port for MySQL, MySQL Workbench and well our entire system too 
 
 volumes:
   db_data:
