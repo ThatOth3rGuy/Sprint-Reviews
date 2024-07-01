@@ -102,6 +102,17 @@ CREATE TABLE IF NOT EXISTS enrollment (
     FOREIGN KEY (courseID) REFERENCES course(courseID)
 );
 
+DROP TABLE IF EXISTS unique_due_dates;
+--table for storing unique due dates of assignments for specific students 
+CREATE TABLE IF NOT EXISTS unique_due_dates (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    assignmentID INT,
+    studentID INT,
+    uniqueDeadline DATETIME,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
+    FOREIGN KEY (studentID) REFERENCES student(userID)
+);
+
 
 -- Insert a sample user (student) into the user table
 INSERT INTO user (firstName, lastName, email, pwd, userRole, institution)

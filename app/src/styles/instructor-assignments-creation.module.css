@@ -97,17 +97,43 @@
   border-radius: 10px;
 }
 
-.innerAdvanced{
-  margin-left: 5%;
-}
-
 .innerAdvanced p{
   margin-top: 2%;
   margin-bottom: 2%;
   margin-left: 5%;
 }
-
 .removeButton{
   margin-left: 5%;
-  background-color: rgb(212, 198, 198);
+  background-color: #46649d;
+  color: #fcf9f7;
+  border: none;
+  padding: 1.25%;
+  border-radius: 10px;
 }
+
+.criterion, .advancedButton, .closeModal, .setDueDate{
+  margin-top: 3%;
+  background-color: #002975;
+  color: #fcf9f7;
+  border: none;
+  padding: 1%;
+  border-radius: 10px;
+}
+
+
+/* advanced options modal styling below */
+.advancedOptions{
+  background-color: #fcf9f7;
+  border: 1px solid #04124b;
+  width: 70%;
+  height: max-content;
+  padding: 3%;
+  /* justify-content:flex-start; */
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10%;
+  border-radius: 10px;
+  /* margin-bottom: auto; */
+}
+

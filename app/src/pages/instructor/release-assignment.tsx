@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import styles from "../../styles/instructor-assignments-creation.module.css";
 import InstructorHeader from "../home/instructor-components/instructor-header";
 import InstructorNavbar from "../home/instructor-components/instructor-navbar";
+import Modal from "react-modal";
 
 // Define the structure fro assignment and Rubric items
 interface Assignment {
@@ -28,8 +29,18 @@ const ReleaseAssignment: React.FC = () => {
   const [allowedFileTypes, setAllowedFileTypes] = useState<string>("");
   const [deadline, setDeadline] = useState<string>("");
   const [students, setStudents] = useState<{ id: number; name: string }[]>([]);
-const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
-const [uniqueDueDate, setUniqueDueDate] = useState<string>("");
+  const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
+  const [uniqueDueDate, setUniqueDueDate] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  //handle open and close for modal
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   // Fetch assignments when the component mounts
   useEffect(() => {
@@ -51,7 +62,7 @@ const [uniqueDueDate, setUniqueDueDate] = useState<string>("");
     }
   };
 
-// function to handle selecting students
+  // function to handle selecting students
   const fetchStudents = async () => {
     try {
       const response = await fetch("/api/getStudents");
@@ -67,13 +78,13 @@ const [uniqueDueDate, setUniqueDueDate] = useState<string>("");
   };
 
   const handleStudentSelection = (studentId: number) => {
-    setSelectedStudents(prev => 
-      prev.includes(studentId) 
-        ? prev.filter(id => id !== studentId)
+    setSelectedStudents((prev) =>
+      prev.includes(studentId)
+        ? prev.filter((id) => id !== studentId)
         : [...prev, studentId]
     );
   };
-  
+
   const handleUniqueDueDateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -86,7 +97,7 @@ const [uniqueDueDate, setUniqueDueDate] = useState<string>("");
           dueDate: uniqueDueDate,
         }),
       });
-  
+
       if (response.ok) {
         alert("Unique due date set successfully");
         setSelectedStudents([]);
@@ -232,7 +243,7 @@ const [uniqueDueDate, setUniqueDueDate] = useState<string>("");
           </div>
 
           {/* handle rubric upload  here*/}
-          
+
           {/* <input
             type="text"
             value={allowedFileTypes}
@@ -251,41 +262,48 @@ const [uniqueDueDate, setUniqueDueDate] = useState<string>("");
             className={styles.textbox}
             required
           />
-          <details>
-            <summary>Advanced Options</summary>
-            <details className={styles.innerAdvanced}>
-              <summary>Change Student Groups</summary>
+          <button onClick={openModal} className={styles.advancedButton}>Advanced Options</button>
+
+          <Modal isOpen={isModalOpen} onRequestClose={closeModal} className={styles.advancedOptions}>
+            <h2>Advanced Options</h2>
+            <div className={styles.innerAdvanced}>
+              <h3>Change Student Groups</h3>
               <p className={styles.innerAdvanced}>
                 List of Students in Course By Group
               </p>
-            </details>
-            <details className={styles.innerAdvanced}>
-  <summary>Unique Due Date</summary>
-  <form onSubmit={handleUniqueDueDateSubmit}>
-    <div className={styles.studentList}>
-      {students.map((student) => (
-        <div key={student.id}>
-          <input
-            type="checkbox"
-            id={`student-${student.id}`}
-            checked={selectedStudents.includes(student.id)}
-            onChange={() => handleStudentSelection(student.id)}
-          />
-          <label htmlFor={`student-${student.id}`}>{student.name}</label>
-        </div>
-      ))}
-    </div>
-    <input
-      type="datetime-local"
-      value={uniqueDueDate}
-      onChange={(e) => setUniqueDueDate(e.target.value)}
-      className={styles.textbox}
-      required
-    />
-    <button type="submit" className={styles.setDueDate}>Set Unique Due Date</button>
-  </form>
-</details>
-          </details>
+            </div>
+            <div className={styles.innerAdvanced}>
+              <h3>Unique Due Date</h3>
+              <form onSubmit={handleUniqueDueDateSubmit}>
+                <div className={styles.studentList}>
+                  {students.map((student) => (
+                    <div key={student.id}>
+                      <input
+                        type="checkbox"
+                        id={`student-${student.id}`}
+                        checked={selectedStudents.includes(student.id)}
+                        onChange={() => handleStudentSelection(student.id)}
+                      />
+                      <label htmlFor={`student-${student.id}`}>
+                        {student.name}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                <input
+                  type="datetime-local"
+                  value={uniqueDueDate}
+                  onChange={(e) => setUniqueDueDate(e.target.value)}
+                  className={styles.textbox}
+                  required
+                />
+                <button type="submit" className={styles.setDueDate}>
+                  Set Unique Due Date
+                </button>
+              </form>
+              <button onClick={closeModal} className={styles.closeModal}>Close</button>
+            </div>
+          </Modal>
           <br />
           <button type="submit" className={styles.release}>
             <b>Release</b>

@@ -341,3 +341,43 @@ export async function updateAssignment(
     throw error;
   }
 }
+
+export async function setUniqueDueDates(assignmentID: number, studentIDs: number[], dueDate: string) {
+  try {
+    const connection = await pool.getConnection();
+
+    for (const studentID of studentIDs) {
+      await connection.execute(
+        'INSERT INTO unique_due_dates (assignmentID, studentID, uniqueDeadline) VALUES (?, ?, ?) ' +
+        'ON DUPLICATE KEY UPDATE uniqueDeadline = ?',
+        [assignmentID, studentID, dueDate, dueDate]
+      );
+    }
+
+    connection.release();
+    return { message: 'Unique due dates set successfully' };
+  } catch (error) {
+    console.error('Error setting unique due dates:', error);
+    throw error;
+  }
+}
+
+
+//Get students for setting unique due date
+export async function getStudents(): Promise<any[]> {
+  const sql = `
+    SELECT u.userID, u.firstName, u.lastName, u.email, s.studentID
+    FROM user u
+    JOIN student s ON u.userID = s.userID
+    WHERE u.userRole = 'student'
+    ORDER BY u.lastName, u.firstName
+  `;
+
+  try {
+    const rows = await query(sql);
+    return rows;
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    throw error;
+  }
+}
