@@ -120,14 +120,19 @@ export async function addAssignmentToDatabase(
   }
 }
 
+
 export async function getAssignments(): Promise<any[]> {
-  const sql = 'SELECT assignmentID, title, description, DATE_FORMAT(deadline, "%Y-%m-%dT%H:%i:%s.000Z") as deadline FROM assignment';
+  const sql = `
+    SELECT assignmentID, title
+    FROM assignment
+    ORDER BY title ASC
+  `;
+
   try {
     const rows = await query(sql);
-    console.log('Fetched assignments:', rows);
     return rows as any[];
   } catch (error) {
-    console.error('Database query error:', error);
+    console.error('Error fetching assignments:', error);
     throw error;
   }
 }
