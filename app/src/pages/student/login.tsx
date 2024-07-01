@@ -1,3 +1,5 @@
+// student/login.tsx
+/* eslint-disable @next/next/no-img-element */
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import styles from '../../styles/student-login.module.css';
