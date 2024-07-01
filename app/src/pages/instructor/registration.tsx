@@ -1,6 +1,6 @@
 // Instructor Registration
 // src/pages/instructor/registration.tsx
-
+/* eslint-disable @next/next/no-img-element */
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';

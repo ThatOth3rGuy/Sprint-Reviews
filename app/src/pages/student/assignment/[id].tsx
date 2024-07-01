@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import StudentHeader from "../../home/student-components/student-header";
-import StudentNavbar from "../../home/student-components/student-navbar";
+import StudentHeader from "../../components/student-components/student-header";
+import StudentNavbar from "../../components/student-components/student-navbar";
 import style from "../../../styles/student-components.module.css"
 import Modal from 'react-modal';
 

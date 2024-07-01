@@ -194,7 +194,7 @@ export async function getAssignmentsWithSubmissions() {
     const rows = await query(sql);
     
     // Group submissions by assignment
-    const assignments = rows.reduce((acc, row) => {
+    const assignments = rows.reduce((acc: any[], row: any) => {
       const assignment = acc.find((a: { assignmentID: any; }) => a.assignmentID === row.assignmentID);
       if (assignment) {
         if (row.studentID) {
@@ -225,6 +225,8 @@ export async function getAssignmentsWithSubmissions() {
     return assignments;
   } catch (error) {
     console.error('Error in getAssignmentsWithSubmissions:', error);
+  }
+}
 
 
 export async function getCoursesByStudentID(studentID: number): Promise<any[]> {
