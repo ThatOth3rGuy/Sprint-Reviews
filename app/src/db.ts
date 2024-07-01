@@ -336,3 +336,30 @@ export async function updateAssignment(
     throw error;
   }
 }
+export async function getStudents(userId: string) {
+  const sql = `
+    SELECT * FROM student WHERE userID = ?
+  `;
+  try {
+    const rows = await query(sql, [userId]);
+    if (rows.length > 0) {
+      return rows[0];
+    }
+  } catch (error) {
+    console.error('Error in getStudents:', error);
+    throw error;
+  }
+}
+export async function assignStudent(userID: string, assignmentID: string): Promise<void> {
+  const sql = `
+    UPDATE assignment SET studentID = ? WHERE assignmentID = ?
+  `;
+  try {
+    const result = await query(sql, [userID, assignmentID]);
+  } catch (error) {
+    const err = error as Error;
+    console.error(`Error adding student ${userID} to assignment ${assignmentID}:`, err.message);
+    throw err;
+  }
+
+}
