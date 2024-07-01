@@ -91,6 +91,33 @@ export async function authenticateStudent(email: string, password: string): Prom
   }
 }
 
+export async function getAllCourses(isArchived: boolean): Promise<any[]> {
+  const sql = `
+    SELECT 
+      course.courseID,
+      course.courseName,
+      user.firstName AS instructorFirstName,
+      user.lastName AS instructorLastName,
+      COALESCE(AVG(submission.grade), 0) AS averageGrade
+    FROM course
+    JOIN instructor ON course.instructorID = instructor.userID
+    JOIN user ON instructor.userID = user.userID
+    LEFT JOIN assignment ON course.courseID = assignment.courseID
+    LEFT JOIN submission ON assignment.assignmentID = submission.assignmentID
+    WHERE course.isArchived = ?
+    GROUP BY course.courseID, user.userID
+  `;
+  try {
+    const rows = await query(sql, [isArchived]);
+    return rows.map(row => ({
+      ...row,
+      averageGrade: row.averageGrade !== null ? parseFloat(row.averageGrade) : null,
+    }));
+  } catch (error) {
+    console.error('Error in getAllCourses:', error); // Log the error
+    throw error;
+  }
+}
 export async function addAssignmentToDatabase(
   title: string, 
   description: string, 
@@ -194,7 +221,7 @@ export async function getAssignmentsWithSubmissions() {
     const rows = await query(sql);
     
     // Group submissions by assignment
-    const assignments = rows.reduce((acc: any[], row: any) => {
+    const assignments = rows.reduce((acc, row) => {
       const assignment = acc.find((a: { assignmentID: any; }) => a.assignmentID === row.assignmentID);
       if (assignment) {
         if (row.studentID) {

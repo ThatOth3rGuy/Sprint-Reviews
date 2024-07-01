@@ -5,6 +5,8 @@ import { useRouter } from 'next/router';
 import React, { ChangeEvent, useCallback, useState } from 'react';
 import InstructorHeader from '../components/instructor-components/instructor-header';
 import InstructorNavbar from '../components/instructor-components/instructor-navbar';
+import AdminNavbar from "../components/admin-components/admin-navbar";
+import AdminHeader from "../components/admin-components/admin-header";
 import { useSessionValidation } from '../api/auth/checkSession';
 
 const Courses: NextPage = () => {
@@ -105,10 +107,29 @@ const Courses: NextPage = () => {
     return <p>Loading...</p>;
   }
 
+  // If the session exists, check if the user is an admin
+  if (!session || !session.user || !session.user.userID) {
+    console.error('No user found in session');
+    return;
+  }
+  const isAdmin = session.user.role === 'admin'; 
+
   return (
     <>
-      <InstructorHeader title="Create Course" />
-      <InstructorNavbar />
+      <br />
+      <br />
+      <br />
+      {isAdmin ? (
+        <>
+          <AdminHeader title="Create Course"/>
+          <AdminNavbar />
+        </>
+      ) : (
+        <>
+          <InstructorHeader title="Create Course"/>
+          <InstructorNavbar />
+        </>
+      )}
       <div className={styles.container}>
         <div className={styles.rectangle}>
           <i style={{width: "368px", position: "relative", fontSize: "35px", display: "flex", fontWeight: "700", fontFamily: "'Inria Serif'", color: "#04124b", textAlign: "left", alignItems: "center", height: "22px"}}>Create a Course</i>

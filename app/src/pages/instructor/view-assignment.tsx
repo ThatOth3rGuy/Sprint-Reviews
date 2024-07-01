@@ -1,6 +1,8 @@
+import InstructorHeader from "../components/instructor-components/instructor-header";
+import InstructorNavbar from "../components/instructor-components/instructor-navbar";
+import AdminNavbar from "../components/admin-components/admin-navbar";
+import AdminHeader from "../components/admin-components/admin-header";
 import { useState, useEffect } from 'react';
-import InstructorHeader from '../components/instructor-components/instructor-header';
-import InstructorNavbar from '../components/instructor-components/instructor-navbar';
 import { useSessionValidation } from '../api/auth/checkSession';
 
 interface Assignment {
@@ -56,15 +58,39 @@ const ViewAssignments = () => {
     return <p>Loading...</p>;
   }
 
+  // If the session exists, check if the user is an admin
+  if (!session || !session.user || !session.user.userID) {
+    console.error('No user found in session');
+    return;
+  }
+  const isAdmin = session.user.role === 'admin';
+
   return (
     <>
-      <InstructorHeader title="Course Name"
+      <br />
+      <br />
+      <br />
+      {isAdmin ? (
+        <>
+          <AdminHeader title="Course Name"
         addLink={[
           { href: "./all-assignments", title: "View All" },
           { href: "./peer-eval-assignments", title: "Peer Evaluations" }
         ]}
       />
-      <InstructorNavbar />
+          <AdminNavbar />
+        </>
+      ) : (
+        <>
+          <InstructorHeader title="Course Name"
+        addLink={[
+          { href: "./all-assignments", title: "View All" },
+          { href: "./peer-eval-assignments", title: "Peer Evaluations" }
+        ]}
+      />
+          <InstructorNavbar />
+        </>
+      )}
       <div>
         <h1>Assignments</h1>
         {error && <p style={{ color: 'red' }}>{error}</p>}
