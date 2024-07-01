@@ -81,7 +81,7 @@ const ReleaseAssignment: React.FC = () => {
       });
 
       if (response.ok) {
-        router.push('/instructor-dashboard');
+        router.push('/instructor/dashboard');
       } else {
         console.error('Failed to release assignment');
       }
