@@ -3,28 +3,23 @@ import styles from "../../styles/instructor-assignments-creation.module.css";
 import { useRouter } from "next/router";
 import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
 
-import InstructorHeader from "../home/instructor-components/instructor-header";
-import InstructorNavbar from "../home/instructor-components/instructor-navbar";
+import InstructorHeader from "../components/instructor-components/instructor-header";
+import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 
-import { useState } from 'react';
-import { useSessionValidation } from '../api/auth/checkSession';
+import { useSessionValidation } from "../api/auth/checkSession";
 
-export default function Page() {
-  const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState<any>(null);
-
-  // Use the session validation hook to check if the user is logged in
-  useSessionValidation('instructor', setLoading, setSession);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
 interface Course {
   courseID: number;
   courseName: string;
 }
 
 const Assignments: NextPage = () => {
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<any>(null);
+
+  // Use the session validation hook to check if the user is logged in
+  useSessionValidation("instructor", setLoading, setSession);
+
   const [file, setFile] = useState<File | null>(null);
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [dueDate, setDueDate] = useState("");
@@ -50,10 +45,7 @@ const Assignments: NextPage = () => {
         setCourses(data);
       })
       .catch((error) => {
-        console.error(
-          "There has been a problem with your fetch operation:",
-          error
-        );
+        console.error("There has been a problem with your fetch operation:", error);
         setError("Failed to fetch courses. Please try again.");
       });
   }, []);
@@ -72,6 +64,7 @@ const Assignments: NextPage = () => {
     };
     reader.readAsText(selectedFile);
   }
+
   const handleFileTypeChange = (fileType: string, checked: boolean) => {
     setAllowedFileTypes((prev) =>
       checked ? [...prev, fileType] : prev.filter((type) => type !== fileType)
@@ -80,16 +73,8 @@ const Assignments: NextPage = () => {
 
   const onCreateAssignmentButtonClick = useCallback(async () => {
     setError(null);
-    if (
-      !title ||
-      !description ||
-      !dueDate ||
-      !courseID ||
-      allowedFileTypes.length === 0
-    ) {
-      setError(
-        "Please fill in all fields and select at least one allowed file type"
-      );
+    if (!title || !description || !dueDate || !courseID || allowedFileTypes.length === 0) {
+      setError("Please fill in all fields and select at least one allowed file type");
       return;
     }
 
@@ -116,22 +101,13 @@ const Assignments: NextPage = () => {
       router.push("/instructor/view-assignment");
     } else {
       const errorData = await response.json();
-      setError(
-        errorData.message || "An error occurred while creating the assignment"
-      );
+      setError(errorData.message || "An error occurred while creating the assignment");
     }
-  }, [
-    title,
-    description,
-    dueDate,
-    courseID,
-    fileContent,
-    groupAssignment,
-    allowedFileTypes,
-    router,
-  ]);
-=======
+  }, [title, description, dueDate, courseID, fileContent, groupAssignment, allowedFileTypes, router]);
 
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <>
@@ -188,10 +164,7 @@ const Assignments: NextPage = () => {
           >
             <option value="">Select a class</option>
             {courses.map((courseItem) => (
-              <option
-                key={courseItem.courseID}
-                value={courseItem.courseID.toString()}
-              >
+              <option key={courseItem.courseID} value={courseItem.courseID.toString()}>
                 {courseItem.courseName}
               </option>
             ))}
@@ -241,12 +214,7 @@ const Assignments: NextPage = () => {
               <label htmlFor="zip">ZIP (.zip)</label>
             </div>
           </div>
-
-          <div
-            className={styles.button}
-            onClick={onCreateAssignmentButtonClick}
-          >
-            <div/>
+          <div className={styles.button} onClick={onCreateAssignmentButtonClick}>
             <b>Create Assignment</b>
           </div>
         </div>

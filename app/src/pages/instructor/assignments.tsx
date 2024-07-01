@@ -1,25 +1,20 @@
 // assignments.tsx
-import InstructorHeader from "../home/instructor-components/instructor-header";
-import InstructorNavbar from "../home/instructor-components/instructor-navbar";
+import InstructorHeader from "../components/instructor-components/instructor-header";
+import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import type { NextPage } from 'next';
 import { useState, useEffect } from 'react';
 import styles from '../../styles/instructor-assignments-creation.module.css';
-import { useState } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 
-export default function Page() {
+
+const Assignments: NextPage = () => {
+  const [assignments, setAssignments] = useState([]); // State variable for the list of assignments
+
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
 
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-const Assignments: NextPage = () => {
-  const [assignments, setAssignments] = useState([]); // State variable for the list of assignments
 
   useEffect(() => {
     // Fetch the assignments when the component mounts
@@ -28,7 +23,9 @@ const Assignments: NextPage = () => {
       .then(setAssignments);
   }, []);
 
-
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <>

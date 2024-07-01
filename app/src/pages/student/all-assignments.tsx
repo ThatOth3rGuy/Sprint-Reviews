@@ -1,23 +1,12 @@
 // pages/student/view-assignments.tsx
 import { useState, useEffect } from "react";
-import StudentHeader from "../home/student-components/student-header";
-import StudentNavbar from "../home/student-components/student-navbar";
+import StudentHeader from "../components/student-components/student-header";
+import StudentNavbar from "../components/student-components/student-navbar";
 import style from "../../styles/student-components.module.css";
 import Link from "next/link";
 
-import { useState } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 
-export default function Page() {
-  const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState<any>(null);
-
-  // Use the session validation hook to check if the user is logged in
-  useSessionValidation('student', setLoading, setSession);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -25,7 +14,13 @@ interface Assignment {
   deadline: string;
 }
 
-const allAssignments = () => {
+const ViewAssignments = () => {
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<any>(null);
+
+  // Use the session validation hook to check if the user is logged in
+  useSessionValidation('student', setLoading, setSession);
+
   const [assignments, setAssignments] = useState<Assignment[]>([]);
 
   useEffect(() => {
@@ -47,6 +42,11 @@ const allAssignments = () => {
         );
       });
   }, []);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <>
       <StudentHeader
@@ -77,4 +77,4 @@ const allAssignments = () => {
   );
 };
 
-export default allAssignments;
+export default ViewAssignments;
