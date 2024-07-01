@@ -3,6 +3,7 @@
 CREATE DATABASE IF NOT EXISTS mydb;
 USE mydb;
 
+
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS student;
 DROP TABLE IF EXISTS instructor;
@@ -24,6 +25,8 @@ CREATE TABLE IF NOT EXISTS user (
     institution VARCHAR(100)
 );
 
+
+
 -- Table for storing student, connected to the user table
 CREATE TABLE IF NOT EXISTS student (
     userID INT PRIMARY KEY,
@@ -34,6 +37,9 @@ CREATE TABLE IF NOT EXISTS student (
     FOREIGN KEY (userID) REFERENCES user(userID)
 );
 
+
+
+
 -- Table for storing instructor information, connected to the user table
 CREATE TABLE IF NOT EXISTS instructor (
     userID INT PRIMARY KEY,
@@ -41,6 +47,9 @@ CREATE TABLE IF NOT EXISTS instructor (
     departments VARCHAR(255),
     FOREIGN KEY (userID) REFERENCES user(userID)
 );
+
+
+
 
 -- Table for storing courses
 CREATE TABLE IF NOT EXISTS course (
@@ -51,6 +60,7 @@ CREATE TABLE IF NOT EXISTS course (
     FOREIGN KEY (instructorID) REFERENCES instructor(userID)
 );
 
+
 -- Table for storing assignment information
 CREATE TABLE IF NOT EXISTS assignment (
     assignmentID INT AUTO_INCREMENT PRIMARY KEY,
@@ -60,15 +70,20 @@ CREATE TABLE IF NOT EXISTS assignment (
     deadline DATETIME,
     groupAssignment BOOLEAN,
     courseID INT,
+    allowedFileTypes VARCHAR(255),
     FOREIGN KEY (courseID) REFERENCES course(courseID)
 );
 
 -- Table for storing submission information between students and assignments
+
 CREATE TABLE IF NOT EXISTS submission (
     submissionID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT,
-    content TEXT,
     studentID INT,
+    fileName VARCHAR(255),
+    fileContent LONGBLOB,
+    fileType VARCHAR(100),
+    submissionDate DATETIME,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
     FOREIGN KEY (studentID) REFERENCES student(userID)
 );
