@@ -42,9 +42,9 @@ const InstructorHeader: NextPage<InstructorHeaderProps> = ({ title, addLink }) =
         <button onClick={toggleCourseDropdown}>Add</button>
         {isCourseOpen && (
           <div className={style.dropdown}>
-            <Link href="#">Create Course</Link>
-            <Link href="#">Create Assignment</Link>
-            <Link href="#">Join Another Institution</Link>
+            <Link href="/instructor/create-course">Create Course</Link>
+            <Link href="/instructor/create-assignment">Create Assignment</Link>
+            <Link href="/instructor/join-institution">Join Another Institution</Link>
           </div>
         )}
       </div>

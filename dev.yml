@@ -20,6 +20,8 @@ services:
       - "3001:3000"
     networks:
       - my_network
+    depends_on:
+      - db
   
   playwright-tests:
     container_name: playwright-tests
