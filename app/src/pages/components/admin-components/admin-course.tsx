@@ -27,7 +27,7 @@ const AdminCourseCard: React.FC<AdminCourseCardProps> = ({ courseName, instructo
   return (
     <div className={styles.courseAdmin} onClick={onClick}>
       <img className={styles.courseAdminChild} alt="" src="/Images/Course-Card outline.svg" />
-      <b className={styles.assignment1}>{courseName}</b>
+      <b className={styles.courseName}>{courseName}</b>
       <i className={styles.instructor}>{instructor}</i>
       <i className={styles.gradePendingRelease}>
         Avg: {averageGrade !== null && averageGrade !== undefined ? averageGrade.toFixed(2) : 'N/A'}%

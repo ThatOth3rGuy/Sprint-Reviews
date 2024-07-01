@@ -11,10 +11,10 @@
     overflow: hidden;
     max-height: 100%;
 }
-.assignment1 {
+.courseName {
     position: absolute;
     height: 37.05%;
-    width: 19.64%;
+    width: 70%;
     top: 17.58%;
     left: 2.59%;
     font-size: 30px;
