@@ -4,6 +4,20 @@ import StudentHeader from "../home/student-components/student-header";
 import StudentNavbar from "../home/student-components/student-navbar";
 import style from "../../styles/student-components.module.css";
 import Link from "next/link";
+
+import { useState } from 'react';
+import { useSessionValidation } from '../api/auth/checkSession';
+
+export default function Page() {
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<any>(null);
+
+  // Use the session validation hook to check if the user is logged in
+  useSessionValidation('student', setLoading, setSession);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -33,7 +47,6 @@ const allAssignments = () => {
         );
       });
   }, []);
-
   return (
     <>
       <StudentHeader

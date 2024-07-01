@@ -4,6 +4,19 @@ import InstructorNavbar from "../home/instructor-components/instructor-navbar";
 import type { NextPage } from 'next';
 import { useState, useEffect } from 'react';
 import styles from '../../styles/instructor-assignments-creation.module.css';
+import { useState } from 'react';
+import { useSessionValidation } from '../api/auth/checkSession';
+
+export default function Page() {
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<any>(null);
+
+  // Use the session validation hook to check if the user is logged in
+  useSessionValidation('instructor', setLoading, setSession);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
 const Assignments: NextPage = () => {
   const [assignments, setAssignments] = useState([]); // State variable for the list of assignments
@@ -14,6 +27,8 @@ const Assignments: NextPage = () => {
       .then(response => response.json())
       .then(setAssignments);
   }, []);
+
+
 
   return (
     <>

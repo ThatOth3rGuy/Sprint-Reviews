@@ -5,6 +5,15 @@ USE mydb;
 
 
 DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS student;
+DROP TABLE IF EXISTS instructor;
+DROP TABLE IF EXISTS course;
+DROP TABLE IF EXISTS class;
+DROP TABLE IF EXISTS assignment;
+DROP TABLE IF EXISTS submission;
+DROP TABLE IF EXISTS feedback;
+DROP TABLE IF EXISTS Enrollment;
+
 -- Table for storing users, which are separated into students and instructors
 CREATE TABLE IF NOT EXISTS user (
     userID INT AUTO_INCREMENT PRIMARY KEY,
@@ -16,7 +25,8 @@ CREATE TABLE IF NOT EXISTS user (
     institution VARCHAR(100)
 );
 
-DROP TABLE IF EXISTS student;
+
+
 -- Table for storing student, connected to the user table
 CREATE TABLE IF NOT EXISTS student (
     userID INT PRIMARY KEY,
@@ -27,7 +37,9 @@ CREATE TABLE IF NOT EXISTS student (
     FOREIGN KEY (userID) REFERENCES user(userID)
 );
 
-DROP TABLE IF EXISTS instructor;
+
+
+
 -- Table for storing instructor information, connected to the user table
 CREATE TABLE IF NOT EXISTS instructor (
     userID INT PRIMARY KEY,
@@ -36,7 +48,9 @@ CREATE TABLE IF NOT EXISTS instructor (
     FOREIGN KEY (userID) REFERENCES user(userID)
 );
 
-DROP TABLE IF EXISTS course;
+
+
+
 -- Table for storing courses
 CREATE TABLE IF NOT EXISTS course (
     courseID INT AUTO_INCREMENT PRIMARY KEY,
@@ -46,7 +60,7 @@ CREATE TABLE IF NOT EXISTS course (
     FOREIGN KEY (instructorID) REFERENCES instructor(userID)
 );
 
-DROP TABLE IF EXISTS assignment;
+
 -- Table for storing assignment information
 CREATE TABLE IF NOT EXISTS assignment (
     assignmentID INT AUTO_INCREMENT PRIMARY KEY,
@@ -60,7 +74,8 @@ CREATE TABLE IF NOT EXISTS assignment (
     FOREIGN KEY (courseID) REFERENCES course(courseID)
 );
 
-DROP TABLE IF EXISTS submission;
+-- Table for storing submission information between students and assignments
+
 CREATE TABLE IF NOT EXISTS submission (
     submissionID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT,
@@ -73,7 +88,6 @@ CREATE TABLE IF NOT EXISTS submission (
     FOREIGN KEY (studentID) REFERENCES student(userID)
 );
 
-DROP TABLE IF EXISTS feedback;
 -- Table for storing feedback information between students and assignments
 CREATE TABLE IF NOT EXISTS feedback (
     feedbackID INT AUTO_INCREMENT PRIMARY KEY,
@@ -84,7 +98,6 @@ CREATE TABLE IF NOT EXISTS feedback (
     FOREIGN KEY (otherStudentID) REFERENCES student(userID)
 );
 
-DROP TABLE IF EXISTS enrollment;
 -- Table for storing enrollment information to connect students to courses
 CREATE TABLE IF NOT EXISTS enrollment (
     studentID INT,
