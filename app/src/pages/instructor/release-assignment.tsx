@@ -30,7 +30,7 @@ const ReleaseAssignment: React.FC = () => {
 // Function to handle changes in the assignment selection
   const fetchAssignments = async () => {
     try {
-      const response = await fetch('/api/getAssignments');
+      const response = await fetch('/api/getAssignment');
       if (response.ok) {
         const data = await response.json();
         setAssignments(data);
@@ -81,7 +81,7 @@ const ReleaseAssignment: React.FC = () => {
       });
 
       if (response.ok) {
-        router.push('/instructor-dashboard');
+        router.push('/instructor/dashboard');
       } else {
         console.error('Failed to release assignment');
       }
