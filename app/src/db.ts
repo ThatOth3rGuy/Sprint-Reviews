@@ -1,10 +1,12 @@
 // db.ts
 import mysql from 'mysql2/promise';
+import fs from 'fs/promises';
+import path from 'path';
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'db',
+  host: process.env.DB_HOST || 'db', // Replace this if running on localhost, else if running on docker container, use 'db'
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || 'SprintRunners',
+  password: process.env.DB_PASSWORD || 'SprintRunners', // SprintRunners
   database: process.env.DB_NAME || 'mydb',
   waitForConnections: true,
   connectionLimit: 10,
@@ -359,4 +361,5 @@ export async function assignStudent(userID: string, assignmentID: string): Promi
     console.error(`Error adding student ${userID} to assignment ${assignmentID}:`, err.message);
     throw err;
   }
+
 }
