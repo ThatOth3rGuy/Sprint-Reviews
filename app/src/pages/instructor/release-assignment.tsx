@@ -36,7 +36,7 @@ const ReleaseAssignment: React.FC = () => {
     try {
       const response = await fetch("/api/getAssignments");
       if (response.ok) {
-        const data = await response.json();
+        const data: Assignment[] = await response.json();
         setAssignments(data);
       } else {
         console.error("Failed to fetch assignments");
@@ -147,6 +147,8 @@ const ReleaseAssignment: React.FC = () => {
                   className={styles.textbox}
                   required
                 />
+                <br />
+                <label>Enter the maximum number of marks allowed:</label>
                 <input
                   type="number"
                   value={item.maxMarks}
@@ -175,8 +177,9 @@ const ReleaseAssignment: React.FC = () => {
               Add Criterion
             </button>
           </div>
-          
+
           {/* handle rubric upload  here*/}
+          
           {/* <input
             type="text"
             value={allowedFileTypes}
@@ -197,7 +200,9 @@ const ReleaseAssignment: React.FC = () => {
             <summary>Advanced Options</summary>
             <details className={styles.innerAdvanced}>
               <summary>Change Student Groups</summary>
-              <p className={styles.innerAdvanced}>List of Students in Course By Group</p>
+              <p className={styles.innerAdvanced}>
+                List of Students in Course By Group
+              </p>
             </details>
             <details className={styles.innerAdvanced}>
               <summary>Unique Due Date</summary>

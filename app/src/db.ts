@@ -121,7 +121,7 @@ export async function addAssignmentToDatabase(
 }
 
 export async function getAssignments(): Promise<any[]> {
-  const sql = 'SELECT assignmentID, title, description, DATE_FORMAT(deadline, "%Y-%m-%dT%H:%i:%s.000Z") as deadline FROM assignment';
+  const sql = 'SELECT * FROM assignment';
   try {
     const rows = await query(sql);
     console.log('Fetched assignments:', rows);
@@ -131,6 +131,7 @@ export async function getAssignments(): Promise<any[]> {
     throw error;
   }
 }
+
 export async function getCourses(): Promise<any[]> {
   const sql = 'SELECT * FROM course';
   try {
@@ -335,4 +336,8 @@ export async function updateAssignment(
     console.error('Error updating assignment:', error);
     throw error;
   }
+}
+
+export async function getStudentGroups(assignmentID: number) {
+  // const sql= "SELECT "
 }
