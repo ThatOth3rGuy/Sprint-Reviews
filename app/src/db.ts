@@ -120,14 +120,19 @@ export async function addAssignmentToDatabase(
   }
 }
 
+
 export async function getAssignments(): Promise<any[]> {
-  const sql = 'SELECT assignmentID, title, description, DATE_FORMAT(deadline, "%Y-%m-%dT%H:%i:%s.000Z") as deadline FROM assignment';
+  const sql = `
+    SELECT assignmentID, title
+    FROM assignment
+    ORDER BY title ASC
+  `;
+
   try {
     const rows = await query(sql);
-    console.log('Fetched assignments:', rows);
     return rows as any[];
   } catch (error) {
-    console.error('Database query error:', error);
+    console.error('Error fetching assignments:', error);
     throw error;
   }
 }
@@ -336,6 +341,45 @@ export async function updateAssignment(
     throw error;
   }
 }
+
+export async function setUniqueDueDates(assignmentID: number, studentIDs: number[], dueDate: string) {
+  try {
+    const connection = await pool.getConnection();
+
+    for (const studentID of studentIDs) {
+      await connection.execute(
+        'INSERT INTO unique_due_dates (assignmentID, studentID, uniqueDeadline) VALUES (?, ?, ?) ' +
+        'ON DUPLICATE KEY UPDATE uniqueDeadline = ?',
+        [assignmentID, studentID, dueDate, dueDate]
+      );
+    }
+
+    connection.release();
+    return { message: 'Unique due dates set successfully' };
+  } catch (error) {
+    console.error('Error setting unique due dates:', error);
+    throw error;
+  }
+}
+
+
+//Get students for setting unique due date
+export async function getStudents(): Promise<any[]> {
+  const sql = `
+    SELECT u.userID, u.firstName, u.lastName, u.email, s.studentID
+    FROM user u
+    JOIN student s ON u.userID = s.userID
+    WHERE u.userRole = 'student'
+    ORDER BY u.lastName, u.firstName
+  `;
+
+  try {
+    const rows = await query(sql);
+    return rows;
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    throw error;
+  }
 export async function getStudents(userId: string) {
   const sql = `
     SELECT * FROM student WHERE userID = ?
@@ -361,5 +405,4 @@ export async function assignStudent(userID: string, assignmentID: string): Promi
     console.error(`Error adding student ${userID} to assignment ${assignmentID}:`, err.message);
     throw err;
   }
-
 }
