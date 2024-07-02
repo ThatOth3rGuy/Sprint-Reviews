@@ -15,7 +15,7 @@ test.describe('Role selection page', () => {
     // Check if landing page displays a logo
     const logo = page.locator('img[alt="SprintRunners Logo"]');
     await expect(logo).toBeVisible();
-    await expect(logo).toHaveAttribute('src', '/Logo.png');
+    await expect(logo).toHaveAttribute('src', /\/_next\/image\?url=%2FLogo.png/); // Dynamic URL due to nextJS's optimization
   });
 
   test('should display the role selection header', async ({ page }) => {
