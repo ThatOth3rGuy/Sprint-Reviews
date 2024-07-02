@@ -85,11 +85,13 @@ DROP TABLE IF EXISTS feedback;
 -- Table for storing feedback information between students and assignments
 CREATE TABLE IF NOT EXISTS feedback (
     feedbackID INT AUTO_INCREMENT PRIMARY KEY,
+    studentID INT,
     assignmentID INT,
     content TEXT,
     otherStudentID INT,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
-    FOREIGN KEY (otherStudentID) REFERENCES student(userID)
+    FOREIGN KEY (otherStudentID) REFERENCES student(userID),
+    FOREIGN KEY (studentID) REFERENCES student(userID)
 );
 
 DROP TABLE IF EXISTS enrollment;
