@@ -1,3 +1,8 @@
+/*
+  This page should be replaced with the landing.test.ts file.
+  I'm leaving it up until we have the tests running in case there are issues with 
+  the landing.test.ts file. But once that file is working, this file should be deleted.
+*/
 import { test, expect } from '@playwright/test';
 import playwrightConfig from '../playwright.config';
 
