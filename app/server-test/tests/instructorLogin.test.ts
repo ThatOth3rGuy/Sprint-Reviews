@@ -2,7 +2,8 @@
 import { test, expect } from '@playwright/test';
 import playwrightConfig from '../playwright.config';
 
-const baseURL = playwrightConfig.use?.baseURL; // Base URL of your application
+const baseURL = 'http://localhost:3001';// playwrightConfig.use?.baseURL; // Base URL of your application
+
 
 test.describe('Instructor Login Page', () => {
 
@@ -41,13 +42,13 @@ test.describe('Instructor Login Page', () => {
     // Check that the back icon redirects to the landing page
     test('should redirect to the landing page when back icon is clicked', async ({ page }) => {
       await page.locator('img[alt="Back"]').click();
-      await expect(page).toHaveURL('/');
+      await expect(page).toHaveURL('http://localhost:3001/');
     });
 
     // Check that the sign-up link redirects to the registration page
     test('should redirect to the registration page when sign-up link is clicked', async ({ page }) => {
       await page.locator('text=Sign up').click();
-      await expect(page).toHaveURL('/instructor/registration');
+      await expect(page).toHaveURL('http://localhost:3001/instructor/registration');
     });
   
     // Check if an error message is displayed when the sign-in attempt fails
@@ -80,6 +81,6 @@ test.describe('Instructor Login Page', () => {
       await page.fill('input[type="password"]', 'password');
       await page.getByText('Sign In').click();
   
-      await expect(page).toHaveURL('/instructor/dashboard');
+      await expect(page).toHaveURL('http://localhost:3001/instructor/dashboard');
     });
   });
