@@ -1,4 +1,5 @@
 // student/dashboard.tsx
+/* eslint-disable @next/next/no-img-element */
 import { useState, useEffect, useCallback } from 'react';
 import StudentHeader from '../components/student-components/student-header';
 import StudentNavbar from '../components/student-components/student-navbar';
