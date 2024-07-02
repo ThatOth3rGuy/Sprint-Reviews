@@ -148,19 +148,6 @@ export async function getCourses(): Promise<any[]> {
 }
 
 
-// export async function submitAssignment(assignmentID: number, studentID: number, file: Buffer) {
-//   const sql = `
-//     INSERT INTO submissions (assignmentID, studentID, submissionDate, file)
-//     VALUES (?, ?, NOW(), ?)
-//   `;
-//   try {
-//     await query(sql, [assignmentID, studentID, file]);
-//   } catch (error) {
-//     console.error('Error in submitAssignment:', error);
-//     throw error;
-//   }
-// }
-
 export async function getAssignmentsWithSubmissions() {
   const sql = `
     SELECT 
@@ -342,67 +329,108 @@ export async function updateAssignment(
   }
 }
 
-export async function setUniqueDueDates(assignmentID: number, studentIDs: number[], dueDate: string) {
+// export async function setUniqueDueDates(assignmentID: number, studentIDs: number[], dueDate: string) {
+//   try {
+//     const connection = await pool.getConnection();
+
+//     for (const studentID of studentIDs) {
+//       await connection.execute(
+//         'INSERT INTO unique_due_dates (assignmentID, studentID, uniqueDeadline) VALUES (?, ?, ?) ' +
+//         'ON DUPLICATE KEY UPDATE uniqueDeadline = ?',
+//         [assignmentID, studentID, dueDate, dueDate]
+//       );
+//     }
+
+//     connection.release();
+//     return { message: 'Unique due dates set successfully' };
+//   } catch (error) {
+//     console.error('Error setting unique due dates:', error);
+//     throw error;
+//   }
+// }
+
+export async function selectStudentsForAssignment(assignmentID: string, studentIDs: string[], uniqueDeadline: string | null): Promise<void> {
+  const sql = `
+    INSERT INTO selected_students (assignmentID, studentID, uniqueDeadline)
+    VALUES (?, ?, ?)
+  `;
+
   try {
-    const connection = await pool.getConnection();
-
     for (const studentID of studentIDs) {
-      await connection.execute(
-        'INSERT INTO unique_due_dates (assignmentID, studentID, uniqueDeadline) VALUES (?, ?, ?) ' +
-        'ON DUPLICATE KEY UPDATE uniqueDeadline = ?',
-        [assignmentID, studentID, dueDate, dueDate]
-      );
+      await query(sql, [assignmentID, studentID, uniqueDeadline]);
     }
-
-    connection.release();
-    return { message: 'Unique due dates set successfully' };
   } catch (error) {
-    console.error('Error setting unique due dates:', error);
-    throw error;
+    const err = error as Error;
+    console.error(`Error selecting students for assignment:`, err.message);
+    throw err;
   }
 }
 
-
-//Get students for setting unique due date
-export async function getStudents(): Promise<any[]> {
+export async function getStudentsInCourse(courseID: string): Promise<any[]> {
   const sql = `
     SELECT u.userID, u.firstName, u.lastName, u.email, s.studentID
     FROM user u
     JOIN student s ON u.userID = s.userID
-    WHERE u.userRole = 'student'
+    JOIN enrollment e ON s.userID = e.studentID
+    WHERE u.userRole = 'student' AND e.courseID = ?
     ORDER BY u.lastName, u.firstName
   `;
 
   try {
-    const rows = await query(sql);
+    const rows = await query(sql, [courseID]);
     return rows;
   } catch (error) {
     console.error('Error fetching students:', error);
     throw error;
   }
-export async function getStudents(userId: string) {
-  const sql = `
-    SELECT * FROM student WHERE userID = ?
-  `;
-  try {
-    const rows = await query(sql, [userId]);
-    if (rows.length > 0) {
-      return rows[0];
-    }
-  } catch (error) {
-    console.error('Error in getStudents:', error);
-    throw error;
-  }
 }
-export async function assignStudent(userID: string, assignmentID: string): Promise<void> {
-  const sql = `
-    UPDATE assignment SET studentID = ? WHERE assignmentID = ?
-  `;
-  try {
-    const result = await query(sql, [userID, assignmentID]);
-  } catch (error) {
-    const err = error as Error;
-    console.error(`Error adding student ${userID} to assignment ${assignmentID}:`, err.message);
-    throw err;
-  }
-}
+
+
+
+
+//Get students for setting unique due date
+// export async function getStudents(): Promise<any[]> {
+//   const sql = `
+//     SELECT u.userID, u.firstName, u.lastName, u.email, s.studentID
+//     FROM user u
+//     JOIN student s ON u.userID = s.userID
+//     WHERE u.userRole = 'student'
+//     ORDER BY u.lastName, u.firstName
+//   `;
+
+//   try {
+//     const rows = await query(sql);
+//     return rows;
+//   } catch (error) {
+//     console.error('Error fetching students:', error);
+//     throw error;
+//   }
+// }
+// export async function getStudents(userId: string) {
+//   const sql = `
+//     SELECT * FROM student WHERE userID = ?
+//   `;
+//   try {
+//     const rows = await query(sql, [userId]);
+//     if (rows.length > 0) {
+//       return rows[0];
+//     }
+//   } catch (error) {
+//     console.error('Error in getStudents:', error);
+//     throw error;
+//   }
+// }
+// export async function assignStudent(userID: string, assignmentID: string): Promise<void> {
+//   const sql = `
+//     UPDATE assignment SET studentID = ? WHERE assignmentID = ?
+//   `;
+//   try {
+//     const result = await query(sql, [userID, assignmentID]);
+//   } catch (error) {
+//     const err = error as Error;
+//     console.error(`Error adding student ${userID} to assignment ${assignmentID}:`, err.message);
+//     throw err;
+//   }
+// }
+
+

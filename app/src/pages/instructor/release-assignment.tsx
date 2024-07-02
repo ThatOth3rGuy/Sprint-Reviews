@@ -6,6 +6,7 @@ import styles from "../../styles/instructor-assignments-creation.module.css";
 import InstructorHeader from "../home/instructor-components/instructor-header";
 import InstructorNavbar from "../home/instructor-components/instructor-navbar";
 import Modal from "react-modal";
+import Select from 'react-select';
 
 // Define the structure fro assignment and Rubric items
 interface Assignment {
@@ -17,8 +18,17 @@ interface RubricItem {
   criterion: string;
   maxMarks: number;
 }
+interface ReleaseAssignmentProps {
+  courseID: string;
+}
+
+interface Student {
+  id: string;
+  name: string;
+}
 
 const ReleaseAssignment: React.FC = () => {
+  
   const router = useRouter();
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [selectedAssignment, setSelectedAssignment] = useState<number | "">("");
@@ -42,11 +52,10 @@ const ReleaseAssignment: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  // Fetch assignments when the component mounts
+  // Fetch assignments ans students in course when the component mounts
   useEffect(() => {
-    fetchAssignments();
-    fetchStudents();
-  }, []);
+    fetchAssignments();  
+  },[]);
   // Function to handle changes in the assignment selection
   const fetchAssignments = async () => {
     try {
@@ -63,19 +72,36 @@ const ReleaseAssignment: React.FC = () => {
   };
 
   // function to handle selecting students
-  const fetchStudents = async () => {
-    try {
-      const response = await fetch("/api/getStudents");
-      if (response.ok) {
-        const data = await response.json();
-        setStudents(data);
-      } else {
-        console.error("Failed to fetch students");
-      }
-    } catch (error) {
-      console.error("Error fetching students:", error);
+  // const fetchStudents = async () => {
+  //   try {
+  //     const response = await fetch("/api/getStudents");
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       setStudents(data);
+  //     } else {
+  //       console.error("Failed to fetch students");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching students:", error);
+  //   }
+  // };
+ // release-assignment.tsx
+
+ const fetchStudents = async (courseID: undefined) => {
+  try {
+    const response = await fetch(`/api/getStudentsInCourse?courseID=${courseID}`);
+    if (response.ok) {
+      const students = await response.json();
+      setStudents(students);
+    } else {
+      console.error("Failed to fetch students");
     }
-  };
+  } catch (error) {
+    console.error("Error fetching students:", error);
+  }
+};
+
+
 
   const handleStudentSelection = (studentId: number) => {
     setSelectedStudents((prev) =>
@@ -85,30 +111,63 @@ const ReleaseAssignment: React.FC = () => {
     );
   };
 
-  const handleUniqueDueDateSubmit = async (e: React.FormEvent) => {
+  // const handleStudentSelection = (studentId: number) => {
+  //   setSelectedStudents((prev) =>
+  //     prev.includes(studentId)
+  //       ? prev.filter((id) => id !== studentId)
+  //       : [...prev, studentId]
+  //   );
+  // };
+
+  // const handleUniqueDueDateSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await fetch("/api/setUniqueDueDate", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         assignmentID: selectedAssignment,
+  //         studentIDs: selectedStudents,
+  //         dueDate: uniqueDueDate,
+  //       }),
+  //     });
+
+  //     if (response.ok) {
+  //       alert("Unique due date set successfully");
+  //       setSelectedStudents([]);
+  //       setUniqueDueDate("");
+  //     } else {
+  //       console.error("Failed to set unique due date");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error setting unique due date:", error);
+  //   }
+  // };
+  const handleStudentSelectionSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/setUniqueDueDate", {
+      const response = await fetch("/api/selectStudentsForAssignment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           assignmentID: selectedAssignment,
           studentIDs: selectedStudents,
-          dueDate: uniqueDueDate,
+          uniqueDeadline: uniqueDueDate,
         }),
       });
-
+  
       if (response.ok) {
-        alert("Unique due date set successfully");
+        alert("Students selected successfully");
         setSelectedStudents([]);
         setUniqueDueDate("");
       } else {
-        console.error("Failed to set unique due date");
+        console.error("Failed to select students");
       }
     } catch (error) {
-      console.error("Error setting unique due date:", error);
+      console.error("Error selecting students:", error);
     }
   };
+  
 
   const handleAssignmentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedAssignment(Number(e.target.value));
@@ -161,6 +220,10 @@ const ReleaseAssignment: React.FC = () => {
       console.error("Error releasing assignment:", error);
     }
   };
+  const options = students.map((student) => ({
+    value: student.id,
+    label: student.name,
+  }));
   // Render the component
   return (
     <>
@@ -242,16 +305,7 @@ const ReleaseAssignment: React.FC = () => {
             </button>
           </div>
 
-          {/* handle rubric upload  here*/}
-
-          {/* <input
-            type="text"
-            value={allowedFileTypes}
-            onChange={(e) => setAllowedFileTypes(e.target.value)}
-            placeholder="Allowed file types (e.g., pdf,docx,txt)"
-            className={styles.textbox}
-            required
-          /> */}
+          
           <br />
           <label>Enter Due Date:</label>
           <br />
@@ -267,14 +321,22 @@ const ReleaseAssignment: React.FC = () => {
           <Modal isOpen={isModalOpen} onRequestClose={closeModal} className={styles.advancedOptions}>
             <h2>Advanced Options</h2>
             <div className={styles.innerAdvanced}>
-              <h3>Change Student Groups</h3>
+              <h3>Select Students: </h3>
               <p className={styles.innerAdvanced}>
-                List of Students in Course By Group
+              {/* todo */}
+                <Select
+                  options={options}
+                  isMulti
+                  onChange={(selectedOptions) => {
+                    const selectedStudentIds = selectedOptions.map((option) => option.value);
+                    setSelectedStudents(selectedStudentIds);
+                  }}
+                />
               </p>
             </div>
             <div className={styles.innerAdvanced}>
               <h3>Unique Due Date</h3>
-              <form onSubmit={handleUniqueDueDateSubmit}>
+              <form onSubmit={handleStudentSelectionSubmit}>
                 <div className={styles.studentList}>
                   {students.map((student) => (
                     <div key={student.id}>
