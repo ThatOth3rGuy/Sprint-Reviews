@@ -1,6 +1,81 @@
 
 # Weekly Logs
 ------------------------------------
+# Week 8
+## Wednesday - July 3, 2024
+**Timesheet Tracking (Friday-Tuesday)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_06_28_2024-07_02_2024.pdf)
+### Cycle Review
+    During this weekend cycle, we had a large amount of work to get done, most of which we managed. We have completed all the features we can for the MVP on Friday, with other partial features still being developed. Though we are still missing one of the vital parts of our app, nearly everything it relies on has been done. With multiple features now complete, most of the cycle was dealing with code inconsistencies and inefficiencies. As all feature components were developed in isolation, our code has a high amount of coupling, thus we have been working to reduce it. 
+
+    We have been able to migrate and run most of our expected demo locally, however our docker server (and subsequent testing server) is having constant issues for the team. We plan to correct that during the week, so the MVP demo runs smoothly. Luckily completing about half of our total application, we should be able to fully complete everything by the deadline. Our success at this point is really determined by whether we can get the docker containers to interact as expected. The goal for the remainder of the week, aside from working to keep the timelines on track, is to configure and successfully run all necessary tests for every feature currently implemented. With the backend coding and integration issues mostly solved, we just need to ensure everything can actually be tested and is working correctly. So long as there are no surprises during the MVP on Friday, we should achieve the goal. We all spend a lot of time on the project this weekend, and the team is doing an incredible job regardless of how frustrated we can get.
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Refine Docker Environment and Testing Framework For Future Development
+  * #3: Create Feature Definition and Sub-divisions on Project Board For Team Division
+  * #4: Run Integration Tests for pushed features (Fix Testing Server Connection)
+  * #5: Complete Manual Student Entry option for Peer Review Assignment Form Feature
+  * #6: Review Branch Pull Requests and Fixes for MVP Demo Branch
+
+### Progress Update: Fri-Wed
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Ongoing
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Feature breakdown/sub-division for parallel task work
+        </td>
+        <!-- Status -->
+        <td>Partly Complete (Recurring)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Update Docker and Testing Setup for Ongoing Development
+        </td>
+        <!-- Status -->
+        <td>Inconclusive? Complete? In-Progress?
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create and Run Integration Tests on Pushed Features
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Complete Manual Student Entry Option for Peer Review Assignment Form
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Review Pull Requests and Make Fixes to Main Branches
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+</table>
+
+#
 # Week 7
 ## Friday - June 28, 2024
 **Timesheet Tracking (Wednesday-Thursday)**
