@@ -3,10 +3,6 @@
 CREATE DATABASE IF NOT EXISTS mydb;
 USE mydb;
 
-<<<<<<< HEAD
-=======
-
->>>>>>> development
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS student;
 DROP TABLE IF EXISTS instructor;
@@ -27,8 +23,6 @@ CREATE TABLE IF NOT EXISTS user (
     institution VARCHAR(100)
 );
 
-
-
 -- Table for storing student, connected to the user table
 CREATE TABLE IF NOT EXISTS student (
     userID INT PRIMARY KEY,
@@ -38,9 +32,6 @@ CREATE TABLE IF NOT EXISTS student (
     dateOfBirth DATE,
     FOREIGN KEY (userID) REFERENCES user(userID)
 );
-
-
-
 
 -- Table for storing instructor information, connected to the user table
 CREATE TABLE IF NOT EXISTS instructor (
@@ -59,7 +50,6 @@ CREATE TABLE IF NOT EXISTS course (
     FOREIGN KEY (instructorID) REFERENCES instructor(userID)
 );
 
-
 -- Table for storing assignment information
 CREATE TABLE IF NOT EXISTS assignment (
     assignmentID INT AUTO_INCREMENT PRIMARY KEY,
@@ -74,7 +64,6 @@ CREATE TABLE IF NOT EXISTS assignment (
 );
 
 -- Table for storing submission information between students and assignments
-
 CREATE TABLE IF NOT EXISTS submission (
     submissionID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT,
