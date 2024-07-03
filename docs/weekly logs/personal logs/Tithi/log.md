@@ -1,5 +1,25 @@
 # Weekly Personal Logs
 
+## Personal Log For Week 8
+
+### 067/03/2024
+
+Topics Covered:
+* testing all the features we've worked on so far
+* merging and integrating sub-features into their respective features branch and completed features into development
+
+My contributions since Friday's log:
+
+Since Friday, I've been working on the peer review form, and the advanced options part of the form. I had some issues with the advanced options, some of the functions weren't working properly and I wasn't getting the right data from the database which is why it took me so long to complete. We decided that the unique due date aspect of the advanced options is going to be moved to instead allow the instructor to edit individual due dates. 
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Work on integrating the peer review form into the student pages | 07/04/2024 | WIP |
+| Write tests for the functions I've been working on | 07/04/2024 | WIP |
+| Update UI to be consistent with prototype | 07/04/2024 | WIP |
+
+![week 8 time tracking](img/week8.png)
+
 ## Personal Log For Week 7
 
 ### 06/26/2024
@@ -21,7 +41,7 @@ My Contributions since Friday's log:
 | Make student view and functionality for viewing selected assignment | 06/23/2024 | Complete |
 | Make student view and functionality for uploading a restricted file for assignment  | 06/23/2024 | Complete; just needs state management for uploading submission to database |
 | Make student view and functionality for viewing all assignments | 06/23/2024 | Complete |
-| Make advanced options- restrictions section and functions for peer review page | 06/28/2024 | WIP |
+| Make advanced options- restrictions section and functions for peer review page | 06/28/2024 | Complete |
 
 ![week 7 time tracking](img/week7.png)
 
@@ -36,6 +56,7 @@ I didn't get much work done since the last meeting because I had a final exam on
 | Make advanced options- restrictions section and functions for peer review page | 06/28/2024 | WIP |
 | Work on tidying up the front-end design on the registration, login, dashboard, and assignment pages  | 06/29/2024 | WIP |
 | Work on connecting the backend for the peer-review page  | 06/29/2024 | WIP |
+
 
 #### Cycle Review And Goals
 
