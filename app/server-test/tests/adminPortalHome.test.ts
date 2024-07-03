@@ -2,7 +2,8 @@
 import { test, expect } from '@playwright/test';
 import playwrightConfig from '../playwright.config';
 
-const baseURL = playwrightConfig.use?.baseURL; // Base URL of your application
+const baseURL = 'http://localhost:3001';
+// playwrightConfig.use?.baseURL; // Base URL of your application
 
 test.describe('Admin Portal Home Page', () => {
 
