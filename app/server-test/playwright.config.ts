@@ -74,8 +74,8 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-     webServer: {
-     url: 'http://app:3000',
-     reuseExistingServer: true,
-    },
+  //   webServer: {
+  //   url: 'http://app:3000',
+  //   reuseExistingServer: true,
+  //  },
 });
