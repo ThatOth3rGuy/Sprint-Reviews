@@ -1,19 +1,19 @@
  # Weekly Logs 
 ------------------------------------
 # Week 7 Summary 
-## Friday (6/28/2024)
+## Wednesday (07/03/2024)
 
-### Timesheet Week 7 (06/26/2024 - 06/28/2024)
-![alt text](images/week7Fri.png)
+### Timesheet Week 7 (06/26/2024 - 07/03/2024)
+![alt text](images/week7_indiv_clokify.png)
 
 
 ### Current Tasks (Complete by the end of the day)
-  * Assignment Creation/Submission system ready for testing
-  * Research and decide on an authenticator to be implemented
-  * Start on Authenticator setup and handle front-end restrictions
+  * Running all the tests 
+  * Optimize and fix the DB queries and have some generalized functions and some specific ones
+  * Any items on discussion with MVP will also be assisted by me
 
 
-### Progress Update 
+
 ### Progress Update 
 <table>
     <tr>
@@ -22,12 +22,53 @@
         <td><strong>STATUS</strong>
         </td>
     </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> General Optimization of the Application  
+        </td>
+        <!-- Status -->
+        <td> In progress 
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Manual Student entry back end integration  
+        </td>
+        <!-- Status -->
+        <td> In progress 
+        </td>
+    </tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> Resolve conflicts while Admin Feature to merge into development 
+        </td>
+        <!-- Status -->
+        <td> Done 
+        </td>
+    </tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> Resolve conflicts while Course Creation Feature merges into development 
+        </td>
+        <!-- Status -->
+        <td> Done 
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>  Resolve conflicts while Assignment Creation and Submission Feature to merge into development 
+        </td>
+        <!-- Status -->
+        <td> Done 
+        </td>
+    </tr>
+ 
   <tr>
         <!-- Task/Issue # -->
         <td> Peer Review form for instructor 
         </td>
         <!-- Status -->
-        <td> Portion Complete/Untested 
+        <td> Done 
         </td>
     </tr>
   <tr>
@@ -35,7 +76,7 @@
         <td> Rubric Upload handling with restrictions 
         </td>
         <!-- Status -->
-        <td> Portion Complete 
+        <td> Done 
         </td>
     </tr>
  <tr>
@@ -45,15 +86,13 @@
 </table>
 
 ### Weekly Goal Review
- I mainly got the instructor assignment creation form to work with the database, where the instructor is exclusively creating assignments for a class and is being handled by the backend to add the information safely
-- Instructor peer review form is created and data is stored and retrievable from the database.
-- Instructor can create a dynamic rubric with grading criteria and input a grade, this is stored in the database
-- testing framework tested to work, has some issues but runs on few of our PCs so testing can be handled. 
+This week, the focus was primarily on developing the Peer Review Creation form. The objective was to save the base template and the instructor-created rubric to the database. This step enables the commencement of form creation, incorporating the instructor's updated rubric. Additionally, with the assistance of Brenden and Eric, I successfully merged three features into development: the course creation, my assignment creation, and Tithi's assignment creation. Lastly, I have been working on optimizing the software by eliminating duplicate or coupled functions in favor of more generalized functions, again with Brenden's help. 
 
 ### Next Cycle Goals
-  * Need to get this to work for students so will work on that
+  * All my feature tests need to be written and tested 
   * The randomizer and the anonymous system need to be created and worked on
-  * A Peer Group evaluation system needs to be made  
+  * A Peer Group evaluation system needs to be made
+ 
 # Week 6 Summary
 ## Wednesday (6/26/2024)
 
@@ -63,7 +102,7 @@
 
 ### Current Tasks (Complete by the end of the day)
   * Test the test framework and write tests for Assignment creation
-  * Start working on the instructor peer review form with upload of rubric handled 
+  * Start working on the instructor peer review form with upload of the rubric handled 
 
 
 ### Progress Update 
