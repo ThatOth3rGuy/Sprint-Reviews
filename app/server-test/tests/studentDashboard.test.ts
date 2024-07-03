@@ -5,35 +5,20 @@ import playwrightConfig from '../playwright.config';
 const baseURL = 'http://localhost:3001';
 // playwrightConfig.use?.baseURL; // Base URL of your application
 
+// Login information comes from database, this should be adjusted when we implement a test db
+async function login(page: any) {
+  await page.goto(`${baseURL}/student/login`);
+  await page.fill('input[type="email"]', 'john.doe@example.com');
+  await page.fill('input[type="password"]', 'password123');
+  await page.click('text=Sign In');
+  await page.waitForNavigation();
+}
 
 test.describe('Student Dashboard Page', () => {
 
   test.beforeEach(async ({ page }) => {
-    // Mock session validation
-    await page.route('/api/auth/checkSession', route => {
-      route.fulfill({
-        status: 200,
-        body: JSON.stringify({
-          user: {
-            userID: 1,
-            role: 'student',
-            firstName: 'Test',
-            lastName: 'User'
-          }
-        })
-      });
-    });
-
-    // Mock fetching courses
-    await page.route('/api/getCourses?studentID=1', route => {
-      route.fulfill({
-        status: 200,
-        body: JSON.stringify([
-          { courseID: 1, courseName: 'Course 1', instructorFirstName: 'Instructor 1' },
-          { courseID: 2, courseName: 'Course 2', instructorFirstName: 'Instructor 2' }
-        ])
-      });
-    });
+    // Perform login before each test to obtain a valid session
+    await login(page);
 
     // Navigate to the student dashboard page before each test
     await page.goto(`${baseURL}/student/dashboard`);
@@ -47,15 +32,18 @@ test.describe('Student Dashboard Page', () => {
 
   // Check that the courses are displayed after loading
   test('should display courses after loading', async ({ page }) => {
-    const course1 = page.locator('text=Course 1');
-    const course2 = page.locator('text=Course 2');
+    // Name of courses comes from the database, this should be adjusted when we implement a test db
+    const course1 = page.getByText('Test Course', { exact: true });
+    const course2 = page.getByText('Test Course 2', { exact: true });
     await expect(course1).toBeVisible();
     await expect(course2).toBeVisible();
   });
 
   // Check that clicking a course redirects to the course dashboard
   test('should redirect to course dashboard on course click', async ({ page }) => {
-    await page.locator('text=Course 1').click();
+    // Name of course comes from the database, this should be adjusted when we implement a test db
+    const course1 = page.getByText('Test Course', { exact: true });
+    await course1.click();
     await expect(page).toHaveURL(`${baseURL}/student/course-dashboard?courseID=1`);
   });
 
@@ -64,6 +52,9 @@ test.describe('Student Dashboard Page', () => {
   test('should display pending assignments section', async ({ page }) => {
     const pendingAssignments = page.locator('text=Pending Assignments');
     await expect(pendingAssignments).toBeVisible();
+
+    // Intentionally fail test to show that the feature is not yet implemented
+    expect(false).toBe(true);
   });
 
   // Check that clicking the assignment details redirects to the assignments page
@@ -72,6 +63,9 @@ test.describe('Student Dashboard Page', () => {
     await page.locator('text=Assignment').first().click();
     // Replace with the actual URL for the assignments page if available
     // await expect(page).toHaveURL(`${baseURL}/student/assignments`);
+
+    // Intentionally fail test to show that the feature is not yet implemented
+    expect(false).toBe(true);
   });
 
 });

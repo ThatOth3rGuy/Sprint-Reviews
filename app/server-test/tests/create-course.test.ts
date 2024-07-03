@@ -1,14 +1,26 @@
 // create-course.test.ts
 import { test, expect } from '@playwright/test';
+import path from 'path';
 import playwrightConfig from '../playwright.config';
 
 const baseURL = 'http://localhost:3001';
 // playwrightConfig.use?.baseURL; // Base URL of your application
 
+// Login information comes from database, this should be adjusted when we implement a test db
+async function login(page: any) {
+  await page.goto(`${baseURL}/instructor/login`);
+  await page.fill('input[type="email"]', 'admin@gmail.com');
+  await page.fill('input[type="password"]', 'password');
+  await page.click('text=Sign In');
+  await page.waitForNavigation();
+}
 
 test.describe('Create Course Page', () => {
 
   test.beforeEach(async ({ page }) => {
+    // Perform login before each test to obtain a valid session
+    await login(page);
+
     // Navigate to the create course page before each test
     await page.goto(`${baseURL}/instructor/create-course`);
   });
@@ -35,7 +47,7 @@ test.describe('Create Course Page', () => {
 
   // Check that the create course button is displayed
   test('should display the create course button', async ({ page }) => {
-    const createCourseButton = page.locator('text=Create Course');
+    const createCourseButton = page.locator('b:has-text("Create Course")');
     await expect(createCourseButton).toBeVisible();
   });
 
@@ -57,9 +69,10 @@ test.describe('Create Course Page', () => {
     await page.fill('input[placeholder="Course Name"]', 'Test Course');
     await page.fill('input[placeholder="Institution Name"]', 'Test Institution');
 
-    await page.setInputFiles('input[type="file"]', 'path/to/student-list.csv');
+    const filePath = path.resolve(__dirname, '../test-files/students.csv');
+    await page.setInputFiles('input[type="file"]', filePath);
 
-    await page.locator('text=Create Course').click();
+    await page.locator('b:has-text("Create Course")').click();
 
     await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseId=1`);
   });
@@ -76,7 +89,7 @@ test.describe('Create Course Page', () => {
     await page.fill('input[placeholder="Course Name"]', 'Test Course');
     await page.fill('input[placeholder="Institution Name"]', 'Test Institution');
 
-    await page.locator('text=Create Course').click();
+    await page.locator('b:has-text("Create Course")').click();
 
     const errorMessage = page.locator('text=Failed to create course');
     await expect(errorMessage).toBeVisible();
@@ -84,7 +97,6 @@ test.describe('Create Course Page', () => {
 
   // Check for error handling when the enroll students API call fails
   test('should show error when enroll students API call fails', async ({ page }) => {
-    // This test should FAIL until we add the student-list.csv file to the repository
     await page.route('/api/createCourse', route => {
       route.fulfill({
         status: 200,
@@ -102,9 +114,10 @@ test.describe('Create Course Page', () => {
     await page.fill('input[placeholder="Course Name"]', 'Test Course');
     await page.fill('input[placeholder="Institution Name"]', 'Test Institution');
 
-    await page.setInputFiles('input[type="file"]', 'path/to/student-list.csv'); // Adjust this path once the student-list is added
+    const filePath = path.resolve(__dirname, '../test-files/students.csv');
+    await page.setInputFiles('input[type="file"]', filePath);
 
-    await page.locator('text=Create Course').click();
+    await page.locator('b:has-text("Create Course")').click();
 
     const errorMessage = page.locator('text=Failed to enroll students');
     await expect(errorMessage).toBeVisible();

@@ -43,13 +43,13 @@ test.describe('Student Login Page', () => {
   // Check that the back icon redirects to the landing page
   test('should redirect to the landing page when back icon is clicked', async ({ page }) => {
     await page.locator('img[alt="Back"]').click();
-    await expect(page).toHaveURL('/');
+    await expect(page).toHaveURL('http://localhost:3001/');
   });
 
   // Check that the sign-up link redirects to the registration page
   test('should redirect to the registration page when sign-up link is clicked', async ({ page }) => {
     await page.locator('text=Sign up').click();
-    await expect(page).toHaveURL('/student/registration');
+    await expect(page).toHaveURL('http://localhost:3001/student/registration');
   });
 
   // Check if an error message is displayed when the sign-in attempt fails
@@ -77,11 +77,11 @@ test.describe('Student Login Page', () => {
       });
     });
 
-    // Login credentials for the student account in the init.sql file
+    // Login credentials for the student account in the init.sql file, this should be adjusted when we implent a test db
     await page.fill('input[type="email"]', 'john.doe@example.com');
     await page.fill('input[type="password"]', 'password123');
     await page.getByText('Sign In').click();
 
-    await expect(page).toHaveURL('/student/dashboard');
+    await expect(page).toHaveURL('http://localhost:3001/student/dashboard');
   });
 });

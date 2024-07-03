@@ -21,7 +21,7 @@ COPY package.json package-lock.json* ./
 RUN npm install -D @playwright/test@latest && npm install
 
 # Step 7: Install necessary browsers for Playwright
-RUN npx playwright install --with-deps chromium firefox webkit
+RUN npx playwright install --with-deps chromium
 
 # Step 8: Optional Change working directory to tests directory to run tests from there
 

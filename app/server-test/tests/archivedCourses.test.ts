@@ -5,35 +5,20 @@ import playwrightConfig from '../playwright.config';
 const baseURL = 'http://localhost:3001';
 // playwrightConfig.use?.baseURL; // Base URL of your application
 
+// Login information comes from database, this should be adjusted when we implement a test db
+async function login(page: any) {
+  await page.goto(`${baseURL}/instructor/login`);
+  await page.fill('input[type="email"]', 'admin@gmail.com');
+  await page.fill('input[type="password"]', 'password');
+  await page.click('text=Sign In');
+  await page.waitForNavigation();
+}
 
 test.describe('Archived Courses Page', () => {
 
   test.beforeEach(async ({ page }) => {
-    // Mock session validation
-    await page.route('/api/auth/checkSession', route => {
-      route.fulfill({
-        status: 200,
-        body: JSON.stringify({
-          user: {
-            userID: 1,
-            role: 'admin',
-            firstName: 'Admin',
-            lastName: 'User'
-          }
-        })
-      });
-    });
-
-    // Mock fetching archived courses
-    await page.route('/api/getAllCourses?isArchived=true', route => {
-      route.fulfill({
-        status: 200,
-        body: JSON.stringify([
-          { courseID: 1, courseName: 'Archived Course 1', instructorFirstName: 'Instructor 1', instructorLastName: 'Last 1', averageGrade: 90 },
-          { courseID: 2, courseName: 'Archived Course 2', instructorFirstName: 'Instructor 2', instructorLastName: 'Last 2', averageGrade: 85 }
-        ])
-      });
-    });
+    // Perform login before each test to obtain a valid session
+    await login(page);
 
     // Navigate to the archived courses page before each test
     await page.goto(`${baseURL}/admin/archived-courses`);
@@ -47,16 +32,17 @@ test.describe('Archived Courses Page', () => {
 
   // Check that archived courses are displayed after loading
   test('should display archived courses after loading', async ({ page }) => {
-    const course1 = page.locator('text=Archived Course 1');
-    const course2 = page.locator('text=Archived Course 2');
+    const course1 = page.getByText('Archived Course', { exact: true });
+    const course2 = page.getByText('Archived Course 2', { exact: true });
     await expect(course1).toBeVisible();
     await expect(course2).toBeVisible();
   });
 
   // Check that clicking an archived course redirects to the course dashboard
   test('should redirect to course dashboard on archived course click', async ({ page }) => {
-    await page.locator('text=Archived Course 1').click();
-    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseID=1`);
+    const course1 = page.getByText('Archived Course', { exact: true });
+    await course1.click();
+    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseID=5`);
   });
 
   // Check that the filter and sort buttons are displayed
@@ -85,9 +71,9 @@ test.describe('Archived Courses Page', () => {
 
   // Check that the breadcrumbs are displayed
   test('should display breadcrumbs', async ({ page }) => {
-    const dashboardLink = page.locator('text=Dashboard');
-    const adminPortalLink = page.locator('text=Admin Portal');
-    const archivedCoursesLink = page.locator('text=Archived Courses');
+    const dashboardLink = page.getByRole('link', { name: 'Dashboard' });
+    const adminPortalLink = page.getByRole('link', { name: 'Admin Portal' });
+    const archivedCoursesLink = page.getByRole('link', { name: 'Archived Courses' });
     await expect(dashboardLink).toBeVisible();
     await expect(adminPortalLink).toBeVisible();
     await expect(archivedCoursesLink).toBeVisible();

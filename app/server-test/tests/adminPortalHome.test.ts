@@ -5,34 +5,20 @@ import playwrightConfig from '../playwright.config';
 const baseURL = 'http://localhost:3001';
 // playwrightConfig.use?.baseURL; // Base URL of your application
 
+// Login information comes from database, this should be adjusted when we implement a test db
+async function login(page: any) {
+  await page.goto(`${baseURL}/instructor/login`);
+  await page.fill('input[type="email"]', 'admin@gmail.com');
+  await page.fill('input[type="password"]', 'password');
+  await page.click('text=Sign In');
+  await page.waitForNavigation();
+}
+
 test.describe('Admin Portal Home Page', () => {
 
   test.beforeEach(async ({ page }) => {
-    // Mock session validation
-    await page.route('/api/auth/checkSession', route => {
-      route.fulfill({
-        status: 200,
-        body: JSON.stringify({
-          user: {
-            userID: 1,
-            role: 'admin',
-            firstName: 'Admin',
-            lastName: 'User'
-          }
-        })
-      });
-    });
-
-    // Mock fetching courses
-    await page.route('/api/getAllCourses?isArchived=false', route => {
-      route.fulfill({
-        status: 200,
-        body: JSON.stringify([
-          { courseID: 1, courseName: 'Course 1', instructorFirstName: 'Instructor 1', instructorLastName: 'Last 1', averageGrade: 90 },
-          { courseID: 2, courseName: 'Course 2', instructorFirstName: 'Instructor 2', instructorLastName: 'Last 2', averageGrade: 85 }
-        ])
-      });
-    });
+    // Perform login before each test to obtain a valid session
+    await login(page);
 
     // Navigate to the admin portal home page before each test
     await page.goto(`${baseURL}/admin/portal-home`);
@@ -46,15 +32,16 @@ test.describe('Admin Portal Home Page', () => {
 
   // Check that courses are displayed after loading
   test('should display courses after loading', async ({ page }) => {
-    const course1 = page.locator('text=Course 1');
-    const course2 = page.locator('text=Course 2');
+    const course1 = page.getByText('Test Course', { exact: true });
+    const course2 = page.getByText('Test Course 2', { exact: true });
     await expect(course1).toBeVisible();
     await expect(course2).toBeVisible();
   });
 
   // Check that clicking a course redirects to the course dashboard
   test('should redirect to course dashboard on course click', async ({ page }) => {
-    await page.locator('text=Course 1').click();
+    const course1 = page.getByText('Test Course', { exact: true });
+    await course1.click();
     await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseID=1`);
   });
 
@@ -84,8 +71,8 @@ test.describe('Admin Portal Home Page', () => {
 
   // Check that the breadcrumbs are displayed
   test('should display breadcrumbs', async ({ page }) => {
-    const dashboardLink = page.locator('text=Dashboard');
-    const adminPortalLink = page.locator('text=Admin Portal');
+    const dashboardLink = page.getByRole('link', { name: 'Dashboard' });
+    const adminPortalLink = page.getByRole('link', { name: 'Admin Portal' });
     await expect(dashboardLink).toBeVisible();
     await expect(adminPortalLink).toBeVisible();
   });
