@@ -2,71 +2,106 @@ import { useEffect, useState } from "react";
 import StudentHeader from "../home/student-components/student-header";
 import StudentNavbar from "../home/student-components/student-navbar";
 import styles from "../../styles/student-assignment.module.css";
+import { useRouter } from 'next/router';
+
+interface Assignment {
+  assignmentID: number;
+  title: string;
+  description: string;
+  deadline: string;
+  // Add other fields as necessary
+}
+
+interface ReviewCriteria {
+  criteriaID: number;
+  criterion: string;
+  maxMarks: number;
+}
 
 export default function Page() {
   const [feedback, setFeedback] = useState("");
-
-  const handleFeedbackChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setFeedback(event.target.value);
-  };
-
-  const getReviewCriteriaData = async (assignmentId: number) => {
-    // Replace with your actual API endpoint
-    const response = await fetch(
-      `/api/getReviewCriteria?assignmentID=${assignmentId}`
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to get review criteria");
-    }
-
-    const data = await response.json();
-    return data;
-  };
-
-  const [reviewCriteriaData, setReviewCriteriaData] = useState<
-    ReviewCriteria[]
-  >([]);
+  const [reviewCriteriaData, setReviewCriteriaData] = useState<ReviewCriteria[]>([]);
+  const [assignment, setAssignment] = useState<Assignment | null>(null);
+  const [studentId, setStudentId] = useState<number | null>(null);
+  const router = useRouter();
+  const { assignmentId } = router.query;
 
   useEffect(() => {
-    const fetchReviewCriteriaData = async () => {
+    const fetchData = async () => {
+      if (typeof assignmentId !== 'string') return;
+
       try {
-        const data = await getReviewCriteriaData(YOUR_ASSIGNMENT_ID_HERE);
-        setReviewCriteriaData(data);
+        // Fetch assignments
+        const assignmentsResponse = await fetch('/api/getAssignments');
+        if (!assignmentsResponse.ok) throw new Error('Failed to fetch assignments');
+        const assignments: Assignment[] = await assignmentsResponse.json();
+        
+        // Find the specific assignment
+        const currentAssignment = assignments.find(a => a.assignmentID === parseInt(assignmentId));
+        if (!currentAssignment) throw new Error('Assignment not found');
+        setAssignment(currentAssignment);
+
+        // Fetch review criteria 
+        const criteriaResponse = await fetch(`/api/getReviewCriteria?assignmentId=${assignmentId}`);
+        if (!criteriaResponse.ok) throw new Error('Failed to fetch review criteria');
+        const criteriaData = await criteriaResponse.json();
+        setReviewCriteriaData(criteriaData);
+
+        // Fetch student ID 
+        const userID = "1"; // Replace with actual user ID
+        const studentResponse = await fetch(`/api/getStudentId?userID=${userID}`);
+        if (!studentResponse.ok) throw new Error('Failed to fetch student ID');
+        const studentData = await studentResponse.json();
+        setStudentId(studentData.studentId);
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchReviewCriteriaData();
-  }, []);
+    if (assignmentId) {
+      fetchData();
+    }
+  }, [assignmentId]);
+
+  const handleFeedbackChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setFeedback(event.target.value);
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // TODO: Replace with your actual API endpoint and student ID
-    const response = await fetch("/api/submitFeedback", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        assignmentID:
-          "YOUR_ASSIGNMENT_ID_HERE" /* TODO: update to store assignment and student id */,
-        studentID: "YOUR_STUDENT_ID_HERE",
-        content: feedback,
-      }),
-    });
+    if (!assignmentId || !studentId) {
+      console.error("Missing assignment ID or student ID");
+      return;
+    }
 
-    if (response.ok) {
-      console.log("Feedback submitted successfully");
-      setFeedback("");
-    } else {
-      console.error("Failed to submit feedback");
+    try {
+      const response = await fetch("/api/submitFeedback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          assignmentID: assignmentId,
+          studentID: studentId,
+          content: feedback,
+        }),
+      });
+
+      if (response.ok) {
+        console.log("Feedback submitted successfully");
+        setFeedback("");
+      } else {
+        throw new Error("Failed to submit feedback");
+      }
+    } catch (error) {
+      console.error("Error submitting feedback:", error);
     }
   };
+
+  if (!assignment) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -74,7 +109,7 @@ export default function Page() {
       <br />
       <br />
       <StudentHeader
-        title="Course Name"
+        title="Course Name" //TODO: fetch course name
         addLink={[
           { href: "./all-assignments", title: "View All" },
           { href: "./peer-eval-assignments", title: "Peer Evaluations" },
@@ -82,12 +117,18 @@ export default function Page() {
       />
       <StudentNavbar />
 
-      {/* TODO: Replace with your actual criteria */}
       <div className={styles.reviewForm}>
-        <h2>Criteria</h2>
-        <p>Criterion 1: ...</p>
-        <p>Criterion 2: ...</p>
-        <p>Criterion 3: ...</p>
+        <h2>{assignment.title}</h2>
+        <p>{assignment.description}</p>
+        <p>Due: {new Date(assignment.deadline).toLocaleString()}</p>
+
+        <h3>Review Criteria</h3>
+        {reviewCriteriaData.map((criteria) => (
+          <div key={criteria.criteriaID}>
+            <h4>{criteria.criterion}</h4>
+            <p>Max Marks: {criteria.maxMarks}</p>
+          </div>
+        ))}
 
         <form onSubmit={handleSubmit}>
           <label>
