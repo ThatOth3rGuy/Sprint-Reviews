@@ -73,7 +73,7 @@ test.describe('Archived Courses Page', () => {
   test('should display breadcrumbs', async ({ page }) => {
     const dashboardLink = page.getByRole('link', { name: 'Dashboard' });
     const adminPortalLink = page.getByRole('link', { name: 'Admin Portal' });
-    const archivedCoursesLink = page.getByRole('link', { name: 'Archived Courses' });
+    const archivedCoursesLink = page.getByRole('link', { name: 'Archived Courses' }).first();
     await expect(dashboardLink).toBeVisible();
     await expect(adminPortalLink).toBeVisible();
     await expect(archivedCoursesLink).toBeVisible();
