@@ -2,6 +2,60 @@
 
 # Weekly Team Logs
 
+# Week 7 summary
+## June 26(Wed) - July 2(Tue)
+
+### Features in the Project Plan Cycle: 
+- Peer review form for instructor created
+- Instructor can add rubric and advanced options
+- Instrcutor can manually select students for the peer review
+- Base template for student peer review form created
+- Last week Items:
+    - Assignment Creation with file restriction option for Instrcutor
+    - Assignment submission and view for Students
+    - Course Creation for instcrutor
+    - Student registration in course 
+
+###  Tasks from the Project Board:
+![week7-kanban](./Images/week7Kanban.png)
+
+
+### Tasks for Next Cycle:
+
+![week5-done](./Images/week7Todo.png)
+
+### Burn-up Chart (Velocity):
+![week5-done](./Images/week7Burnup.png)
+
+### Times for Team/Individual:
+
+
+Clockify Times:
+
+![week5-done](./Images/week7clokify.png)
+
+
+
+### Completed Tasks:
+![week5-done](./Images/week7Done.png)
+
+### In Progress Tasks/ To do:
+![week5-done](./Images/week7Inprogress.png)
+
+### Overview:
+This week, significant progress was made in the development of the peer review system. A peer review form was created specifically for instructors. This form allows instructors to add a rubric and other advanced options to guide the review process. In addition, instructors now have the ability to manually select students for the peer review, providing greater control over the review process.
+
+A base template for the student peer review form was also created. This template will serve as a starting point for students when they are conducting peer reviews.
+
+Looking back at the last week, several key features were implemented:
+
+ * Assignment Creation: Instructors now have the ability to create assignments with an option to restrict file types. This ensures that students submit their work in the desired format.
+* Assignment Submission and View: Students can now submit their assignments and view them after submission. This provides students with confirmation that their work has been successfully submitted.
+* Course Creation: Instructors have the ability to create new courses. This is a crucial feature that allows instructors to manage their teaching materials effectively.
+* Student Registration in Course: Students can now register in courses. This feature makes it easy for students to enroll in the courses they are interested in.
+
+Overall, these enhancements significantly improve the functionality and user experience of the system. The team continues to work diligently to implement additional features and improvements
+
 ## June 19(Wed) - June 25(Tue)
 
 ### Features in the Project Plan Cycle: 
