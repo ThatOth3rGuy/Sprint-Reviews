@@ -18,23 +18,29 @@ const Landing: NextPage = () => {
   }
 
     return (
+      <>
+     
+      <br /><br /><br />
       <div className={styles.roleSelection}>
-        <header className={styles.roleButton}>Select Your Role</header>
         <Image 
           className={styles.image} 
           src="/Logo.png" 
           alt="SprintRunners Logo"
-          width={363}
-          height={330}
+          width={150}
+          height={150}
         />
-        <div className={styles.line}></div>
-        <p className={styles.description}>Choose from below to continue to sign up</p>
-        <p className={styles.iAmA}>I am a:</p>
+        <h2 className={styles.roleButton}>Select Your Role</h2>
+        <hr />
+        <p className={styles.description}>Choose from below to continue to sign up:</p>
+        {/* <p className={styles.iAmA}>I am a:</p> */}
         <div className={styles.roleButtons}>
-          <button className={styles.studentButton} onClick={handleStudentClick}>Student</button>
+        
+          <button className={styles.studentButton} onClick={handleStudentClick}>Student</button><br />
           <button className={styles.instructorButton} onClick={handleInstructorClick}>Instructor</button>
         </div>
       </div>
+      </>
+      
     );
   }
 
