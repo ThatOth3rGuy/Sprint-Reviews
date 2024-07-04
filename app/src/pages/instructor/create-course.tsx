@@ -1,4 +1,3 @@
-// create-course.tsx
 import type { NextPage } from 'next';
 import styles from '../../styles/instructor-courses-creation.module.css';
 import { useRouter } from 'next/router';
@@ -41,9 +40,11 @@ const Courses: NextPage = () => {
           setShowEnrollPopup(true);
         } else {
           console.error('Failed to upload and process students');
+          alert('Failed to upload and process students'); // Ensure alert is shown
         }
       } catch (error) {
         console.error('Error uploading file:', error);
+        alert('Error uploading file'); // Ensure alert is shown
       }
     }
   }
@@ -57,18 +58,22 @@ const Courses: NextPage = () => {
 
     const instructorID = session.user.userID;
 
-    const createCourseResponse = await fetch('/api/createCourse', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        courseName: courseName,
-        instructorID: instructorID,
-      }),
-    });
+    try {
+      const createCourseResponse = await fetch('/api/createCourse', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          courseName: courseName,
+          instructorID: instructorID,
+        }),
+      });
 
-    if (createCourseResponse.ok) {
+      if (!createCourseResponse.ok) {
+        throw new Error('Failed to create course');
+      }
+
       const courseData = await createCourseResponse.json();
       const courseId = courseData.courseId;
 
@@ -85,21 +90,20 @@ const Courses: NextPage = () => {
         }),
       });
 
-      if (enrollStudentsResponse.ok) {
-        console.log('Students enrolled successfully');
-        //router.push(`/instructor/course-dashboard/${courseId}`);
-      } else {
-        console.error('Failed to enroll students');
+      if (!enrollStudentsResponse.ok) {
+        throw new Error('Failed to enroll students');
       }
 
-      // Redirect to course page after successful creation
+      console.log('Students enrolled successfully');
+      
+      // Redirect to course page after successful creation and enrollment
       router.push({
         pathname: '/instructor/course-dashboard',
         query: { courseId },
       });
-    } else {
-      // Handle errors
-      console.error('Failed to create course');
+    } catch (error) {
+      console.error((error as Error).message);
+      alert((error as Error).message); // Ensure alert is shown
     }
   }, [courseName, students, router, session]);
 

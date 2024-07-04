@@ -1,10 +1,9 @@
 // create-course.test.ts
 import { test, expect } from '@playwright/test';
 import path from 'path';
-import playwrightConfig from '../playwright.config';
+import fs from 'fs';
 
 const baseURL = 'http://localhost:3001';
-// playwrightConfig.use?.baseURL; // Base URL of your application
 
 // Login information comes from database, this should be adjusted when we implement a test db
 async function login(page: any) {
@@ -89,10 +88,14 @@ test.describe('Create Course Page', () => {
     await page.fill('input[placeholder="Course Name"]', 'Test Course');
     await page.fill('input[placeholder="Institution Name"]', 'Test Institution');
 
-    await page.locator('b:has-text("Create Course")').click();
+    // Capture the alert dialog
+    const [dialog] = await Promise.all([
+        page.waitForEvent('dialog'),
+        await page.locator('b:has-text("Create Course")').click(),
+    ]);
 
-    const errorMessage = page.locator('text=Failed to create course');
-    await expect(errorMessage).toBeVisible();
+    expect(dialog.message()).toBe('Failed to create course');
+    await dialog.accept();
   });
 
   // Check for error handling when the enroll students API call fails
@@ -117,9 +120,13 @@ test.describe('Create Course Page', () => {
     const filePath = path.resolve(__dirname, '../test-files/students.csv');
     await page.setInputFiles('input[type="file"]', filePath);
 
-    await page.locator('b:has-text("Create Course")').click();
+    // Capture the alert dialog
+    const [dialog] = await Promise.all([
+        page.waitForEvent('dialog'),
+        await page.locator('b:has-text("Create Course")').click(),
+    ]);
 
-    const errorMessage = page.locator('text=Failed to enroll students');
-    await expect(errorMessage).toBeVisible();
+    expect(dialog.message()).toBe('Failed to enroll students');
+    await dialog.accept();
   });
 });
