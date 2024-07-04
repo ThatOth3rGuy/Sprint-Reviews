@@ -32,15 +32,15 @@ test.describe('Admin Portal Home Page', () => {
 
   // Check that courses are displayed after loading
   test('should display courses after loading', async ({ page }) => {
-    const course1 = page.getByText('Test Course', { exact: true });
-    const course2 = page.getByText('Test Course 2', { exact: true });
+    const course1 = page.getByText('Course', { exact: true });
+    const course2 = page.getByText('Course 2', { exact: true });
     await expect(course1).toBeVisible();
     await expect(course2).toBeVisible();
   });
 
   // Check that clicking a course redirects to the course dashboard
   test('should redirect to course dashboard on course click', async ({ page }) => {
-    const course1 = page.getByText('Test Course', { exact: true });
+    const course1 = page.getByText('Course', { exact: true });
     await course1.click();
     await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseID=1`);
   });
@@ -65,8 +65,13 @@ test.describe('Admin Portal Home Page', () => {
     // Reload the page to trigger the error
     await page.reload();
 
-    const errorMessage = page.locator('text=Error: Failed to fetch courses');
-    await expect(errorMessage).toBeVisible();
+    // Capture the alert dialog
+    const [dialog] = await Promise.all([
+      page.waitForEvent('dialog'),
+  ]);
+
+  expect(dialog.message()).toBe('Failed to fetch courses');
+  await dialog.accept();
   });
 
   // Check that the breadcrumbs are displayed
