@@ -3,10 +3,6 @@
 CREATE DATABASE IF NOT EXISTS mydb;
 USE mydb;
 
-<<<<<<< HEAD
-=======
-
->>>>>>> development
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS student;
 DROP TABLE IF EXISTS instructor;

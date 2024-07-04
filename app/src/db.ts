@@ -2,6 +2,7 @@
 import mysql from 'mysql2/promise';
 import fs from 'fs/promises';
 import path from 'path';
+import multer from 'multer';
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'db', // Replace this if running on localhost, else if running on docker container, use 'db'
@@ -91,33 +92,7 @@ export async function authenticateStudent(email: string, password: string): Prom
   }
 }
 
-export async function getAllCourses(isArchived: boolean): Promise<any[]> {
-  const sql = `
-    SELECT 
-      course.courseID,
-      course.courseName,
-      user.firstName AS instructorFirstName,
-      user.lastName AS instructorLastName,
-      COALESCE(AVG(submission.grade), 0) AS averageGrade
-    FROM course
-    JOIN instructor ON course.instructorID = instructor.userID
-    JOIN user ON instructor.userID = user.userID
-    LEFT JOIN assignment ON course.courseID = assignment.courseID
-    LEFT JOIN submission ON assignment.assignmentID = submission.assignmentID
-    WHERE course.isArchived = ?
-    GROUP BY course.courseID, user.userID
-  `;
-  try {
-    const rows = await query(sql, [isArchived]);
-    return rows.map(row => ({
-      ...row,
-      averageGrade: row.averageGrade !== null ? parseFloat(row.averageGrade) : null,
-    }));
-  } catch (error) {
-    console.error('Error in getAllCourses:', error); // Log the error
-    throw error;
-  }
-}
+
 export async function addAssignmentToDatabase(
   title: string, 
   description: string, 
@@ -200,60 +175,7 @@ export async function getCourses(): Promise<any[]> {
 //   }
 // }
 
-export async function getAssignmentsWithSubmissions() {
-  const sql = `
-    SELECT 
-      a.assignmentID, 
-      a.title, 
-      a.description, 
-      DATE_FORMAT(a.deadline, '%Y-%m-%dT%H:%i:%s.000Z') as deadline,
-      a.rubric,
-      a.file,
-      s.studentID,
-      DATE_FORMAT(s.submissionDate, '%Y-%m-%dT%H:%i:%s.000Z') as submissionDate,
-      s.file as submissionFile
-    FROM 
-      assignment a
-    LEFT JOIN 
-      submissions s ON a.assignmentID = s.assignmentID
-  `;
-  try {
-    const rows = await query(sql);
-    
-    // Group submissions by assignment
-    const assignments = rows.reduce((acc, row) => {
-      const assignment = acc.find((a: { assignmentID: any; }) => a.assignmentID === row.assignmentID);
-      if (assignment) {
-        if (row.studentID) {
-          assignment.submissions.push({
-            studentID: row.studentID,
-            submissionDate: row.submissionDate,
-            file: row.submissionFile
-          });
-        }
-      } else {
-        acc.push({
-          assignmentID: row.assignmentID,
-          title: row.title,
-          description: row.description,
-          deadline: row.deadline,
-          rubric: row.rubric,
-          file: row.file,
-          submissions: row.studentID ? [{
-            studentID: row.studentID,
-            submissionDate: row.submissionDate,
-            file: row.submissionFile
-          }] : []
-        });
-      }
-      return acc;
-    }, []);
 
-    return assignments;
-  } catch (error) {
-    console.error('Error in getAssignmentsWithSubmissions:', error);
-  }
-}
 
 
 export async function getCoursesByStudentID(studentID: number): Promise<any[]> {

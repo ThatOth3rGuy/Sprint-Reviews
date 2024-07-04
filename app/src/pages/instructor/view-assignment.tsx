@@ -4,6 +4,7 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import { useState, useEffect } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
+import { Card } from 'react-bootstrap';
 
 interface Assignment {
   assignmentID: number;
@@ -24,7 +25,8 @@ interface Submission {
 const ViewAssignments = () => {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
-
+  const [showModal, setShowModal] = useState(false);
+  const [selectedAssignment, setSelectedAssignment] = useState<Assignment | null>(null);
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
 
@@ -65,6 +67,8 @@ const ViewAssignments = () => {
   }
   const isAdmin = session.user.role === 'admin';
 
+  
+
   return (
     <>
       <br />
@@ -91,6 +95,7 @@ const ViewAssignments = () => {
           <InstructorNavbar />
         </>
       )}
+      
       <div>
         <h1>Assignments</h1>
         {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -116,6 +121,8 @@ const ViewAssignments = () => {
           ))}
         </ul>
       </div>
+      
+      
     </>
   );
 }
