@@ -59,6 +59,7 @@ const Courses: NextPage = () => {
     const instructorID = session.user.userID;
 
     try {
+      // Call the create course API with courseName and instructorID
       const createCourseResponse = await fetch('/api/createCourse', {
         method: 'POST',
         headers: {
@@ -70,6 +71,7 @@ const Courses: NextPage = () => {
         }),
       });
 
+      // If it fails, throw an error
       if (!createCourseResponse.ok) {
         throw new Error('Failed to create course');
       }
@@ -77,8 +79,9 @@ const Courses: NextPage = () => {
       const courseData = await createCourseResponse.json();
       const courseId = courseData.courseId;
 
-      const studentIDs = students.map(student => student.userID); // Ensure student IDs are extracted
+      const studentIDs = students.map(student => student.userID);
 
+      // Call the enroll students API with studentIDs and courseID
       const enrollStudentsResponse = await fetch(`/api/enrollStudents`, {
         method: 'POST',
         headers: {
@@ -90,10 +93,12 @@ const Courses: NextPage = () => {
         }),
       });
 
+      // If it fails, throw an error
       if (!enrollStudentsResponse.ok) {
         throw new Error('Failed to enroll students');
       }
 
+      // If there are no errors, log success message and redirect
       console.log('Students enrolled successfully');
       
       // Redirect to course page after successful creation and enrollment
@@ -101,6 +106,7 @@ const Courses: NextPage = () => {
         pathname: '/instructor/course-dashboard',
         query: { courseId },
       });
+    // Catch any errors and log/display them
     } catch (error) {
       console.error((error as Error).message);
       alert((error as Error).message); // Ensure alert is shown
