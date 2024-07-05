@@ -3,6 +3,46 @@
 # Weekly Team Logs
 
 # Week 7 summary
+##  July 3rd (Wed) - July 5th (Fri)
+
+### Features in the Project Plan Cycle: 
+Final list of features for MVP:
+- Login/Create Account
+- Assignment creation and submission
+- Course creation and Registratiom
+- Peer Review creation form for instrcutor 
+- Admin Portal  
+
+###  Tasks from the Project Board:
+![week7-kanban](./Images/week7Kanban.png)
+
+
+### Tasks for Next Cycle:
+
+![week5-done](./Images/week7Todo2.png)
+
+### Burn-up Chart (Velocity):
+![week5-done](./Images/week7Burnup2.png)
+
+### Times for Team/Individual:
+
+
+Clockify Times:
+
+![week5-done](./Images/week7clokify2.png)
+
+
+
+### Completed Tasks:
+![week5-done](./Images/week7Done2.png)
+
+### In Progress Tasks/ To do:
+![week5-done](./Images/week7Inprogress2.png)
+
+### Overview:
+
+- Overall from last Wednesday's meet we have been fixing and integrating all our features into Production Demo branch and have been working on running integration tests and fixing front-end  for the demo. The MVP presentation was also worked on and all preperations for that 
+
 ## June 26(Wed) - July 2(Tue)
 
 ### Features in the Project Plan Cycle: 
