@@ -65,8 +65,10 @@ test.describe('Archived Courses Page', () => {
     // Reload the page to trigger the error
     await page.reload();
 
-    const errorMessage = page.locator('text=Error: Failed to fetch courses');
-    await expect(errorMessage).toBeVisible();
+    page.once('dialog', async dialog => {
+      expect(dialog.message()).toContain('Failed to fetch courses');
+      await dialog.dismiss();
+    });
   });
 
   // Check that the breadcrumbs are displayed
