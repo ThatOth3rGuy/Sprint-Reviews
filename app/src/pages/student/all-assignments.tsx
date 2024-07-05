@@ -58,7 +58,7 @@ const ViewAssignments = () => {
       />
       <StudentNavbar />
       <div className={style.assignment}>
-        <h1>Assignments</h1>
+        <br /><br /><br /><br />
         <ul>
           {assignments.map((assignment) => (
             <li className={style.assignmentCard} key={assignment.assignmentID}>
