@@ -2,7 +2,7 @@
 
 ## Personal Log For Week 8
 
-### 067/03/2024
+### 07/03/2024
 
 Topics Covered:
 * testing all the features we've worked on so far
@@ -14,11 +14,30 @@ Since Friday, I've been working on the peer review form, and the advanced option
 
 | Task | Due By | Status |
 | ------- | ------- | ------- |
-| Work on integrating the peer review form into the student pages | 07/04/2024 | WIP |
-| Write tests for the functions I've been working on | 07/04/2024 | WIP |
-| Update UI to be consistent with prototype | 07/04/2024 | WIP |
+| Work on integrating the peer review form into the student pages | 07/07/2024 | WIP |
+| Write tests for the functions I've been working on | 07/04/2024 | Complete |
+| Update UI to be consistent with prototype | 07/04/2024 | Complete |
 
 ![week 8 time tracking](img/week8.png)
+
+### 07/05/2024
+
+My contributions since Wednesday's log:
+* wrote tests for student view and submit assignment
+* created slide deck for MVP presentation
+* worked on getting frontend presentable for MVP
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Update UI according to Parsa's inputs | 07/04/2024 | WIP |
+| Integrate Peer Review Submission into student pages | 07/08/2024 | WIP |
+| Make sure frontend has functional restrictions for user | 07/08/2024 | WIP |
+
+#### Cycle Review and Goals
+
+This last cycle was pretty hectic with getting tests done and making sure all of our key features for the MVP are functioning. We were pretty good about keeping up our pace for working and we spent the last couple of days making sure our features were functional, we had tests written for them, and the UI was up to date. I wasn't able to get to integrating the student Peer Review Submission form because to do that I need to change multiple assignment pages and add props or components that will build a page depending on the type of assignment. This also means making database changes which I'm holding off on because we want to optimize our database after the MVP presentation.
+
+![week 8.2 time tracking](img/week8.2.png)
 
 ## Personal Log For Week 7
 
