@@ -1,9 +1,23 @@
 import { test, expect } from '@playwright/test';
 import path from 'path';
 
+const baseURL = 'http://localhost:3001';
+
+// Login information comes from database, this should be adjusted when we implement a test db
+async function login(page: any) {
+  await page.goto(`${baseURL}/instructor/login`);
+  await page.fill('input[type="email"]', 'admin@gmail.com');
+  await page.fill('input[type="password"]', 'password');
+  await page.click('text=Sign In');
+  await page.waitForNavigation();
+}
+
 test.describe('Create Assignment Page', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:3000/instructor/create-assignment');
+    // Perform login before each test to obtain a valid session
+    await login(page);
+    
+    await page.goto('http://localhost:3001/instructor/create-assignment');
   });
 
   test('should display the create assignment form', async ({ page }) => {
