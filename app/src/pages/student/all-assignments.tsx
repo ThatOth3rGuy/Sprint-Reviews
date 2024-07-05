@@ -61,7 +61,7 @@ const ViewAssignments = () => {
         <h1>Assignments</h1>
         <ul>
           {assignments.map((assignment) => (
-            <li key={assignment.assignmentID}>
+            <li className={style.assignmentCard} key={assignment.assignmentID}>
               <Link href={`/student/assignment/${assignment.assignmentID}`}>
                 <h2>{assignment.title}</h2>
               </Link>

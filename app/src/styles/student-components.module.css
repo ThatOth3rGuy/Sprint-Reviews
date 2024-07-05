@@ -103,3 +103,8 @@
 .assignment{
   text-align: center;
 }
+
+.assignmentCard{
+  border: 1px solid #285943;
+  border-radius: 10px;
+}
