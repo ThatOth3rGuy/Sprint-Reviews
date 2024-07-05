@@ -31,30 +31,23 @@ test.describe('Create Assignment Page', () => {
   });
 
   test('should show error message if required fields are empty', async ({ page }) => {
-    await page.click('text=Create Assignment');
+    // Click the "Create Assignment" button
+    await page.click('div[class*="button"] >> text=Create Assignment');
     await expect(page.locator('text=Please fill in all fields and select at least one allowed file type')).toBeVisible();
   });
 
   test('should create an assignment successfully', async ({ page }) => {
-    // Fill in the assignment title
+    // Fill each input field with the required information
     await page.fill('input[placeholder="Assignment Title"]', 'Test Assignment');
-    // Fill in the assignment description
     await page.fill('textarea[placeholder="Assignment Description"]', 'This is a test assignment.');
-    // Fill in the assignment date and time
     await page.fill('input[type="datetime-local"]', '2024-07-10T10:00');
-    // Wait for the dropdown options to be populated
     await page.waitForSelector('select:has-text("Select a class")');
-    // Select the 'Demo Course' from the dropdown by courseID
-    await page.selectOption('select', { value: '1' });  // Adjust this value based on the actual courseID
-  
-    // Verify the selected option
-    const selectedOption = await page.$eval('select', select => select.value);
-    expect(selectedOption).toBe('1');  // Ensure the value matches the expected courseID
-    
-    // Check the relevant checkbox
+    await page.selectOption('select', { value: '1' }); 
     await page.check('input[type="checkbox"]#txt');
-    // Click the "Create Assignment" button near the bottom
+
+    // Click the "Create Assignment" button
     await page.click('div[class*="button"] >> text=Create Assignment');
+    
     // Verify that the URL has changed to the expected URL
     await expect(page).toHaveURL('http://localhost:3001/instructor/view-assignment');
   });
@@ -86,6 +79,6 @@ test.describe('Create Assignment Page', () => {
   
     // Verify the selected option
     const selectedOption = await page.$eval('select', select => select.value);
-    expect(selectedOption).toBe('60');  // Adjust this value based on the actual value attribute of the 'Demo Course' option
+    expect(selectedOption).toBe('60');
   });
 });
