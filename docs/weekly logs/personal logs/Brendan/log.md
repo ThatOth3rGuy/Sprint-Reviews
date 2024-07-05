@@ -2,13 +2,88 @@
 # Weekly Logs
 ------------------------------------
 # Week 8
+## Friday - July 5, 2024
+**Timesheet Tracking (Wednesday-Thursday)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_07_03_2024-07_04_2024.pdf)
+### Cycle Review
+
+As per usual this cycle was very short for myself. With little time between Wednesday's meeting and Thursday evening, most of what was completed/worked on was project management and issue tracking. Wednesday we met as a team and put together the next steps beyond the MVP for what progress has been made. Sorting out work breakdown, testing, how features will interact. Post-meeting I began starting work on refactoring the database as was mentioned in Wednesday's meeting with Scott. Aside from that I spent more GrUeLiNg HoUrS trying to figure out Integration tests via Docker... I don't wanna talk about it anymore. 
+
+Overall as a team we have been working to ensure everything intended and needed is working for the MVP presentation. Between work on the presentation, and testing all feature integration during branch merging, this cycle has actually been quite successful with all of us logging OBSENE hours (as per usual). I think we are ready for the MVP presentation and have a sufficient amount of the project complete for this milestone. Tomorrow we will discuss all our goals moving forward, afterall this is being written super late. Proud of the team #rockstars
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Refine Docker Environment and Testing Framework For Future Development
+  * #3: Create Feature Definition and Sub-divisions on Project Board For Team Division
+  * #4: Run Integration Tests for pushed features (Fix Testing Server Connection)
+  * #5: Review Branch Pull Requests and Fixes for MVP Demo Branch
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Ongoing
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Feature breakdown/sub-division for parallel task work
+        </td>
+        <!-- Status -->
+        <td>Partly Complete (Recurring)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Update Docker and Testing Setup for Ongoing Development
+        </td>
+        <!-- Status -->
+        <td>Inconclusive? Complete? In-Progress?
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create and Run Integration Tests on Pushed Features
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Cry
+        </td>
+        <!-- Status -->
+        <td>Complete/To-Do
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Review Pull Requests and Make Fixes to Main Branches
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+</table>
+
+#
 ## Wednesday - July 3, 2024
 **Timesheet Tracking (Friday-Tuesday)**
 * ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_06_28_2024-07_02_2024.pdf)
 ### Cycle Review
-    During this weekend cycle, we had a large amount of work to get done, most of which we managed. We have completed all the features we can for the MVP on Friday, with other partial features still being developed. Though we are still missing one of the vital parts of our app, nearly everything it relies on has been done. With multiple features now complete, most of the cycle was dealing with code inconsistencies and inefficiencies. As all feature components were developed in isolation, our code has a high amount of coupling, thus we have been working to reduce it. 
 
-    We have been able to migrate and run most of our expected demo locally, however our docker server (and subsequent testing server) is having constant issues for the team. We plan to correct that during the week, so the MVP demo runs smoothly. Luckily completing about half of our total application, we should be able to fully complete everything by the deadline. Our success at this point is really determined by whether we can get the docker containers to interact as expected. The goal for the remainder of the week, aside from working to keep the timelines on track, is to configure and successfully run all necessary tests for every feature currently implemented. With the backend coding and integration issues mostly solved, we just need to ensure everything can actually be tested and is working correctly. So long as there are no surprises during the MVP on Friday, we should achieve the goal. We all spend a lot of time on the project this weekend, and the team is doing an incredible job regardless of how frustrated we can get.
+During this weekend cycle, we had a large amount of work to get done, most of which we managed. We have completed all the features we can for the MVP on Friday, with other partial features still being developed. Though we are still missing one of the vital parts of our app, nearly everything it relies on has been done. With multiple features now complete, most of the cycle was dealing with code inconsistencies and inefficiencies. As all feature components were developed in isolation, our code has a high amount of coupling, thus we have been working to reduce it. 
+
+We have been able to migrate and run most of our expected demo locally, however our docker server (and subsequent testing server) is having constant issues for the team. We plan to correct that during the week, so the MVP demo runs smoothly. Luckily completing about half of our total application, we should be able to fully complete everything by the deadline. Our success at this point is really determined by whether we can get the docker containers to interact as expected. The goal for the remainder of the week, aside from working to keep the timelines on track, is to configure and successfully run all necessary tests for every feature currently implemented. With the backend coding and integration issues mostly solved, we just need to ensure everything can actually be tested and is working correctly. So long as there are no surprises during the MVP on Friday, we should achieve the goal. We all spend a lot of time on the project this weekend, and the team is doing an incredible job regardless of how frustrated we can get.
 
 ### Current Tasks
   * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
@@ -81,9 +156,9 @@
 **Timesheet Tracking (Wednesday-Thursday)**
 * ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_06_26_2024-06_27_2024.pdf)
 ### Cycle Review
-    This mid-week cycle as short as it is, the team managed to get a good amount done. As the cycle is especially short for myself, I spent as much time as possible to work on what is needed. Unfortunately, a portion of that still won't work and as a team cannot find a solution. As such, our E2E testing has been tabled for the time being and over the next week will be testing manually on the server-side. So far, everything is working (or not working) reasonably as expected. Wednesday I spent time laying out of task breakdown for the week ahead to the MVP presentation, and will hopefully keep all of us on track. I do not believe we are off pace, however we will be meeting tomorrow (Friday) to discuss our progress and what we plan to present in a weeks time. Aside from PM duties and testing I have started and continued to work on the sub-feature I was tasked with, which will likely be working complete tomorrow. 
+This mid-week cycle as short as it is, the team managed to get a good amount done. As the cycle is especially short for myself, I spent as much time as possible to work on what is needed. Unfortunately, a portion of that still won't work and as a team cannot find a solution. As such, our E2E testing has been tabled for the time being and over the next week will be testing manually on the server-side. So far, everything is working (or not working) reasonably as expected. Wednesday I spent time laying out of task breakdown for the week ahead to the MVP presentation, and will hopefully keep all of us on track. I do not believe we are off pace, however we will be meeting tomorrow (Friday) to discuss our progress and what we plan to present in a weeks time. Aside from PM duties and testing I have started and continued to work on the sub-feature I was tasked with, which will likely be working complete tomorrow. 
 
-    As a team we are making great progress with each feature. I continue to have no doubts in our team ability to meet all requirements by the deadlines. Despite how short this cycle is, we will hopefully have 1-2 more features complete going into the long weekend, with possibly 2 more by the MVP presentation. The goal for the next cycle is to complete the current feature we are working on, ensure integration is successful and complete most to all of the assignment pages for demo on Wednesday. That being said, as a long weekend for Canada Day... I think it's also important we have a little fun, especially with how hard the team has been working! We have put in many hours and will continue to until the deadline and project completion, but we are making great progress.
+As a team we are making great progress with each feature. I continue to have no doubts in our team ability to meet all requirements by the deadlines. Despite how short this cycle is, we will hopefully have 1-2 more features complete going into the long weekend, with possibly 2 more by the MVP presentation. The goal for the next cycle is to complete the current feature we are working on, ensure integration is successful and complete most to all of the assignment pages for demo on Wednesday. That being said, as a long weekend for Canada Day... I think it's also important we have a little fun, especially with how hard the team has been working! We have put in many hours and will continue to until the deadline and project completion, but we are making great progress.
 
 ### Current Tasks
   * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
