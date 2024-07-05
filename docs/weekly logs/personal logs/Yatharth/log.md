@@ -1,6 +1,63 @@
  # Weekly Logs 
 ------------------------------------
 # Week 7 Summary 
+## Friday (07/05/2024)
+
+### Timesheet Week 7 (07/03/2024- 07/05/2024)
+![alt text](images//week8_indi.png)
+
+
+### Current Tasks (Complete by the end of the day)
+- MVP presentation feedback meeting
+- Discuss the next course of action on the randomizer algorithm 
+
+
+
+### Progress Update 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+  <tr>
+        <!-- Task/Issue # -->
+        <td> Randomizer Algorithm   
+        </td>
+        <!-- Status -->
+        <td> In progress 
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> General Optimization of the Application  
+        </td>
+        <!-- Status -->
+        <td> In progress 
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Manual Student entry back end integration  
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+ 
+ <tr>
+
+     
+    
+</table>
+
+### Weekly Goal Review
+During this cycle, I was helping in integrating all the features into the production demo and aided in the optimization of the application to reduce some level of workload on the application. We had a sprint where we fixed all issues and made the product ready for demo.  
+### Next Cycle Goals
+  * All my feature tests need to be written and tested 
+  * The randomizer and the anonymous system need to be created and worked on
+  * A Peer Group evaluation system needs to be made
 ## Wednesday (07/03/2024)
 
 ### Timesheet Week 7 (06/26/2024 - 07/03/2024)
@@ -20,6 +77,14 @@
         <td><strong>TASK/ISSUE #</strong>
         </td>
         <td><strong>STATUS</strong>
+        </td>
+    </tr>
+  <tr>
+        <!-- Task/Issue # -->
+        <td> General Optimization of the Application  
+        </td>
+        <!-- Status -->
+        <td> In progress 
         </td>
     </tr>
     <tr>
