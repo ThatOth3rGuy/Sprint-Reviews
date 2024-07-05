@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
   app:
@@ -51,8 +51,7 @@ services:
     networks:
       - my_network
     ports:
-      - "3307:3306" # Exposing port for MySQL, MySQL Workbench and well our entire system too 
-
+      - "3307:3306"
 
 volumes:
   db_data:
@@ -63,4 +62,3 @@ volumes:
 # with each other, by using their container name as a hostname
 networks:
   my_network:
-    external: true

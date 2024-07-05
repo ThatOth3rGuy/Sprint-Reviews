@@ -1,3 +1,5 @@
+
+// pages/api/getAssignments.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getAssignments } from '../../db';
 
@@ -25,6 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
   } else {
-    res.status(405).json({ message: 'Method not allowed' });
+    res.setHeader('Allow', ['GET'])
+    res.status(405).end(`Method ${req.method} Not Allowed`)
   }
 }
