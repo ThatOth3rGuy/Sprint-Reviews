@@ -33,8 +33,8 @@ test.describe('Student Dashboard Page', () => {
   // Check that the courses are displayed after loading
   test('should display courses after loading', async ({ page }) => {
     // Name of courses comes from the database, this should be adjusted when we implement a test db
-    const course1 = page.getByText('Test Course', { exact: true });
-    const course2 = page.getByText('Test Course 2', { exact: true });
+    const course1 = page.getByText('Course', { exact: true }).first();
+    const course2 = page.getByText('Course 2', { exact: true });
     await expect(course1).toBeVisible();
     await expect(course2).toBeVisible();
   });
@@ -42,7 +42,7 @@ test.describe('Student Dashboard Page', () => {
   // Check that clicking a course redirects to the course dashboard
   test('should redirect to course dashboard on course click', async ({ page }) => {
     // Name of course comes from the database, this should be adjusted when we implement a test db
-    const course1 = page.getByText('Test Course', { exact: true });
+    const course1 = page.getByText('Course').first();
     await course1.click();
     await expect(page).toHaveURL(`${baseURL}/student/course-dashboard?courseID=1`);
   });
