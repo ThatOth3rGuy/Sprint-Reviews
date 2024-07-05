@@ -1,4 +1,49 @@
-.roleSelection {
+.roleSelection{
+  text-align: center;
+  justify-content: center;
+  border: 3px solid #002975;
+  width: fit-content;
+  padding: 3%;
+  padding-top: 1%;
+  margin: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #002975;
+}
+
+.roleButton{
+  /* background-color: #002975; */
+  color: #302f4d;
+  padding: 1%;
+  width: 100%;
+}
+
+.roleButtons{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.studentButton{
+  background-color: #b1d4cd;
+  border: 1px solid #657a76;
+  border-radius: 5px;
+  padding: 1% 3% 1% 3%;
+  box-shadow: 0 0 3px #657a76;
+}
+.instructorButton{
+  background-color: #90ab93;
+  border: 1px solid #374a46;
+  border-radius: 5px;
+  padding: 1% 3% 1% 3%;
+  box-shadow: 0 0 3px #374a46;
+}
+
+.studentButton:hover,.instructorButton:hover{
+  box-shadow: 1px -1px #374a46 inset;
+}
+
+/* OLD STYLING BELOW ----------------------------------------*/
+/* .roleSelection {
   width: 100%;
   max-width: 1366px;
   height: 100vh;
@@ -6,6 +51,8 @@
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
+  border-radius: 10px;
+  border: 1px solid #000000;
 }
 
 .roleButton {
@@ -74,7 +121,7 @@
   position: absolute;
   left: 33.5%;
   top: 300px;
-  gap: 45px; /* Adjusted for spacing between buttons */
+  gap: 45px; 
 }
 
 .studentButton, .instructorButton {
@@ -90,8 +137,8 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  text-decoration: none; /* Ensure no underline */
-  background: none; /* Remove any default button background */
+  text-decoration: none; 
+  background: none; 
 }
 
 .studentButton {
@@ -100,4 +147,4 @@
 
 .instructorButton {
   background-color: #028090;
-}
+} */

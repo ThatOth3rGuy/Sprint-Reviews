@@ -32,7 +32,7 @@ const StudentHeader: NextPage<StudentHeaderProps> = ({ title, addLink }) => {
         </div>
       ))}
       
-      <div
+      {/* <div
         className={style.navItem}
         onMouseEnter={() => setCourseOpen(true)}
         onMouseLeave={() => setCourseOpen(false)}
@@ -43,7 +43,7 @@ const StudentHeader: NextPage<StudentHeaderProps> = ({ title, addLink }) => {
             <Link href="#">Register For Course</Link>
           </div>
         )}
-      </div>
+      </div> */}
       <div
         className={style.navItem}
         onMouseEnter={() => setProfileOpen(true)}
