@@ -17,7 +17,7 @@
   * #4: Run Integration Tests for pushed features (Fix Testing Server Connection)
   * #5: Review Branch Pull Requests and Fixes for MVP Demo Branch
 
-### Progress Update: Fri-Wed
+### Progress Update: Wed-Fri
 <table>
     <tr>
         <td><strong>TASK/ISSUE #</strong>
