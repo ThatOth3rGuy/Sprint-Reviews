@@ -3,6 +3,19 @@
 CREATE DATABASE IF NOT EXISTS mydb;
 USE mydb;
 
+
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS student;
+DROP TABLE IF EXISTS instructor;
+DROP TABLE IF EXISTS course;
+DROP TABLE IF EXISTS class;
+DROP TABLE IF EXISTS assignment;
+DROP TABLE IF EXISTS submission;
+DROP TABLE IF EXISTS feedback;
+DROP TABLE IF EXISTS Enrollment;
+DROP TABLE IF EXISTS selected_students;
+DROP TABLE IF EXISTS review_criteria;
+
 -- Table for storing users, which are separated into students and instructors
 CREATE TABLE IF NOT EXISTS user (
     userID INT AUTO_INCREMENT PRIMARY KEY,
@@ -32,10 +45,10 @@ CREATE TABLE IF NOT EXISTS instructor (
     FOREIGN KEY (userID) REFERENCES user(userID)
 );
 
--- Table for storing classes
-CREATE TABLE IF NOT EXISTS class (
-    classID INT AUTO_INCREMENT PRIMARY KEY,
-    className VARCHAR(100),
+-- Table for storing courses
+CREATE TABLE IF NOT EXISTS course (
+    courseID INT AUTO_INCREMENT PRIMARY KEY,
+    courseName VARCHAR(100),
     isArchived BOOLEAN,
     instructorID INT,
     FOREIGN KEY (instructorID) REFERENCES instructor(userID)
@@ -49,20 +62,31 @@ CREATE TABLE IF NOT EXISTS assignment (
     rubric TEXT,
     deadline DATETIME,
     groupAssignment BOOLEAN,
-    classID INT,
-    FOREIGN KEY (classID) REFERENCES class(classID)
+    courseID INT,
+    allowedFileTypes VARCHAR(255),
+    FOREIGN KEY (courseID) REFERENCES course(courseID)
 );
 
 -- Table for storing submission information between students and assignments
 CREATE TABLE IF NOT EXISTS submission (
     submissionID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT,
-    content TEXT,
     studentID INT,
+    fileName VARCHAR(255),
+    fileContent LONGBLOB,
+    fileType VARCHAR(100),
+    submissionDate DATETIME,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
     FOREIGN KEY (studentID) REFERENCES student(userID)
 );
-
+-- Review creation table for instrcutor
+CREATE TABLE IF NOT EXISTS review_criteria (
+    criteriaID INT AUTO_INCREMENT PRIMARY KEY,
+    assignmentID INT,
+    criterion VARCHAR(255),
+    maxMarks INT,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID)
+);
 -- Table for storing feedback information between students and assignments
 CREATE TABLE IF NOT EXISTS feedback (
     feedbackID INT AUTO_INCREMENT PRIMARY KEY,
@@ -73,13 +97,23 @@ CREATE TABLE IF NOT EXISTS feedback (
     FOREIGN KEY (otherStudentID) REFERENCES student(userID)
 );
 
--- Table for storing enrollment information to connect students to classes
-CREATE TABLE IF NOT EXISTS Enrollment (
+-- Table for storing enrollment information to connect students to courses
+CREATE TABLE IF NOT EXISTS enrollment (
     studentID INT,
-    classID INT,
-    PRIMARY KEY (studentID, classID),
+    courseID INT,
+    PRIMARY KEY (studentID, courseID),
     FOREIGN KEY (studentID) REFERENCES student(userID),
-    FOREIGN KEY (classID) REFERENCES class(classID)
+    FOREIGN KEY (courseID) REFERENCES course(courseID)
+);
+
+-- Table for storing selected students for a group assignment
+CREATE TABLE IF NOT EXISTS selected_students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    assignmentID INT,
+    studentID INT,
+    uniqueDeadline DATETIME,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
+    FOREIGN KEY (studentID) REFERENCES student(userID)
 );
 
 -- Insert a sample user (student) into the user table
