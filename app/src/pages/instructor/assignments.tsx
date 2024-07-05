@@ -29,6 +29,10 @@ const Assignments: NextPage = () => {
 
   return (
     <>
+    <br />
+    <br />
+    <br />
+    <br />
       <InstructorHeader title="Assignments"
       addLink={[{href: "./create-assignment", title: "Create Assignment"}, {href: "#", title: "Release Assignment"}]}/>
       <InstructorNavbar/>

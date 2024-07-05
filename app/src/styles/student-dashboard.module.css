@@ -1,4 +1,4 @@
-.pendingAssignments{
+/*.pendingAssignments{
     text-align: center;
     margin: auto;
 }
@@ -11,11 +11,39 @@
 .assignmentDetails{
     padding: 1%;
     margin: 1%;
+}*/
+
+/*.courseCard {
+    position: relative; 
+    right: 15%;
+    margin: auto; 
+    width: 50%; 
+    max-width: 758px; 
+    height: 163px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    color: #000000;
 }
+
+.studentHome {
+    right: 0;
+    width: 80%;
+    margin: auto;
+    background-color: #fcf9f7;
+    height: 102.4vh;
+    overflow: hidden;
+    text-align: center;
+    font-size: 3vw;
+    color: #fff;
+    font-family: 'Inria Serif';
+}*/
 
 /* OLD STYLING BELOW */
 
-/* .assignments1 {
+ .assignments1 {
     position: absolute;
     top: 5%;
     left: 1%;
@@ -79,8 +107,7 @@
     cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
-    border: 1px solid #ddd; 
+    justify-content: center; 
 }
 .pendingAssignmentsChild {
     position: absolute;
@@ -186,13 +213,12 @@
     width: 80%;
     margin-left: auto;
     background-color: #fcf9f7;
-    height: 102.4vh;
     overflow: hidden;
     text-align: center;
     font-size: 3vw;
     color: #fff;
     font-family: 'Inria Serif';
-} */
+}
 
 /* Responsive Styles */
 @media (max-width: 768px) {

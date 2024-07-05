@@ -441,6 +441,9 @@ export async function selectStudentsForAssignment(assignmentID: string, studentI
   } catch (error) {
     const err = error as Error;
     console.error(`Error selecting students for assignment:`, err.message);
+  }
+}
+
 
 export async function getCourse(courseID: string): Promise<any> {
   const sql = `

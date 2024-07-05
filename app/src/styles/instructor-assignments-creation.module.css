@@ -1,4 +1,4 @@
-/* .container {
+.container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,8 +13,8 @@
   padding: 1%;
   margin: 2%;
   border: 1px solid #002975;
-  height: 100vh;
-} */
+  height: fit-content;
+} 
 
 .rectangle {
   margin-left: auto;
