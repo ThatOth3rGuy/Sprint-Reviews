@@ -66,7 +66,6 @@ function Page() {
       <br />
       <br />
       <br />
-      <b className={styles.breadcrumbs}>Breadcrumbs</b>
       <div className={styles.studentHome}>
         {courses.map((course) => (
           <div
@@ -74,11 +73,11 @@ function Page() {
             className={styles.courseCard}
             onClick={() => onCoursesContainerClick(course.courseID)}
           >
-            <img
+            {/*<img
               className={styles.courseCardChild}
               alt=""
               src="/CourseCard-outline.svg"
-            />
+            />*/}
             <div className={styles.courseCardItem} />
             <b className={styles.courseName}>{course.courseName}</b>
             <i className={styles.instructor}>{course.instructorFirstName}</i>
@@ -87,7 +86,7 @@ function Page() {
         {/* <div className={styles.pendingAssignments}> */}
         {/* <div className={styles.pendingAssignmentsChild} />
           <div className={styles.pendingAssignmentsItem} /> */}
-        <div className={styles.pendingAssignments}>
+        {/* <div className={styles.pendingAssignments}>
           <b className={styles.pendingTitle}>Pending Assignments</b>
           <div
             className={styles.assignmentDetails}
@@ -105,8 +104,8 @@ function Page() {
           <b className={styles.assignment}>Assignment</b>
           <b className={styles.due010101}>Due: 01/01/01</b>
           <p className={styles.course}>Course</p>
-        </div>
-      </div>
+        </div>*/}
+      </div> 
       {/* </div> */}
     </>
   );
