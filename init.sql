@@ -13,6 +13,8 @@ DROP TABLE IF EXISTS assignment;
 DROP TABLE IF EXISTS submission;
 DROP TABLE IF EXISTS feedback;
 DROP TABLE IF EXISTS Enrollment;
+DROP TABLE IF EXISTS selected_students;
+DROP TABLE IF EXISTS review_criteria;
 
 -- Table for storing users, which are separated into students and instructors
 CREATE TABLE IF NOT EXISTS user (
@@ -25,8 +27,6 @@ CREATE TABLE IF NOT EXISTS user (
     institution VARCHAR(100)
 );
 
-
-
 -- Table for storing student, connected to the user table
 CREATE TABLE IF NOT EXISTS student (
     userID INT PRIMARY KEY,
@@ -37,9 +37,6 @@ CREATE TABLE IF NOT EXISTS student (
     FOREIGN KEY (userID) REFERENCES user(userID)
 );
 
-
-
-
 -- Table for storing instructor information, connected to the user table
 CREATE TABLE IF NOT EXISTS instructor (
     userID INT PRIMARY KEY,
@@ -47,9 +44,6 @@ CREATE TABLE IF NOT EXISTS instructor (
     departments VARCHAR(255),
     FOREIGN KEY (userID) REFERENCES user(userID)
 );
-
-
-
 
 -- Table for storing courses
 CREATE TABLE IF NOT EXISTS course (
@@ -59,7 +53,6 @@ CREATE TABLE IF NOT EXISTS course (
     instructorID INT,
     FOREIGN KEY (instructorID) REFERENCES instructor(userID)
 );
-
 
 -- Table for storing assignment information
 CREATE TABLE IF NOT EXISTS assignment (
@@ -75,7 +68,6 @@ CREATE TABLE IF NOT EXISTS assignment (
 );
 
 -- Table for storing submission information between students and assignments
-
 CREATE TABLE IF NOT EXISTS submission (
     submissionID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT,
@@ -87,7 +79,14 @@ CREATE TABLE IF NOT EXISTS submission (
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
     FOREIGN KEY (studentID) REFERENCES student(userID)
 );
-
+-- Review creation table for instrcutor
+CREATE TABLE IF NOT EXISTS review_criteria (
+    criteriaID INT AUTO_INCREMENT PRIMARY KEY,
+    assignmentID INT,
+    criterion VARCHAR(255),
+    maxMarks INT,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID)
+);
 -- Table for storing feedback information between students and assignments
 CREATE TABLE IF NOT EXISTS feedback (
     feedbackID INT AUTO_INCREMENT PRIMARY KEY,
@@ -105,6 +104,16 @@ CREATE TABLE IF NOT EXISTS enrollment (
     PRIMARY KEY (studentID, courseID),
     FOREIGN KEY (studentID) REFERENCES student(userID),
     FOREIGN KEY (courseID) REFERENCES course(courseID)
+);
+
+-- Table for storing selected students for a group assignment
+CREATE TABLE IF NOT EXISTS selected_students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    assignmentID INT,
+    studentID INT,
+    uniqueDeadline DATETIME,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
+    FOREIGN KEY (studentID) REFERENCES student(userID)
 );
 
 -- Insert a sample user (student) into the user table
