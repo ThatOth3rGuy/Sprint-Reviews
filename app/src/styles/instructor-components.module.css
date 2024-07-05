@@ -65,13 +65,13 @@
       position: relative;
       float: right;
       justify-content: flex-end;
-    }
+  }
    
   .navItem button {
     width: 40px; 
     height: 40px; 
     border-radius: 50%;
-    font-size: xx-small;
+    font-size: x-small;
     text-align: center;
     background-color: #fcf9f7;
     border: .5px solid #04124b;
