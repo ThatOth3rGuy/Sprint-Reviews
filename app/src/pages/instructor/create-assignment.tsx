@@ -98,7 +98,7 @@ const Assignments: NextPage = () => {
     });
 
     if (response.ok) {
-      router.push("/instructor/view-assignment");
+      router.push("/instructor/assignments");
     } else {
       const errorData = await response.json();
       setError(errorData.message || "An error occurred while creating the assignment");
