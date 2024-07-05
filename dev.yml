@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
   app:
@@ -20,6 +20,8 @@ services:
       - "3001:3000"
     networks:
       - my_network
+    depends_on:
+      - db
   
   playwright-tests:
     container_name: playwright-tests
@@ -60,4 +62,3 @@ volumes:
 # with each other, by using their container name as a hostname
 networks:
   my_network:
-    external: true

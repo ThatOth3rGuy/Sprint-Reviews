@@ -1,13 +1,23 @@
+// student/login.tsx
+/* eslint-disable @next/next/no-img-element */
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import styles from '../../styles/student-login.module.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const StudentLogin: NextPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
+  const { reason } = router.query;
+
+  // Check for the session expiration reason and show an alert
+  useEffect(() => {
+    if (reason === 'Session has expired') {
+      alert('Session has expired. Please log in again.');
+    }
+  }, [reason]);
 
   const handleBackClick = async () => {
     // Redirect to the landing page
@@ -15,7 +25,7 @@ const StudentLogin: NextPage = () => {
   }
 
   const handleSignUpClick = async () => {
-    // Redirect to the instructor dashboard
+    // Redirect to the student dashboard
     router.push('/student/registration');
   }
 
@@ -32,7 +42,7 @@ const StudentLogin: NextPage = () => {
       });
 
       if (response.ok) {
-        // Redirect to the instructor dashboard
+        // Redirect to the student dashboard
         router.push('/student/dashboard');
       } else {
         // Handle error response

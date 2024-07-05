@@ -2,11 +2,15 @@
 // Import necessary libraries
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { useState } from 'react';
+import { useSessionValidation } from '../api/auth/checkSession';        
 import styles from "../../styles/instructor-assignments-creation.module.css";
-import InstructorHeader from "../home/instructor-components/instructor-header";
-import InstructorNavbar from "../home/instructor-components/instructor-navbar";
+import InstructorHeader from "../components/instructor-components/instructor-header";
+import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import Modal from "react-modal";
 import Select from 'react-select';
+
+
 
 // Define the structure fro assignment and Rubric items
 interface Assignment {
@@ -42,7 +46,15 @@ const ReleaseAssignment: React.FC = () => {
   const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
   const [uniqueDueDate, setUniqueDueDate] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<any>(null);
 
+  // Use the session validation hook to check if the user is logged in
+  useSessionValidation('instructor', setLoading, setSession);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
   //handle open and close for modal
   const openModal = () => {
     setIsModalOpen(true);
