@@ -58,19 +58,18 @@ As of the end of Friday we will have the major features necessary for the MVP co
     </tr>
 </table>
 
-## Wednesday - June 26, 2024
+## Wednesday - July 3, 2024
 
 ### Timesheet
 ![Clockify Timesheet](./images/EricClockify%208.2.png)
 
 ### Cycle Review
     
----
+All the features for the MVP demo on Friday are complete. Now that the playwright tests are finally running (locally, not through docker) we need to write a bunch of tests so we have some kind of test report for the demo. Once that's done we just need to move all the features into a demo branch and update the front-end to make sure everything is presentable
 
 ### Current Tasks
-  * 1: 
-  * 2: 
-  * 3: 
+  * 1: Write playwright tests
+  * 2: Update front-end before demo
 
 ### Progress Update: Wed-Fri
 <table>
@@ -82,26 +81,18 @@ As of the end of Friday we will have the major features necessary for the MVP co
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> 
+        <td> Write playwright tests
         </td>
         <!-- Status -->
-        <td> 
+        <td> In Progress
         </td>
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> 
+        <td> Update front-end before demo
         </td>
         <!-- Status -->
-        <td> 
-        </td>
-    </tr>
-    <tr>
-        <!-- Task/Issue # -->
-        <td> 
-        </td>
-        <!-- Status -->
-        <td> 
+        <td> Complete
         </td>
     </tr>
 </table>
