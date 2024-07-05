@@ -22,8 +22,8 @@ export default function Page() {
       <br />
       <InstructorHeader title="Dashboard"/>
       <InstructorNavbar />
-      <InstructorCourseCard />
-      <InstructorCourseCard />
+      {/* <InstructorCourseCard />
+      <InstructorCourseCard /> */}
     </>
   );
 }

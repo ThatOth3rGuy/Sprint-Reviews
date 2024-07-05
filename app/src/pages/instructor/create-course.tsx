@@ -107,6 +107,8 @@ const Courses: NextPage = () => {
 
   return (
     <>
+    <br />
+    <br />
       <InstructorHeader title="Create Course" />
       <InstructorNavbar />
       <div className={styles.container}>
