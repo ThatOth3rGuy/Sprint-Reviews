@@ -2,6 +2,79 @@
 # Weekly Logs
 ------------------------------------
 # Week 8
+## Friday - July 5, 2024
+**Timesheet Tracking (Wednesday-Thursday)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_07_03_2024-07_04_2024.pdf)
+### Cycle Review
+    As per usual this cycle was very short for myself. With little time between Wednesday's meeting and Thursday evening, most of what was completed/worked on was project management and issue tracking. Wednesday we met as a team and put together the next steps beyond the MVP for what progress has been made. Sorting out work breakdown, testing, how features will interact. Post-meeting I began starting work on refactoring the database as was mentioned in Wednesday's meeting with Scott. Aside from that I spent more GrUeLiNg HoUrS trying to figure out Integration tests via Docker... I don't wanna talk about it anymore. 
+
+    Overall as a team we have been working to ensure everything intended and needed is working for the MVP presentation. Between work on the presentation, and testing all feature integration during branch merging, this cycle has actually been quite successful with all of us logging OBSENE hours (as per usual). I think we are ready for the MVP presentation and have a sufficient amount of the project complete for this milestone. Tomorrow we will discuss all our goals moving forward, afterall this is being written super late. Proud of the team #rockstars
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Refine Docker Environment and Testing Framework For Future Development
+  * #3: Create Feature Definition and Sub-divisions on Project Board For Team Division
+  * #4: Run Integration Tests for pushed features (Fix Testing Server Connection)
+  * #5: Review Branch Pull Requests and Fixes for MVP Demo Branch
+
+### Progress Update: Fri-Wed
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Ongoing
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Feature breakdown/sub-division for parallel task work
+        </td>
+        <!-- Status -->
+        <td>Partly Complete (Recurring)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Update Docker and Testing Setup for Ongoing Development
+        </td>
+        <!-- Status -->
+        <td>Inconclusive? Complete? In-Progress?
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create and Run Integration Tests on Pushed Features
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Cry
+        </td>
+        <!-- Status -->
+        <td>Complete/To-Do
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Review Pull Requests and Make Fixes to Main Branches
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+</table>
+
+#
 ## Wednesday - July 3, 2024
 **Timesheet Tracking (Friday-Tuesday)**
 * ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_06_28_2024-07_02_2024.pdf)
