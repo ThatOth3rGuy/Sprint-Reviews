@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS submission (
     fileContent LONGBLOB,
     fileType VARCHAR(100),
     submissionDate DATETIME,
+    grade INT,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
     FOREIGN KEY (studentID) REFERENCES student(userID) ON DELETE SET NULL
 );
