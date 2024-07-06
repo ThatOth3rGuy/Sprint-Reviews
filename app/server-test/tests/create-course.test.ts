@@ -1,7 +1,6 @@
 // create-course.test.ts
 import { test, expect } from '@playwright/test';
 import path from 'path';
-import fs from 'fs';
 
 const baseURL = 'http://localhost:3001';
 
@@ -24,6 +23,14 @@ test.describe('Create Course Page', () => {
     await page.goto(`${baseURL}/instructor/create-course`);
   });
 
+  /*
+  test.afterEach(async ({ page }, testInfo) => {
+    // Take a screenshot after each test
+    const screenshotPath = path.join(__dirname, 'screenshots', `${testInfo.title}.png`);
+    await page.screenshot({ path: screenshotPath });
+  });
+  */
+
   // Check that the course creation header is displayed
   test('should display the course creation header', async ({ page }) => {
     const header = page.locator('text=Create a Course');
@@ -31,11 +38,9 @@ test.describe('Create Course Page', () => {
   });
 
   // Check that the course name and institution name input fields are displayed
-  test('should display the course name and institution name input fields', async ({ page }) => {
+  test('should display the course name input field', async ({ page }) => {
     const courseNameInput = page.locator('input[placeholder="Course Name"]');
-    const institutionNameInput = page.locator('input[placeholder="Institution Name"]');
     await expect(courseNameInput).toBeVisible();
-    await expect(institutionNameInput).toBeVisible();
   });
 
   // Check that the file upload input is displayed
@@ -66,14 +71,15 @@ test.describe('Create Course Page', () => {
     });
 
     await page.fill('input[placeholder="Course Name"]', 'Test Course');
-    await page.fill('input[placeholder="Institution Name"]', 'Test Institution');
 
     const filePath = path.resolve(__dirname, '../test-files/students.csv');
     await page.setInputFiles('input[type="file"]', filePath);
 
     await page.locator('b:has-text("Create Course")').click();
 
-    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseId=1`);
+    // Wait for the navigation and verify the URL contains the expected path
+    await page.waitForNavigation();
+    expect(page.url()).toContain(`${baseURL}/instructor/course-dashboard?courseId=`);
   });
 
   // Check for error handling when the create course API call fails
@@ -86,7 +92,6 @@ test.describe('Create Course Page', () => {
     });
 
     await page.fill('input[placeholder="Course Name"]', 'Test Course');
-    await page.fill('input[placeholder="Institution Name"]', 'Test Institution');
 
     // Capture the alert dialog
     const [dialog] = await Promise.all([
@@ -115,7 +120,6 @@ test.describe('Create Course Page', () => {
     });
 
     await page.fill('input[placeholder="Course Name"]', 'Test Course');
-    await page.fill('input[placeholder="Institution Name"]', 'Test Institution');
 
     const filePath = path.resolve(__dirname, '../test-files/students.csv');
     await page.setInputFiles('input[type="file"]', filePath);

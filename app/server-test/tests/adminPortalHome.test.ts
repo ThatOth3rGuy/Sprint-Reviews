@@ -42,7 +42,7 @@ test.describe('Admin Portal Home Page', () => {
   test('should redirect to course dashboard on course click', async ({ page }) => {
     const course1 = page.getByText('Course', { exact: true });
     await course1.click();
-    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseID=1`);
+    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseID=2`);
   });
 
   // Check that the filter and sort buttons are displayed

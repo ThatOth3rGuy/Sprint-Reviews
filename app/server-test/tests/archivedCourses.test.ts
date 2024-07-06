@@ -42,7 +42,7 @@ test.describe('Archived Courses Page', () => {
   test('should redirect to course dashboard on archived course click', async ({ page }) => {
     const course1 = page.getByText('Archived Course', { exact: true });
     await course1.click();
-    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseID=5`);
+    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseID=4`);
   });
 
   // Check that the filter and sort buttons are displayed

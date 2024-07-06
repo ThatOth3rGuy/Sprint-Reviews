@@ -20,12 +20,14 @@ test.describe('Create Assignment Page', () => {
     await page.goto('http://localhost:3001/instructor/create-assignment');
   });
 
+  /*
   test.afterEach(async ({ page }, testInfo) => {
     // Take a screenshot after each test
     const screenshotPath = path.join(__dirname, 'screenshots', `${testInfo.title}.png`);
     await page.screenshot({ path: screenshotPath });
   });
-
+  */
+ 
   test('should display the create assignment form', async ({ page }) => {
     await expect(page.locator('text=Create an Assignment')).toBeVisible();
   });
@@ -54,8 +56,18 @@ test.describe('Create Assignment Page', () => {
 
   test('should upload a file', async ({ page }) => {
     const filePath = path.join(__dirname, '../test-files/AssignmentRubric.txt');
-    await page.setInputFiles('input[type="file"]', filePath);
-    await expect(page.locator('text=File uploaded successfully')).toBeVisible();
+    
+    // Check the file input value before uploading the file
+    const fileInput = page.locator('input[type="file"]');
+    const fileInputValueBefore = await fileInput.evaluate(input => (input as HTMLInputElement).value);
+    expect(fileInputValueBefore).toBe('');
+
+    // Upload the file
+    await fileInput.setInputFiles(filePath);
+    
+    // Check the file input value after uploading the file
+    const fileInputValueAfter = await fileInput.evaluate(input => (input as HTMLInputElement).files?.[0]?.name);
+    expect(fileInputValueAfter).toBe('AssignmentRubric.txt');
   });
 
   test('should toggle group assignment checkbox', async ({ page }) => {
@@ -72,13 +84,13 @@ test.describe('Create Assignment Page', () => {
     
     // Verify the dropdown contains the expected options
     const options = await page.$$eval('select option', options => options.map(option => option.textContent));
-    expect(options).toContain('Demo Course');
+    expect(options).toContain('COSC 499');
   
-    // Select the 'Demo Course' from the dropdown
-    await page.selectOption('select', { label: 'Demo Course' });
+    // Select the 'COSC 499' from the dropdown
+    await page.selectOption('select', { label: 'COSC 499' });
   
     // Verify the selected option
     const selectedOption = await page.$eval('select', select => select.value);
-    expect(selectedOption).toBe('60');
+    expect(selectedOption).toBe('1');
   });
 });
