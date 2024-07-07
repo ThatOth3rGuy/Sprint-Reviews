@@ -1,39 +1,41 @@
-version: "3"
-
 services:
   app:
     container_name: app
     build:
       context: ./app
       dockerfile: Dockerfile
-
-    # Set environment variables directly in the docker-compose file
     environment:
-      ENV_VARIABLE: ${ENV_VARIABLE}
-      NEXT_PUBLIC_ENV_VARIABLE: ${NEXT_PUBLIC_ENV_VARIABLE}
-
-    # Set environment variables based on the .env file
+      - ENV_VARIABLE=${ENV_VARIABLE}
+      - NEXT_PUBLIC_ENV_VARIABLE=${NEXT_PUBLIC_ENV_VARIABLE}
+      - DATABASE_HOST=${MYSQLDB_HOST}
+      - DATABASE_PORT=${MYSQLDB_DOCKER_PORT}
+      - DATABASE_USER=${MYSQLDB_USER}
+      - DATABASE_PASSWORD=${MYSQLDB_PASSWORD}
+      - DATABASE_NAME=${MYSQLDB_DATABASE}
     env_file:
       - .env
     volumes:
       - ./app/src:/app/src
       - ./app/public:/app/public
+      - ./app/server-test:/app/server-test
     restart: always
     ports:
-      - "3001:3000"
+      - "${NEXTJS_APP_LOCAL_PORT}:${NEXTJS_APP_DOCKER_PORT}"
     networks:
       - my_network
 
   db:
     image: mysql:latest
     environment:
-      - MYSQL_ROOT_PASSWORD=SprintRunners
-      - MYSQL_DATABASE=mydb
+      - MYSQL_ROOT_PASSWORD=${MYSQLDB_PASSWORD}
+      - MYSQL_DATABASE=${MYSQLDB_DATABASE}
     volumes:
       - db_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - my_network
+    ports:
+      - "${MYSQLDB_LOCAL_PORT}:${MYSQLDB_DOCKER_PORT}"
 
   test:
     build:
@@ -46,11 +48,6 @@ services:
 
 volumes:
   db_data:
-  # Add more containers below OUR DB BUILD***
 
-
-# Define a network, which allows containers to communicate
-# with each other, by using their container name as a hostname
 networks:
   my_network:
-    external: true

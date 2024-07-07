@@ -1,40 +1,41 @@
-import { useEffect, useState } from 'react';
+import { NextPage } from 'next';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import styles from '../styles/landing.module.css';
 
-interface User {
-  userID: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  pwd: string;
-  userRole: string;
-  institution: string;
-}
 
-export default function Home() {
-  const [users, setUsers] = useState<User[]>([]);
+const Landing: NextPage = () => {
+  const router = useRouter();
 
-  useEffect(() => {
-    fetch('/api/users')
-      .then((response) => response.json())
-      .then((data) => setUsers(data))
-      .catch((error) => console.error('Error fetching users:', error));
-  }, []);
+  const handleStudentClick = () => {
+    // Redirect user to login page
+    router.push('/student/login');
+  }
 
-  return (
-    <div>
-      <h1>Users</h1>
-      <ul>
-        {users.map((user) => (
-          <li key={user.userID}>
-            <div>
-              <strong>{user.firstName} {user.lastName}</strong>
-              <p>Email: {user.email}</p>
-              <p>Role: {user.userRole}</p>
-              <p>Institution: {user.institution}</p>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+  const handleInstructorClick = () => {
+    // Redirect user to login page
+    router.push('/instructor/login');
+  }
+
+    return (
+      <div className={styles.roleSelection}>
+        <header className={styles.roleButton}>Select Your Role</header>
+        <Image 
+          className={styles.image} 
+          src="/Logo.png" 
+          alt="SprintRunners Logo"
+          width={363}
+          height={330}
+        />
+        <div className={styles.line}></div>
+        <p className={styles.description}>Choose from below to continue to sign up</p>
+        <p className={styles.iAmA}>I am a:</p>
+        <div className={styles.roleButtons}>
+          <button className={styles.studentButton} onClick={handleStudentClick}>Student</button>
+          <button className={styles.instructorButton} onClick={handleInstructorClick}>Instructor</button>
+        </div>
+      </div>
+    );
+  }
+
+  export default Landing;
