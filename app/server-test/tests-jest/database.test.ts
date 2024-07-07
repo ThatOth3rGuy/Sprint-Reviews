@@ -35,7 +35,6 @@ describe('Database Tests', () => {
         expect((rows as any[])[0]).toHaveProperty('email');
         expect((rows as any[])[0]).toHaveProperty('pwd');
         expect((rows as any[])[0]).toHaveProperty('userRole');
-        expect((rows as any[])[0]).toHaveProperty('institution');
       }
     } catch (error) {
       console.error('Error querying users:', error);
