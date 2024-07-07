@@ -37,15 +37,6 @@ services:
     ports:
       - "${MYSQLDB_LOCAL_PORT}:${MYSQLDB_DOCKER_PORT}"
 
-  test:
-    build:
-      context: .
-      dockerfile: ./app/Dockerfile.jest
-    networks:
-      - my_network
-    depends_on:
-      - db
-
 volumes:
   db_data:
 
