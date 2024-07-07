@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  test:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=SprintRunnersTest
+      - MYSQL_DATABASE=testdb
+    volumes:
+      - test_db_data:/var/lib/mysql
+      - ./test.sql:/docker-entrypoint-initdb.d/test.sql
+    networks:
+      - my_network
+    ports:
+      - "3309:3306"
+    depends_on:
+      - app
+
+volumes:
+  test_db_data:

@@ -1,4 +1,4 @@
-version: "3"
+version: '3.9'
 
 services:
   app:
@@ -20,26 +20,7 @@ services:
       - "3001:3000"
     networks:
       - my_network
-    depends_on:
-      - db
-  
-  playwright-tests:
-    container_name: playwright-tests
-    build:
-      context: ./app/server-test
-      dockerfile: pw.Dockerfile # Ensure Dockerfile for Playwright setup exists here
-    volumes:
-      - ./app/server-test:/app/server-test
-    depends_on:
-      - app
-      - db
-    networks:
-      - my_network
-    working_dir: /app/server-test
-    environment: # Add any required environment variables for your tests here
-      ENV_VARIABLE: ${ENV_VARIABLE}
-      NEXT_PUBLIC_ENV_VARIABLE: ${NEXT_PUBLIC_ENV_VARIABLE}
-    
+
   db:
     image: mysql:latest
     environment:
@@ -51,8 +32,20 @@ services:
     networks:
       - my_network
     ports:
-      - "3307:3306" # Exposing port for MySQL, MySQL Workbench and well our entire system too 
+      - "3307:3306"
 
+  # playwright-tests:
+  #   container_name: playwright-tests
+  #   build:
+  #     context: .
+  #     dockerfile: ./test/Dockerfile # Ensure you have a Dockerfile for Playwright setup
+  #   volumes:
+  #     - ./test:/tests # Assuming your tests are in the ./test directory
+  #   depends_on:
+  #     - app
+  #   networks:
+  #     - my_network
+  #   working_dir: /test
 
 volumes:
   db_data:
@@ -63,4 +56,3 @@ volumes:
 # with each other, by using their container name as a hostname
 networks:
   my_network:
-    external: true
