@@ -83,8 +83,8 @@ test.describe('Instructor Login Page', () => {
       });
   
       // Currently using admin credentials to test the redirect as it's the only instructor account in the init.sql file
-      await page.fill('input[type="email"]', 'admin@gmail.com');
-      await page.fill('input[type="password"]', 'password');
+      await page.fill('input[type="email"]', 'scott.faz@example.com');
+      await page.fill('input[type="password"]', 'password123');
       await page.getByText('Sign In').click();
   
       await expect(page).toHaveURL('http://localhost:3001/instructor/dashboard');

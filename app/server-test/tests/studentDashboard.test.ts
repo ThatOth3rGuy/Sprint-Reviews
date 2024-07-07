@@ -8,7 +8,7 @@ const baseURL = 'http://localhost:3001';
 // Login information comes from database, this should be adjusted when we implement a test db
 async function login(page: any) {
   await page.goto(`${baseURL}/student/login`);
-  await page.fill('input[type="email"]', 'john.doe@example.com');
+  await page.fill('input[type="email"]', 'jane.smith@example.com');
   await page.fill('input[type="password"]', 'password123');
   await page.click('text=Sign In');
   await page.waitForNavigation();
@@ -33,8 +33,8 @@ test.describe('Student Dashboard Page', () => {
   // Check that the courses are displayed after loading
   test('should display courses after loading', async ({ page }) => {
     // Name of courses comes from the database, this should be adjusted when we implement a test db
-    const course1 = page.getByText('Course', { exact: true }).first();
-    const course2 = page.getByText('Course 2', { exact: true });
+    const course1 = page.getByText('COSC 499', { exact: true });
+    const course2 = page.getByText('COSC 310', { exact: true });
     await expect(course1).toBeVisible();
     await expect(course2).toBeVisible();
   });
@@ -42,7 +42,7 @@ test.describe('Student Dashboard Page', () => {
   // Check that clicking a course redirects to the course dashboard
   test('should redirect to course dashboard on course click', async ({ page }) => {
     // Name of course comes from the database, this should be adjusted when we implement a test db
-    const course1 = page.getByText('Course').first();
+    const course1 = page.getByText('COSC 499', { exact: true });
     await course1.click();
     await expect(page).toHaveURL(`${baseURL}/student/course-dashboard?courseID=1`);
   });

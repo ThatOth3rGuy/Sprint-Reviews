@@ -8,8 +8,8 @@ const baseURL = 'http://localhost:3001';
 // Login information comes from database, this should be adjusted when we implement a test db
 async function login(page: any) {
   await page.goto(`${baseURL}/instructor/login`);
-  await page.fill('input[type="email"]', 'admin@gmail.com');
-  await page.fill('input[type="password"]', 'password');
+  await page.fill('input[type="email"]', 'admin@example.com');
+  await page.fill('input[type="password"]', 'password123');
   await page.click('text=Sign In');
   await page.waitForNavigation();
 }
@@ -32,17 +32,17 @@ test.describe('Archived Courses Page', () => {
 
   // Check that archived courses are displayed after loading
   test('should display archived courses after loading', async ({ page }) => {
-    const course1 = page.getByText('Archived Course', { exact: true });
-    const course2 = page.getByText('Archived Course 2', { exact: true });
+    const course1 = page.getByText('COSC 100', { exact: true });
+    const course2 = page.getByText('COSC 101', { exact: true });
     await expect(course1).toBeVisible();
     await expect(course2).toBeVisible();
   });
 
   // Check that clicking an archived course redirects to the course dashboard
   test('should redirect to course dashboard on archived course click', async ({ page }) => {
-    const course1 = page.getByText('Archived Course', { exact: true });
+    const course1 = page.getByText('COSC 100', { exact: true });
     await course1.click();
-    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseID=4`);
+    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseID=3`);
   });
 
   // Check that the filter and sort buttons are displayed

@@ -120,7 +120,7 @@ INSERT INTO user (firstName, lastName, email, pwd, userRole) VALUES
 ('John', 'Doe', 'john.doe@example.com', 'password123', 'student'),
 ('Jane', 'Smith', 'jane.smith@example.com', 'password123', 'student'),
 ('Admin', 'User', 'admin@example.com', 'password123', 'instructor'),
-('Scott', 'Fazackerley', 'bob.brown@example.com', 'password123', 'instructor');
+('Scott', 'Fazackerley', 'scott.faz@example.com', 'password123', 'instructor');
 
 -- Insert students
 INSERT INTO student (userID, studentID, phoneNumber, homeAddress, dateOfBirth) VALUES
@@ -164,6 +164,7 @@ INSERT INTO feedback (assignmentID, content, otherStudentID) VALUES
 -- Insert enrollment
 INSERT INTO enrollment (studentID, courseID) VALUES
 (1, 1),
+(2, 1),
 (2, 2);
 
 -- Insert selected students for group assignments
