@@ -4,10 +4,10 @@ import fs from 'fs/promises';
 import path from 'path';
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'db', // Replace this if running on localhost, else if running on docker container, use 'db'
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || 'SprintRunners', // SprintRunners
-  database: process.env.DB_NAME || 'mydb',
+  host: process.env.DATABASE_HOST || 'db',
+  user: process.env.DATABASE_USER || 'root',
+  password: process.env.DATABASE_PASSWORD || 'SprintRunners',
+  database: process.env.DATABASE_NAME || 'mydb',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
