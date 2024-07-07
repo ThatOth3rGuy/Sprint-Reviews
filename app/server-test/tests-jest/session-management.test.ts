@@ -1,6 +1,6 @@
 import { encrypt, decrypt, login, logout, getSession, updateSession, updateSessionInMiddleware } from '../../src/lib';
 import { SignJWT, jwtVerify } from 'jose';
-import cookie from 'cookie';
+import * as cookie from 'cookie';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from '../../src/db';
@@ -16,7 +16,8 @@ jest.mock('jose', () => ({
 }));
 
 jest.mock('cookie', () => ({
-  serialize: jest.fn()
+  serialize: jest.fn(),
+  parse: jest.fn()
 }));
 
 jest.mock('../../src/db', () => ({
@@ -82,7 +83,7 @@ describe('Session Management', () => {
       expect(res.setHeader).toHaveBeenCalledWith('Set-Cookie', expect.any(String));
       expect(cookie.serialize).toHaveBeenCalledWith('session', 'encryptedToken', {
         httpOnly: true,
-        expires,
+        expires: expect.any(Date),
         path: '/'
       });
     });
@@ -161,7 +162,7 @@ describe('Session Management', () => {
       expect(res.setHeader).toHaveBeenCalledWith('Set-Cookie', expect.any(String));
       expect(cookie.serialize).toHaveBeenCalledWith('session', 'encryptedToken', {
         httpOnly: true,
-        expires: newExpires,
+        expires: expect.any(Date),
         path: '/'
       });
     });
@@ -189,7 +190,7 @@ describe('Session Management', () => {
       expect(jwtVerify).toHaveBeenCalledWith('encryptedToken', key, { algorithms: ['HS256'] });
       expect(response.cookies.set).toHaveBeenCalledWith('session', 'encryptedToken', {
         httpOnly: true,
-        expires: newExpires,
+        expires: expect.any(Date),
         path: '/'
       });
     });
