@@ -1,0 +1,24 @@
+services:
+  app:
+    environment:
+      - DATABASE_HOST=test
+      - DATABASE_PORT=${MYSQLDB_DOCKER_PORT}
+      - DATABASE_USER=${MYSQLDB_USER}
+      - DATABASE_PASSWORD=SprintRunnersTest
+      - DATABASE_NAME=testdb
+
+  test:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=SprintRunnersTest
+      - MYSQL_DATABASE=testdb
+    volumes:
+      - test_db_data:/var/lib/mysql
+      - ./test.sql:/docker-entrypoint-initdb.d/test.sql
+    networks:
+      - my_network
+    ports:
+      - "3309:${MYSQLDB_DOCKER_PORT}"
+
+volumes:
+  test_db_data:
