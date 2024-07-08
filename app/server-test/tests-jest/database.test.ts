@@ -1,4 +1,4 @@
-// __tests__/database.test.tsx
+// tests-jest/database.test.tsx
 import mysql from 'mysql2/promise';
 
 declare global {

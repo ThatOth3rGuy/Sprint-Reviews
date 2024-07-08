@@ -1,4 +1,3 @@
-// db.ts
 import mysql from 'mysql2/promise';
 import fs from 'fs/promises';
 import path from 'path';
@@ -109,7 +108,7 @@ export async function getAllCourses(isArchived: boolean): Promise<any[]> {
   `;
   try {
     const rows = await query(sql, [isArchived]);
-    return rows.map(row => ({
+    return rows.map((row: any) => ({
       ...row,
       averageGrade: row.averageGrade !== null ? parseFloat(row.averageGrade) : null,
     }));
@@ -221,7 +220,7 @@ export async function getAssignmentsWithSubmissions() {
     const rows = await query(sql);
     
     // Group submissions by assignment
-    const assignments = rows.reduce((acc, row) => {
+    const assignments = rows.reduce((acc: any[], row: any) => {
       const assignment = acc.find((a: { assignmentID: any; }) => a.assignmentID === row.assignmentID);
       if (assignment) {
         if (row.studentID) {
@@ -401,4 +400,3 @@ export async function enrollStudent(userID: string, courseID: string): Promise<v
     throw err;
   }
 }
-

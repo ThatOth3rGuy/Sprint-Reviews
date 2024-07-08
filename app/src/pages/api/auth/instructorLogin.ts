@@ -1,4 +1,4 @@
-// pages/api/auth/instructor-login.ts
+// pages/api/auth/instructorLogin.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import { authenticateInstructor, authenticateAdmin } from '../../../db';
 import { login } from '../../../lib';
