@@ -1,4 +1,4 @@
-// release-assignment.tsx
+// view-assignment.tsx
 // Import necessary libraries
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
@@ -20,7 +20,7 @@ interface RubricItem {
   maxMarks: number;
 }
 
-const ReleaseAssignment: React.FC = () => {
+const ViewAssignment: React.FC = () => {
   const router = useRouter();
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [selectedAssignment, setSelectedAssignment] = useState<number | ''>('');
@@ -29,10 +29,17 @@ const ReleaseAssignment: React.FC = () => {
   const [allowedFileTypes, setAllowedFileTypes] = useState<string>('');
   const [deadline, setDeadline] = useState<string>('');
   const [students, setStudents] = useState<{ userID: number }[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<any>(null);
+
+  // Use the session validation hook to check if the user is logged in
+  useSessionValidation('instructor', setLoading, setSession);
+  
 // Fetch assignments when the component mounts
   useEffect(() => {
     fetchAssignments();
   }, []);
+
 // Function to handle changes in the assignment selection
   const fetchAssignments = async () => {
     try {
@@ -133,7 +140,7 @@ const ReleaseAssignment: React.FC = () => {
     }
   };
         
-   // If the session exists, check if the user is an admin
+  // If the session exists, check if the user is an admin
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
     return;
@@ -142,7 +149,7 @@ const ReleaseAssignment: React.FC = () => {
         
 // Render the component
   return (
-        
+    <div className={styles.container}>
         {isAdmin ? (
         <>
           <AdminHeader title="Course Name"
@@ -164,7 +171,6 @@ const ReleaseAssignment: React.FC = () => {
           <InstructorNavbar />
         </>
       )}
-    <div className={styles.container}>
       <div className={styles.rectangle}>
         <h1>Release Assignment</h1>
         <form onSubmit={handleSubmit}>
@@ -255,4 +261,4 @@ const ReleaseAssignment: React.FC = () => {
   );
 };
 
-export default ReleaseAssignment;
+export default ViewAssignment;
