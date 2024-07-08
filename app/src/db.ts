@@ -1,17 +1,10 @@
 // db.ts
 import mysql from 'mysql2/promise';
 import fs from 'fs/promises';
-import path from 'path';
+import config from '../dbConfig'; // Import the database configuration from dbConfig.ts
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'db', // Replace this if running on localhost, else if running on docker container, use 'db'
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || 'SprintRunners', // SprintRunners
-  database: process.env.DB_NAME || 'mydb',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
+const dbConfig = config.development; // Use the development configuration
+const pool = mysql.createPool(dbConfig);
 
 export async function query(sql: string, values: any[] = []): Promise<any> {
   try {
@@ -441,7 +434,8 @@ export async function selectStudentsForAssignment(assignmentID: string, studentI
   } catch (error) {
     const err = error as Error;
     console.error(`Error selecting students for assignment:`, err.message);
-
+  }
+}
 export async function getCourse(courseID: string): Promise<any> {
   const sql = `
     SELECT * FROM course WHERE courseID = ?

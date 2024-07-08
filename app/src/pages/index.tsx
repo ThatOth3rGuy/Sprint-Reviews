@@ -2,6 +2,7 @@ import { NextPage } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import styles from '../styles/landing.module.css';
+import React, { useEffect } from 'react';
 
 
 const Landing: NextPage = () => {
@@ -16,6 +17,20 @@ const Landing: NextPage = () => {
     // Redirect user to login page
     router.push('/instructor/login');
   }
+  const initializeDb = async () => {
+    try {
+      const response = await fetch('/api/dbInit', { method: 'POST' });
+      const data = await response.json();
+      console.log(data.message); // Log success message or handle it as needed
+    } catch (error) {
+      console.error('Failed to initialize database'); // Log or handle error
+    }
+  };
+
+  // useEffect hook to run on component mount
+  useEffect(() => {
+    initializeDb();
+  }, []); // The empty array ensures this effect runs only once on mount
 
     return (
       <>

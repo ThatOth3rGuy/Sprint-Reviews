@@ -2,15 +2,12 @@
 // Import necessary libraries
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useState } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';        
 import styles from "../../styles/instructor-assignments-creation.module.css";
 import InstructorHeader from "../components/instructor-components/instructor-header";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import Modal from "react-modal";
 import Select from 'react-select';
-
-
 
 // Define the structure fro assignment and Rubric items
 interface Assignment {
