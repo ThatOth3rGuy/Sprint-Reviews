@@ -1,6 +1,8 @@
 // assignments.tsx
 import InstructorHeader from "../components/instructor-components/instructor-header";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
+import AdminNavbar from "../components/admin-components/admin-navbar";
+import AdminHeader from "../components/admin-components/admin-header";
 import type { NextPage } from 'next';
 import { useState, useEffect } from 'react';
 import styles from '../../styles/instructor-assignments-creation.module.css';
@@ -27,11 +29,31 @@ const Assignments: NextPage = () => {
     return <p>Loading...</p>;
   }
 
+  // If the session exists, check if the user is an admin
+  if (!session || !session.user || !session.user.userID) {
+    console.error('No user found in session');
+    return;
+  }
+  const isAdmin = session.user.role === 'admin';
+
   return (
     <>
-      <InstructorHeader title="Assignments"
-      addLink={[{href: "./create-assignment", title: "Create Assignment"}, {href: "#", title: "Release Assignment"}]}/>
-      <InstructorNavbar/>
+      <br />
+      <br />
+      <br />
+      {isAdmin ? (
+        <>
+          <AdminHeader title="Assignments"
+          addLink={[{href: "./create-assignment", title: "Create Assignment"}, {href: "#", title: "Release Assignment"}]}/>
+          <AdminNavbar />
+        </>
+      ) : (
+        <>
+          <InstructorHeader title="Assignments"
+          addLink={[{href: "./create-assignment", title: "Create Assignment"}, {href: "#", title: "Release Assignment"}]}/>
+          <InstructorNavbar />
+        </>
+      )}
       <div className={styles.container}>
         {assignments.map(({ assignmentID, title, description, deadline }) => (
           <div key={assignmentID} className={styles.card}>

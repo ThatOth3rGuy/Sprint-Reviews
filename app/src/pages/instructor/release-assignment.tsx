@@ -234,21 +234,19 @@ const ReleaseAssignment: React.FC = () => {
     label: student.name,
   }));
   // Render the component
+
+  // If the session exists, check if the user is an admin
+  if (!session || !session.user || !session.user.userID) {
+    console.error('No user found in session');
+    return;
+  }
+  const isAdmin = session.user.role === 'admin';
+
   return (
     <>
       <br />
       <br />
       <br />
-      <br />
-      <br />
-      <InstructorHeader
-        title="Assignments"
-        addLink={[
-          { href: "./create-assignment", title: "Create Assignment" },
-          { href: "./release-assignment", title: "Release Assignment" },
-        ]}
-      />
-      <InstructorNavbar />
       <div className={styles.rectangle}>
         <h1>Release Assignment For Peer Review</h1>
         <form onSubmit={handleSubmit}>
@@ -381,6 +379,19 @@ const ReleaseAssignment: React.FC = () => {
           </button>
         </form>
       </div>
+      {isAdmin ? (
+        <>
+          <AdminHeader title="Assignments"
+          addLink={[{href: "./create-assignment", title: "Create Assignment"}, {href: "#", title: "Release Assignment"}]}/>
+          <AdminNavbar />
+        </>
+      ) : (
+        <>
+          <InstructorHeader title="Assignments"
+          addLink={[{href: "./create-assignment", title: "Create Assignment"}, {href: "#", title: "Release Assignment"}]}/>
+          <InstructorNavbar />
+        </>
+      )}
     </>
   );
 };

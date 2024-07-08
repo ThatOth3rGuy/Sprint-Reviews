@@ -3,7 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styles from "../../styles/instructor-assignments-creation.module.css";
-
+import InstructorHeader from "../components/instructor-components/instructor-header";
+import InstructorNavbar from "../components/instructor-components/instructor-navbar";
+import AdminNavbar from "../components/admin-components/admin-navbar";
+import AdminHeader from "../components/admin-components/admin-header";
+import { useSessionValidation } from '../api/auth/checkSession';
+        
 // Define the structure fro assignment and Rubric items
 interface Assignment { 
   assignmentID: number;
@@ -127,8 +132,38 @@ const ReleaseAssignment: React.FC = () => {
       console.error('Error releasing assignment:', error);
     }
   };
+        
+   // If the session exists, check if the user is an admin
+  if (!session || !session.user || !session.user.userID) {
+    console.error('No user found in session');
+    return;
+  }
+  const isAdmin = session.user.role === 'admin';
+        
 // Render the component
   return (
+        
+        {isAdmin ? (
+        <>
+          <AdminHeader title="Course Name"
+        addLink={[
+          { href: "./all-assignments", title: "View All" },
+          { href: "./peer-eval-assignments", title: "Peer Evaluations" }
+        ]}
+      />
+          <AdminNavbar />
+        </>
+      ) : (
+        <>
+          <InstructorHeader title="Course Name"
+        addLink={[
+          { href: "./all-assignments", title: "View All" },
+          { href: "./peer-eval-assignments", title: "Peer Evaluations" }
+        ]}
+      />
+          <InstructorNavbar />
+        </>
+      )}
     <div className={styles.container}>
       <div className={styles.rectangle}>
         <h1>Release Assignment</h1>

@@ -3,16 +3,14 @@
 CREATE DATABASE IF NOT EXISTS mydb;
 USE mydb;
 
-
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS student;
 DROP TABLE IF EXISTS instructor;
 DROP TABLE IF EXISTS course;
-DROP TABLE IF EXISTS class;
 DROP TABLE IF EXISTS assignment;
 DROP TABLE IF EXISTS submission;
 DROP TABLE IF EXISTS feedback;
-DROP TABLE IF EXISTS Enrollment;
+DROP TABLE IF EXISTS enrollment;
 DROP TABLE IF EXISTS selected_students;
 DROP TABLE IF EXISTS review_criteria;
 
@@ -71,6 +69,8 @@ CREATE TABLE IF NOT EXISTS assignment (
 CREATE TABLE IF NOT EXISTS submission (
     submissionID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT,
+    content TEXT,
+    grade INT,
     studentID INT,
     fileName VARCHAR(255),
     fileContent LONGBLOB,
@@ -92,6 +92,7 @@ CREATE TABLE IF NOT EXISTS feedback (
     feedbackID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT,
     content TEXT,
+    grade INT,
     otherStudentID INT,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
     FOREIGN KEY (otherStudentID) REFERENCES student(userID)
