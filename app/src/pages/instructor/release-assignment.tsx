@@ -9,7 +9,7 @@ import InstructorNavbar from "../components/instructor-components/instructor-nav
 import Modal from "react-modal";
 import Select from 'react-select';
 
-// Define the structure fro assignment and Rubric items
+// Define the structure for assignment and Rubric items
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -19,9 +19,6 @@ interface RubricItem {
   criterion: string;
   maxMarks: number;
 }
-interface ReleaseAssignmentProps {
-  courseID: string;
-}
 
 interface Student {
   id: string;
@@ -29,13 +26,10 @@ interface Student {
 }
 
 const ReleaseAssignment: React.FC = () => {
-  
   const router = useRouter();
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [selectedAssignment, setSelectedAssignment] = useState<number | "">("");
-  const [rubric, setRubric] = useState<RubricItem[]>([
-    { criterion: "", maxMarks: 0 },
-  ]);
+  const [rubric, setRubric] = useState<RubricItem[]>([{ criterion: "", maxMarks: 0 }]);
   const [isGroupAssignment, setIsGroupAssignment] = useState(false);
   const [allowedFileTypes, setAllowedFileTypes] = useState<string>("");
   const [deadline, setDeadline] = useState<string>("");
@@ -52,7 +46,8 @@ const ReleaseAssignment: React.FC = () => {
   if (loading) {
     return <p>Loading...</p>;
   }
-  //handle open and close for modal
+
+  // Handle open and close for modal
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -61,11 +56,15 @@ const ReleaseAssignment: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  // Fetch assignments ans students in course when the component mounts
+  // Fetch assignments and students in the course when the component mounts
   useEffect(() => {
-    fetchAssignments();  
-  },[]);
-  // Function to handle changes in the assignment selection
+    if (session && session.user) {
+      fetchAssignments();
+      fetchStudents(session.user.courseID);
+    }
+  }, [session]);
+
+  // Function to fetch assignments
   const fetchAssignments = async () => {
     try {
       const response = await fetch("/api/getAssignments");
@@ -80,38 +79,22 @@ const ReleaseAssignment: React.FC = () => {
     }
   };
 
-  // function to handle selecting students
-  // const fetchStudents = async () => {
-  //   try {
-  //     const response = await fetch("/api/getStudents");
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       setStudents(data);
-  //     } else {
-  //       console.error("Failed to fetch students");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching students:", error);
-  //   }
-  // };
- // release-assignment.tsx
-
- const fetchStudents = async (courseID: undefined) => {
-  try {
-    const response = await fetch(`/api/getStudentsInCourse?courseID=${courseID}`);
-    if (response.ok) {
-      const students = await response.json();
-      setStudents(students);
-    } else {
-      console.error("Failed to fetch students");
+  // Function to fetch students in the course
+  const fetchStudents = async (courseID: string) => {
+    try {
+      const response = await fetch(`/api/getStudentsInCourse?courseID=${courseID}`);
+      if (response.ok) {
+        const students = await response.json();
+        setStudents(students);
+      } else {
+        console.error("Failed to fetch students");
+      }
+    } catch (error) {
+      console.error("Error fetching students:", error);
     }
-  } catch (error) {
-    console.error("Error fetching students:", error);
-  }
-};
+  };
 
-
-
+  // Handle student selection
   const handleStudentSelection = (studentId: number) => {
     setSelectedStudents((prev) =>
       prev.includes(studentId)
@@ -120,38 +103,7 @@ const ReleaseAssignment: React.FC = () => {
     );
   };
 
-  // const handleStudentSelection = (studentId: number) => {
-  //   setSelectedStudents((prev) =>
-  //     prev.includes(studentId)
-  //       ? prev.filter((id) => id !== studentId)
-  //       : [...prev, studentId]
-  //   );
-  // };
-
-  // const handleUniqueDueDateSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await fetch("/api/setUniqueDueDate", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         assignmentID: selectedAssignment,
-  //         studentIDs: selectedStudents,
-  //         dueDate: uniqueDueDate,
-  //       }),
-  //     });
-
-  //     if (response.ok) {
-  //       alert("Unique due date set successfully");
-  //       setSelectedStudents([]);
-  //       setUniqueDueDate("");
-  //     } else {
-  //       console.error("Failed to set unique due date");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error setting unique due date:", error);
-  //   }
-  // };
+  // Handle student selection submission
   const handleStudentSelectionSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -176,12 +128,13 @@ const ReleaseAssignment: React.FC = () => {
       console.error("Error selecting students:", error);
     }
   };
-  
 
+  // Handle assignment change
   const handleAssignmentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedAssignment(Number(e.target.value));
   };
-  // Function to handle changes in the rubric
+
+  // Handle rubric change
   const handleRubricChange = (
     index: number,
     field: "criterion" | "maxMarks",
@@ -195,16 +148,19 @@ const ReleaseAssignment: React.FC = () => {
     }
     setRubric(updatedRubric);
   };
-  // Function to add a new rubric item
+
+  // Add new rubric item
   const addRubricItem = () => {
     setRubric([...rubric, { criterion: "", maxMarks: 0 }]);
   };
-  // Function to remove a rubric item
+
+  // Remove rubric item
   const removeRubricItem = (index: number) => {
     const updatedRubric = rubric.filter((_, i) => i !== index);
     setRubric(updatedRubric);
   };
-  // Function to handle form submission
+
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -229,26 +185,24 @@ const ReleaseAssignment: React.FC = () => {
       console.error("Error releasing assignment:", error);
     }
   };
+
   const options = students.map((student) => ({
     value: student.id,
     label: student.name,
   }));
-  // Render the component
+
+  // If the session exists, check if the user is an admin
+  if (!session || !session.user || !session.user.userID) {
+    console.error('No user found in session');
+    return;
+  }
+  const isAdmin = session.user.role === 'admin';
+
   return (
     <>
       <br />
       <br />
       <br />
-      <br />
-      <br />
-      <InstructorHeader
-        title="Assignments"
-        addLink={[
-          { href: "./create-assignment", title: "Create Assignment" },
-          { href: "./release-assignment", title: "Release Assignment" },
-        ]}
-      />
-      <InstructorNavbar />
       <div className={styles.rectangle}>
         <h1>Release Assignment For Peer Review</h1>
         <form onSubmit={handleSubmit}>
@@ -314,7 +268,6 @@ const ReleaseAssignment: React.FC = () => {
             </button>
           </div>
 
-          
           <br />
           <label>Enter Due Date:</label>
           <br />
@@ -332,7 +285,6 @@ const ReleaseAssignment: React.FC = () => {
             <div className={styles.innerAdvanced}>
               <h3>Select Students: </h3>
               <p className={styles.innerAdvanced}>
-              {/* todo */}
                 <Select
                   options={options}
                   isMulti
@@ -381,6 +333,17 @@ const ReleaseAssignment: React.FC = () => {
           </button>
         </form>
       </div>
+      {isAdmin ? (
+        <>
+          <InstructorHeader title="Assignments" addLink={[{href: "./create-assignment", title: "Create Assignment"}, {href: "#", title: "Release Assignment"}]}/>
+          <InstructorNavbar />
+        </>
+      ) : (
+        <>
+          <InstructorHeader title="Assignments" addLink={[{href: "./create-assignment", title: "Create Assignment"}, {href: "#", title: "Release Assignment"}]}/>
+          <InstructorNavbar />
+        </>
+      )}
     </>
   );
 };

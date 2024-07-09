@@ -1,9 +1,14 @@
-// release-assignment.tsx
+// view-assignment.tsx
 // Import necessary libraries
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styles from "../../styles/instructor-assignments-creation.module.css";
-
+import InstructorHeader from "../components/instructor-components/instructor-header";
+import InstructorNavbar from "../components/instructor-components/instructor-navbar";
+import AdminNavbar from "../components/admin-components/admin-navbar";
+import AdminHeader from "../components/admin-components/admin-header";
+import { useSessionValidation } from '../api/auth/checkSession';
+        
 // Define the structure fro assignment and Rubric items
 interface Assignment { 
   assignmentID: number;
@@ -15,7 +20,7 @@ interface RubricItem {
   maxMarks: number;
 }
 
-const ReleaseAssignment: React.FC = () => {
+const ViewAssignment: React.FC = () => {
   const router = useRouter();
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [selectedAssignment, setSelectedAssignment] = useState<number | ''>('');
@@ -24,10 +29,17 @@ const ReleaseAssignment: React.FC = () => {
   const [allowedFileTypes, setAllowedFileTypes] = useState<string>('');
   const [deadline, setDeadline] = useState<string>('');
   const [students, setStudents] = useState<{ userID: number }[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<any>(null);
+
+  // Use the session validation hook to check if the user is logged in
+  useSessionValidation('instructor', setLoading, setSession);
+  
 // Fetch assignments when the component mounts
   useEffect(() => {
     fetchAssignments();
   }, []);
+
 // Function to handle changes in the assignment selection
   const fetchAssignments = async () => {
     try {
@@ -127,9 +139,38 @@ const ReleaseAssignment: React.FC = () => {
       console.error('Error releasing assignment:', error);
     }
   };
+        
+  // If the session exists, check if the user is an admin
+  if (!session || !session.user || !session.user.userID) {
+    console.error('No user found in session');
+    return;
+  }
+  const isAdmin = session.user.role === 'admin';
+        
 // Render the component
   return (
     <div className={styles.container}>
+        {isAdmin ? (
+        <>
+          <AdminHeader title="Course Name"
+        addLink={[
+          { href: "./all-assignments", title: "View All" },
+          { href: "./peer-eval-assignments", title: "Peer Evaluations" }
+        ]}
+      />
+          <AdminNavbar />
+        </>
+      ) : (
+        <>
+          <InstructorHeader title="Course Name"
+        addLink={[
+          { href: "./all-assignments", title: "View All" },
+          { href: "./peer-eval-assignments", title: "Peer Evaluations" }
+        ]}
+      />
+          <InstructorNavbar />
+        </>
+      )}
       <div className={styles.rectangle}>
         <h1>Release Assignment</h1>
         <form onSubmit={handleSubmit}>
@@ -220,4 +261,4 @@ const ReleaseAssignment: React.FC = () => {
   );
 };
 
-export default ReleaseAssignment;
+export default ViewAssignment;
