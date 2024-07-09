@@ -12,9 +12,9 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-export async function query(sql: string, values: any[] = []): Promise<any> {
+export async function query(sql: string, values: any[] = [], customPool: mysql.Pool = pool): Promise<any> {
   try {
-    const [result] = await pool.execute(sql, values);
+    const [result] = await customPool.execute(sql, values);
     return result;
   } catch (error) {
     console.error('Database query error:', error);
@@ -48,7 +48,7 @@ export async function addStudentToDatabase(firstName: string, lastName: string, 
   }
 }
 
-export async function authenticateAdmin(email: string, password: string): Promise<boolean> {
+export async function authenticateAdmin(email: string, password: string, customPool?: mysql.Pool): Promise<boolean> {
   const sql = `
     SELECT u.* 
     FROM user u
@@ -56,34 +56,37 @@ export async function authenticateAdmin(email: string, password: string): Promis
     WHERE u.email = ? AND u.pwd = ? AND u.userRole = 'instructor' AND i.isAdmin = true
   `;
   try {
-    const rows = await query(sql, [email, password]);
-    return rows.length > 0;
+    const rows = await query(sql, [email, password], customPool);
+    const isAuthenticated = rows.length > 0;
+    return isAuthenticated;
   } catch (error) {
-    console.error('Error in authenticateAdmin:', error); // Log the error
+    console.error('Error in authenticateAdmin:', error);
     throw error;
   }
 }
 
-export async function authenticateInstructor(email: string, password: string): Promise<boolean> {
+export async function authenticateInstructor(email: string, password: string, customPool?: mysql.Pool): Promise<boolean> {
   const sql = `
     SELECT * FROM user WHERE email = ? AND pwd = ? AND userRole = 'instructor'
   `;
   try {
-    const rows = await query(sql, [email, password]);
-    return rows.length > 0;
+    const rows = await query(sql, [email, password], customPool);
+    const isAuthenticated = rows.length > 0;
+    return isAuthenticated;
   } catch (error) {
-    console.error('Error in authenticateInstructor:', error); // Log the error
+    console.error('Error in authenticateInstructor:', error);
     throw error;
   }
 }
 
-export async function authenticateStudent(email: string, password: string): Promise<boolean> {
+export async function authenticateStudent(email: string, password: string, customPool?: mysql.Pool): Promise<boolean> {
   const sql = `
     SELECT * FROM user WHERE email = ? AND pwd = ? AND userRole = 'student'
   `;
   try {
-    const rows = await query(sql, [email, password]);
-    return rows.length > 0;
+    const rows = await query(sql, [email, password], customPool);
+    const isAuthenticated = rows.length > 0;
+    return isAuthenticated;
   } catch (error) {
     console.error('Error in authenticateStudent:', error); // Log the error
     throw error;
