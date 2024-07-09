@@ -1,27 +1,23 @@
 .roleSelection{
   text-align: center;
   justify-content: center;
-  border: 3px solid #002975;
-  width: fit-content;
+  border: 2px solid #002975;
+  width: 35vw;
+  height: 50vh;
   padding: 3%;
   padding-top: 1%;
   margin: auto;
   border-radius: 10px;
   box-shadow: 0 0 10px #002975;
 }
-
-.roleButton{
-  /* background-color: #002975; */
-  /* color: #302f4d; */
-  
-  padding: 1%;
-  width: 100%;
+.description{
+  padding: 5%;
 }
 
-.roleButtons{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
+.roleButton{
+  padding: 5%;
+  width: 100%;
+  
 }
 
 .studentButton{
