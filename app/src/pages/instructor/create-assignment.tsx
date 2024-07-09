@@ -100,7 +100,7 @@ const Assignments: NextPage = () => {
     });
 
     if (response.ok) {
-      router.push("/instructor/view-assignment");
+      router.push("/instructor/assignments");
     } else {
       const errorData = await response.json();
       setError(errorData.message || "An error occurred while creating the assignment");
@@ -126,34 +126,34 @@ const Assignments: NextPage = () => {
       {isAdmin ? (
         <>
           <AdminHeader title="Assignments"
-          addLink={[{href: "#", title: "Create Assignment"}, {href: "./release-assignment", title: "Release Assignment"}]}/>
+          addLink={[{href: "./create-assignment", title: "Create Assignment"}, {href: "./release-assignment", title: "Release Assignment"}]}/>
           <AdminNavbar />
         </>
       ) : (
         <>
           <InstructorHeader title="Assignments"
-          addLink={[{href: "#", title: "Create Assignment"}, {href: "./release-assignment", title: "Release Assignment"}]}/>
+          addLink={[{href: "./create-assignment", title: "Create Assignment"}, {href: "./release-assignment", title: "Release Assignment"}]}/>
           <InstructorNavbar />
         </>
       )}
       <div className={styles.container}>
         <div className={styles.rectangle}>
-          <i
-            style={{
-              width: "368px",
-              position: "relative",
-              fontSize: "35px",
-              display: "flex",
-              fontWeight: "700",
-              fontFamily: "'Inria Serif'",
-              color: "#04124b",
-              textAlign: "left",
-              alignItems: "center",
-              height: "22px",
-            }}
+          <h2><i
+            // style={{
+            //   width: "368px",
+            //   position: "relative",
+            //   fontSize: "35px",
+            //   display: "flex",
+            //   fontWeight: "700",
+            //   fontFamily: "'Inria Serif'",
+            //   color: "#04124b",
+            //   textAlign: "left",
+            //   alignItems: "center",
+            //   height: "22px",
+            // }}
           >
             Create an Assignment
-          </i>
+          </i></h2>
           {error && <p style={{ color: "red" }}>{error}</p>}
           <input
             type="text"
@@ -187,7 +187,7 @@ const Assignments: NextPage = () => {
             ))}
           </select>
           <p>
-            Upload Rubric:
+            Upload Rubric: <br />
             <input type="file" onChange={handleFileUpload} />
           </p>
           <input
@@ -231,9 +231,10 @@ const Assignments: NextPage = () => {
               <label htmlFor="zip">ZIP (.zip)</label>
             </div>
           </div>
-          <div className={styles.button} onClick={onCreateAssignmentButtonClick}>
+          <button className={styles.createButton} onClick={onCreateAssignmentButtonClick}>Create Assignment</button>
+          {/* <div className={styles.button} onClick={onCreateAssignmentButtonClick}>
             <b>Create Assignment</b>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

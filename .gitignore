@@ -8,6 +8,7 @@
 
 # testing
 /coverage
+/app/server-test/node_modules
 
 # next.js
 /.next/
