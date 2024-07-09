@@ -3,7 +3,8 @@ import mysql from 'mysql2/promise';
 import fs from 'fs/promises';
 import config from '../dbConfig'; // Import the database configuration from dbConfig.ts
 
-const dbConfig = config.development; // Use the development configuration
+const dbConfig = process.env.NODE_ENV === 'production' ? config.production : config.development; 
+// Use the production configuration if the NODE_ENV environment variable is set to 'production' but development config by default
 const pool = mysql.createPool(dbConfig);
 
 export async function query(sql: string, values: any[] = []): Promise<any> {

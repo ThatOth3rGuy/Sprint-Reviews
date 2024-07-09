@@ -26,7 +26,7 @@ const development: DBConfig = {
 
 const production: DBConfig = {
   host: process.env.PROD_DB_HOST || 'db',
-  port: parseInt(process.env.PROD_DB_PORT || '3306', 10),
+  port: parseInt(process.env.PROD_DB_PORT || '3307', 10),
   user: process.env.PROD_DB_USER || 'root',
   password: process.env.PROD_DB_PASSWORD || 'SprintRunners',
   database: process.env.PROD_DB_NAME || 'mydb',
