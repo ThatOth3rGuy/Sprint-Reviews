@@ -1,10 +1,14 @@
-// __tests__/api/auth/instructorLogin.test.ts
-
+// tests-jest/instructorLogin.test.ts
 import handler from '../../src/pages/api/auth/instructorLogin';
 import { authenticateInstructor, authenticateAdmin } from '../../src/db';
 import { login } from '../../src/lib';
 import { createMocks } from 'node-mocks-http';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import mysql from 'mysql2/promise';
+
+declare global {
+  var pool: mysql.Pool;
+}
 
 jest.mock('../../src/db', () => ({
   authenticateInstructor: jest.fn(),
@@ -15,7 +19,7 @@ jest.mock('../../src/lib', () => ({
   login: jest.fn(),
 }));
 
-describe('/api/auth/instructorLogin API endpoint', () => {
+describe('API endpoint handler tests', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -24,7 +28,7 @@ describe('/api/auth/instructorLogin API endpoint', () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: 'POST',
       body: {
-        email: 'instructor@example.com',
+        email: 'scott.faz@example.com',
         password: 'password123',
       },
     });
@@ -37,9 +41,9 @@ describe('/api/auth/instructorLogin API endpoint', () => {
 
     expect(res._getStatusCode()).toBe(200);
     expect(res._getJSONData()).toEqual({ message: 'Authenticated' });
-    expect(authenticateInstructor).toHaveBeenCalledWith('instructor@example.com', 'password123');
-    expect(authenticateAdmin).toHaveBeenCalledWith('instructor@example.com', 'password123');
-    expect(login).toHaveBeenCalledWith({ email: 'instructor@example.com', password: 'password123', role: 'instructor' }, res);
+    expect(authenticateInstructor).toHaveBeenCalledWith('scott.faz@example.com', 'password123');
+    expect(authenticateAdmin).toHaveBeenCalledWith('scott.faz@example.com', 'password123');
+    expect(login).toHaveBeenCalledWith({ email: 'scott.faz@example.com', password: 'password123', role: 'instructor' }, res);
   });
 
   test('should authenticate an admin successfully', async () => {
