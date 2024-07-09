@@ -3,6 +3,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import styles from '../styles/landing.module.css';
 import React, { useEffect } from 'react';
+import {Button, ButtonGroup} from "@nextui-org/react";
+
 
 
 const Landing: NextPage = () => {
@@ -52,6 +54,12 @@ const Landing: NextPage = () => {
         
           <button className={styles.studentButton} onClick={handleStudentClick}>Student</button><br />
           <button className={styles.instructorButton} onClick={handleInstructorClick}>Instructor</button>
+          <Button color="primary">
+      Button
+    </Button>
+    <Button color="primary">
+        Secondary
+      </Button>
         </div>
       </div>
       </>
