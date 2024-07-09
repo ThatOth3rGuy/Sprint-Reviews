@@ -1,22 +1,22 @@
 // db.ts
 import mysql from 'mysql2/promise';
 import fs from 'fs/promises';
-//import config from '../dbConfig'; // Import the database configuration from dbConfig.ts
+import config from './dbConfig'; // Import the database configuration from dbConfig.ts
 
-//const dbConfig = process.env.NODE_ENV === 'production' ? config.production : config.development; 
+let dbConfig;
+
+if (process.env.NODE_ENV === 'production') {
+  dbConfig = config.production;
+} else if (process.env.NODE_ENV === 'development' && process.env.DEV_DB_HOST === '') {
+  dbConfig = config.development;
+} else if (process.env.NODE_ENV === 'development' && process.env.DEV_DB_HOST === 'db') {
+  dbConfig = config.localhost;
+} else {
+  dbConfig = config.testing;
+}
+
 // Use the production configuration if the NODE_ENV environment variable is set to 'production' but development config by default
-//const pool = mysql.createPool(dbConfig);
-
-const pool = mysql.createPool({
-  host: process.env.DEV_DB_HOST || 'localhost',
-  port: parseInt(process.env.DEV_DB_PORT || '3306', 10),
-  user: process.env.DEV_DB_USER || 'root',
-  password: process.env.DEV_DB_PASSWORD || 'SprintRunners',
-  database: process.env.DEV_DB_NAME || 'mydb',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-});
+const pool = mysql.createPool(dbConfig);
 
 export async function query(sql: string, values: any[] = []): Promise<any> {
   try {

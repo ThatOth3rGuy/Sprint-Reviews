@@ -1,11 +1,13 @@
 services:
   app:
     environment:
-      - DATABASE_HOST=test
-      - DATABASE_PORT=${MYSQLDB_DOCKER_PORT}
-      - DATABASE_USER=${MYSQLDB_USER}
-      - DATABASE_PASSWORD=SprintRunnersTest
-      - DATABASE_NAME=testdb
+      - ENV_VARIABLE=testing
+      - NEXT_PUBLIC_ENV_VARIABLE=${NEXT_PUBLIC_ENV_VARIABLE}
+      - DEV_DB_HOST=test
+      - DEV_DB_PORT=${DEV_DB_PORT}
+      - DEV_DB_USER=${DEV_DB_USER}
+      - DEV_DB_PASSWORD=SprintRunnersTest
+      - DEV_DB_NAME=testdb
 
   test:
     image: mysql:latest
