@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import styles from '../styles/landing.module.css';
 import React, { useEffect } from 'react';
 import {Button, ButtonGroup} from "@nextui-org/react";
-
+import {Divider} from "@nextui-org/react";
 
 
 const Landing: NextPage = () => {
@@ -47,19 +47,13 @@ const Landing: NextPage = () => {
           height={150}
         />
         <h2 className={styles.roleButton}>Select Your Role</h2>
-        <hr />
+       <Divider />
         <p className={styles.description}>Choose from below to continue to sign up:</p>
         {/* <p className={styles.iAmA}>I am a:</p> */}
         <div className={styles.roleButtons}>
         
-          <button className={styles.studentButton} onClick={handleStudentClick}>Student</button><br />
-          <button className={styles.instructorButton} onClick={handleInstructorClick}>Instructor</button>
-          <Button color="primary">
-      Button
-    </Button>
-    <Button color="primary">
-        Secondary
-      </Button>
+          <Button color="primary" variant="ghost" className="student" onClick={handleStudentClick}>Student</Button><br />
+          <Button color="primary" variant="ghost" className="instructor" onClick={handleInstructorClick}>Instructor</Button>
         </div>
       </div>
       </>

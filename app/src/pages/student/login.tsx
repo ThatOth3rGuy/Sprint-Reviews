@@ -4,6 +4,7 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import styles from "../../styles/student-login.module.css";
 import { useState, useEffect } from "react";
+import {Button, ButtonGroup} from "@nextui-org/react";
 
 const StudentLogin: NextPage = () => {
   const [email, setEmail] = useState("");
@@ -57,7 +58,7 @@ const StudentLogin: NextPage = () => {
 
   return (
     <>
-      <div className={styles.container}>
+      <div className="student">
         <img className={styles.img1} src="/images/Logo.png" alt="Logo" />{" "}
         {/* Use relative path */}
         <div className={styles.horizontalLine}></div>
@@ -96,6 +97,9 @@ const StudentLogin: NextPage = () => {
           <div className={styles.signInText} onClick={handleSignInClick}>
             Sign In
           </div>
+          <Button color="primary" variant="ghost">
+        Ghost
+      </Button>
         </div>
         <img
           className={styles.backIcon}

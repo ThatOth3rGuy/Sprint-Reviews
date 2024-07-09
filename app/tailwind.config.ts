@@ -40,10 +40,10 @@ const config: Config = {
         dark: {},
         "instructor":{
           colors: {
-            background: "#0D001A",
+            background: "#eceeff",
             foreground: "#ffffff",
             primary: {
-              50: "#eceeff",
+              50: "#ffffff",
               100: "#cdcbeb",
               200: "#a9aad8",
               300: "#888bc5",
@@ -79,7 +79,7 @@ const config: Config = {
             },
             focus: "#F182F6",
           },
-        }
+        },
       },
     }),
   ],
