@@ -43,20 +43,16 @@ const ReleaseAssignment: React.FC = () => {
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  // Handle open and close for modal
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  // Fetch assignments and students in the course when the component mounts
+    // Handle open and close for modal
+    const openModal = () => {
+      setIsModalOpen(true);
+    };
+  
+    const closeModal = () => {
+      setIsModalOpen(false);
+    };
+  
+    // Fetch assignments and students in the course when the component mounts
   useEffect(() => {
     if (session && session.user) {
       fetchAssignments();
@@ -64,7 +60,7 @@ const ReleaseAssignment: React.FC = () => {
     }
   }, [session]);
 
-  // Function to fetch assignments
+    // Function to fetch assignments
   const fetchAssignments = async () => {
     try {
       const response = await fetch("/api/getAssignments");
@@ -79,7 +75,7 @@ const ReleaseAssignment: React.FC = () => {
     }
   };
 
-  // Function to fetch students in the course
+    // Function to fetch students in the course
   const fetchStudents = async (courseID: string) => {
     try {
       const response = await fetch(`/api/getStudentsInCourse?courseID=${courseID}`);
@@ -94,7 +90,7 @@ const ReleaseAssignment: React.FC = () => {
     }
   };
 
-  // Handle student selection
+    // Handle student selection
   const handleStudentSelection = (studentId: number) => {
     setSelectedStudents((prev) =>
       prev.includes(studentId)
@@ -103,7 +99,7 @@ const ReleaseAssignment: React.FC = () => {
     );
   };
 
-  // Handle student selection submission
+    // Handle student selection submission
   const handleStudentSelectionSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -116,7 +112,7 @@ const ReleaseAssignment: React.FC = () => {
           uniqueDeadline: uniqueDueDate,
         }),
       });
-  
+
       if (response.ok) {
         alert("Students selected successfully");
         setSelectedStudents([]);
@@ -129,12 +125,12 @@ const ReleaseAssignment: React.FC = () => {
     }
   };
 
-  // Handle assignment change
+    // Handle assignment change
   const handleAssignmentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedAssignment(Number(e.target.value));
   };
 
-  // Handle rubric change
+    // Handle rubric change
   const handleRubricChange = (
     index: number,
     field: "criterion" | "maxMarks",
@@ -177,7 +173,7 @@ const ReleaseAssignment: React.FC = () => {
       });
 
       if (response.ok) {
-        router.push("/instructor-dashboard");
+        router.push("/instructor/dashboard");
       } else {
         console.error("Failed to release assignment");
       }
@@ -190,13 +186,18 @@ const ReleaseAssignment: React.FC = () => {
     value: student.id,
     label: student.name,
   }));
-
+  
   // If the session exists, check if the user is an admin
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
-    return;
+    return <p>No user found in session</p>;
   }
-  const isAdmin = session.user.role === 'admin';
+
+  const isAdmin = session?.user?.role === 'admin';
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <>
