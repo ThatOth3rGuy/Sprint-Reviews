@@ -1,3 +1,11 @@
+.root {
+  --nextui-primary-color: #4c9989;
+  --nextui-primary-hover-color: #39776f;
+  --nextui-primary-gradient: linear-gradient(135deg, #4c9989 0%, #39776f 100%);
+  /* Add more variables as needed */
+}
+
+
 .navbar {
     top: 0%;
     width: 12.5%;
@@ -130,7 +138,7 @@
 }
 
 .innerCard h5{
-  color: #04124b;
+  color: #09124b;
   margin-left: 8vw;
   place-items: right;
 }

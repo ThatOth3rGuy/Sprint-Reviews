@@ -6,7 +6,7 @@ import AdminHeader from "../components/admin-components/admin-header";
 import { useState } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 import { useRouter } from 'next/router';
-
+import { Button } from "@nextui-org/react";
 export default function Page() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
@@ -31,12 +31,15 @@ export default function Page() {
       <br />
       <br />
       <br />
+      
       <InstructorCourseCard />
       <InstructorCourseCard />
       {isAdmin ? (
         <>
           <AdminHeader title="Instructor Dashboard"/>
           <AdminNavbar />
+
+          
         </>
       ) : (
         <>

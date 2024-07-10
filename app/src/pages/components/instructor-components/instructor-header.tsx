@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import { useState } from "react";
 import Link from "next/link";
 import style from "../../../styles/instructor-components.module.css";
-
+import Image from 'next/image';
 interface LinkProps {
   href: string;
   title: string;
@@ -22,6 +22,7 @@ const InstructorHeader: NextPage<InstructorHeaderProps> = ({ title, addLink }) =
 
   return (
     <header className={style.header}>
+      
       <div className={style.navTitle}>
         <h1>
           <i>{title}</i>
@@ -57,7 +58,6 @@ const InstructorHeader: NextPage<InstructorHeaderProps> = ({ title, addLink }) =
         {isProfileOpen && (
           <div className={style.dropdown}>
             <Link href="#">My Profile</Link>
-            <Link href="#">Logout</Link>
             <p style={{ backgroundColor: "#00abb3", color: "#e7f5fe" }}>
               Instructor Name
             </p>

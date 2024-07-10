@@ -39,6 +39,18 @@ const Landing: NextPage = () => {
      
       <br /><br /><br /><br />
       <div className={styles.roleSelection}>
+      <Image 
+           style={{
+            display: 'block',
+            marginLeft: 'auto',
+            marginRight: 'auto'
+          }}  
+          src="/logo-transparent-png.png" 
+          alt="SprintRunners Logo"
+          width={200}
+          height={200}
+          
+        />
         {/* TODO: Insert logo here */}
         <h2 className={styles.roleButton}>Select Your Role</h2>
         <Divider />

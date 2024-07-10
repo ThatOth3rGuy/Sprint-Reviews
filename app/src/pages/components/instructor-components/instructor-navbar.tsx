@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import style from "../../../styles/instructor-components.module.css";
 import { useRouter } from "next/router";
-
+import Image from 'next/image';
 //TODO: Add logo and images per button
 
 const InstructorNavbar: NextPage = () => {
@@ -28,6 +28,12 @@ const InstructorNavbar: NextPage = () => {
 
   return (
     <nav className={style.navbar}>
+      <Image 
+    src="/logo-transparent-png.png" 
+    alt="SprintRunners Logo"
+    width={200}
+    height={200}
+    />
       <div
         className={style.navButton}
         onClick={() => handleNavigation("/instructor/dashboard")}
