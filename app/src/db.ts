@@ -389,13 +389,13 @@ export async function getStudents(firstName:string, lastName:string) {
   }
 }
 //  enroll student in a course
-export async function enrollStudent(userID: string, courseID: string): Promise<void> {
+export async function enrollStudent(userID: string, courseID: string, customPool?: mysql.Pool): Promise<void> {
   const sql = `
     INSERT INTO enrollment (studentID, courseID)
     VALUES (?, ?)
   `;
   try {
-    const result = await query(sql, [userID, courseID]);
+    const result = await query(sql, [userID, courseID], customPool);
   } catch (error) {
     const err = error as Error;
     console.error(`Error enrolling student ${userID} in course ${courseID}:`, err.message);
