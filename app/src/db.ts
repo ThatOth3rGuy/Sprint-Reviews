@@ -274,20 +274,20 @@ ORDER BY c.courseID`;
     throw error;
   }
 }
-export async function createCourse(courseName: string, instructorID: number) {
+
+export async function createCourse(courseName: string, instructorID: number, customPool?: mysql.Pool) {
   const sql = `
     INSERT INTO course (courseName, isArchived, instructorID)
     VALUES (?, false, ?)
   `;
   try {
-    const result = await query(sql, [courseName, instructorID]);
+    const result = await query(sql, [courseName, instructorID], customPool);
     return result.insertId; // Return the inserted course ID
   } catch (error) {
     console.error('Error in createCourse:', error); // Log the error
     throw error;
   }
 }
-
 
 export async function getAssignmentForStudentView(assignmentId: number) {
   const sql = `
