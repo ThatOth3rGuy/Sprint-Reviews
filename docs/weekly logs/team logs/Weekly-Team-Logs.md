@@ -2,7 +2,43 @@
 
 # Weekly Team Logs
 
-# Week 7 summary
+# Week 8 summary ( post-MVP)
+##  July 5th (Fri) - July 10th (Wed)
+### Features in the Project Plan Cycle: 
+- Tests Database set up 
+- Playwright tests working and passing as per expected
+- Front end fixes and updates based on Parsa's and MVP feedback
+
+###  Tasks from the Project Board:
+![week7-kanban](./Images/week8Kanban.png)
+
+
+### Tasks for Next Cycle:
+
+![week5-done](./Images/week8Todo.png)
+
+### Burn-up Chart (Velocity):
+![week5-done](./Images/week8Burnup.png)
+
+### Times for Team/Individual:
+
+
+Clockify Times:
+
+![week5-done](./Images/week8clokify.png)
+
+
+
+### Completed Tasks:
+![week5-done](./Images/week8Done.png)
+
+### In Progress Tasks/ To do:
+![week5-done](./Images/week8InProgress.png)
+
+### Overview:
+Since our last meeting, we have been diligently working on several key tasks. We have successfully set up the Tests Database and ensured its smooth operation. Our Playwright tests are now functioning as expected and all the major tests are passing, confirming the robustness of our system.
+In response to the valuable feedback received from Parsa and the MVP presentation, we have to make the  necessary fixes and updates to the front end. 
+# Week 7 summary (pre-MVP and MVP)
 ##  July 3rd (Wed) - July 5th (Fri)
 
 ### Features in the Project Plan Cycle: 
