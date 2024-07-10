@@ -47,14 +47,13 @@ const Landing: NextPage = () => {
           }}  
           src="/logo-transparent-png.png" 
           alt="SprintRunners Logo"
-          width={200}
-          height={200}
+          width={150}
+          height={150}
           
         />
-        {/* TODO: Insert logo here */}
         <h2 className={styles.roleButton}>Select Your Role</h2>
         <Divider />
-        <p className={styles.description}>Choose from below to continue to sign up:</p>
+        <p className={styles.description}>Choose your role from below to continue:</p>
         {/* <p className={styles.iAmA}>I am a:</p> */}
         <div className="flex gap-2 items-center justify-evenly">
           <Button color="primary" variant="ghost" className="student" onClick={handleStudentClick}>Student</Button><br />
