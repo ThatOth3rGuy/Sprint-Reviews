@@ -1,14 +1,15 @@
 // /pages/api/deleteCourse.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
+import mysql from 'mysql2/promise';
 import { query } from '../../db';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse, customPool?: mysql.Pool) {
   if (req.method === 'POST') {
     const { courseID } = req.body;
 
     try {
       const deleteSql = 'DELETE FROM course WHERE courseID = ?';
-      await query(deleteSql, [courseID]);
+      await query(deleteSql, [courseID], customPool);
 
       res.status(200).json({ message: 'Course deleted successfully' });
     } catch (error) {
@@ -20,3 +21,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
+
+
