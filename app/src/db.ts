@@ -120,6 +120,7 @@ export async function getAllCourses(isArchived: boolean): Promise<any[]> {
     throw error;
   }
 }
+
 export async function addAssignmentToDatabase(
   title: string, 
   description: string, 
@@ -127,7 +128,8 @@ export async function addAssignmentToDatabase(
   file: string, 
   groupAssignment: boolean, 
   courseID: number,
-  allowedFileTypes: string[]
+  allowedFileTypes: string[],
+  customPool?: mysql.Pool
 ) {
   if (!Number.isInteger(courseID)) {
     throw new Error('Invalid courseID');
@@ -141,9 +143,7 @@ export async function addAssignmentToDatabase(
   try {
     // Check if the classID exists in the class table
     const classCheckSql = 'SELECT COUNT(*) as count FROM course WHERE courseID = ?';
-    const classCheckResult = await query(classCheckSql, [courseID]);
-    
-    console.log('Class check result:', classCheckResult);
+    const classCheckResult = await query(classCheckSql, [courseID], customPool);
 
     if (!classCheckResult || !Array.isArray(classCheckResult) || classCheckResult.length === 0) {
       throw new Error(`Unexpected result when checking for class with ID ${courseID}`);
@@ -156,8 +156,7 @@ export async function addAssignmentToDatabase(
     }
 
     // If the class exists, proceed with the insert
-    const insertResult = await query(sql, [title, description, new Date(dueDate), file, groupAssignment, courseID, allowedFileTypesString]);
-    console.log('Insert result:', insertResult);
+    const insertResult = await query(sql, [title, description, new Date(dueDate), file, groupAssignment, courseID, allowedFileTypesString], customPool);
 
     return insertResult;
   } catch (error: any) {

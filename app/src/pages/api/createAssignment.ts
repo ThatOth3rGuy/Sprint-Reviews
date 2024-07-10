@@ -11,9 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      console.log('Received courseID:', courseID);
       const result = await addAssignmentToDatabase(title, description, dueDate, file, groupAssignment, Number(courseID), allowedFileTypes);
-      console.log('Assignment creation result:', result);
       res.status(200).json({ message: 'Assignment created successfully', result });
     } catch (error: any) {
       console.error('Error in createAssignment:', error);
