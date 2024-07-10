@@ -4,7 +4,7 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import styles from "../../styles/student-login.module.css";
 import { useState, useEffect } from "react";
-import {Button, ButtonGroup} from "@nextui-org/react";
+import {Button, Chip, Input, Divider} from "@nextui-org/react";
 
 const StudentLogin: NextPage = () => {
   const [email, setEmail] = useState("");
@@ -29,6 +29,7 @@ const StudentLogin: NextPage = () => {
     // Redirect to the student dashboard
     router.push("/student/registration");
   };
+
 
   const handleSignInClick = async () => {
     setError("");
@@ -58,49 +59,30 @@ const StudentLogin: NextPage = () => {
 
   return (
     <>
-      <div className="student">
-        <img className={styles.img1} src="/images/Logo.png" alt="Logo" />{" "}
-        {/* Use relative path */}
-        <div className={styles.horizontalLine}></div>
-        <div className={styles.loginButton}>
-          <div className={styles.loginText}>Student Login</div>
-        </div>
-        <div className={styles.emailInput}>
-          <input
-            type="email"
-            className={styles.inputField}
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className={styles.passwordInput}>
-          <input
-            type="password"
-            className={styles.inputField}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div className={styles.forgotPassword}>I Forgot My Password</div>
-        <div className={styles.signUpPrompt}>
-          <span className={styles.signUpText}>
-            Don’t have an account yet?
-            <br />
-          </span>
-          <span className={styles.signUpLink} onClick={handleSignUpClick}>
-            Sign up
-          </span>
-        </div>
-        <div className={styles.signInButton}>
-          <div className={styles.signInText} onClick={handleSignInClick}>
-            Sign In
-          </div>
-          <Button color="primary" variant="ghost">
-        Ghost
+    <body className="student p-3 pt-12 justify-center">
+    <div className="student justify-center text-center mx-auto my-auto min-w-fit p-[2vw] max-w-max flex border-solid border-2 border-[#39776f] ">
+       <div >
+       <h2 className="justify-self-center text-xl p-4  border-[#39776f] border-2 text-[#39776f]">Student Login Portal</h2>
+      <Divider />
+        <Input className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+        <Input className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
+            onChange={(e) => setPassword(e.target.value)}/> 
+        <Button className="bg-[#39776f] text-white my-1 w-full text-medium " variant="solid" onClick={handleSignInClick}>
+        Sign In
       </Button>
-        </div>
+      <div className="flex-column align-center justify-center text-center">
+        <Button className="bg-white h-fit w-fit my-1 mb-3 text-xs text-[#39776f]" variant="solid" onClick={handleSignInClick}>
+        Forgot Your Password?
+      </Button><Divider orientation="horizontal"/>
+      <p className="mt-3 p-1 text-small">Don't have an account?</p>
+      <Button className="w-fit h-5 bg-[#c6e8e4]" variant="flat"  onClick={handleSignUpClick}>
+        Sign Up
+      </Button>
+      </div>
+      
+      
+       </div>
+        
         <img
           className={styles.backIcon}
           alt="Back"
@@ -108,6 +90,8 @@ const StudentLogin: NextPage = () => {
           onClick={handleBackClick}
         />
       </div>
+    </body>
+    
     </>
   );
 };

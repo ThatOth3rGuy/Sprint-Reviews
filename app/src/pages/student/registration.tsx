@@ -5,6 +5,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styles from '../../styles/student-register.module.css';
+import { Button, Divider, Input } from '@nextui-org/react';
 
 const SignUp: NextPage = () => {
     const [firstName, setFirstName] = useState('');
@@ -50,75 +51,35 @@ const SignUp: NextPage = () => {
     }
     
     return (
-      <div className={styles.signUp}>
-        <img className={styles.sprintrunner1Icon} alt="Sprintrunner" src="/images/Logo.png" />
-        <div className={styles.signUpChild}></div>
-        <div className={styles.signUpItem}>
-        <div className={styles.createAnAccount}>Create an Account</div>
-        </div>
-        <div className={`${styles.textInput}`} style={{ top: '200px' }}>
-        <input
-          type="text"
-          placeholder="First Name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          className={styles.textInputChild}
-        />
-        </div>
-        <div className={`${styles.textInput}`} style={{ top: '270px' }}>
-        <input
-          type="text"
-          placeholder="Last Name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          className={styles.textInputChild}
-        />
-        </div>
-        <div className={`${styles.textInput}`} style={{ top: '340px' }}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={styles.textInputChild}
-        />
-        </div>
-        <div className={`${styles.textInput}`} style={{ top: '410px' }}>
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className={styles.textInputChild}
-        />
-        </div>
-        <div className={`${styles.textInput}`} style={{ top: '480px' }}>
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          className={styles.textInputChild}
-        />
-        </div>
-        <div className={`${styles.textInput}`} style={{ top: '550px' }}>
-        <input
-          type="institution"
-          placeholder="Institution"
-          value={institution}
-          onChange={(e) => setInstitution(e.target.value)}
-          className={styles.textInputChild}
-        />
-        </div>
-        <button className={styles.createEvaluationButton} onClick={handleSignUpClick}>
-        <div className={styles.createEvaluationButtonChild}>Sign Up</div>
-        </button>
-        <p className={styles.pleaseEnterThe}>Please enter the following information:</p>
-        <div className={styles.loginPrompt}>
-            <span className={styles.loginText}>Already have an account?<br/></span>
-            <span className={styles.loginLink} onClick={handleLoginClick}>Login</span>
-        </div>
+      <body className="student p-3 pt-12 justify-center">
+        <div className="student flex-col justify-evenly text-center mx-auto my-auto min-w-fit p-[2vw] max-w-max flex border-solid border-2 border-[#39776f] ">
+        <h2 className="justify-self-center text-xl p-4 bg-[#a7d6d1] text-[#113334]">Create an account</h2>
+        <p className='my-2 text-small'>Enter the following information to create your account:</p>
+        <Input className="my-1 p-2" type="text" labelPlacement="inside" label="First Name" value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}/>
+        <Input className="my-1 p-2" type="text" labelPlacement="inside" label="Last Name" value={lastName}
+          onChange={(e) => setLastName(e.target.value)}/>
+        <Input className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email}
+          onChange={(e) => setEmail(e.target.value)}/>
+        <Input className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}/>
+        <Input className="my-1 p-2" type="text" labelPlacement="inside" label="Confirm Password" value={lastName}
+          onChange={(e) => setLastName(e.target.value)}/>
+        <Input className="my-1 p-2" type="text" labelPlacement="inside" label="Institution" value={institution}
+          onChange={(e) => setInstitution(e.target.value)}/>
+       <Button className="bg-[#39776f] text-white my-2 w-full text-medium mb-5" variant="solid" onClick={handleSignUpClick}>
+        Sign In
+      </Button>
+       <Divider/> 
+      <div className="flex-column align-center justify-center text-center">
+        <p className="mt-3 p-1 text-small text-center">Already have an account?</p>
+        <Button className="w-fit h-5 bg-[#c6e8e4] text-center" variant="flat"  onClick={handleLoginClick}>
+          Sign In
+        </Button>   
       </div>
+      </div>
+      </body>
+      
     );
     };
     

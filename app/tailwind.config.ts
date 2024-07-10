@@ -20,7 +20,6 @@ const config: Config = {
   },
   darkMode: "class",
   plugins: [
-    nextui(),
     nextui({
       layout: {
         disabledOpacity: "0.3", // opacity-[0.3]
@@ -39,6 +38,7 @@ const config: Config = {
         light: {},
         dark: {},
         "instructor":{
+          extend: "light",
           colors: {
             background: "#eceeff",
             foreground: "#ffffff",
@@ -60,6 +60,7 @@ const config: Config = {
           },
         },
         "student":{
+          extend: "light",
           colors: {
             background: "#0D001A",
             foreground: "#ffffff",
@@ -69,12 +70,12 @@ const config: Config = {
               200: "#a7d6d1",
               300: "#86c4bb",
               400: "#66b3a6",
-              500: "#39776f",
+              500: "#4c9989",
               600: "#39776f",
               700: "#265652",
               800: "#113334",
               900: "#001414",
-              DEFAULT: "#4c9989",
+              DEFAULT: "#265652",
               foreground: "#ffffff",
             },
             focus: "#F182F6",
