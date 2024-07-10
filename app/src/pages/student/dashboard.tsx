@@ -21,17 +21,19 @@ function Page() {
   const router = useRouter();
 
   // Use the session validation hook to check if the user is logged in
-  useSessionValidation('student', setLoading, setSession);
+  useSessionValidation("student", setLoading, setSession);
 
   useEffect(() => {
     const fetchCourses = async () => {
       if (session) {
         try {
-          const response = await fetch(`/api/getCourses?studentID=${session.user.userID}`);
+          const response = await fetch(
+            `/api/getCourses?studentID=${session.user.userID}`
+          );
           const data = await response.json();
           setCourses(data);
         } catch (error) {
-          console.error('Error fetching courses:', error);
+          console.error("Error fetching courses:", error);
         }
       }
     };
@@ -39,12 +41,15 @@ function Page() {
     fetchCourses();
   }, [session]);
 
-  const onCoursesContainerClick = useCallback((courseID: number) => {
-    router.push({
-      pathname: '/student/course-dashboard',
-      query: { courseID },
-    });
-  }, [router]);
+  const onCoursesContainerClick = useCallback(
+    (courseID: number) => {
+      router.push({
+        pathname: "/student/course-dashboard",
+        query: { courseID },
+      });
+    },
+    [router]
+  );
 
   const onAssignmentsContainerClick = useCallback(() => {
     // Redirect to the assignments page
@@ -56,34 +61,54 @@ function Page() {
 
   return (
     <>
+      <StudentHeader title="Dashboard" />
+      <StudentNavbar />
+      <br />
+      <br />
+      <br />
+      <br />
+      <b className={styles.breadcrumbs}>Breadcrumbs</b>
       <div className={styles.studentHome}>
-	  <b className={styles.breadcrumbs}>Breadcrumbs</b>
         {courses.map((course) => (
-          <div key={course.courseID} className={styles.courseCard} onClick={() => onCoursesContainerClick(course.courseID)}>
-            <img className={styles.courseCardChild} alt="" src="/CourseCard-outline.svg" />
+          <div
+            key={course.courseID}
+            className={styles.courseCard}
+            onClick={() => onCoursesContainerClick(course.courseID)}
+          >
+            <img
+              className={styles.courseCardChild}
+              alt=""
+              src="/CourseCard-outline.svg"
+            />
             <div className={styles.courseCardItem} />
             <b className={styles.courseName}>{course.courseName}</b>
             <i className={styles.instructor}>{course.instructorFirstName}</i>
           </div>
         ))}
+        {/* <div className={styles.pendingAssignments}> */}
+        {/* <div className={styles.pendingAssignmentsChild} />
+          <div className={styles.pendingAssignmentsItem} /> */}
         <div className={styles.pendingAssignments}>
-          <div className={styles.pendingAssignmentsChild} />
-          <div className={styles.pendingAssignmentsItem} />
-          <b className={styles.pendingAssignments1}>Pending Assignments</b>
-          <div className={styles.assignmentDetails} onClick={onAssignmentsContainerClick}>
+          <b className={styles.pendingTitle}>Pending Assignments</b>
+          <div
+            className={styles.assignmentDetails}
+            onClick={onAssignmentsContainerClick}
+          >
             <b className={styles.assignment}>Assignment</b>
             <b className={styles.due010101}>Due: 01/01/01</b>
-            <b className={styles.course}>Course</b>
+            <p className={styles.course}>Course</p>
           </div>
         </div>
-        <div className={styles.assignmentDetails1} onClick={onAssignmentsContainerClick}>
+        <div
+          className={styles.assignmentDetails1}
+          onClick={onAssignmentsContainerClick}
+        >
           <b className={styles.assignment}>Assignment</b>
           <b className={styles.due010101}>Due: 01/01/01</b>
-          <b className={styles.course}>Course</b>
+          <p className={styles.course}>Course</p>
         </div>
       </div>
-      <StudentHeader title="Dashboard" />
-      <StudentNavbar />
+      {/* </div> */}
     </>
   );
 }

@@ -16,48 +16,70 @@ This example contains everything needed to get a Next.js development and product
 Install [Docker Desktop](https://docs.docker.com/get-docker) for Mac, Windows, or Linux. Docker Desktop includes Docker Compose as part of the installation.
 
 ## Development
-
-First, run the development server:
+This is to be used for local server development. For Docker Deployed Server use **Production**
+First, run the development MySQL server:
 
 ```bash
-# Create a network, which allows containers to communicate
-# with each other, by using their container name as a hostname
+# Docker creates and manages the custom network, which allows containers to communicate via the internal port
+# For development only the Database is needed to be running on Docker.
 
-docker network create my_network
-
-# Build dev
+# Build the development containers. ONLY run this command if you wish to build testing containers as well!
 docker compose -f dev.yml build 
-# IF YOU WISH TO BUILD BOTH THE DEV AND TEST CONTAINERS
-# Otherwise:
+
+# To Build Only the containers required for running the LOCAL web server, USE:
 docker compose -f dev.yml build app
-# Up dev
-docker compose -f dev.yml up 
+# This will build the app container, network connection, and MySQL Server ONLY.
+
+# Run the MySQL Server and Database Init
+docker compose -f dev.yml up db 
+#If you wish to continue using the console add: "-d" to the end
 ```
+Now run the Next Dev server on Localhost
+
+```bash
+# Navigate to the app directory:
+cd app
+
+#Run dev server:
+npm run dev
+
+# (Optional) If any dependancies are missing or version changes, update package contents in the app directory:
+npm install
+```
+Development server uses the default localhost, and database port (:3000 and :3306 respectively)
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+The server landing page defaults to `pages/index.tsx`. The page auto-updates as you edit the file.
+
+For Test Configuration please refer to README in 'app/server-test/README.md'
+
 
 ## Production
 
 Multistage builds are highly recommended in production. Combined with the Next [Output Standalone](https://nextjs.org/docs/advanced-features/output-file-tracing#automatically-copying-traced-files) feature, only `node_modules` files required for production are copied into the final Docker image.
 
-First, run the production server (Final image approximately 110 MB).
-
+The Production Server is to be used for full server deployment via Docker, and may not include Testing or Dynamic Refresh.
+To Start the Production Server on Docker:
 ```bash
-# Create a network, which allows containers to communicate
-# with each other, by using their container name as a hostname
-docker network create my_network
+# Docker creates and manages the custom network, which allows containers to communicate via the internal port
+# For Production the Database and App are both required to be running on Docker.
 
-# Build prod
+# Build the server containers. ONLY run this command if you wish to build testing containers as well!
+docker compose -f dev.yml build 
+
+# (RECOMMENDED) To Build Only the containers required for running the deployed web server, USE:
 docker compose -f prod.yml build
+# This will build the app container, network connection, and MySQL Server ONLY.
 
-# Up prod in detached mode
-docker compose -f prod.yml up -d
+# Run the MySQL and App Servers
+docker compose -f prod.yml up
+#If you wish to continue using the console add: "-d" to the end
 ```
+The Deployed Server Host uses a custom port for client connection, while the default port is used for internal container communication
+To View the App Open [http://localhost:3001](http://localhost:3001).
 
-Open [http://localhost:3000](http://localhost:3000).
-
+To run testing please see README in the 'Server-test' directory
 ## Useful commands
 
 ```bash

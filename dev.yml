@@ -26,6 +26,9 @@ services:
 
   db:
     image: mysql:latest
+    restart: always
+    cap_add:
+      - SYS_NICE
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQLDB_PASSWORD}
       - MYSQL_DATABASE=${MYSQLDB_DATABASE}

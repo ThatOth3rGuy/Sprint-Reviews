@@ -1,12 +1,27 @@
-.container {
+/* .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: fit-content;
+  margin: auto;
 }
 
+.card{
+  width: 80%;
+  height: fit-content;
+  padding: 1%;
+  margin: 2%;
+  border: 1px solid #002975;
+  height: 100vh;
+} */
+
 .rectangle {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  /* text-align: center; */
   width: 50%;
   height: 75%;
   position: relative;
@@ -18,17 +33,32 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  /* justify-content: space-around; */
+  /* z-index: -1; */
+  position: relative;
+}
+
+.createButton{
+  margin: 3%;
+  padding: 2%;
+  cursor: pointer;
+  text-align: center;
+  font-size: medium;
+  color: #fcf9f7;
+  background-color: #04124b;
+  border-radius: 10px;
+  font-family: 'Inria Serif';
 }
 
 .button {
-  width: 80%;
+  width: 50%;
   position: relative;
-  height: 60px;
+  height: max-content;
   cursor: pointer;
   text-align: center;
-  font-size: 30px;
+  font-size: medium;
   color: #fcf9f7;
+  background-color: #04124b;
   font-family: 'Inria Serif';
 }
 
@@ -67,11 +97,64 @@
 }
 
 .title_textbox {
-  width: 100%;
-  position: relative;
-  height: 73px;
-  text-align: left;
-  font-size: 25px;
-  color: #04124b;
+  width: "100%";
+  position: "relative";
+  height: "73px";
+  text-align: "left";
+  font-style: "25px";
+  color: "#04124b";
+  font-style: "'Inria Serif'",;
+}
+
+.release{
+  /* text-align: center; */
+  float: inline-end;
+  width: 30%;
+  padding: 1%;
+  margin: 2%;
   font-family: 'Inria Serif';
+  font-size: large;
+  background-color: #002975;
+  color: #fcf9f7;
+  border-radius: 10px;
+}
+
+.innerAdvanced p{
+  margin-top: 2%;
+  margin-bottom: 2%;
+  margin-left: 5%;
+}
+.removeButton{
+  margin-left: 5%;
+  background-color: #46649d;
+  color: #fcf9f7;
+  border: none;
+  padding: 1.25%;
+  border-radius: 10px;
+}
+
+.criterion, .advancedButton, .closeModal, .setDueDate{
+  margin-top: 3%;
+  background-color: #002975;
+  color: #fcf9f7;
+  border: none;
+  padding: 1%;
+  border-radius: 10px;
+}
+
+
+/* advanced options modal styling below */
+.advancedOptions{
+  background-color: #fcf9f7;
+  border: 1px solid #04124b;
+  width: 70%;
+  height: max-content;
+  padding: 3%;
+  /* justify-content:flex-start; */
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10%;
+  border-radius: 10px;
+  /* margin-bottom: auto; */
 }
