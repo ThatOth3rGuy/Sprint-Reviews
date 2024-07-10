@@ -47,7 +47,8 @@ const StudentLogin: NextPage = () => {
       } else {
         // Handle error response
         const errorData = await response.json();
-        setError(errorData.message || "Failed to authenticate");
+        setError(errorData.message || 'Failed to authenticate');
+        alert(`${errorData.message}`);
       }
     } catch (error) {
       // Handle network or other errors

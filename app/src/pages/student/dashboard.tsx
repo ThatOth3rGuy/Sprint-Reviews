@@ -1,10 +1,11 @@
 // student/dashboard.tsx
-import { useState, useEffect, useCallback } from "react";
-import StudentHeader from "../components/student-components/student-header";
-import StudentNavbar from "../components/student-components/student-navbar";
-import styles from "../../styles/student-dashboard.module.css";
-import { useSessionValidation } from "../api/auth/checkSession";
-import { useRouter } from "next/router";
+/* eslint-disable @next/next/no-img-element */
+import { useState, useEffect, useCallback } from 'react';
+import StudentHeader from '../components/student-components/student-header';
+import StudentNavbar from '../components/student-components/student-navbar';
+import styles from '../../styles/student-dashboard.module.css';
+import { useSessionValidation } from '../api/auth/checkSession';
+import { useRouter } from 'next/router';
 
 // Define the types for course and session
 interface Course {

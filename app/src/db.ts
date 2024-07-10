@@ -254,9 +254,10 @@ export async function getCoursesByStudentID(studentID: number): Promise<any[]> {
   const sql = `SELECT c.courseID, c.courseName, u.firstName AS instructorFirstName
 FROM enrollment e
 JOIN course c ON e.courseID = c.courseID
-JOIN instructor i
-JOIN  user u ON i.userID = u.userID
-WHERE e.studentID = ?`;
+JOIN instructor i ON c.instructorID = i.userID
+JOIN user u ON i.userID = u.userID
+WHERE e.studentID = ?
+ORDER BY c.courseID`;
   try {
     console.log('Fetching courses for student:', studentID);
     const rows = await query(sql, [studentID]);
