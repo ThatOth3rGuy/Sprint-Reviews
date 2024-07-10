@@ -1,5 +1,83 @@
  # Weekly Logs 
 ------------------------------------
+# Week 8 Summary 
+## Wednesday (07/09/2024)
+### Timesheet Week 7 (07/03/2024- 07/05/2024)
+![alt text](images//week9_logs.png)
+
+
+### Current Tasks (Complete by the end of the day)
+- Front-end components for instrcutor and student dashboard and course page
+- Updating all current CSS to using Next UI.
+
+
+
+### Progress Update 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+     <tr>
+        <!-- Task/Issue # -->
+        <td> Front end fixes for Instructor pages   
+        </td>
+        <!-- Status -->
+        <td> In progress 
+        </td>
+    </tr>
+  <tr>
+        <!-- Task/Issue # -->
+        <td> Randomizer Algorithm   
+        </td>
+        <!-- Status -->
+        <td> In progress 
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> General Optimization of the Application  
+        </td>
+        <!-- Status -->
+        <td> In progress 
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Set up NextUI framework and its components for a better UI and UX 
+        </td>
+        <!-- Status -->
+        <td> Done 
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Refactor logo and app name as per Clients input  
+        </td>
+        <!-- Status -->
+        <td> Done 
+        </td>
+    </tr>
+   
+ 
+ <tr>
+
+     
+    
+</table>
+
+### Weekly Goal Review
+During this cycle, I have mainly inorporated the clients feedback on the fron-end and the logo aspect of the application. The new logo alligns with the new name of the application, Sprint Review. This is an application made by Learnification  and that has been incorporated. The new logo looks like this:
+<div>
+<img src="images/logo-png.png" alt="alt text" width="50%" height="50%">
+</div>
+
+### Next Cycle Goals
+ * Fix the remaining front end items and have the basic UI templates fro each pages
+ * Authorization API and forget password needs to be done 
+ * Help in optiizing the system 
 # Week 7 Summary 
 ## Friday (07/05/2024)
 
@@ -19,6 +97,14 @@
         <td><strong>TASK/ISSUE #</strong>
         </td>
         <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Front end instructor dashboard   
+        </td>
+        <!-- Status -->
+        <td> In progress 
         </td>
     </tr>
   <tr>
