@@ -1,5 +1,26 @@
 # Weekly Personal Logs
 
+## Personal Log For Week 9
+
+### 07/10/2024
+
+Topics Covered:
+* researching HCI concepts and its applications
+* researching UI toolkits for React.js/Next.js
+
+My contributions since Friday's log:
+
+Since Friday, I've been looking into my COSC 341 notes for HCI concepts and how to improve our UI design as per Parsa's inputs which we received last Wednesday. We had decided to focus on our integration rather than our frontend for most of the features we have been working on so a lot of the feedback we received was expected. For the demo, we made so minor UI changes so that our application looked presentable but the major changes are planned for the upcoming week. I found a Next.js UI framework called NextUI which I have been working on integrating with our system. I'm still having some issues with setting up the themes in the tailwind.config.ts file but the framework is pretty well integrated into the system regardless. I also updated the landing and registration pages for the student users using the framework.
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Create templates for the rest of the student pages using the NextUI framework | 07/12/2024 | WIP |
+| Rebuild the navigation system to have slide out feature and favicons | 07/12/2024 | WIP |
+| Add frontend restrictions for users | 07/12/2024 | WIP |
+| Add FAQ or tooltips throughout the website for accessibility | 07/12/2024 | WIP |
+
+![week 9 time tracking](img/week9.png)
+
 ## Personal Log For Week 8
 
 ### 07/03/2024
