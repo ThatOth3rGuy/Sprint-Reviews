@@ -1,5 +1,104 @@
 # Weekly Logs
 
+# Week 9
+
+## Friday - July 5, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%209.1-1.png)
+![Clockify Timesheet](./images/EricClockify%209.1-2.png)
+
+### Cycle Review
+
+During the presentation of the MVP we had some issues with our features not connecting together properly. So this cycle we're planning on finializing all of those features so they connect together. My main focus during this time was getting the testing working and writing automated tests for everything we've done so far.
+
+### Current Tasks
+  * 1: Set up testing database
+  * 2: Set up Jest framework
+  * 3: Fix all current playwright tests
+  * 4: Write Jest tests
+
+### Progress Update: Fri-Tue
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Set up testing database
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Set up Jest framework
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Fix all current playwright tests
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Write Jest tests
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
+## Wednesday - July 10, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%209.2.png)
+
+### Cycle Review
+    
+...
+
+### Current Tasks
+  * 1: -
+  * 2: -
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> -
+        </td>
+        <!-- Status -->
+        <td> -
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> -
+        </td>
+        <!-- Status -->
+        <td> -
+        </td>
+    </tr>
+</table>
+
 # Week 8
 
 ## Friday - June 28, 2024
