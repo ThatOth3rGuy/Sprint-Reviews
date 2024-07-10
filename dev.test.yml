@@ -20,5 +20,5 @@ services:
     ports:
       - "3309:${MYSQLDB_DOCKER_PORT}"
 
-volumes:
-  test_db_data:
+  volumes:
+    test_db_data:
