@@ -93,7 +93,7 @@ export async function authenticateStudent(email: string, password: string, custo
   }
 }
 
-export async function getAllCourses(isArchived: boolean): Promise<any[]> {
+export async function getAllCourses(isArchived: boolean, customPool?: mysql.Pool): Promise<any[]> {
   const sql = `
     SELECT 
       course.courseID,
@@ -110,7 +110,7 @@ export async function getAllCourses(isArchived: boolean): Promise<any[]> {
     GROUP BY course.courseID, user.userID
   `;
   try {
-    const rows = await query(sql, [isArchived]);
+    const rows = await query(sql, [isArchived], customPool);
     return rows.map((row: any) => ({
       ...row,
       averageGrade: row.averageGrade !== null ? parseFloat(row.averageGrade) : null,
