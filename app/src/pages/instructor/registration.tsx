@@ -70,9 +70,9 @@ const SignUp: NextPage = () => {
             </div>
             <Input color='primary' size='sm' className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email}
               onChange={(e) => setEmail(e.target.value)} />
-            <Input color='primary' size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={confirmPassword}
+            <Input color='primary' size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
               onChange={(e) => setConfirmPassword(e.target.value)} />
-            <Input color='primary' size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Confirm Password" value={lastName}
+            <Input color='primary' size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Confirm Password" value={confirmPassword}
               onChange={(e) => setLastName(e.target.value)} />
             <Button color='primary' className='w-full mt-2' variant="solid" onClick={handleSignUpClick}>
               Sign Up
