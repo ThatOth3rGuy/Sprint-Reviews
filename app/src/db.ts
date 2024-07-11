@@ -290,7 +290,7 @@ export async function createCourse(courseName: string, instructorID: number, cus
   }
 }
 
-export async function getAssignmentForStudentView(assignmentId: number) {
+export async function getAssignmentForStudentView(assignmentId: number, customPool?: mysql.Pool) {
   const sql = `
     SELECT 
       assignmentID, 
@@ -305,7 +305,7 @@ export async function getAssignmentForStudentView(assignmentId: number) {
     WHERE assignmentID = ?
   `;
   try {
-    const rows = await query(sql, [assignmentId]);
+    const rows = await query(sql, [assignmentId], customPool);
     if (rows.length === 0) {
       return null;
     }
