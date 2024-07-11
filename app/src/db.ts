@@ -165,10 +165,10 @@ export async function addAssignmentToDatabase(
   }
 }
 
-export async function getAssignments(): Promise<any[]> {
+export async function getAssignments(customPool?: mysql.Pool): Promise<any[]> {
   const sql = 'SELECT assignmentID, title, description, DATE_FORMAT(deadline, "%Y-%m-%dT%H:%i:%s.000Z") as deadline FROM assignment';
   try {
-    const rows = await query(sql);
+    const rows = await query(sql, [], customPool);
     console.log('Fetched assignments:', rows);
     return rows as any[];
   } catch (error) {
@@ -176,6 +176,7 @@ export async function getAssignments(): Promise<any[]> {
     throw error;
   }
 }
+
 export async function getCourses(): Promise<any[]> {
   const sql = 'SELECT * FROM course';
   try {
