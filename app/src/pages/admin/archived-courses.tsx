@@ -39,8 +39,10 @@ export default function Page() {
       } catch (error) {
         if (error instanceof Error) {
           setError(error.message);
+          alert(error.message);
         } else {
           setError(String(error));
+          alert(String(error));
         }
       } finally {
         setLoading(false);

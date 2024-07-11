@@ -1,7 +1,6 @@
--- init.sql
--- script for initializing the db.
-CREATE DATABASE IF NOT EXISTS mydb;
-USE mydb;
+-- test.sql
+CREATE DATABASE IF NOT EXISTS testdb;
+USE testdb;
 
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS student;
@@ -86,14 +85,7 @@ CREATE TABLE IF NOT EXISTS review_criteria (
     maxMarks INT,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
--- Review creation table for instrcutor
-CREATE TABLE IF NOT EXISTS review_criteria (
-    criteriaID INT AUTO_INCREMENT PRIMARY KEY,
-    assignmentID INT,
-    criterion VARCHAR(255),
-    maxMarks INT,
-    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID)
-);
+
 -- Table for storing feedback information between students and assignments
 CREATE TABLE IF NOT EXISTS feedback (
     feedbackID INT AUTO_INCREMENT PRIMARY KEY,
@@ -123,79 +115,59 @@ CREATE TABLE IF NOT EXISTS selected_students (
     FOREIGN KEY (studentID) REFERENCES student(userID) ON DELETE SET NULL
 );
 
--- Table for storing selected students for a group assignment
-CREATE TABLE IF NOT EXISTS selected_students (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    assignmentID INT,
-    studentID INT,
-    uniqueDeadline DATETIME,
-    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
-    FOREIGN KEY (studentID) REFERENCES student(userID)
-);
+-- Insert users
+INSERT INTO user (firstName, lastName, email, pwd, userRole) VALUES
+('John', 'Doe', 'john.doe@example.com', 'password123', 'student'),
+('Jane', 'Smith', 'jane.smith@example.com', 'password123', 'student'),
+('Admin', 'User', 'admin@example.com', 'password123', 'instructor'),
+('Scott', 'Fazackerley', 'scott.faz@example.com', 'password123', 'instructor');
 
--- Insert a sample user (student) into the user table
-INSERT INTO user (firstName, lastName, email, pwd, userRole)
-VALUES ('John', 'Doe', 'john.doe@example.com', 'password123', 'student');
+-- Insert students
+INSERT INTO student (userID, studentID, phoneNumber, homeAddress, dateOfBirth) VALUES
+(1, 1001, '555-1234', '123 Elm Street', '2000-01-01'),
+(2, 1002, '555-5678', '456 Oak Street', '2001-02-02');
 
--- Insert a sample user (instructor) into the user table
-INSERT INTO user (firstName, lastName, email, pwd, userRole)
-VALUES ('Admin', 'Instructor', 'admin@gmail.com', 'password', 'instructor');
+-- Insert instructors
+INSERT INTO instructor (userID, isAdmin, departments) VALUES
+(3, TRUE, 'Computer Science, Mathematics'),
+(4, FALSE, 'Physics');
 
--- Get the userID of the newly inserted instructor
-SET @userID = LAST_INSERT_ID();
+-- Insert courses
+INSERT INTO course (courseName, isArchived, instructorID) VALUES
+('COSC 499', FALSE, 4),
+('COSC 310', FALSE, 3),
+('COSC 100', TRUE, 4),
+('COSC 101', TRUE, 3);
 
--- Insert the instructor into the instructor table with isAdmin set to true
-INSERT INTO instructor (userID, isAdmin, departments)
-VALUES (@userID, true, 'Computer Science');
+-- Insert assignments
+INSERT INTO assignment (title, description, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES
+('Assignment 1', 'Description for assignment 1', 'Rubric for assignment 1', '2024-08-01 23:59:59', FALSE, 1, 'pdf,docx'),
+('Assignment 2', 'Description for assignment 2', 'Rubric for assignment 2', '2024-09-01 23:59:59', TRUE, 2, 'pdf,docx');
 
--- Insert a sample user (instructor) into the user table
-INSERT INTO user (firstName, lastName, email, pwd, userRole)
-VALUES ('Instructor', 'Sample', 'instructor@gmail.com', 'password', 'instructor');
+-- Insert submissions
+INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate, grade) VALUES
+(1, 1, 'assignment1_john.pdf', NULL, 'pdf', '2024-07-01 12:00:00', 85),
+(2, 2, 'assignment2_jane.docx', NULL, 'docx', '2024-07-02 12:00:00', 90);
 
--- Get the userID of the newly inserted instructor
-SET @userID = LAST_INSERT_ID();
+-- Insert review criteria
+INSERT INTO review_criteria (assignmentID, criterion, maxMarks) VALUES
+(1, 'Criterion 1', 10),
+(1, 'Criterion 2', 20),
+(2, 'Criterion 1', 15),
+(2, 'Criterion 2', 25);
 
--- Insert the instructor into the instructor table with isAdmin set to false
-INSERT INTO instructor (userID, isAdmin, departments)
-VALUES (@userID, false, 'Computer Science');
+-- Insert feedback
+INSERT INTO feedback (assignmentID, content, otherStudentID) VALUES
+(1, 'Great work!', 2),
+(2, 'Needs improvement.', 1);
 
--- Insert a sample course
-INSERT INTO course (courseName, isArchived, instructorID)
-VALUES ('COSC 499', false, @userID);
+-- Insert enrollment
+INSERT INTO enrollment (studentID, courseID) VALUES
+(1, 1),
+(2, 1),
+(2, 2);
 
--- Get the courseID of the newly inserted course
-SET @courseID = LAST_INSERT_ID();
-
--- Insert a sample assignment
-INSERT INTO assignment (title, description, rubric, deadline, groupAssignment, courseID, allowedFileTypes)
-VALUES ('Final Project', 'Design a database schema', 'Design, Implementation, Report', '2024-12-01 23:59:59', false, @courseID, 'pdf,docx');
-
--- Get the assignmentID of the newly inserted assignment
-SET @assignmentID = LAST_INSERT_ID();
-
--- Insert a sample student into the student table
-INSERT INTO student (userID, phoneNumber, homeAddress, dateOfBirth)
-VALUES ((SELECT userID FROM user WHERE email = 'john.doe@example.com'), '12345', '123 Main St', '2000-01-01');
-
--- Get the studentID of the newly inserted student
-SET @studentID = LAST_INSERT_ID();
-
--- Insert the student into the enrollment table
-INSERT INTO enrollment (studentID, courseID)
-VALUES (@studentID, @courseID);
-
--- Insert a sample submission
-INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate)
-VALUES (@assignmentID, @studentID, 'final_project.pdf', NULL, 'pdf', NOW());
-
--- Insert a sample feedback
-INSERT INTO feedback (assignmentID, content, otherStudentID)
-VALUES (@assignmentID, 'Great job on the project!', @studentID);
-
--- Insert a sample review criteria
-INSERT INTO review_criteria (assignmentID, criterion, maxMarks)
-VALUES (@assignmentID, 'Design', 20);
-
--- Insert a sample selected student for a group assignment
-INSERT INTO selected_students (assignmentID, studentID, uniqueDeadline)
-VALUES (@assignmentID, @studentID, '2024-12-05 23:59:59');
+-- Insert selected students for group assignments
+INSERT INTO selected_students (assignmentID, studentID, uniqueDeadline) VALUES
+(2, 1, '2024-08-15 23:59:59'),
+(2, 2, '2024-08-16 23:59:59');

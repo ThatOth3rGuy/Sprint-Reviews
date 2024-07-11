@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "app",
   "version": "0.1.0",
@@ -54,3 +55,58 @@
     "typescript": "5.4.5"
   }
 }
+=======
+{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.16.2",
+    "@react-oauth/google": "^0.12.1",
+    "@types/formidable": "^3.4.5",
+    "@types/multer": "^1.4.11",
+    "@types/react-select": "^5.0.0",
+    "babel-eslint": "^10.1.0",
+    "cookie": "^0.6.0",
+    "csv-parse": "^5.5.6",
+    "csv-parser": "^3.0.0",
+    "formidable": "^3.5.1",
+    "formik": "^2.4.6",
+    "jose": "^5.4.0",
+    "jwt-decode": "^4.0.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.10.1",
+    "net-browserify": "^0.1.4",
+    "next": "^14.2.4",
+    "pdf-parse": "^1.1.1",
+    "react": "^18",
+    "react-datepicker": "^7.1.0",
+    "react-dom": "^18",
+    "react-modal": "^3.16.1",
+    "react-select": "^5.8.0"
+  },
+  "devDependencies": {
+    "@types/cookie": "^0.6.0",
+    "@types/formidable": "^3.4.5",
+    "@types/jest": "^29.5.12",
+    "@types/multer": "^1.4.11",
+    "@types/node": "20.14.2",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/react-modal": "^3.16.3",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.3",
+    "postcss": "^8",
+    "prisma": "^5.16.2",
+    "tailwindcss": "^3.4.1",
+    "ts-node": "^10.9.2",
+    "typescript": "5.4.5"
+  }
+}
+>>>>>>> 84c600aed06e6ff32633f756957c7ccc5a4c8bc3
