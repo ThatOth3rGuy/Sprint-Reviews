@@ -1,6 +1,6 @@
 // tests-jest/enrollStudent.test.ts
 import mysql from 'mysql2/promise';
-import { enrollStudent } from '../../src/db'; // Adjust the import path as necessary
+import { enrollStudent } from '../../src/db';
 
 describe('enrollStudent Tests', () => {
   let connection: mysql.PoolConnection;

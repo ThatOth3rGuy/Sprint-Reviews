@@ -158,7 +158,7 @@ describe('addAssignmentToDatabase Tests', () => {
     } catch (error) {
       if (error instanceof Error) {
         expect(error).toBeInstanceOf(Error);
-        expect(error.message).toContain('ER_HOST_NOT_PRIVILEGED');  // Adjust error message based on actual error
+        expect(error.message).toContain('ER_HOST_NOT_PRIVILEGED');
       } else {
         console.error('Unknown error in addAssignmentToDatabase:', error);
         throw new Error('Unknown error occurred');

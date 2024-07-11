@@ -1,6 +1,6 @@
 // tests-jest/createCourse.test.ts
 import mysql from 'mysql2/promise';
-import { createCourse } from '../../src/db'; // Adjust the import path as necessary
+import { createCourse } from '../../src/db';
 
 describe('createCourse Tests', () => {
   let connection: mysql.PoolConnection;

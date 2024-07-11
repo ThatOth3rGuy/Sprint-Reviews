@@ -1,9 +1,11 @@
 // tests-jest/getAssignments.test.ts
 import mysql from 'mysql2/promise';
-import { getAssignments } from '../../src/db'; // Adjust the import path as necessary
+import { getAssignments } from '../../src/db';
 
 describe('getAssignments Tests', () => {
   let connection: mysql.PoolConnection;
+  // Since multiple tests are being run, use a baseID to ensure unique IDs
+  // then only test for getting theses specific courses
   const uniqueID = Math.floor(Math.random() * 1000000); // Base value for unique IDs
 
   beforeAll(async () => {

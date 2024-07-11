@@ -1,10 +1,12 @@
 // tests-jest/deleteCourse.test.ts
 import mysql from 'mysql2/promise';
 import deleteCourseHandler from '../../src/pages/api/deleteCourse';
-import { mockNextApi } from '../utils/mockNextApi'; // Adjust the import path as necessary
+import { mockNextApi } from '../utils/mockNextApi';
 
 describe('deleteCourse API Tests', () => {
   let connection: mysql.PoolConnection;
+  // Since multiple tests are being run, use a baseID to ensure unique IDs
+  // then only test for getting theses specific courses
   const uniqueID = Math.floor(Math.random() * 1000000); // Base value for unique IDs
 
   beforeAll(async () => {
