@@ -3,9 +3,9 @@ import { addStudentToDatabase } from '../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { firstName, lastName, email, password, role, institution } = req.body;
+    const { firstName, lastName, email, password, role} = req.body;
     try {
-      await addStudentToDatabase(firstName, lastName, email, password, role, institution);
+      await addStudentToDatabase(firstName, lastName, email, password, role);
       res.status(200).json({ message: 'User added successfully' });
     } catch (error) {
       console.error(error);

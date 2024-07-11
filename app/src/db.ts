@@ -30,13 +30,13 @@ export async function addInstructorToDatabase(firstName: string, lastName: strin
   }
 }
 
-export async function addStudentToDatabase(firstName: string, lastName: string, email: string, password: string, role: string, institution: string) {
+export async function addStudentToDatabase(firstName: string, lastName: string, email: string, password: string, role: string) {
   const sql = `
-    INSERT INTO user (firstName, lastName, email, pwd, userRole, institution)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO user (firstName, lastName, email, pwd, userRole)
+    VALUES (?, ?, ?, ?, ?)
   `;
   try {
-    await query(sql, [firstName, lastName, email, password, role, institution]);
+    await query(sql, [firstName, lastName, email, password, role]);
   } catch (error) {
     console.error('Error in addUserToDatabase:', error); // Log the error
     throw error;

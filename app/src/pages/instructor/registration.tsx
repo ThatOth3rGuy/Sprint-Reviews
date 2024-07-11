@@ -55,7 +55,7 @@ const SignUp: NextPage = () => {
 
   return (
     <>
-      <body className='instructor flex justify-center items-center bg-gradient-to-r from-[#7887ec] to-[#bbb9b9]'>
+      <div className='instructor flex justify-center w-[100vw] h-[100vh] items-center bg-gradient-to-r from-[#7887ec] to-[#bbb9b9]'>
         <img src="/images/Back-Instructor.png" alt="Back" className="absolute top-0 left-0 mt-[2vh] ml-[1vh] object-cover cursor-pointer w-[3vw] h-[3vw]" onClick={handleLoginClick} />
         <div className="flex-col justify-evenly text-center bg-white min-w-min m-[5vw] p-[2vw] flex border-solid border-2 border-primary">
           <h2 className="justify-self-center text-xl p-4 bg-[#c7d3f7] text-primary" >Create an account</h2>
@@ -71,9 +71,9 @@ const SignUp: NextPage = () => {
             <Input color='primary' size='sm' className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email}
               onChange={(e) => setEmail(e.target.value)} />
             <Input color='primary' size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
-              onChange={(e) => setConfirmPassword(e.target.value)} />
+              onChange={(e) => setPassword(e.target.value)} />
             <Input color='primary' size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Confirm Password" value={confirmPassword}
-              onChange={(e) => setLastName(e.target.value)} />
+              onChange={(e) => setConfirmPassword(e.target.value)} />
             <Button color='primary' className='w-full mt-2' variant="solid" onClick={handleSignUpClick}>
               Sign Up
             </Button>
@@ -88,7 +88,7 @@ const SignUp: NextPage = () => {
             </Button></p>
           </div>
         </div>
-      </body>
+      </div>
     </>
 
   );
