@@ -59,8 +59,8 @@ const InstructorLogin: NextPage = () => {
 
   return (
     <>
-      <body className="instructor flex justify-center items-center">
-        <div className="instructor justify-center text-center mx-auto my-auto min-w-fit p-[2vw] max-w-max flex border-solid border-2 border-primary ">
+      <body className="instructor flex justify-center items-center bg-gradient-to-r from-[#7887ec] to-[#bbb9b9]">
+        <div className="instructor justify-center text-center bg-white mx-auto my-auto min-w-fit p-[2vw] max-w-max flex border-solid border-2 border-primary ">
           <div >
             <h2 className="justify-self-center text-xl p-4 mb-3 text-primary bg-[#c7d3f7]">Instructor Login Portal</h2>
             
