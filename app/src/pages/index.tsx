@@ -26,9 +26,10 @@ const Landing: NextPage = () => {
       <br /><br/><br /><br />
         <Image 
           style={{
-            display: 'block',
+            display: 'flex',
             marginLeft: 'auto',
-            marginRight: 'auto'
+            marginRight: 'auto',
+            padding: 'none'
           }}  
           src="/logo-transparent-png.png" 
           alt="SprintRunners Logo"
