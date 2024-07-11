@@ -36,7 +36,9 @@
     "react-datepicker": "^7.3.0",
     "react-dom": "^18",
     "react-modal": "^3.16.1",
-    "react-select": "^5.8.0"
+    "react-select": "^5.8.0",
+    "react-tsparticles": "^2.12.2",
+    "tsparticles": "^3.5.0"
   },
   "devDependencies": {
     "@types/cookie": "^0.6.0",

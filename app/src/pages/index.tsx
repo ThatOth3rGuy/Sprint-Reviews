@@ -6,7 +6,6 @@ import React, { useEffect } from 'react';
 import {Button, ButtonGroup} from "@nextui-org/react";
 import {Divider} from "@nextui-org/react";
 
-
 const Landing: NextPage = () => {
   const router = useRouter();
 
@@ -19,50 +18,33 @@ const Landing: NextPage = () => {
     // Redirect user to login page
     router.push('/instructor/login');
   }
-  // const initializeDb = async () => {
-  //   try {
-  //     const response = await fetch('/api/dbInit', { method: 'POST' });
-  //     const data = await response.json();
-  //     console.log(data.message); // Log success message or handle it as needed
-  //   } catch (error) {
-  //     console.error('Failed to initialize database'); // Log or handle error
-  //   }
-  // };
 
-  // // useEffect hook to run on component mount
-  // useEffect(() => {
-  //   initializeDb();
-  // }, []); // The empty array ensures this effect runs only once on mount
+  return (
+<div style={{background: 'linear-gradient(to right, #265652, #4c5699)', minHeight: '100vh'}}>      <br /><br /><br /><br />
 
-    return (
-      <>
-     
-      <br /><br /><br /><br />
       <div className={styles.roleSelection}>
-      <Image 
-           style={{
+      <br /><br/><br /><br />
+        <Image 
+          style={{
             display: 'block',
             marginLeft: 'auto',
             marginRight: 'auto'
           }}  
           src="/logo-transparent-png.png" 
           alt="SprintRunners Logo"
-          width={150}
-          height={150}
-          
+          width={145}
+          height={145}
         />
         <h2 className={styles.roleButton}>Select Your Role</h2>
         <Divider />
         <p className={styles.description}>Choose your role from below to continue:</p>
-        {/* <p className={styles.iAmA}>I am a:</p> */}
         <div className="flex gap-2 items-center justify-evenly">
-          <Button color="primary" variant="ghost" className="student" onClick={handleStudentClick}>Student</Button><br />
-          <Button color="primary" variant="ghost" className="instructor" onClick={handleInstructorClick}>Instructor</Button>
+          <Button color="primary" variant="ghost" size = "lg" className="student" onClick={handleStudentClick}>Student</Button><br />
+          <Button color="primary" variant="ghost" size = "lg" className="instructor" onClick={handleInstructorClick}>Instructor</Button>
         </div>
       </div>
-      </>
-      
-    );
-  }
+    </div>
+  );
+}
 
-  export default Landing;
+export default Landing;
