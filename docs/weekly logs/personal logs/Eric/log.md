@@ -67,11 +67,10 @@ During the presentation of the MVP we had some issues with our features not conn
 
 ### Cycle Review
     
-...
+I'm in Calgary for this portion of the cycle, so the vast majority of my time this week was spent in the Fri-Wed split. With that being said, I still managed to spend some time working on the Jest tests.
 
 ### Current Tasks
-  * 1: -
-  * 2: -
+  * 1: Write Jest tests
 
 ### Progress Update: Wed-Fri
 <table>
@@ -83,18 +82,10 @@ During the presentation of the MVP we had some issues with our features not conn
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> -
+        <td> Write Jest tests
         </td>
         <!-- Status -->
-        <td> -
-        </td>
-    </tr>
-    <tr>
-        <!-- Task/Issue # -->
-        <td> -
-        </td>
-        <!-- Status -->
-        <td> -
+        <td> In Progress
         </td>
     </tr>
 </table>
