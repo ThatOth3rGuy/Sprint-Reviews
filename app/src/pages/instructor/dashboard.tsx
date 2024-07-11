@@ -1,29 +1,54 @@
+import React, { useState, useEffect } from 'react';
 import InstructorCourseCard from "../components/instructor-components/instructor-course";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import InstructorHeader from "../components/instructor-components/instructor-header";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
-import { useState } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 import { useRouter } from 'next/router';
-import { Button } from "@nextui-org/react";
+
+interface Course {
+  courseID: number;
+  courseName: string;
+}
+
 export default function Page() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
+  const [courses, setCourses] = useState<Course[]>([]);
   const router = useRouter();
 
-  // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
+
+  useEffect(() => {
+    if (session && session.user && session.user.userID) {
+      fetchCourses(session.user.userID);
+    }
+  }, [session]);
+
+  const fetchCourses = async (instructorID: number) => {
+    try {
+      const response = await fetch(`/api/getCourse4Instructor?instructorID=${instructorID}`);
+      if (response.ok) {
+        const data = await response.json();
+        setCourses(data.courses);
+      } else {
+        console.error('Failed to fetch courses');
+      }
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+    }
+  };
 
   if (loading) {
     return <p>Loading...</p>;
   }
 
-  // If the session exists, check if the user is an admin
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
-    return;
+    return null;
   }
+
   const isAdmin = session.user.role === 'admin';
 
   return (
@@ -31,15 +56,10 @@ export default function Page() {
       <br />
       <br />
       <br />
-      
-      <InstructorCourseCard />
-      <InstructorCourseCard />
       {isAdmin ? (
         <>
           <AdminHeader title="Instructor Dashboard"/>
           <AdminNavbar />
-
-          
         </>
       ) : (
         <>
@@ -47,6 +67,18 @@ export default function Page() {
           <InstructorNavbar />
         </>
       )}
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', padding: '20px' }}>
+        {courses.map((course) => (
+          <div key={course.courseID} style={{ width: '500px' }}>
+            <InstructorCourseCard
+             courseID={course.courseID}
+              courseName={course.courseName}
+              color="#4c9989"
+              img="/logo-transparent-png.png"
+            />
+          </div>
+        ))}
+      </div>
     </>
   );
 }
