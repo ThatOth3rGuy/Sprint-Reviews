@@ -75,7 +75,7 @@ const config: Config = {
               DEFAULT: "#72a98f"
             },
             success: {
-              DEFAULT: "#93b758",
+              DEFAULT: "#92cf97",
             },
             warning: {
               DEFAULT: "#f6d965",

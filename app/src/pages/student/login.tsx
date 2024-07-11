@@ -4,7 +4,7 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import styles from "../../styles/student-login.module.css";
 import { useState, useEffect } from "react";
-import {Button, Chip, Input, Divider} from "@nextui-org/react";
+import { Button, Chip, Input, Divider } from "@nextui-org/react";
 
 const StudentLogin: NextPage = () => {
   const [email, setEmail] = useState("");
@@ -60,39 +60,36 @@ const StudentLogin: NextPage = () => {
 
   return (
     <>
-    <body className="student p-3 pt-12 justify-center">
-    <div className="student justify-center text-center mx-auto my-auto min-w-fit p-[2vw] max-w-max flex border-solid border-2 border-[#39776f] ">
-       <div >
-       <h2 className="justify-self-center text-xl p-4  border-[#39776f] border-2 text-[#39776f]">Student Login Portal</h2>
-      <Divider />
-        <Input className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email} onChange={(e) => setEmail(e.target.value)}/>
-        <Input className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
-            onChange={(e) => setPassword(e.target.value)}/> 
-        <Button className="bg-[#39776f] text-white my-1 w-full text-medium " variant="solid" onClick={handleSignInClick}>
-        Sign In
-      </Button>
-      <div className="flex-column align-center justify-center text-center">
-        <Button className="bg-white h-fit w-fit my-1 mb-3 text-xs text-[#39776f]" variant="solid" onClick={handleSignInClick}>
-        Forgot Your Password?
-      </Button><Divider orientation="horizontal"/>
-      <p className="mt-3 p-1 text-small">Don't have an account?</p>
-      <Button className="w-fit h-5 bg-[#c6e8e4]" variant="flat"  onClick={handleSignUpClick}>
-        Sign Up
-      </Button>
-      </div>
-      
-      
-       </div>
-        
-        <img
-          className={styles.backIcon}
-          alt="Back"
-          src="/images/Back-Arrow.png"
-          onClick={handleBackClick}
-        />
-      </div>
-    </body>
-    
+      <body className="student flex justify-center items-center">
+        <div className="student justify-center text-center mx-auto my-auto min-w-fit p-[2vw] max-w-max flex border-solid border-2 border-[#39776f] ">
+          <div >
+            <h2 className="justify-self-center text-xl p-4 mb-3 text-primary bg-[#c0dfdc]">Student Login Portal</h2>
+            
+            <Input color="primary" className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input color="primary" className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
+              onChange={(e) => setPassword(e.target.value)} />
+            <Button className="bg-[#39776f] text-white my-1 w-full text-medium " variant="solid" onClick={handleSignInClick}>
+              Sign In
+            </Button>
+            <div className="flex-column align-center justify-center text-center">
+              <Button className="bg-white h-fit w-fit my-1 mb-3 text-xs text-[#39776f]" variant="solid" >
+                Forgot Your Password?
+              </Button><Divider orientation="horizontal" />
+              <p className="mt-3 p-1 text-small">Don't have an account?</p>
+              <Button className="w-fit h-5 bg-[#c6e8e4]" variant="flat" onClick={handleSignUpClick}>
+                Sign Up
+              </Button>
+            </div>
+          </div>
+          <img
+            className="absolute top-0 left-0 mt-[2vh] ml-[1vh] object-cover cursor-pointer w-[3vw] h-[3vw]"
+            alt="Back"
+            src="/images/Back-Student.png"
+            onClick={handleBackClick}
+          />
+        </div>
+      </body>
+
     </>
   );
 };
