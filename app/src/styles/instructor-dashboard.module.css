@@ -1,0 +1,29 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #fffdfc;
+  }
+  
+  .topSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%; 
+    right: 20%;/* Ensure it takes the full width */
+  }
+  
+  .courseCards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    overflow-y: auto;
+  }
+  
+  .courseCard {
+    align-items: center;
+    width: 500px;
+  }
+  

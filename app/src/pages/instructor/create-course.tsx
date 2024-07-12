@@ -7,7 +7,7 @@ import InstructorNavbar from '../components/instructor-components/instructor-nav
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import { useSessionValidation } from '../api/auth/checkSession';
-
+import { Button, Input} from '@nextui-org/react';
 const Courses: NextPage = () => {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
@@ -18,10 +18,11 @@ const Courses: NextPage = () => {
   const [students, setStudents] = useState<{ userID: number }[]>([]);
   const router = useRouter();
 
-  // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
-
-  // Function to handle file upload
+  const handleBackClick = async () => {
+    // Redirect to the landing page
+    router.push('/instructor/dashboard');
+  }
   async function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
@@ -40,16 +41,15 @@ const Courses: NextPage = () => {
           setShowEnrollPopup(true);
         } else {
           console.error('Failed to upload and process students');
-          alert('Failed to upload and process students'); // Ensure alert is shown
+          alert('Failed to upload and process students');
         }
       } catch (error) {
         console.error('Error uploading file:', error);
-        alert('Error uploading file'); // Ensure alert is shown
+        alert('Error uploading file');
       }
     }
   }
 
-  // Function to create a course
   const onCreateCourseButtonClick = useCallback(async () => {
     if (!session || !session.user || !session.user.userID) {
       console.error('No instructor ID found in session');
@@ -59,7 +59,6 @@ const Courses: NextPage = () => {
     const instructorID = session.user.userID;
 
     try {
-      // Call the create course API with courseName and instructorID
       const createCourseResponse = await fetch('/api/createCourse', {
         method: 'POST',
         headers: {
@@ -71,7 +70,6 @@ const Courses: NextPage = () => {
         }),
       });
 
-      // If it fails, throw an error
       if (!createCourseResponse.ok) {
         throw new Error('Failed to create course');
       }
@@ -81,7 +79,6 @@ const Courses: NextPage = () => {
 
       const studentIDs = students.map(student => student.userID);
 
-      // Call the enroll students API with studentIDs and courseID
       const enrollStudentsResponse = await fetch(`/api/enrollStudents`, {
         method: 'POST',
         headers: {
@@ -93,23 +90,18 @@ const Courses: NextPage = () => {
         }),
       });
 
-      // If it fails, throw an error
       if (!enrollStudentsResponse.ok) {
         throw new Error('Failed to enroll students');
       }
 
-      // If there are no errors, log success message and redirect
       console.log('Students enrolled successfully');
-      
-      // Redirect to course page after successful creation and enrollment
       router.push({
         pathname: '/instructor/course-dashboard',
         query: { courseId },
       });
-    // Catch any errors and log/display them
     } catch (error) {
       console.error((error as Error).message);
-      alert((error as Error).message); // Ensure alert is shown
+      alert((error as Error).message);
     }
   }, [courseName, students, router, session]);
 
@@ -117,7 +109,6 @@ const Courses: NextPage = () => {
     return <p>Loading...</p>;
   }
 
-  // If the session exists, check if the user is an admin
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
     return;
@@ -142,19 +133,24 @@ const Courses: NextPage = () => {
       )}
       <div className={styles.container}>
         <div className={styles.rectangle}>
-          <i style={{width: "368px", position: "relative", fontSize: "35px", display: "flex", fontWeight: "700", fontFamily: "'Inria Serif'", color: "#04124b", textAlign: "left", alignItems: "center", height: "22px"}}>Create a Course</i>
-          
-          
-        <input type="text" placeholder="Course Name" className={styles.textbox} value={courseName} onChange={e => setTitle(e.target.value)} />
-          
-          <p>Upload Student List: {' '}
-          <input type="file" onChange={handleFileUpload} /></p>
-          <div className={styles.button} onClick={onCreateCourseButtonClick}>
-            <div />
-            <b>Create Course</b>
-          </div>
+          <h3 style={{ fontSize: "35px", fontWeight: "700", fontFamily: "'Inria Serif'", color: "#04124b", textAlign: "left" }}>Create a Course</h3>
+          <Input variant = "flat" size ="lg" className= {styles.textbox} label="Course Name" placeholder="Enter course name" value={courseName} onChange={e => setTitle(e.target.value)} />
+          <p className= {styles.upload}>
+          <h3 style={{ fontSize: "20px", fontWeight: "700", fontFamily: "'Inria Serif'", color: "#04124b", textAlign: "center" }}> &nbsp; Upload a class list (.csv): </h3>
+          <Input  type="file" size ="lg"  className= {styles.textbox} onChange={handleFileUpload} />
+          </p>
+          <Button variant = "ghost" size ="lg" color ="primary" onClick={onCreateCourseButtonClick}>Create Course</Button>
+          <img
+            className="absolute top-0 left-0 mt-[2vh] ml-[1vh] object-cover cursor-pointer w-[3vw] h-[3vw]"
+            alt="Back"
+            src="/images/Back-Instructor.png"
+            onClick={handleBackClick}
+          />
         </div>
+
+
       </div>
+      
     </>
   );
 }
