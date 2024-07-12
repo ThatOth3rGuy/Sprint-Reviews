@@ -15,11 +15,23 @@ Since Friday, I've been looking into my COSC 341 notes for HCI concepts and how 
 | Task | Due By | Status |
 | ------- | ------- | ------- |
 | Create templates for the rest of the student pages using the NextUI framework | 07/12/2024 | WIP |
-| Rebuild the navigation system to have slide out feature and favicons | 07/12/2024 | WIP |
-| Add frontend restrictions for users | 07/12/2024 | WIP |
-| Add FAQ or tooltips throughout the website for accessibility | 07/12/2024 | WIP |
+| Rebuild the navigation system to have slide out feature and favicons | 07/12/2024 | Complete |
+| Add frontend restrictions for users | 07/13/2024 | WIP |
+| Add FAQ or tooltips throughout the website for accessibility | 07/13/2024 | WIP |
 
 ![week 9 time tracking](img/week9.png)
+
+### 07/12/2024
+
+My contributions since Wednesday's log:
+
+So far, I have worked on getting the theme configuration working, setting a simple background for login/registration/landing pages, and fixing the layout and UI for said pages. I was also able to refactor the navbar for all of the users. Each navbar now is consistent with icons and layout, with each having its own theme depending on the user. The only aspect left to add to the navbar is any dropdowns for course list. I am planning to work on the templates for the student side of the application today and hopefully be done with majority of the frontend changes by end of day.
+
+#### Cycle Review and Goals
+
+This cycle was spent on implementing all of the changes that Parsa suggested for our design. Majority of the changes have been implemented by configuring the NextUI framework into our application and using the components it provides to create a consistent theme. We are making sure that the frontend design follows the 10 design heuristics. We covered a good amount of work this week even though we haven't implemented new features yet. Our goals for the next cycle are to have the randomization algorithm setup along with at least two other features.
+
+![week 9 time tracking](img/week9.2.png)
 
 ## Personal Log For Week 8
 
