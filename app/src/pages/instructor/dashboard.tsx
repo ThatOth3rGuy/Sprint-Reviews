@@ -71,9 +71,7 @@ export default function Page() {
       <InstructorNavbar />
     </>
   )}
-   <Breadcrumbs>
-            <BreadcrumbItem>Dashboard</BreadcrumbItem>
-          </Breadcrumbs>
+   
   <div className={styles.container}>
         <div className={styles.topSection}>
           <Breadcrumbs>
