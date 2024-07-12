@@ -65,18 +65,18 @@ const StudentLogin: NextPage = () => {
           <div >
             <h2 className="justify-self-center text-xl p-4 mb-3 text-primary bg-[#c0dfdc]">Student Login Portal</h2>
             
-            <Input color="primary" className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <Input color="primary" className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
+            <Input className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input  className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
               onChange={(e) => setPassword(e.target.value)} />
-            <Button className="bg-[#39776f] text-white my-1 w-full text-medium " variant="solid" onClick={handleSignInClick}>
+            <Button className="bg-primary text-white my-1 w-full text-medium " variant="solid" onClick={handleSignInClick}>
               Sign In
             </Button>
             <div className="flex-column align-center justify-center text-center">
               <Button className="bg-white h-fit w-fit my-1 mb-3 text-xs text-[#39776f]" variant="solid" >
                 Forgot Your Password?
-              </Button><Divider orientation="horizontal" />
+              </Button><Divider orientation="horizontal" className="bg-primary" />
               <p className="mt-3 p-1 text-small">Don't have an account?</p>
-              <Button className="w-fit h-5 bg-[#c6e8e4]" variant="flat" onClick={handleSignUpClick}>
+              <Button className="w-fit h-5 bg-secondary-50" variant="flat" onClick={handleSignUpClick}>
                 Sign Up
               </Button>
             </div>
@@ -84,7 +84,7 @@ const StudentLogin: NextPage = () => {
           <img
             className="absolute top-0 left-0 mt-[2vh] ml-[1vh] object-cover cursor-pointer w-[3vw] h-[3vw]"
             alt="Back"
-            src="/images/Back-Student.png"
+            src="/images/student/Back-Student.png"
             onClick={handleBackClick}
           />
         </div>

@@ -62,7 +62,7 @@ export default function Page() {
   <br />
   {isAdmin ? (
     <>
-      <AdminHeader title="Instructor Dashboard"/>
+      {/* <AdminHeader title="Instructor Dashboard"/> */}
       <AdminNavbar />
     </>
   ) : (

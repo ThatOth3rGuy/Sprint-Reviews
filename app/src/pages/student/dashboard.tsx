@@ -61,8 +61,8 @@ function Page() {
 
   return (
     <>
-      <StudentHeader title="Dashboard" />
-      <StudentNavbar />
+      <StudentHeader title="Dashboard"/>
+      <StudentNavbar home={{className: "bg-secondary-50"}}/>
       <br />
       <br />
       <br />

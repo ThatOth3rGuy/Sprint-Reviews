@@ -60,30 +60,30 @@ const SignUp: NextPage = () => {
         <div className="flex-col justify-evenly text-center bg-white min-w-min m-[5vw] p-[2vw] flex border-solid border-2 border-primary">
           <h2 className="justify-self-center text-xl p-4 bg-[#c7d3f7] text-primary" >Create an account</h2>
           <br />
-          <div className='max-h-[45vh] p-2 pt-0 overflow-y-auto'>
+          <div className='instructor max-h-[45vh] p-2 pt-0 overflow-y-auto'>
             <p className='my-2 text-small'>Enter the following information to create your account:</p>
             <div className='flex'>
-              <Input color='primary' size='sm' className="my-1 p-2 w-1/2" type="text" labelPlacement="inside" label="First Name" value={firstName}
+              <Input  size='sm' className="my-1 p-2 w-1/2" type="text" labelPlacement="inside" label="First Name" value={firstName}
                 onChange={(e) => setFirstName(e.target.value)} />
-              <Input color='primary' size='sm' className="my-1 p-2 w-1/2" type="text" labelPlacement="inside" label="Last Name" value={lastName}
+              <Input  size='sm' className="my-1 p-2 w-1/2" type="text" labelPlacement="inside" label="Last Name" value={lastName}
                 onChange={(e) => setLastName(e.target.value)} />
             </div>
-            <Input color='primary' size='sm' className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email}
+            <Input size='sm' className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email}
               onChange={(e) => setEmail(e.target.value)} />
-            <Input color='primary' size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
+            <Input  size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
               onChange={(e) => setPassword(e.target.value)} />
-            <Input color='primary' size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Confirm Password" value={confirmPassword}
+            <Input  size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Confirm Password" value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)} />
             <Button color='primary' className='w-full mt-2' variant="solid" onClick={handleSignUpClick}>
               Sign Up
             </Button>
           </div>
 
-          <Divider className='my-4 bg-secondary' />
+          <Divider className='instructor my-4 bg-primary' />
 
-          <div className="flex align-center justify-center text-center">
+          <div className="instructor flex align-center justify-center text-center">
             <p className="text-center p-1">Already have an account?
-            <Button color='secondary' className="w-fit h-5 m-1" variant="flat" onClick={handleLoginClick}>
+            <Button color='primary' className="w-fit h-5 m-1" variant="flat" onClick={handleLoginClick}>
               Sign In
             </Button></p>
           </div>
