@@ -1,6 +1,84 @@
  # Weekly Logs 
 ------------------------------------
-# Week 8 Summary 
+# Week 9 Summary 
+## Friday  (07/12/2024)
+### Timesheet Week 9 (07/10/2024- 07/13/2024)
+![alt text](images//week9_indi2.png)
+
+
+### Current Tasks (Complete by the end of the day)
+- Instructor dashboard with breadcrumbs complete
+- Instrcutor course dashboard view
+- Instrcutor Assignments creation to be updated with NextUI 
+
+
+
+### Progress Update 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Course Dashboard View Instructor   
+        </td>
+        <!-- Status -->
+        <td> In progress 
+        </td>
+    </tr>
+     <tr>
+        <!-- Task/Issue # -->
+        <td> Landing Page background set  
+        </td>
+        <!-- Status -->
+        <td> Done 
+        </td>
+    </tr>
+     <tr>
+        <!-- Task/Issue # -->
+        <td> Instructor dashboard 
+        </td>
+        <!-- Status -->
+        <td> Done 
+        </td>
+    </tr>
+  <tr>
+        <!-- Task/Issue # -->
+        <td> Randomizer Algorithm   
+        </td>
+        <!-- Status -->
+        <td> In progress 
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> General Optimization of the Application  
+        </td>
+        <!-- Status -->
+        <td> In progress 
+        </td>
+    </tr>
+    
+ 
+ <tr>
+
+     
+    
+</table>
+
+### Weekly Goal Review
+The instructor dashboard with breadcrumbs is complete, providing a hierarchical view of the site structure. The instructor course dashboard view is under development for a consolidated view of all courses. The instructor assignments creation feature is being updated with NextUI for a more user-friendly interface. The landing page now has a new background, enhancing the visual appeal. A randomizer algorithm is being developed to introduce dynamic elements. General optimization of the application is ongoing to improve performance and efficiency 
+
+
+### Next Cycle Goals * 
+ * Fix the remaining front end items and have the basic UI templates fro each pages
+ * Authorization API and forget password needs to be done 
+ * Help in optimizing the system 
+
+ (*same as last week as changes are in progress)
 ## Wednesday (07/09/2024)
 ### Timesheet Week 7 (07/03/2024- 07/05/2024)
 ![alt text](images//week9_logs.png)
@@ -78,7 +156,7 @@ During this cycle, I have mainly inorporated the clients feedback on the fron-en
  * Fix the remaining front end items and have the basic UI templates fro each pages
  * Authorization API and forget password needs to be done 
  * Help in optiizing the system 
-# Week 7 Summary 
+# Week 8 Summary 
 ## Friday (07/05/2024)
 
 ### Timesheet Week 7 (07/03/2024- 07/05/2024)
