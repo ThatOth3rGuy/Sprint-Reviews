@@ -3,6 +3,42 @@
 # Weekly Team Logs
 
 # Week 8 summary ( post-MVP)
+##  July 10th (Wed) - July 12th (Fri) 
+### Features in the Project Plan Cycle: 
+- Landing page background added 
+- Instructor and Student Login components fixed to work with NextUI
+- Instructor dasboard shows course card and is linked properly
+- Instructor create course updated with Next UI 
+- Back-end optimization and fixes based on newer plans
+
+###  Tasks from the Project Board:
+![week7-kanban](./Images/week8Kanban2.png)
+
+
+### Tasks for Next Cycle:
+
+![week5-done](./Images/week8Todo2.png)
+
+### Burn-up Chart (Velocity):
+![week5-done](./Images/week8Burnup2.png)
+
+### Times for Team/Individual:
+
+
+Clockify Times:
+
+![week5-done](./Images/week8clokify2.png)
+
+
+
+### Completed Tasks:
+![week5-done](./Images/week8Done2.png)
+
+### In Progress Tasks/ To do:
+![week5-done](./Images/week8InProgress2.png)
+
+### Overview:
+The landing page now features an engaging new background. Login components for instructors and students have been updated for compatibility with NextUI, enhancing user experience. The instructor dashboard displays course cards and is properly linked for easy navigation. The ‘Create Course’ feature for instructors has been revamped with NextUI for a more intuitive interface. Back-end optimizations have been implemented for improved performance, and several fixes have been made based on updated plans. These updates collectively aim to provide a smoother and more efficient user experience 
 ##  July 5th (Fri) - July 10th (Wed)
 ### Features in the Project Plan Cycle: 
 - Tests Database set up 
