@@ -2,6 +2,70 @@
 # Weekly Logs
 ------------------------------------
 # Week 9
+## Friday - July 12, 2024
+**Timesheet Tracking (Wednesday-Thursday)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_07_10_2024-07_11_2024.pdf)
+### Cycle Review
+
+My time spent on the project this cycle was regrettably very minimal. I was really only able to complete some work and complete fixes on Wednesday. We started the morning with a team meeting to discuss our current standing and plan moving forward. This week we want to finish up some updates/fixes to our code/database, then continue on developing the remainder of our features. Unfortunately, I have not yet completed those database changes due to my current situation; packing my house to move into my new place for the end of the month (possibly sooner). I needed to utilize Thursday to pack up things, plus I work from 8-4pm every Thursday. This was a very minimal cycle for me, however for this next cycle I will be completing all the database changes to make our implemented API handlers fully functional as some errors currently exist in how the queries are called. Once that work is done, I will work with the team to implement the next intended features; the randomization algorithm and site-wide assignment view. I believe we are still on track and will complete what is necessary this week and by the project deadline.
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Create Feature Definition and Sub-divisions on Project Board For Team Division
+  * #3: Run Integration Tests for pushed features (Fix Testing Server Connection)
+  * #4: Review Branch Pull Requests and Complete Necessary Fixes
+  * #5: Reconfigure App Server & Database Connection for Local or Dockerized Development
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Ongoing
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Feature breakdown/sub-division for parallel task work
+        </td>
+        <!-- Status -->
+        <td>Partly Complete (Recurring)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create and Run Integration Tests on Pushed Features
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Fix Database for API Handler Queries (Refactoring)
+        </td>
+        <!-- Status -->
+        <td>To-do
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Review Pull Requests and Make Fixes to Main Branches
+        </td>
+        <!-- Status -->
+        <td>Complete-ish
+        </td>
+    </tr>
+</table>
+
+#
 ## Wednesday - July 10, 2024
 **Timesheet Tracking (Friday-Tuesday)**
 * ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_07_05_2024-07_09_2024.pdf)
