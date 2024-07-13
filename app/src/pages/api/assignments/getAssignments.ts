@@ -1,7 +1,7 @@
 
 // pages/api/getAssignments.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getAssignments } from '../../db';
+import { getAssignments } from '../../../db';
 
 function isError(error: unknown): error is Error {
   return error instanceof Error;

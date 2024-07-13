@@ -24,7 +24,7 @@ const SignUp: NextPage = () => {
         }
 
         try {
-            const response = await fetch('/api/addInstructor', {
+            const response = await fetch('/api/addNew/addInstructor', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

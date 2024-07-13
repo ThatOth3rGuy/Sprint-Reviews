@@ -28,7 +28,7 @@ function Page() {
       if (session) {
         try {
           const response = await fetch(
-            `/api/getCourses?studentID=${session.user.userID}`
+            `/api/courses/getCoursesByStudent?studentID=${session.user.studentID}` //Needs to be fixed to match db changes
           );
           const data = await response.json();
           setCourses(data);

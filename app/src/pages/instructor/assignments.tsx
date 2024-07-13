@@ -20,7 +20,7 @@ const Assignments: NextPage = () => {
 
   useEffect(() => {
     // Fetch the assignments when the component mounts
-    fetch('/api/getAssignments')
+    fetch('/api/assignments/getAssignments')
       .then(response => response.json())
       .then(setAssignments);
   }, []);

@@ -43,7 +43,7 @@ const ViewAssignment: React.FC = () => {
 // Function to handle changes in the assignment selection
   const fetchAssignments = async () => {
     try {
-      const response = await fetch('/api/getAssignments');
+      const response = await fetch('/api/assignments/getAssignments');
       if (response.ok) {
         const data = await response.json();
         setAssignments(data);
@@ -117,7 +117,7 @@ const ViewAssignment: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/releaseAssignment', {
+      const response = await fetch('/api/assignments/releaseAssignment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

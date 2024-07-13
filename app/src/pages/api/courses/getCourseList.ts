@@ -1,14 +1,14 @@
 // pages/api/getStudentsInCourse.ts
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getStudentsInCourse } from '../../db';
+import { getStudentsInCourse } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     const { courseID } = req.query;
 
     try {
-      const students = await getStudentsInCourse(courseID as string);
+      const students = await getStudentsInCourse(Number(courseID));
       res.status(200).json(students);
     } catch (error) {
       const err = error as Error;

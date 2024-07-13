@@ -1,6 +1,6 @@
 // createAssignment.ts
 import { NextApiRequest, NextApiResponse } from 'next';
-import { addAssignmentToDatabase } from '../../db';
+import { addAssignmentToCourse } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       console.log('Received courseID:', courseID);
-      const result = await addAssignmentToDatabase(title, description, dueDate, file, groupAssignment, Number(courseID), allowedFileTypes);
+      const result = await addAssignmentToCourse(title, description, dueDate, file, groupAssignment, Number(courseID), allowedFileTypes);
       console.log('Assignment creation result:', result);
       res.status(200).json({ message: 'Assignment created successfully', result });
     } catch (error: any) {

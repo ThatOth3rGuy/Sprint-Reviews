@@ -60,7 +60,7 @@ const Courses: NextPage = () => {
 
     try {
       // Call the create course API with courseName and instructorID
-      const createCourseResponse = await fetch('/api/createCourse', {
+      const createCourseResponse = await fetch('/api/addNew/createCourse', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ const Courses: NextPage = () => {
       const studentIDs = students.map(student => student.userID);
 
       // Call the enroll students API with studentIDs and courseID
-      const enrollStudentsResponse = await fetch(`/api/enrollStudents`, {
+      const enrollStudentsResponse = await fetch(`/api/addNew/enrollStudents`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

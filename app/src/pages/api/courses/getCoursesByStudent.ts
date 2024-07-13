@@ -1,6 +1,6 @@
 // getCourses.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getCoursesByStudentID } from '../../db';
+import { getCoursesByStudentID } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { studentID } = req.query;

@@ -1,7 +1,7 @@
 // pages/api/createCourse.ts
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createCourse } from '../../db';
+import { createCourse } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
