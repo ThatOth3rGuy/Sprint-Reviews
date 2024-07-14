@@ -7,11 +7,12 @@ import type { NextPage } from 'next';
 import { useState, useEffect } from 'react';
 import styles from '../../styles/instructor-assignments-creation.module.css';
 import { useSessionValidation } from '../api/auth/checkSession';
-
+import { useRouter } from 'next/router';
 
 const Assignments: NextPage = () => {
   const [assignments, setAssignments] = useState([]); // State variable for the list of assignments
-
+  const router = useRouter();
+  const { courseId } = router.query;
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
 
@@ -19,11 +20,17 @@ const Assignments: NextPage = () => {
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
+    if (courseId) {
+      // Fetch the assignments for the specified course
+      fetch(`/api/getAssignments?courseId=${courseId}`)
+        .then(response => response.json())
+        .then(setAssignments);
+    }
     // Fetch the assignments when the component mounts
     fetch('/api/getAssignments')
       .then(response => response.json())
       .then(setAssignments);
-  }, []);
+  }, [courseId]);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -55,7 +62,7 @@ const Assignments: NextPage = () => {
         </>
       )}
       <div className={styles.container}>
-        {assignments.map(({ assignmentID, title, description, deadline }) => (
+        {assignments && assignments.map(({ assignmentID, title, description, deadline }) => (
           <div key={assignmentID} className={styles.card}>
             <h2>{title}</h2>
             <p>{description}</p>

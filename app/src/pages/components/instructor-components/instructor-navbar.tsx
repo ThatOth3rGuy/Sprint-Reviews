@@ -55,7 +55,7 @@ const InstructorNavbar: NextPage<InstructorNavbarProps> = ({ home, courses, assi
         </div>
         <div
           className={style.navButton}
-          onClick={() => handleNavigation("/instructor/assignments")}
+          onClick={() => handleNavigation("/instructor/create-assignment")}
         >
           <Link onClick={() => handleNavigation("/instructor/assignments")} className={`w-[98%] p-2  ${assignments?.className} text-primary-50 `} ><img className={style.navImg} src="/images/Instructor/Assignments.png" />Assignments</Link>
         </div>

@@ -67,7 +67,7 @@ export default function Page() {
     </>
   ) : (
     <>
-      <InstructorHeader title="Instructor Dashboard"/>
+      {/* <InstructorHeader title="Instructor Dashboard"/> */}
       <InstructorNavbar />
     </>
   )}
