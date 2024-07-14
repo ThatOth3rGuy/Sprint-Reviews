@@ -6,8 +6,8 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
-import styles from '../../styles/instructor-dashboard.module.css';
-import InstructorCourseCard from "../components/instructor-components/instructor-assignment-card";
+import styles from '../../styles/instructor-course-dashboard.module.css';
+import InstructorAssignmentCard from "../components/instructor-components/instructor-assignment-card";
 import {Button,Breadcrumbs,BreadcrumbItem} from "@nextui-org/react";
 interface CourseData {
   courseID: string;
@@ -92,59 +92,41 @@ export default function Page() {
 
   return (
     <>
-      <br />
-      <br />
-      <br />
-      {isAdmin ? (
-        <>
-          {/* <AdminHeader 
-            title={courseData.courseName}
-            addLink={[
-              {href: "./create-assignment", title: "Create Assignment"}, 
-              {href: "./release-assignment", title: "Release Assignment"}
-            ]}
-          /> */}
-          <AdminNavbar />
-        </>
-      ) : (
-        <>
-          {/* <InstructorHeader 
-            title={courseData.courseName}
-            addLink={[
-              {href: "./create-assignment", title: "Create Assignment"}, 
-              {href: "./release-assignment", title: "Release Assignment"}
-            ]}
-          /> */}
-          <InstructorNavbar />
-        </>
-      )}
-
+      {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
       <div className={styles.container}>
-      <div className={styles.topSection}>   
-      <img
-            className="absolute top-0 left-0 mt-[2vh] ml-[1vh] object-cover cursor-pointer w-[3vw] h-[3vw]"
-            alt="Back"
-            src="/images/Back-Instructor.png"
-            onClick={handleBackClick}
-          />
-      
-      <p><Button color="secondary" variant='ghost' onClick={handleCreateAssignmentClick}>Create Assignment</Button>
-      <Button color="secondary" variant='ghost' onClick={handleCreatePeerReviewAssignmentClick}>Create Peer Review </Button>
-      <Button color="secondary" variant='ghost' onClick={handleCreateGroupPeerReviewAssignmentClick}>Create Group Peer Review </Button></p>
-      </div>
-      <div className={styles.courseCards}>
-          {assignments.map((assignments) => (
-            <div key={assignments.assignmentID} className={styles.courseCard}>
-              <InstructorCourseCard
-                courseID={assignments.assignmentID}
-                courseName={assignments.title}
-                color="#4c9989"
-                img="/logo-transparent-png.png"
-              />
+        <div className={styles.mainContent}>
+          <div className={styles.assignmentsSection}>
+          <h2>Assignments for {courseData.courseName}</h2>
+          <div className={styles.courseCard}>
+        {assignments.length > 0 ? (
+          assignments.map((assignment) => (
+                <div key={assignment.assignmentID} className={styles.courseCard}>
+                  <InstructorAssignmentCard
+                    courseID={assignment.assignmentID}
+                    courseName={assignment.title}
+                    color="#4c9989"                    
+                  />
+                </div>
+               ))
+              ) : (
+                <p>No assignments found for this course.</p>
+              )}
+              </div>
             </div>
-          ))}
+          <div className={styles.notificationsSection}>
+            <div className={styles.actionButtons}>
+              <Button color="secondary" variant="ghost" onClick={handleCreateAssignmentClick}>Create Assignment</Button>
+              <Button color="secondary" variant="ghost" onClick={handleCreatePeerReviewAssignmentClick}>Create Peer Review</Button>
+              <Button color="secondary" variant="ghost" onClick={handleCreateGroupPeerReviewAssignmentClick}>Create Group Peer Review</Button>
+            </div>
+            <h2>Notifications</h2>
+            <div className={styles.notificationsContainer}>
+              <div className={styles.notificationCard}>Dummy Notification</div>
+            </div>
+          </div>
         </div>
       </div>
+      
       
     </>
   );

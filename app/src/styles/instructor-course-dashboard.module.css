@@ -1,0 +1,111 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+    background-color: #fffdfc;
+    color: black;
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+  }
+  
+  .mainContent {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .assignmentsSection {
+    width: 70%;
+    background-color: #ffffff;
+    padding: 20px;
+    padding-left: 40px; /* Increased left padding */
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: auto;
+  }
+  
+  .notificationsSection {
+    width: 25%;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .actionButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .courseCards {
+    display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  
+  }
+  
+  .courseCard {
+    width: 95%;
+    padding: 5px;
+    margin: 5px;
+    box-sizing: border-box;
+  }
+  
+  .notificationsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .notificationCard {
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .listboxWrapper {
+    width: 100%;
+    max-width: 260px;
+    border: 1px solid var(--nextui-colors-border);
+    border-radius: 8px;
+    padding: 8px;
+  }
+  
+  .actionListbox {
+    background-color: white;
+  }
+  
+  .deleteAction {
+    color: var(--nextui-colors-danger) !important;
+  }
+  @media (max-width: 1024px) {
+    .container {
+      flex-direction: column;
+    }
+  
+    .mainContent {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .assignmentsSection,
+    .notificationsSection {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  
+    .courseCards {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+  
+    .actionButtons {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+  

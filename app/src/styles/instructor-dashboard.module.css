@@ -1,56 +1,57 @@
-/* This is a message for pushing this particlular file  */
 .container {
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    background-color: #fffdfc;
-    color : black;
-    width: 100vw;
-    height :100vh;
-    
-  }
-  
-  .topSection {
-    display: flex;
-    position: relative;
-    flex-direction: column;
-    justify-content: flex-start; /* Aligns items along the vertical axis to the start */
-    align-items: flex-end; /* Aligns items along the horizontal axis to the start */
-    text-align: right; /* Aligns text to the left */
-    margin: auto;
-    padding: 20px;
-    width: 80vw;    
-   
-  }
-  
-  
-  
-  
-  .courseCards {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.05px;
-    background-color: #fffdfc;
-    
-  }
-  
-  .courseCard {
-    align-items: center;
-    width: 500px;
-    
-  }
-  .breadcrumbs {
-    display: flex;
-    position: relative;
-    flex-direction: column;
-    justify-content: flex-start; /* Aligns items along the vertical axis to the start */
-    align-items: flex-start; /* Aligns items along the horizontal axis to the start */
-    text-align: left; /* Aligns text to the left */
-    margin: auto;
-    padding: 20px;
-    width: 80vw; 
-    color : black;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #fffdfc;
+  color: black;
+  width: 100vw;
+  height: 100vh;
+}
 
-  }
-  
+.topSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  text-align: right;
+  margin: auto;
+  padding: 20px;
+  width: 80vw;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.mainContent {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.assignmentsSection, .notificationsSection {
+  width: 48%;
+}
+
+.courseCards {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.05px;
+  background-color: #fffdfc;
+}
+
+.courseCard {
+  align-items: center;
+  width: 500px;
+}
+
+.notificationsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notificationCard {
+  padding: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}

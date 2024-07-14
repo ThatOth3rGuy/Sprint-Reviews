@@ -153,3 +153,22 @@
 .outerCard:hover {
   transform: scale(1.05);
 }
+.assignmentCard {
+  background-color: var(--nextui-colors-primary);
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.assignmentTitle {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.assignmentDescription {
+  margin-bottom: 0.5rem;
+}
+
+.assignmentDeadline {
+  font-style: italic;
+}
