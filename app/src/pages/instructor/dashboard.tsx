@@ -6,9 +6,9 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import { useSessionValidation } from '../api/auth/checkSession';
 import { useRouter } from 'next/router';
-import { User, Button, Image } from '@nextui-org/react';
+import {  Button  } from '@nextui-org/react';
 import styles from '../../styles/instructor-dashboard.module.css';
-import { Card, CardHeader, Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
+import {  Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 interface Course {
   courseID: number;
   courseName: string;
@@ -60,6 +60,7 @@ export default function Page() {
       <br />
       <br />
       <br />
+      <div>
       {isAdmin ? (
         <>
           {/* <AdminHeader title="Instructor Dashboard"/> */}
@@ -70,15 +71,16 @@ export default function Page() {
           {/* <InstructorHeader title="Instructor Dashboard"/> */}
           <InstructorNavbar />
         </>
-      )}
-<div className='instructor p-0 m-0 top-0'>
-<div className={styles.container}>
-        <div className={styles.topSection}>
-          {/* <Breadcrumbs>
+      )}</div>
+<div >
+<div className={styles.topSection}>
+          {/* <Breadcrumbs color ="primary" className = {styles.breadcrumbs}>
             <BreadcrumbItem>Dashboard</BreadcrumbItem>
           </Breadcrumbs> */}
-          <Button color="secondary" variant='ghost' onClick={handleCreateCourseClick}>Create Course</Button>
+          <Button  color="secondary" variant='ghost' onClick={handleCreateCourseClick}>Create Course</Button>
         </div>
+<div className={styles.container}>
+        
         <div className={styles.courseCards}>
           {courses.map((course) => (
             <div key={course.courseID} className={styles.courseCard}>

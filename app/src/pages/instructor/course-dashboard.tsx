@@ -80,8 +80,14 @@ export default function Page() {
     router.push('/instructor/dashboard');
   }
 
-  const handleCreateCourseClick = () => {
-    router.push('/instructor/create-course');
+  const handleCreateAssignmentClick = () => {
+    router.push('/instructor/create-assignment');
+  };
+  const handleCreatePeerReviewAssignmentClick = () => {
+    router.push('/instructor/release-assignment');
+  };
+  const handleCreateGroupPeerReviewAssignmentClick = () => {
+    router.push('/instructor/create-assignment');
   };
 
   return (
@@ -115,8 +121,16 @@ export default function Page() {
 
       <div className={styles.container}>
       <div className={styles.topSection}>   
-       
-      <Button color="secondary" variant='ghost' onClick={handleCreateCourseClick}>Create Course</Button>
+      <img
+            className="absolute top-0 left-0 mt-[2vh] ml-[1vh] object-cover cursor-pointer w-[3vw] h-[3vw]"
+            alt="Back"
+            src="/images/Back-Instructor.png"
+            onClick={handleBackClick}
+          />
+      
+      <p><Button color="secondary" variant='ghost' onClick={handleCreateAssignmentClick}>Create Assignment</Button>
+      <Button color="secondary" variant='ghost' onClick={handleCreatePeerReviewAssignmentClick}>Create Peer Review </Button>
+      <Button color="secondary" variant='ghost' onClick={handleCreateGroupPeerReviewAssignmentClick}>Create Group Peer Review </Button></p>
       </div>
       <div className={styles.courseCards}>
           {assignments.map((assignments) => (

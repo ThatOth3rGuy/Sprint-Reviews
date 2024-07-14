@@ -5,27 +5,52 @@
     padding: 20px;
     background-color: #fffdfc;
     color : black;
+    width: 100vw;
+    height :100vh;
+    
   }
   
   .topSection {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    width: 100%; 
-    right: 20%;/* Ensure it takes the full width */
+    position: relative;
+    flex-direction: column;
+    justify-content: flex-start; /* Aligns items along the vertical axis to the start */
+    align-items: flex-end; /* Aligns items along the horizontal axis to the start */
+    text-align: right; /* Aligns text to the left */
+    margin: auto;
+    padding: 20px;
+    width: 80vw;    
+   
   }
+  
+  
+  
   
   .courseCards {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    /* overflow-y: auto; */
+    gap: 0.05px;
+    background-color: #fffdfc;
+    
   }
   
   .courseCard {
     align-items: center;
     width: 500px;
+    
+  }
+  .breadcrumbs {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    justify-content: flex-start; /* Aligns items along the vertical axis to the start */
+    align-items: flex-start; /* Aligns items along the horizontal axis to the start */
+    text-align: left; /* Aligns text to the left */
+    margin: auto;
+    padding: 20px;
+    width: 80vw; 
+    color : black;
+
   }
   
