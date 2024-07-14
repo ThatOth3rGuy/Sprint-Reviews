@@ -6,9 +6,9 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import { useSessionValidation } from '../api/auth/checkSession';
 import { useRouter } from 'next/router';
-import {  Button  } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
 import styles from '../../styles/instructor-dashboard.module.css';
-import {  Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 interface Course {
   courseID: number;
   courseName: string;
@@ -61,41 +61,41 @@ export default function Page() {
       <br />
       <br />
       <div>
-      {isAdmin ? (
-        <>
-          {/* <AdminHeader title="Instructor Dashboard"/> */}
-          <AdminNavbar />
-        </>
-      ) : (
-        <>
-          {/* <InstructorHeader title="Instructor Dashboard"/> */}
-          <InstructorNavbar />
-        </>
-      )}</div>
-<div >
-<div className={styles.topSection}>
+        {isAdmin ? (
+          <>
+            {/* <AdminHeader title="Instructor Dashboard"/> */}
+            <AdminNavbar />
+          </>
+        ) : (
+          <>
+            {/* <InstructorHeader title="Instructor Dashboard"/> */}
+            <InstructorNavbar />
+          </>
+        )}</div>
+      <div >
+        <div className={styles.topSection}>
           {/* <Breadcrumbs color ="primary" className = {styles.breadcrumbs}>
             <BreadcrumbItem>Dashboard</BreadcrumbItem>
           </Breadcrumbs> */}
-          <Button  color="secondary" variant='ghost' onClick={handleCreateCourseClick}>Create Course</Button>
+          <Button color="secondary" variant='ghost' onClick={handleCreateCourseClick}>Create Course</Button>
         </div>
-<div className={styles.container}>
-        
-        <div className={styles.courseCards}>
-          {courses.map((course) => (
-            <div key={course.courseID} className={styles.courseCard}>
-              <InstructorCourseCard
-                courseID={course.courseID}
-                courseName={course.courseName}
-                color="#4c9989"
-                img="/logo-transparent-png.png"
-              />
-            </div>
-          ))}
+        <div className={styles.container}>
+
+          <div className={styles.courseCards}>
+            {courses.map((course) => (
+              <div key={course.courseID} className={styles.courseCard}>
+                <InstructorCourseCard
+                  courseID={course.courseID}
+                  courseName={course.courseName}
+                  color="#4c9989"
+                  img="/logo-transparent-png.png"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-</div>
-      
+
     </>
   );
 }

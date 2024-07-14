@@ -33,7 +33,7 @@ const ViewAssignments = () => {
       })
       .then((data) => {
         console.log(data);
-        setAssignments(data);
+        setAssignments(data.courses);
       })
       .catch((error) => {
         console.error(

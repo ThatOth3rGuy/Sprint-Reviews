@@ -15,10 +15,7 @@ const StudentCourseCard: React.FC<StudentCourseCardProps> = ({ courseID, courseN
     const router = useRouter();
 
     const handleClick = () => {
-      router.push({
-        pathname: "/student/course-dashboard",
-        query: { courseID },
-      });
+      router.push(`/student/course-dashboard?courseId=${courseID}`);
     };
 
     return (
