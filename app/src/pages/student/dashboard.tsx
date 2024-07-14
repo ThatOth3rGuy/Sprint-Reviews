@@ -6,12 +6,15 @@ import StudentNavbar from '../components/student-components/student-navbar';
 import styles from '../../styles/student-dashboard.module.css';
 import { useSessionValidation } from '../api/auth/checkSession';
 import { useRouter } from 'next/router';
+import StudentCourseCard from '../components/student-components/student-course';
+import { Breadcrumbs, BreadcrumbItem, Button } from '@nextui-org/react';
 
 // Define the types for course and session
 interface Course {
   courseID: number;
   courseName: string;
   instructorFirstName: string;
+  instructorLastName: string;
 }
 
 function Page() {
@@ -61,54 +64,36 @@ function Page() {
 
   return (
     <>
-      <StudentHeader title="Dashboard"/>
-      <StudentNavbar home={{className: "bg-secondary-50"}}/>
-      <br />
-      <br />
-      <br />
-      <br />
-      <b className={styles.breadcrumbs}>Breadcrumbs</b>
-      <div className={styles.studentHome}>
-        {courses.map((course) => (
-          <div
-            key={course.courseID}
-            className={styles.courseCard}
-            onClick={() => onCoursesContainerClick(course.courseID)}
-          >
-            <img
-              className={styles.courseCardChild}
-              alt=""
-              src="/CourseCard-outline.svg"
-            />
-            <div className={styles.courseCardItem} />
-            <b className={styles.courseName}>{course.courseName}</b>
-            <i className={styles.instructor}>{course.instructorFirstName}</i>
-          </div>
-        ))}
-        {/* <div className={styles.pendingAssignments}> */}
-        {/* <div className={styles.pendingAssignmentsChild} />
-          <div className={styles.pendingAssignmentsItem} /> */}
-        <div className={styles.pendingAssignments}>
-          <b className={styles.pendingTitle}>Pending Assignments</b>
-          <div
-            className={styles.assignmentDetails}
-            onClick={onAssignmentsContainerClick}
-          >
-            <b className={styles.assignment}>Assignment</b>
-            <b className={styles.due010101}>Due: 01/01/01</b>
-            <p className={styles.course}>Course</p>
-          </div>
+      {/* <StudentHeader title="Dashboard" /> */}
+      
+      <div className='inline-block mx-0 '>
+        <StudentNavbar home={{ className: "bg-secondary-50" }} />
+      </div>
+      <div className={styles.content}>
+      <h2>Dashboard</h2>
+        <div className={styles.topSection}>
+          {/* <Breadcrumbs variant='bordered' color='secondary'>
+            <BreadcrumbItem>Dashboard</BreadcrumbItem>
+          </Breadcrumbs> */}
+
         </div>
-        <div
-          className={styles.assignmentDetails1}
-          onClick={onAssignmentsContainerClick}
-        >
-          <b className={styles.assignment}>Assignment</b>
-          <b className={styles.due010101}>Due: 01/01/01</b>
-          <p className={styles.course}>Course</p>
+        <div className={styles.studentHome}>
+          {courses.map((course) => (
+            <div
+            className={styles.courseCard}
+              key={course.courseID}
+              onClick={() => onCoursesContainerClick(course.courseID)}
+            >
+              <StudentCourseCard
+                courseID={course.courseID}
+                courseName={course.courseName} color={''} img="/logo-transparent-png.png"
+                instructorName={course.instructorFirstName + " " + course.instructorLastName}>
+              </StudentCourseCard>
+            </div>
+          ))}
         </div>
       </div>
-      {/* </div> */}
+
     </>
   );
 }

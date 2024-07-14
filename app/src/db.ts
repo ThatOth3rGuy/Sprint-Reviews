@@ -159,10 +159,10 @@ export async function addAssignmentToDatabase(
 }
 
 
-export async function getAssignments(courseID: number): Promise<any[]> {
-  const sql = 'SELECT assignmentID, title, description, DATE_FORMAT(deadline, "%Y-%m-%dT%H:%i:%s.000Z") as deadline, courseID FROM assignment WHERE courseID = ?';
+export async function getAssignments(): Promise<any[]> {
+  const sql = 'SELECT assignmentID, title, description, DATE_FORMAT(deadline, "%Y-%m-%dT%H:%i:%s.000Z") as deadline FROM assignment';
   try {
-    const rows = await query(sql,[courseID]);
+    const rows = await query(sql);
     console.log('Fetched assignments:', rows);
     return rows as any[];
   } catch (error) {
@@ -251,7 +251,7 @@ export async function getAssignmentsWithSubmissions() {
 
 
 export async function getCoursesByStudentID(studentID: number): Promise<any[]> {
-  const sql = `SELECT c.courseID, c.courseName, u.firstName AS instructorFirstName
+  const sql = `SELECT c.courseID, c.courseName, u.firstName AS instructorFirstName, u.lastName AS instructorLastName
 FROM enrollment e
 JOIN course c ON e.courseID = c.courseID
 JOIN instructor i ON c.instructorID = i.userID

@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import styles from '../../styles/instructor-login.module.css';
+// import styles from '../../styles/instructor-login.module.css';
 import { useState, useEffect } from 'react';
 import { Button, Divider, Input } from '@nextui-org/react';
 
@@ -59,7 +59,7 @@ const InstructorLogin: NextPage = () => {
 
   return (
    
-      <div className="instructor flex justify-center items-center min-h-[100vh] bg-gradient-to-r from-[#7887ec] to-[#bbb9b9]">
+      <div className="instructor flex justify-center items-center min-h-[100vh] min-w-[100vw] bg-gradient-to-r from-[#7887ec] to-[#bbb9b9]">
         <div className="instructor justify-center text-center bg-white mx-auto my-auto min-w-fit p-[2vw] max-w-max flex border-solid border-2 border-primary ">
           <div >
             <h2 className="justify-self-center text-xl p-4 mb-3 text-primary bg-[#c7d3f7]">Instructor Login Portal</h2>
