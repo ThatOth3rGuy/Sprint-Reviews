@@ -55,7 +55,7 @@ test.describe('Admin Portal Home Page', () => {
 
   // Mock an error response for fetching courses
   test('should display error message on failed courses fetch', async ({ page }) => {
-    await page.route('/api/getAllCourses?isArchived=false', route => {
+    await page.route('**/api/getAllCourses?isArchived=false', route => {
       route.fulfill({
         status: 500,
         body: JSON.stringify({ message: 'Failed to fetch courses' })
@@ -68,11 +68,11 @@ test.describe('Admin Portal Home Page', () => {
     // Capture the alert dialog
     const [dialog] = await Promise.all([
       page.waitForEvent('dialog'),
-  ]);
+    ]);
 
-  expect(dialog.message()).toBe('Failed to fetch courses');
-  await dialog.accept();
-  });
+    expect(dialog.message()).toBe('Failed to fetch courses');
+    await dialog.accept();
+});
 
   // Check that the breadcrumbs are displayed
   test('should display breadcrumbs', async ({ page }) => {
