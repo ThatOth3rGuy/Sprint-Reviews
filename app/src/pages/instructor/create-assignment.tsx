@@ -2,7 +2,7 @@
 import type { NextPage } from "next";
 import styles from "../../styles/instructor-assignments-creation.module.css";
 import { useRouter } from "next/router";
-
+import { Card,SelectItem, Select,Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input } from "@nextui-org/react";
 import InstructorHeader from "../components/instructor-components/instructor-header";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
@@ -33,6 +33,10 @@ const Assignments: NextPage = () => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const [allowedFileTypes, setAllowedFileTypes] = useState<string[]>([]);
+
+  // Declare the groups and students variables here
+  const groups = ["Group A", "Group B", "Group C"];
+  const students = ["Student 1", "Student 2", "Student 3", "Student 4"];
 
   useEffect(() => {
     fetch("/api/getCourses4assign")
@@ -121,125 +125,119 @@ const Assignments: NextPage = () => {
   }
   const isAdmin = session.user.role === 'admin';
 
+  function handleHomeClick(): void {
+    router.push("/instructor/dashboard");
+  }
+
   return (
     <>
-      <br />
-      <br />
-      <br />
-      {isAdmin ? (
-        <>
-          <AdminHeader title="Assignments"
-          addLink={[{href: "./create-assignment", title: "Create Assignment"}, {href: "./release-assignment", title: "Release Assignment"}]}/>
-          <AdminNavbar />
-        </>
-      ) : (
-        <>
-          <InstructorHeader title="Assignments"
-          addLink={[{href: "./create-assignment", title: "Create Assignment"}, {href: "./release-assignment", title: "Release Assignment"}]}/>
-          <InstructorNavbar />
-        </>
-      )}
-      <div className={styles.container}>
+      {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
+      <div className={`instructor text-primary-900 ${styles.container}`}>
+       <div className={styles.header}>
+          <h1>Create Assignment</h1>
+          <br />
+          <Breadcrumbs>
+            <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
+            <BreadcrumbItem>Create Assignment</BreadcrumbItem>
+          </Breadcrumbs>
+          
+        </div>
+        <div className={styles.mainContent}>
         <div className={styles.rectangle}>
-          <h2><i
-            // style={{
-            //   width: "368px",
-            //   position: "relative",
-            //   fontSize: "35px",
-            //   display: "flex",
-            //   fontWeight: "700",
-            //   fontFamily: "'Inria Serif'",
-            //   color: "#04124b",
-            //   textAlign: "left",
-            //   alignItems: "center",
-            //   height: "22px",
-            // }}
-          >
-            Create an Assignment
-          </i></h2>
           {error && <p style={{ color: "red" }}>{error}</p>}
-          <input
+          <Input
             type="text"
             placeholder="Assignment Title"
             className={styles.textbox}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <textarea
+          <Textarea
             placeholder="Assignment Description"
             className={styles.textbox}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
-          <input
+          ></Textarea>
+          <Input
             type="datetime-local"
             className={styles.textbox}
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
           />
-          <select
-            className={styles.textbox}
-            value={courseID}
-            onChange={(e) => setCourseID(e.target.value)}
-          >
-            <option value="">Select a class</option>
-            {courses.map((courseItem) => (
-              <option key={courseItem.courseID} value={courseItem.courseID.toString()}>
-                {courseItem.courseName}
-              </option>
-            ))}
-          </select>
-          <p>
-            Upload Rubric: <br />
-            <input type="file" onChange={handleFileUpload} />
-          </p>
-          <input
-            type="checkbox"
-            checked={groupAssignment}
-            onChange={(e) => setGroupAssignment(e.target.checked)}
-          />
-          <label>Group Assignment</label>
-          <div>
-            <p>Allowed file types:</p>
-            <div>
-              <input
-                type="checkbox"
-                id="txt"
-                onChange={(e) => handleFileTypeChange("txt", e.target.checked)}
-              />
-              <label htmlFor="txt">Text (.txt)</label>
-            </div>
-            <div>
-              <input
-                type="checkbox"
-                id="pdf"
-                onChange={(e) => handleFileTypeChange("pdf", e.target.checked)}
-              />
-              <label htmlFor="pdf">PDF (.pdf)</label>
-            </div>
-            <div>
-              <input
-                type="checkbox"
-                id="docx"
-                onChange={(e) => handleFileTypeChange("docx", e.target.checked)}
-              />
-              <label htmlFor="docx">Word (.docx)</label>
-            </div>
-            <div>
-              <input
-                type="checkbox"
-                id="zip"
-                onChange={(e) => handleFileTypeChange("zip", e.target.checked)}
-              />
-              <label htmlFor="zip">ZIP (.zip)</label>
-            </div>
+          <Autocomplete 
+          isRequired
+        label="Select a class"
+        placeholder="Search a class"
+        className="max-w-xs"
+        value={courseID}        
+              >
+        {courses.map((courseItem) => (
+          <AutocompleteItem key={courseItem.courseID} value={courseItem.courseID.toString()}>
+            {courseItem.courseName}
+          </AutocompleteItem>
+        ))}
+      </Autocomplete>
+      <div >
+      <Checkbox
+      className={styles.innerTitle}
+        checked={groupAssignment}
+        onChange={(e) => setGroupAssignment(e.target.checked)}
+      >
+        Group Assignments 
+      </Checkbox>
+
+      {groupAssignment && (
+        <Card className={styles.courseCard} >
+          <div className="flex">
+            <Select
+              label="Select a Group"
+              placeholder="Select a group"
+              selectionMode="multiple"
+              className="max-w-xs flex items-start"
+            >
+              {groups.map((group, index) => (
+                <SelectItem key={index}>{group}</SelectItem>
+              ))}
+            </Select>
+            <Select
+              label="Select Students"
+              placeholder="Select a group"
+              selectionMode="multiple"
+              className="max-w-xs flex items-end "
+            >
+              {students.map((student, index) => (
+                <SelectItem key={index}>{student}</SelectItem>
+              ))}
+            </Select>
           </div>
-          <button className={styles.createButton} onClick={onCreateAssignmentButtonClick}>Create Assignment</button>
-          {/* <div className={styles.button} onClick={onCreateAssignmentButtonClick}>
-            <b>Create Assignment</b>
-          </div> */}
-        </div>
+          <div>
+            <Button color="primary" variant="ghost"> Confirm groups  </Button>
+          </div>
+        </Card>
+      )}</div>
+        
+          
+        <div>
+        
+        <br />
+        <CheckboxGroup
+        isRequired
+          color="default"
+          value={allowedFileTypes}
+        ><h3 className={styles.innerTitle}>Allowed file types:</h3>
+          <Checkbox value="txt" onChange={(e) => handleFileTypeChange("txt", e.target.checked)}>Text (.txt)</Checkbox>
+          <Checkbox value="pdf" onChange={(e) => handleFileTypeChange("pdf", e.target.checked)}>PDF (.pdf)</Checkbox>
+          <Checkbox value="docx" onChange={(e) => handleFileTypeChange("docx", e.target.checked)}>Word (.docx)</Checkbox>
+          <Checkbox value="zip" onChange={(e) => handleFileTypeChange("zip", e.target.checked)}>ZIP (.zip)</Checkbox>
+        </CheckboxGroup>
       </div>
+            
+          
+          <Button color="primary" variant="ghost" className={styles.createButton} onClick={onCreateAssignmentButtonClick}>Create Assignment</Button>
+          
+      </div>    
+    </div>    
+  </div>
     </>
   );
 };

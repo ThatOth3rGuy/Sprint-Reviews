@@ -16,7 +16,7 @@ interface AdminNavbarProps { //used to accept a Button prop for each specific bu
   profile?: ButtonProps;
   settings?: ButtonProps;
 }
-const InstructorNavbar: NextPage<AdminNavbarProps> = ({ home, courses, assignments, grades, profile, settings }) => {
+const AdminNavbar: NextPage<AdminNavbarProps> = ({ home, courses, assignments, grades, profile, settings }) => {
   const router = useRouter();
 
   const handleNavigation = (path: string) => {
@@ -82,10 +82,8 @@ const InstructorNavbar: NextPage<AdminNavbarProps> = ({ home, courses, assignmen
         </div>
         <div
           className={style.navButton}
-
         >
           <Link className="w-[98%] p-2 text-primary-50 " onClick={() => handleNavigation("/admin/portal-home")}><img className={style.navImg} src="/images/Instructor/Admin.png" />Admin</Link>
-
         </div>
         <div className={style.logoutWrapper}>
           <div
@@ -101,4 +99,4 @@ const InstructorNavbar: NextPage<AdminNavbarProps> = ({ home, courses, assignmen
   );
 };
 
-export default InstructorNavbar;
+export default AdminNavbar;

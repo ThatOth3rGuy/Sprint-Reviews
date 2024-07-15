@@ -8,6 +8,7 @@ import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/admin-portal-home.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { Listbox, ListboxItem } from "@nextui-org/react";
 
 interface Course {
   courseID: number;
@@ -68,54 +69,87 @@ export default function Page() {
       query: { courseID },
     });
   };
-
+  const handleCreateAssignmentClick = () => {
+    router.push('/instructor/create-assignment');
+  };
+  const handleCreatePeerReviewAssignmentClick = () => {
+    router.push('/instructor/release-assignment');
+  };
+  const handleCreateGroupPeerReviewAssignmentClick = () => {
+    router.push('/instructor/create-assignment');
+  };
+  const handleAction = (key: any) => {
+    switch (key) {
+      case "create":
+        handleCreateAssignmentClick();
+        break;
+      case "peer-review":
+        handleCreatePeerReviewAssignmentClick();
+        break;
+      case "group-review":
+        handleCreateGroupPeerReviewAssignmentClick();
+        break;
+      case "delete":
+        // Implement delete course functionality
+        console.log("Delete course");
+        break;
+      default:
+        console.log("Unknown action:", key);
+    }
+  };
   return (
     <>
-      <div className={styles.adminHome}>
-      <nav className={`${styles.breadcrumbsBase} ${styles.breadcrumbs}`}>
-
-          <Link href="/instructor/dashboard">Dashboard</Link>
-          {' / '}
-          <Link href="/admin/portal-home">Admin Portal</Link>
-        </nav>
-        <div className={styles.filtersort}>
-          <div className={styles.filterButton}>
-            <div className={styles.filterButtonChild} />
-            <div className={styles.filter}>
-              <b className={styles.filter1}>Filter</b>
-              <img className={styles.filterIcon} alt="" src="/Images/Filter.png" />
-            </div>
-          </div>
-          <div className={styles.sortButton}>
-            <div className={styles.filterButtonChild} />
-            <div className={styles.sort}>
-              <b className={styles.sort1}>Sort</b>
-              <img className={styles.descendingSortingIcon} alt="" src="/Images/Descending Sorting.png" />
-            </div>
+      <div className={`instructor text-primary-900 ${styles.container}`}>
+        <div className={styles.header}>
+          <h1>Dashboard</h1>
+          {/* <Button size='sm' color="secondary" variant='ghost' className=' self-end' onClick={handleCreateCourseClick}>Create Course</Button> */}
+        </div>
+        <div className={styles.mainContent}>
+        <div className={styles.assignmentsSection}>
+        <div className={styles.courseCards}>
+            {courses.map((course, index) => (
+              <div className={styles.courseCard}>
+                <AdminCourseCard
+                key={index}
+                courseName={course.courseName}
+                instructor={`${course.instructorFirstName} ${course.instructorLastName}`}
+                averageGrade={course.averageGrade}
+                courseID={course.courseID}
+                img="/logo-transparent-png.png"
+              />
+              </div>
+            ))}
           </div>
         </div>
-        <br />
-        <br />
-        {courses.map((course, index) => (
-          <AdminCourseCard
-            key={index}
-            courseName={course.courseName}
-            instructor={`${course.instructorFirstName} ${course.instructorLastName}`}
-            averageGrade={course.averageGrade}
-            courseID={course.courseID}
-            onClick={() => handleCourseClick(course.courseID)}
-          />
-        ))}
-      </div>
-      <AdminHeader
+          
+          <div className={styles.notificationsSection}>
+            <div className={styles.actionButtons}>
+              <Listbox aria-label="Actions" onAction={handleAction}>
+                <ListboxItem key="create">Create Assignment</ListboxItem>
+                <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
+                <ListboxItem key="group-review">Create Group Peer Review</ListboxItem>
+                <ListboxItem key="delete" className="text-danger" color="danger">
+                  Archive Course
+                </ListboxItem>
+              </Listbox>
+            </div>
+            <hr />
+            <h2 className="my-3">Notifications</h2>
+            <div className={styles.notificationsContainer}>
+              <div className={styles.notificationCard}>Dummy Notification</div>
+            </div>
+          </div>
+          {/* <AdminHeader
         title="Admin Portal"
         addLink={[
           { href: "./view-users", title: "View Users" },
           { href: "./join-requests", title: "Join Requests" },
           { href: "./archived-courses", title: "Archived Courses" },
         ]}
-      />
-      <AdminNavbar />
-    </>
-  );
+      /> */}
+          <AdminNavbar />
+        </div>
+        </div>
+      </>
+      );
 }

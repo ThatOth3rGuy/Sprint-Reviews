@@ -71,7 +71,7 @@ export default function Page() {
                 <InstructorCourseCard
                   courseID={course.courseID}
                   courseName={course.courseName}
-                  color="#4c9989"
+                  color="#9fc3cf"
                   img="/logo-transparent-png.png"
                 />
               </div>
