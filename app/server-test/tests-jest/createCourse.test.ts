@@ -40,7 +40,7 @@ describe('createCourse Tests', () => {
     const courseName = 'Test Course';
     const invalidInstructorID = 9999;
 
-    await expect(createCourse(courseName, invalidInstructorID)).rejects.toThrow();
+    await expect(createCourse(courseName, invalidInstructorID, global.pool)).rejects.toThrow();
   });
 
   test('should handle database operation errors', async () => {
