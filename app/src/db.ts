@@ -258,7 +258,7 @@ export async function getAssignmentsWithSubmissions(customPool?: mysql.Pool) {
 }
 
 
-export async function getCoursesByStudentID(studentID: number): Promise<any[]> {
+export async function getCoursesByStudentID(studentID: number, customPool?: mysql.Pool): Promise<any[]> {
   const sql = `SELECT c.courseID, c.courseName, u.firstName AS instructorFirstName
 FROM enrollment e
 JOIN course c ON e.courseID = c.courseID
@@ -267,8 +267,7 @@ JOIN user u ON i.userID = u.userID
 WHERE e.studentID = ?
 ORDER BY c.courseID`;
   try {
-    console.log('Fetching courses for student:', studentID);
-    const rows = await query(sql, [studentID]);
+    const rows = await query(sql, [studentID], customPool);
     return rows;
   } catch (error) {
     console.error('Error fetching courses for student:', error);

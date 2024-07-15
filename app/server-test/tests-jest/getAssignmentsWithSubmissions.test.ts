@@ -1,6 +1,6 @@
 // tests-jest/getAssignmentsWithSubmissions.test.ts
 import mysql from 'mysql2/promise';
-import { getAssignmentsWithSubmissions } from '../../src/db'; // Adjust the import path as necessary
+import { getAssignmentsWithSubmissions } from '../../src/db';
 
 describe('getAssignmentsWithSubmissions Tests', () => {
   let connection: mysql.PoolConnection;
