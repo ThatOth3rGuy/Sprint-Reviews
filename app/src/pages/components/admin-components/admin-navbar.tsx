@@ -58,7 +58,7 @@ const InstructorNavbar: NextPage<AdminNavbarProps> = ({ home, courses, assignmen
         <div
           className={style.navButton}
         >
-          <Link onClick={() => handleNavigation("/instructor/create-assignments")} className={`w-[98%] p-2  ${assignments?.className} text-primary-50 `} ><img className={style.navImg} src="/images/Instructor/Assignments.png" />Assignments</Link>
+          <Link onClick={() => handleNavigation("/instructor/assignments")} className={`w-[98%] p-2  ${assignments?.className} text-primary-50 `} ><img className={style.navImg} src="/images/Instructor/Assignments.png" />Assignments</Link>
 
         </div>
         <div
@@ -78,7 +78,7 @@ const InstructorNavbar: NextPage<AdminNavbarProps> = ({ home, courses, assignmen
           className={style.navButton}
 
         >
-          <Link onClick={() => handleNavigation("/instructor/settings")} className={`w-[98%] p-2  ${settings?.className} text-primary-50 `} ><img className={style.navImg} src="/images/Instructor/Profile.png" />Settings</Link>
+          <Link onClick={() => handleNavigation("/instructor/settings")} className={`w-[98%] p-2  ${settings?.className} text-primary-50 `} ><img className={style.navImg} src="/images/Instructor/Settings.png" />Settings</Link>
         </div>
         <div
           className={style.navButton}

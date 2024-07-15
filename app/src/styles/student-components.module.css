@@ -112,7 +112,7 @@ justify-content: baseline;
   background-color: #fcf9f7;
   align-items: center;
   padding: 1%;
-  border: 1px solid #04124b;
+  /* border: 1px solid #04124b; */
   border-radius: 25px;
   margin: 45px 95px;
   position: relative;

@@ -44,7 +44,7 @@ const config: Config = {
           extend: "light",
           colors: {
             background: "#eceeff",
-            foreground: "#ffffff",
+            foreground: "#1a1b60",
             primary: {
               DEFAULT: "#282a90",
               50: "#bfc0ed",
@@ -117,7 +117,7 @@ const config: Config = {
           extend: "light",
           colors: {
             background: "#0D001A",
-            foreground: "#ffffff",
+            foreground: "#193936",
             primary: {
               DEFAULT: "#265652", //dark green
               50: "#63bbb3",

@@ -57,29 +57,13 @@ export default function Page() {
 
   return (
     <>
-      <br />
-      <br />
-      <br />
-      <div>
-        {isAdmin ? (
-          <>
-            {/* <AdminHeader title="Instructor Dashboard"/> */}
-            <AdminNavbar />
-          </>
-        ) : (
-          <>
-            {/* <InstructorHeader title="Instructor Dashboard"/> */}
-            <InstructorNavbar />
-          </>
-        )}</div>
-      <div >
+{isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
+      <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.topSection}>
-          {/* <Breadcrumbs color ="primary" className = {styles.breadcrumbs}>
-            <BreadcrumbItem>Dashboard</BreadcrumbItem>
-          </Breadcrumbs> */}
-          <Button color="secondary" variant='ghost' onClick={handleCreateCourseClick}>Create Course</Button>
+          <h1>Dashboard</h1>
+          <Button size='sm' color="secondary" variant='ghost' className=' self-end' onClick={handleCreateCourseClick}>Create Course</Button>
         </div>
-        <div className={styles.container}>
+        <div >
 
           <div className={styles.courseCards}>
             {courses.map((course) => (

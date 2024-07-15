@@ -25,16 +25,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
-async function getCourse(studentID: string): Promise<any> {
-    const sql = `
-      SELECT c.courseID, courseName, instructorID, isArchived 
-      FROM course c JOIN enrollment e ON c.courseID= e.courseID JOIN user u ON u.userID=c.instructorID
-      WHERE studentID = ? AND isArchived=0 `;
-    try {
-      const rows = await query(sql, [studentID]);
-      return rows;
-    } catch (error) {
-      console.error('Error in getCourse:', error);
-      throw error;
-    }
+async function getCourse(courseID: string) {
+  const sql = `
+    SELECT courseID, courseName
+    FROM course
+    WHERE courseID = ? AND isArchived = 0
+  `;
+  try {
+    const rows = await query(sql, [courseID]);
+    return rows[0] || null;
+  } catch (error) {
+    console.error('Error in getCourse:', error);
+    throw error;
   }
+}

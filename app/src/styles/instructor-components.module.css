@@ -109,49 +109,20 @@
 
 /* Course Card Styling Below */
 .outerCard {
-  width: 60vw;
-  background-color: #fcf9f7;
-  align-items: center;
-  padding: 1%;
-  border: 1px solid #04124b;
-  border-radius: 25px;
-  margin: 45px 95px;
-  position: relative;
-}
-
-.innerCard {
-  width: 25vw;
-  background: linear-gradient(270deg, rgba(217, 217, 217, 0.05), #535b80);
-  align-items: center;
-  padding: 1%;
-  border-radius: 15px;
-  padding: 1vw;
-  display: flex;
-}
-
-.innerCard h2 {
-  padding: 1%;
-  color: #fcf9f7;
-  margin-right: 2vw;
-}
-
-.innerCard h5 {
-  color: #09124b;
-  margin-left: 8vw;
-  place-items: right;
-}
-
-.outerCard {
   width: 100%;
   background-color: #fcf9f7;
   border: 1px solid #04124b;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   overflow: hidden;
   transition: transform 0.2s;
+  align-items: center;
+  padding: 1%;
+  position: relative;
 }
 
 .outerCard:hover {
-  transform: scale(1.05);
+  transform: scale(1.005);
+  box-shadow: #09124b;
 }
 .assignmentCard {
   background-color: var(--nextui-colors-primary);

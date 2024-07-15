@@ -1,46 +1,43 @@
 .container {
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  background-color: #fffdfc;
-  color: black;
+  padding: 2%;
   width: 100vw;
   height: 100vh;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .topSection {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
-  text-align: right;
-  margin: auto;
-  padding: 20px;
-  width: 80vw;
-  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
-}
-
-.mainContent {
-  display: flex;
-  justify-content: space-between;
+  flex-direction: row;
+  gap: 2%;
+  background: inherit;
   width: 100%;
-}
-
-.assignmentsSection, .notificationsSection {
-  width: 48%;
+  margin-left: 11vw;
+  padding: 1%;
+  padding-top: 0;
+  margin-top: 0;
+  text-align: left;
 }
 
 .courseCards {
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
-  flex-direction: column;
+  flex-flow: row wrap;
   align-items: center;
-  gap: 0.05px;
-  background-color: #fffdfc;
+  /* min-width: 50vw; */
+  max-width: 75vw;
+  gap: 2%;
+  text-align: left;
+  justify-content: center;
 }
 
 .courseCard {
-  align-items: center;
-  width: 500px;
+  margin: 2%;
+  min-width: 20vw;
 }
 
 .notificationsContainer {
