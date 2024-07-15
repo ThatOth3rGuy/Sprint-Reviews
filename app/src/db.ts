@@ -202,7 +202,7 @@ export async function getCourses(): Promise<any[]> {
 //   }
 // }
 
-export async function getAssignmentsWithSubmissions() {
+export async function getAssignmentsWithSubmissions(customPool?: mysql.Pool) {
   const sql = `
     SELECT 
       a.assignmentID, 
@@ -210,17 +210,17 @@ export async function getAssignmentsWithSubmissions() {
       a.description, 
       DATE_FORMAT(a.deadline, '%Y-%m-%dT%H:%i:%s.000Z') as deadline,
       a.rubric,
-      a.file,
+      a.allowedFileTypes,
       s.studentID,
       DATE_FORMAT(s.submissionDate, '%Y-%m-%dT%H:%i:%s.000Z') as submissionDate,
-      s.file as submissionFile
+      s.fileName as submissionFile
     FROM 
       assignment a
     LEFT JOIN 
-      submissions s ON a.assignmentID = s.assignmentID
+      submission s ON a.assignmentID = s.assignmentID
   `;
   try {
-    const rows = await query(sql);
+    const rows = await query(sql, [], customPool);
     
     // Group submissions by assignment
     const assignments = rows.reduce((acc: any[], row: any) => {
@@ -240,7 +240,7 @@ export async function getAssignmentsWithSubmissions() {
           description: row.description,
           deadline: row.deadline,
           rubric: row.rubric,
-          file: row.file,
+          allowedFileTypes: row.allowedFileTypes ? row.allowedFileTypes.split(',') : [],
           submissions: row.studentID ? [{
             studentID: row.studentID,
             submissionDate: row.submissionDate,
