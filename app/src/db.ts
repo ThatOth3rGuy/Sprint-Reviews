@@ -317,7 +317,7 @@ export async function getAssignmentForStudentView(assignmentId: number, customPo
   }
 }
 
-export async function submitAssignment(assignmentID: number, studentID: number, file: Express.Multer.File) {
+export async function submitAssignment(assignmentID: number, studentID: number, file: Express.Multer.File, customPool?: mysql.Pool) {
   const sql = `
     INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate)
     VALUES (?, ?, ?, ?, ?, NOW())
@@ -328,7 +328,7 @@ export async function submitAssignment(assignmentID: number, studentID: number, 
     const fileName = file.originalname;
     const fileType = file.mimetype;
 
-    await query(sql, [assignmentID, studentID, fileName, fileContent, fileType]);
+    await query(sql, [assignmentID, studentID, fileName, fileContent, fileType], customPool);
 
     // Delete the temporary file after it's been saved to the database
     await fs.unlink(file.path);
