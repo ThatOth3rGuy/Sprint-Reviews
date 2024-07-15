@@ -1,6 +1,6 @@
 // pages/api/courses/[courseID].ts
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getCourse } from '../../../db';
+import { query } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { courseID } = req.query;
@@ -19,6 +19,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(404).json({ error: 'Course not found' });
     }
   } catch (error) {
+    console.error('Error fetching course:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+}
+async function getCourse(courseID: string) {
+  const sql = `
+    SELECT courseID, courseName
+    FROM course
+    WHERE courseID = ? AND isArchived = 0
+  `;
+  try {
+    const rows = await query(sql, [courseID]);
+    return rows[0] || null;
+  } catch (error) {
+    console.error('Error in getCourse:', error);
+    throw error;
   }
 }

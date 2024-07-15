@@ -4,7 +4,7 @@ import StudentHeader from "../components/student-components/student-header";
 import StudentNavbar from "../components/student-components/student-navbar";
 import style from "../../styles/student-components.module.css";
 import Link from "next/link";
-
+import { Card, CardBody, CardHeader, CardFooter, Divider } from "@nextui-org/react";
 import { useSessionValidation } from '../api/auth/checkSession';
 
 interface Assignment {
@@ -33,7 +33,7 @@ const ViewAssignments = () => {
       })
       .then((data) => {
         console.log(data);
-        setAssignments(data);
+        setAssignments(data.courses);
       })
       .catch((error) => {
         console.error(
@@ -49,13 +49,14 @@ const ViewAssignments = () => {
 
   return (
     <>
-      <StudentHeader
+      {/* <StudentHeader
         title="Assignments"
         addLink={[
           { href: "./all-assignments", title: "View All" },
           { href: "./peer-eval-assignments", title: "Peer Evaluations" },
         ]}
-      />
+      /> */}
+      {/* TODO: add a selection button that allows a student to view only a certain type of assignments */}
       <StudentNavbar />
       <div className={style.assignment}>
         <h1>Assignments</h1>
@@ -63,7 +64,7 @@ const ViewAssignments = () => {
           {assignments.map((assignment) => (
             <li key={assignment.assignmentID}>
               <Link href={`/student/assignment/${assignment.assignmentID}`}>
-                <h2>{assignment.title}</h2>
+                <h3>{assignment.title}</h3>
               </Link>
               <p>{assignment.description}</p>
               <p>
@@ -72,6 +73,17 @@ const ViewAssignments = () => {
             </li>
           ))}
         </ul>
+        {/* {assignments.map((assignment) => (
+          <Card key={assignment.assignmentID} className="w-[70vw]">
+            <CardHeader><Link href={`/student/assignment/${assignment.assignmentID}`}>
+              <b>{assignment.title}</b>
+            </Link></CardHeader>
+            <Divider/>
+            <CardBody>
+            {assignment.description}
+            </CardBody>
+          </Card>
+          ))} */}
       </div>
     </>
   );

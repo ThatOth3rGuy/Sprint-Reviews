@@ -483,8 +483,7 @@ export async function selectStudentsForAssignment(assignmentID: number, studentI
 }
 export async function getCourse(courseID: number): Promise<any> {
   const sql = `
-    SELECT * FROM course WHERE courseID = ?
-  `;
+    SELECT courseID, courseName  FROM course WHERE instructorID = ?  `;
   try {
     const rows = await query(sql, [courseID]);
     return rows[0];

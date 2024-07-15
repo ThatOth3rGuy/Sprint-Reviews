@@ -1,38 +1,42 @@
 .navbar {
   top: 0%;
-  width: 12.5%;
+  width: 25vw;
   left: 0;
-  height: 100%;
+  height: 100vh;
   position: fixed;
-  background-color: #90ab93;
-  text-align: center;
+  text-align: left;
   display: flex;
   flex-direction: column;
-  max-width: 100px;
-  min-width: 30px;
+  max-width: 150px;
+  min-width: 40px;
   position: fixed;
   z-index: 1;
 }
 
 .navButton {
   height: 10vh;
-  padding: 4% 2% 4% 2%;
-  background-color: #90ab93;
-  text-align: center;
+  margin-top: 1px;
+  justify-content: baseline;
+  text-align: left;
   cursor: pointer;
   font-size: small;
-  align-content: center;
+  align-content: baseline;
   overflow: hidden;
   text-decoration: none;
 }
 
-.logoutWrapper {
-  margin-top: auto;
+
+.navImg{
+  height: 12%;
+  width: 14%;
+margin-right: 3px;
+justify-content: baseline;
 }
 
-.navButton:hover {
-  background-color: #f0f8f1;
-  font-weight: bolder;
+.logoutWrapper {
+  margin-top: auto;
+  bottom: 0;
+  
 }
 
 .navButton a {
@@ -42,16 +46,14 @@
 }
 /* header styling below */
 .header {
-  top: 0%;
     width: 100%;
     display: flex;
     align-items: center;
-    float: left;
-    margin-right: 5vw;
-    margin: 0%;
+    float: right;
+    margin-top: 0;
     background-color: #f0f8f1;
-    justify-content: flex-end;
-    position: fixed;
+    justify-content: flex-start;
+    margin-left: 15vw;
     z-index: 1;
 }
 
@@ -102,4 +104,51 @@
 /* assignments styling below */
 .assignment{
   text-align: center;
+}
+
+/* course card styling below */
+.outerCard {
+  width: 60vw;
+  background-color: #fcf9f7;
+  align-items: center;
+  padding: 1%;
+  /* border: 1px solid #04124b; */
+  border-radius: 25px;
+  margin: 45px 95px;
+  position: relative;
+}
+
+.innerCard {
+  width: 25vw;
+  background: linear-gradient(270deg, rgba(217, 217, 217, 0.05), #535b80);
+  align-items: center;
+  padding: 1%;
+  border-radius: 15px;
+  padding: 1vw;
+  display: flex;
+}
+
+.innerCard h2 {
+  padding: 1%;
+  color: #fcf9f7;
+  margin-right: 2vw;
+}
+
+.innerCard h5 {
+  color: #09124b;
+  margin-left: 8vw;
+  place-items: right;
+}
+
+.outerCard {
+  width: 100%;
+  background-color: #fcf9f7;
+  border: 1px solid #04124b;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.outerCard:hover {
+  transform: scale(1.05);
 }

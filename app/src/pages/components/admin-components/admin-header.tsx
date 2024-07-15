@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import style from "../../../styles/instructor-components.module.css";
-
+import Image from 'next/image';
 interface LinkProps {
   href: string;
   title: string;
@@ -38,6 +38,7 @@ const AdminHeader: NextPage<AdminHeaderProps> = ({ title, addLink }) => {
   };
 
   return (
+    
     <header className={style.header}>
       <div className={style.navTitle}>
         <h1>
@@ -45,6 +46,7 @@ const AdminHeader: NextPage<AdminHeaderProps> = ({ title, addLink }) => {
         </h1>
 
       </div>
+      
       {addLink && addLink.map((link, index) => (
         <div key={index} className={style.navItem}>
           <Link href={link.href}><h3>{link.title}</h3></Link>
