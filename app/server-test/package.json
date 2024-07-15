@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "next dev",
     "test": "playwright test --config=playwright.config.ts",
-    "test:debug": "PWDEBUG=1 playwright test"
+    "test:debug": "PWDEBUG=1 playwright test",
+    "jest": "jest"
   },
   "keywords": [],
   "author": "",
@@ -18,6 +19,8 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.45.1",
-    "@types/node": "^20.14.8"
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.14.8",
+    "jest-environment-jsdom": "^29.7.0"
   }
 }

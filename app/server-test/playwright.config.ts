@@ -14,7 +14,7 @@ export default defineConfig({
   /* Ignore tests that match the pattern */
   testIgnore: '*register*',
   /* Directory where the tests are located */
-  testDir: 'tests',
+  testDir: 'tests-playwright',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
