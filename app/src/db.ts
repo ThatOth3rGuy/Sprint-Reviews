@@ -177,10 +177,10 @@ export async function getAssignments(customPool?: mysql.Pool): Promise<any[]> {
   }
 }
 
-export async function getCourses(): Promise<any[]> {
+export async function getCourses(customPool?: mysql.Pool): Promise<any[]> {
   const sql = 'SELECT * FROM course';
   try {
-    const rows = await query(sql);
+    const rows = await query(sql, [], customPool);
     return rows as any[];
   } catch (error) {
     console.error('Database query error:', error);
