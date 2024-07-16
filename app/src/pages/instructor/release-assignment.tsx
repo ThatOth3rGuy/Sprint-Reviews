@@ -63,7 +63,7 @@ const ReleaseAssignment: React.FC = () => {
     // Function to fetch assignments
   const fetchAssignments = async () => {
     try {
-      const response = await fetch("/api/getAssignments");
+      const response = await fetch("/api/assignments/getAssignments");
       if (response.ok) {
         const data: Assignment[] = await response.json();
         setAssignments(data);
@@ -78,7 +78,7 @@ const ReleaseAssignment: React.FC = () => {
     // Function to fetch students in the course
   const fetchStudents = async (courseID: string) => {
     try {
-      const response = await fetch(`/api/getStudentsInCourse?courseID=${courseID}`);
+      const response = await fetch(`/api/courses/getCourseList?courseID=${courseID}`);
       if (response.ok) {
         const students = await response.json();
         setStudents(students);
@@ -160,7 +160,7 @@ const ReleaseAssignment: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/releaseAssignment", {
+      const response = await fetch("/api/assignments/releaseAssignment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

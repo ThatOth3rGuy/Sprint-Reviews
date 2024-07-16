@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { enrollStudent } from '../../db';
+import { enrollStudent } from '../../../db';
 
 // This function handles adding students to the database under a given courseID
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

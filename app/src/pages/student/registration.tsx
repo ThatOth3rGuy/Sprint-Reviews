@@ -25,14 +25,14 @@ const SignUp: NextPage = () => {
       return;
     }
 
-    try {
-      const response = await fetch('/api/addStudent', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ firstName, lastName, email, password, role: 'student' })
-      });
+        try {
+            const response = await fetch('/api/addNew/addStudent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ firstName, lastName, email, password, role: 'student'})
+            });
 
       if (response.ok) {
         router.push('/student/login');

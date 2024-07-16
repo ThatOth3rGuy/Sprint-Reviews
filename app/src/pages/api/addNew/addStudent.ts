@@ -1,11 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { addInstructorToDatabase } from '../../db';
+import { createStudent, createUser } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { firstName, lastName, email, password, role } = req.body;
+    const { uID, firstName, lastName, email, password, role } = req.body;
     try {
-      await addInstructorToDatabase(firstName, lastName, email, password, role);
+      // Create the user
+      const accId = await createUser(firstName, lastName, email, password, role);
+
+      // Create the student with the user ID 
+      await createStudent(uID, accId);
+
       res.status(200).json({ message: 'User added successfully' });
     } catch (error) {
       console.error(error);

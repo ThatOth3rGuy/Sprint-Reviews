@@ -1,5 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { query } from '../../db';
+// import { getAssignments } from '../../../db';
+
+// function isError(error: unknown): error is Error {
+//   return error instanceof Error;
+// }
+import { query } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {

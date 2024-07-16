@@ -39,7 +39,7 @@ const Assignments: NextPage = () => {
   const students = ["Student 1", "Student 2", "Student 3", "Student 4"];
 
   useEffect(() => {
-    fetch("/api/getCourses4assign")
+    fetch("/api/getAllCourses")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -87,7 +87,7 @@ const Assignments: NextPage = () => {
     // Convert the date to ISO format
     const isoDate = new Date(dueDate).toISOString();
 
-    const response = await fetch("/api/createAssignment", {
+    const response = await fetch("/api/addNew/createAssignment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

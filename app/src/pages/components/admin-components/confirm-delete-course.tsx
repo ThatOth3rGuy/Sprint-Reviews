@@ -16,7 +16,7 @@ const ConfirmDeleteCourse: NextPage<ConfirmDeleteCourseType> = ({ className = ""
 
   const onInstructorButtonContainerClick = useCallback(async () => {
     try {
-      const response = await fetch('/api/deleteCourse', {
+      const response = await fetch('/api/courses/deleteCourse', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
