@@ -489,20 +489,35 @@ export async function getCourse(courseID: string): Promise<any> {
   }
 }
   // grab all students from the database matching the first and last name
-export async function getStudents(firstName:string, lastName:string) {
-  const sql = `
-    SELECT * FROM user WHERE firstName = ? AND lastName = ? AND userRole = 'student'
-  `;
-  try {
-    const rows = await query(sql, [firstName, lastName]);
-    if (rows.length > 0) {
-      return rows[0];
+  export async function getStudentsByName(firstName:string, lastName:string) {
+    const sql = `
+      SELECT user.*, student.studentID FROM user JOIN student ON user.userID = student.userID WHERE user.firstName = ? AND user.lastName = ? AND user.userRole = 'student'
+    `;
+    try {
+      const rows = await query(sql, [firstName, lastName]);
+      if (rows.length > 0) {
+        return rows[0];
+      }
+    } catch (error) {
+      console.error('Error in getStudents:', error);
+      throw error;
     }
-  } catch (error) {
-    console.error('Error in getStudents:', error);
-    throw error;
   }
-}
+    // grab all students from the database matching their student ID's
+    export async function getStudentsById(studentID: number) {
+      const sql = `
+        SELECT student.*, user.* FROM student JOIN user ON student.userID = user.userID WHERE studentID = ?
+      `;
+      try {
+        const rows = await query(sql, [studentID]);
+        if (rows.length > 0) {
+          return rows[0];
+        }
+      } catch (error) {
+        console.error('Error in getStudents:', error);
+        throw error;
+      }
+    }
 //  enroll student in a course
 export async function enrollStudent(userID: string, courseID: string): Promise<void> {
   const sql = `

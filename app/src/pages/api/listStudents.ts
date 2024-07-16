@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
 import { parse } from 'csv-parse';
-import { getStudents } from '../../db';
+import { getStudentsById } from '../../db';
 import formidable, { IncomingForm } from 'formidable';
 
 //const upload = multer({ dest: 'studentList/' });
@@ -59,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             // Loop through each student and call getStudents
             const students = [];
             for (const studentDetail of studentsDetails) {
-               const studentData = await getStudents(studentDetail.firstName, studentDetail.lastName);
+               const studentData = await getStudentsById(studentDetail.studentID);
                students.push(studentData);
             }
             // Respond with the retrieved students
