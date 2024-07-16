@@ -497,6 +497,8 @@ export async function getCourse(courseID: string): Promise<any> {
       const rows = await query(sql, [firstName, lastName]);
       if (rows.length > 0) {
         return rows[0];
+      } else {
+        return null; // Return null if no student is found
       }
     } catch (error) {
       console.error('Error in getStudents:', error);
@@ -512,6 +514,8 @@ export async function getCourse(courseID: string): Promise<any> {
         const rows = await query(sql, [studentID]);
         if (rows.length > 0) {
           return rows[0];
+        } else {
+          return null; // Return null if no student is found
         }
       } catch (error) {
         console.error('Error in getStudents:', error);

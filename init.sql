@@ -157,8 +157,8 @@ VALUES ('Final Project', 'Design a database schema', 'Design, Implementation, Re
 SET @assignmentID = LAST_INSERT_ID();
 
 -- Insert a sample student into the student table
-INSERT INTO student (userID, phoneNumber, homeAddress, dateOfBirth)
-VALUES ((SELECT userID FROM user WHERE email = 'john.doe@example.com'), '12345', '123 Main St', '2000-01-01');
+INSERT INTO student (userID, studentID, phoneNumber, homeAddress, dateOfBirth)
+VALUES ((SELECT userID FROM user WHERE email = 'john.doe@example.com'), '12345', '123-456-7890', '123 Main St', '2000-01-01');
 
 -- Get the studentID of the newly inserted student
 SET @studentID = LAST_INSERT_ID();

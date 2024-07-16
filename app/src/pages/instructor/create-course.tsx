@@ -16,6 +16,7 @@ const Courses: NextPage = () => {
   const [institutionName, setDescription] = useState('');
   const [showEnrollPopup, setShowEnrollPopup] = useState(false);
   const [students, setStudents] = useState<{ userID: number }[]>([]);
+  const [missingData, setMissingData] = useState<number[]>([]);
   const router = useRouter();
 
   // Use the session validation hook to check if the user is logged in
@@ -37,6 +38,9 @@ const Courses: NextPage = () => {
         if (enrollStudentsResponse.ok) {
           const studentsData = await enrollStudentsResponse.json();
           setStudents(studentsData.students);
+          setMissingData(studentsData.missingData);
+          console.log('Student Data:', studentsData.students); // Log student data
+          console.log('Missing Data:', studentsData.missingData); // Log missing data
           setShowEnrollPopup(true);
         } else {
           console.error('Failed to upload and process students');
