@@ -1,9 +1,20 @@
 // db.ts
 import mysql from 'mysql2/promise';
 import fs from 'fs/promises';
-import config from '../dbConfig'; // Import the database configuration from dbConfig.ts
+import config from './dbConfig'; // Import the database configuration from dbConfig.ts
 
-const dbConfig = process.env.NODE_ENV === 'production' ? config.production : config.development; 
+let dbConfig;
+
+if (process.env.NODE_ENV === 'production') {
+  dbConfig = config.production;
+} else if (process.env.NODE_ENV === 'development' && process.env.DEV_DB_HOST === '') {
+  dbConfig = config.development;
+} else if (process.env.NODE_ENV === 'development' && process.env.DEV_DB_HOST === 'db') {
+  dbConfig = config.localhost;
+} else {
+  dbConfig = config.testing;
+}
+
 // Use the production configuration if the NODE_ENV environment variable is set to 'production' but development config by default
 const pool = mysql.createPool(dbConfig);
 
