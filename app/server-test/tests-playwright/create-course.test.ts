@@ -23,13 +23,13 @@ test.describe('Create Course Page', () => {
     await page.goto(`${baseURL}/instructor/create-course`);
   });
 
-  /*
-  test.afterEach(async ({ page }, testInfo) => {
-    // Take a screenshot after each test
-    const screenshotPath = path.join(__dirname, 'screenshots', `${testInfo.title}.png`);
-    await page.screenshot({ path: screenshotPath });
-  });
-  */
+  
+  // test.afterEach(async ({ page }, testInfo) => {
+  //   // Take a screenshot after each test
+  //   const screenshotPath = path.join(__dirname, 'screenshots', `${testInfo.title}.png`);
+  //   await page.screenshot({ path: screenshotPath });
+  // });
+  
 
   // Check that the course creation header is displayed
   test('should display the course creation header', async ({ page }) => {
@@ -53,6 +53,22 @@ test.describe('Create Course Page', () => {
   test('should display the create course button', async ({ page }) => {
     const createCourseButton = page.locator('b:has-text("Create Course")');
     await expect(createCourseButton).toBeVisible();
+  });
+
+  test('should upload a file', async ({ page }) => {
+    const filePath = path.join(__dirname, '../test-files/students.csv');
+    
+    // Check the file input value before uploading the file
+    const fileInput = page.locator('input[type="file"]');
+    const fileInputValueBefore = await fileInput.evaluate(input => (input as HTMLInputElement).value);
+    expect(fileInputValueBefore).toBe('');
+
+    // Upload the file
+    await fileInput.setInputFiles(filePath);
+    
+    // Check the file input value after uploading the file
+    const fileInputValueAfter = await fileInput.evaluate(input => (input as HTMLInputElement).files?.[0]?.name);
+    expect(fileInputValueAfter).toBe('students.csv');
   });
 
   // Check that the create course button can be clicked and that the appropriate API call is made

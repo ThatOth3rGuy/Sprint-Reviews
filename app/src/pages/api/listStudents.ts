@@ -5,8 +5,6 @@ import { parse } from 'csv-parse';
 import { getStudentsById } from '../../db';
 import formidable, { IncomingForm } from 'formidable';
 
-//const upload = multer({ dest: 'studentList/' });
-
 export const config = {
   api: {
     bodyParser: false,

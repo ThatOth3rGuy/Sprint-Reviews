@@ -18,9 +18,9 @@ if (process.env.NODE_ENV === 'production') {
 // Use the production configuration if the NODE_ENV environment variable is set to 'production' but development config by default
 const pool = mysql.createPool(dbConfig);
 
-export async function query(sql: string, values: any[] = []): Promise<any> {
+export async function query(sql: string, values: any[] = [], customPool: mysql.Pool = pool): Promise<any> {
   try {
-    const [result] = await pool.execute(sql, values);
+    const [result] = await customPool.execute(sql, values);
     return result;
   } catch (error) {
     console.error('Database query error:', error);
@@ -506,12 +506,12 @@ export async function getCourse(courseID: string): Promise<any> {
     }
   }
     // grab all students from the database matching their student ID's
-    export async function getStudentsById(studentID: number) {
+    export async function getStudentsById(studentID: number, customPool: mysql.Pool = pool) {
       const sql = `
         SELECT student.*, user.* FROM student JOIN user ON student.userID = user.userID WHERE studentID = ?
       `;
       try {
-        const rows = await query(sql, [studentID]);
+        const rows = await query(sql, [studentID], customPool);
         if (rows.length > 0) {
           return rows[0];
         } else {
@@ -523,13 +523,13 @@ export async function getCourse(courseID: string): Promise<any> {
       }
     }
 //  enroll student in a course
-export async function enrollStudent(userID: string, courseID: string): Promise<void> {
+export async function enrollStudent(userID: string, courseID: string, customPool: mysql.Pool = pool): Promise<void> {
   const sql = `
     INSERT INTO enrollment (studentID, courseID)
     VALUES (?, ?)
   `;
   try {
-    const result = await query(sql, [userID, courseID]);
+    const result = await query(sql, [userID, courseID], customPool);
   } catch (error) {
     const err = error as Error;
     console.error(`Error enrolling student ${userID} in course ${courseID}:`, err.message);
