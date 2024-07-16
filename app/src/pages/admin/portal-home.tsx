@@ -8,7 +8,7 @@ import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/admin-portal-home.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Listbox, ListboxItem } from "@nextui-org/react";
+import { Divider, Listbox, ListboxItem } from "@nextui-org/react";
 
 interface Course {
   courseID: number;
@@ -101,11 +101,15 @@ export default function Page() {
     <>
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
-          <h1>Dashboard</h1>
+          <h1>Admin Dashboard</h1>
           {/* <Button size='sm' color="secondary" variant='ghost' className=' self-end' onClick={handleCreateCourseClick}>Create Course</Button> */}
         </div>
         <div className={styles.mainContent}>
         <div className={styles.assignmentsSection}>
+          <div className="text-left mx-2 mt-0 ">
+            <h3>Courses</h3>
+            <Divider className="my-1"/>
+          </div>
         <div className={styles.courseCards}>
             {courses.map((course, index) => (
               <div className={styles.courseCard}>
