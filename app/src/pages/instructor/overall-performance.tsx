@@ -1,46 +1,62 @@
-import InstructorHeader from "../components/instructor-components/instructor-header";
+import React, { useState, useEffect } from "react";
+import { useSessionValidation } from '../api/auth/checkSession';      
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
+import styles from "../../styles/instructor-assignments-creation.module.css";
+import {Button, Card, CardHeader, CardBody, CardFooter, Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 import AdminNavbar from "../components/admin-components/admin-navbar";
-import AdminHeader from "../components/admin-components/admin-header";
-import { useState } from 'react';
-import { useSessionValidation } from '../api/auth/checkSession';
+import router from "next/router";
 
-export default function Page() {
+export default function Component() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
 
-  // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  // If the session exists, check if the user is an admin
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
-    return;
+    return <p>No user found in session</p>;
   }
-  const isAdmin = session.user.role === 'admin';
 
+  const isAdmin = session?.user?.role === 'admin';
+  function handleHomeClick(): void {
+    router.push("/instructor/dashboard");
+  }
   return (
     <>
-      <br />
-      <br />
-      <br />
-     {isAdmin ? (
-        <>
-          <AdminHeader title="Grades"
-          addLink={[{href: "#", title: "Overall Performance"}, {href: "./individual-performance", title: "Individual Performance"}]}/>
-          <AdminNavbar />
-        </>
-      ) : (
-        <>
-          <InstructorHeader title="Grades"
-          addLink={[{href: "#", title: "Overall Performance"}, {href: "./individual-performance", title: "Individual Performance"}]}/>
-          <InstructorNavbar />
-        </>
-      )}
+    {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
+    <div className={`instructor text-primary-900 ${styles.container}`}>
+    <div className={styles.header}>
+          <h1>Grades</h1>
+          <br />
+          <Breadcrumbs>
+            <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
+            <BreadcrumbItem>Grades</BreadcrumbItem>
+          </Breadcrumbs>
+          
+        </div>
+        <div className={styles.mainContent}>
+        <div className={styles.rectangle}>
+    <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <Card className="bg-background shadow-lg rounded-lg overflow-hidden cursor-pointer transition-transform duration-300 ease-in-out hover:-translate-y-2 hover:shadow-xl">
+          <CardHeader className="bg-primary text-primary-foreground p-4 flex justify-between items-center">
+            <h2 className="text-xl font-bold">MATH201 - Calculus I</h2>
+            <div className="bg-primary-foreground text-primary px-3 py-1 rounded-full text-sm font-medium">92%</div>
+          </CardHeader>
+          <CardBody className="p-4">
+            <p className="text-muted-foreground">Overall average score for students in this course.</p>
+          </CardBody>
+          <CardFooter className="bg-muted p-4 flex justify-end">
+            <Button onClick={() => {}}>View Details</Button>
+          </CardFooter>
+        </Card>
+        </div>
+        </div>
+      </div>
+      </div>
+    </div>
     </>
-  );
+  )
 }

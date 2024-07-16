@@ -72,9 +72,7 @@ export default function Page() {
   return (
     <>
 
-      {/* <StudentHeader title={courseData.courseName}
-      addLink={[{href: "./all-assignments", title: "Assignments"}, {href: "./peer-eval-assignments", title: "Peer Feedback"}]}/>
-      */}
+      
       <StudentNavbar />
       <div >
         <div >

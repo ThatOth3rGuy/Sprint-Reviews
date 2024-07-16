@@ -54,9 +54,13 @@ export default function Page() {
   const handleHomeClick = async () => {
     router.push("/instructor/dashboard")
   }
+  /**
+   * Fetches assignments based on the provided course ID.
+   * @param {string | string[]} courseID - The ID of the course to fetch assignments for.
+   */
   const fetchAssignments = async (courseID: string | string[]) => {
     try {
-      const response = await fetch(`/api/getAssignments?courseID=${courseID}`);
+      const response = await fetch(`/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`);
       if (response.ok) {
         const data = await response.json();
         setAssignments(data.courses);
@@ -94,8 +98,12 @@ export default function Page() {
     router.push('/instructor/release-assignment');
   };
   const handleCreateGroupPeerReviewAssignmentClick = () => {
-    router.push('/instructor/create-assignment');
+    router.push('/instructor/create-groups');
   };
+  /**
+   * Handles the action based on the key provided.
+   * @param {any} key - The key representing the action to be performed.
+   */
   const handleAction = (key: any) => {
     switch (key) {
       case "create":
@@ -115,6 +123,10 @@ export default function Page() {
         console.log("Unknown action:", key);
     }
   };
+  /**
+   * Renders the instructor course dashboard page.
+   * @returns {JSX.Element} The instructor course dashboard page.
+   */
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -181,7 +193,7 @@ export default function Page() {
               <Listbox aria-label="Actions" onAction={handleAction}>
                 <ListboxItem key="create">Create Assignment</ListboxItem>
                 <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
-                <ListboxItem key="group-review">Create Group Peer Review</ListboxItem>
+                <ListboxItem key="group-review">Create Student Groups</ListboxItem>
                 <ListboxItem key="delete" className="text-danger" color="danger">
                   Archive Course
                 </ListboxItem>
@@ -196,6 +208,7 @@ export default function Page() {
         </div>
       </div>
 
+      
 
     </>
   );

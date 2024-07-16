@@ -136,4 +136,14 @@
     }
   }
   
-  
+  .outerCard {
+    width: 100%;
+    background-color: #fcf9f7;
+    border: 1px solid #04124b;
+    /* border-radius: 10px; */
+    overflow: hidden;
+    transition: transform 0.2s;
+    align-items: center;
+    padding: 1%;
+    position: relative;
+  }

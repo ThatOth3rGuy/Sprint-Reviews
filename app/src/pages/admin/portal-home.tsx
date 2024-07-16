@@ -8,7 +8,8 @@ import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/admin-portal-home.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Divider, Listbox, ListboxItem } from "@nextui-org/react";
+import Image from 'next/image';
+import { Button, Divider, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 
 interface Course {
   courseID: number;
@@ -31,7 +32,7 @@ export default function Page() {
   useEffect(() => {
     async function fetchCourses() {
       try {
-        const response = await fetch('/api/getAllCourses?isArchived=false');
+        const response = await fetch('/api/courses/getAllArchivedCourses?isArchived=false');
         if (!response.ok) {
           throw new Error('Failed to fetch courses');
         }
@@ -69,30 +70,30 @@ export default function Page() {
       query: { courseID },
     });
   };
-  const handleCreateAssignmentClick = () => {
-    router.push('/instructor/create-assignment');
+  const handleViewUsersClick = () => {
+    router.push('/admin/view-users');
   };
-  const handleCreatePeerReviewAssignmentClick = () => {
-    router.push('/instructor/release-assignment');
+  const handleJoinRequestClick = () => {
+    router.push('/admin/join-requests');
   };
-  const handleCreateGroupPeerReviewAssignmentClick = () => {
-    router.push('/instructor/create-assignment');
+  const handleArchivedCoursesClick = () => {
+    router.push('/admin/archived-courses');
   };
   const handleAction = (key: any) => {
     switch (key) {
-      case "create":
-        handleCreateAssignmentClick();
+      case "view":
+        handleViewUsersClick();
         break;
-      case "peer-review":
-        handleCreatePeerReviewAssignmentClick();
+      case "join":
+        handleJoinRequestClick();
         break;
-      case "group-review":
-        handleCreateGroupPeerReviewAssignmentClick();
+      case "archives":
+        handleArchivedCoursesClick();
         break;
-      case "delete":
-        // Implement delete course functionality
-        console.log("Delete course");
-        break;
+      // case "delete":
+      //   // Implement delete course functionality
+      //   console.log("Delete course");
+      //   break;
       default:
         console.log("Unknown action:", key);
     }
@@ -103,38 +104,37 @@ export default function Page() {
         <div className={styles.header}>
           <h1>Admin Dashboard</h1>
           {/* <Button size='sm' color="secondary" variant='ghost' className=' self-end' onClick={handleCreateCourseClick}>Create Course</Button> */}
+          <h3 className="my-1">All Active Courses</h3>
+          <Divider className="my-1" />
         </div>
         <div className={styles.mainContent}>
-        <div className={styles.assignmentsSection}>
-          <div className="text-left mx-2 mt-0 ">
-            <h3>Courses</h3>
-            <Divider className="my-1"/>
+          <div className={styles.assignmentsSection}>
+            {/* TODO: add functionality to search bar to search from all active courses */}
+            <Input className="m-1 mx-4 pr-7" placeholder="Search for course" size="sm" type="search" />
+
+            <div className={styles.courseCards}>
+              {courses.map((course, index) => (
+                <div className={styles.courseCard}>
+                  <AdminCourseCard
+                    key={index}
+                    courseName={course.courseName}
+                    instructor={`${course.instructorFirstName} ${course.instructorLastName}`}
+                    averageGrade={course.averageGrade}
+                    courseID={course.courseID}
+                    img="/logo-transparent-png.png"
+                  />
+                  
+                </div>
+              ))}
+            </div>
           </div>
-        <div className={styles.courseCards}>
-            {courses.map((course, index) => (
-              <div className={styles.courseCard}>
-                <AdminCourseCard
-                key={index}
-                courseName={course.courseName}
-                instructor={`${course.instructorFirstName} ${course.instructorLastName}`}
-                averageGrade={course.averageGrade}
-                courseID={course.courseID}
-                img="/logo-transparent-png.png"
-              />
-              </div>
-            ))}
-          </div>
-        </div>
-          
+
           <div className={styles.notificationsSection}>
             <div className={styles.actionButtons}>
               <Listbox aria-label="Actions" onAction={handleAction}>
-                <ListboxItem key="create">Create Assignment</ListboxItem>
-                <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
-                <ListboxItem key="group-review">Create Group Peer Review</ListboxItem>
-                <ListboxItem key="delete" className="text-danger" color="danger">
-                  Archive Course
-                </ListboxItem>
+                <ListboxItem key="join">Join Requests</ListboxItem>
+                <ListboxItem key="view">View Users</ListboxItem>
+                <ListboxItem key="archives">Archived Courses</ListboxItem>
               </Listbox>
             </div>
             <hr />
@@ -153,7 +153,7 @@ export default function Page() {
       /> */}
           <AdminNavbar />
         </div>
-        </div>
-      </>
-      );
+      </div>
+    </>
+  );
 }

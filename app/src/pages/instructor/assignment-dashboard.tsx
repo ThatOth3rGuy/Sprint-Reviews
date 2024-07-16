@@ -15,11 +15,15 @@ interface Assignment {
   submittedStudents: string[];
   remainingStudents: string[];
 }
+
 interface CourseData {
   courseID: string;
   courseName: string;
 }
-export default function AssignmentDashboard() {
+interface AssignmentDashboardProps {
+  courseId: string;
+}
+export default function AssignmentDashboard({ courseId }: AssignmentDashboardProps) {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const router = useRouter();
@@ -31,6 +35,7 @@ export default function AssignmentDashboard() {
 
   useEffect(() => {
     if (assignmentID) {
+      // Fetch assignment data
       fetch(`/api/assignments/${assignmentID}`)
         .then((response) => response.json())
         .then((data: Assignment) => {
@@ -38,6 +43,15 @@ export default function AssignmentDashboard() {
           setAssignment(data);
         })
         .catch((error) => console.error('Error fetching assignment data:', error));
+  
+      // Fetch course data
+      fetch(`/api/courses/${courseId}`) // Replace `courseID` with the actual course ID
+        .then((response) => response.json())
+        .then((data: CourseData) => {
+          console.log("Fetched course data:", data);
+          setCourseData(data);
+        })
+        .catch((error) => console.error('Error fetching course data:', error));
     }
   }, [assignmentID]);
 

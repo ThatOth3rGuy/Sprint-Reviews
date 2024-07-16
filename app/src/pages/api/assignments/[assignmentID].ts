@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 export async function getAssignmentById(assignmentID: string): Promise<any> {
   const sql = `
-    SELECT assignmentID, title,description, deadline  FROM assignment WHERE courseID = ?  `;
+    SELECT assignmentID, title,descr, deadline  FROM assignment WHERE assignmentID = ?  `;
   try {
     const rows = await query(sql, [assignmentID]);
     return rows[0];

@@ -39,23 +39,25 @@ const Assignments: NextPage = () => {
   const students = ["Student 1", "Student 2", "Student 3", "Student 4"];
 
   useEffect(() => {
-    fetch("/api/getAllCourses")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Fetched courses:", data);
-        setCourses(data);
-      })
-      .catch((error) => {
-        console.error("There has been a problem with your fetch operation:", error);
-        setError("Failed to fetch courses. Please try again.");
-      });
-  }, []);
+    if (session && session.user && session.user.userID) {
+      fetchCourses(session.user.userID);
+    }
 
+  
+}, [session]);
+const fetchCourses = async (instructorID: number) => {
+  try {
+    const response = await fetch(`/api/getCourse4Instructor?instructorID=${instructorID}`);
+    if (response.ok) {
+      const data = await response.json();
+      setCourses(data.courses);
+    } else {
+      console.error('Failed to fetch courses');
+    }
+  } catch (error) {
+    console.error('Error fetching courses:', error);
+  }
+};
   async function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
     if (!event.target.files || event.target.files.length === 0) {
       return;
@@ -78,15 +80,30 @@ const Assignments: NextPage = () => {
   };
 
   const onCreateAssignmentButtonClick = useCallback(async () => {
+    // Reset error state
     setError(null);
-    if (!title || !description || !dueDate || !courseID || allowedFileTypes.length === 0) {
-      setError("Please fill in all fields and select at least one allowed file type");
+  
+    // Check if all required fields are filled
+    if (!title.trim()) {
+      setError("Please enter the assignment title.");
       return;
     }
-
+    if (!dueDate.trim()) {
+      setError("Please select a due date.");
+      return;
+    }
+    if (!courseID.trim()) {
+      setError("Please select a course.");
+      return;
+    }
+    if (allowedFileTypes.length === 0) {
+      setError("Please select at least one allowed file type.");
+      return;
+    }
+  
     // Convert the date to ISO format
     const isoDate = new Date(dueDate).toISOString();
-
+  
     const response = await fetch("/api/addNew/createAssignment", {
       method: "POST",
       headers: {
@@ -102,17 +119,17 @@ const Assignments: NextPage = () => {
         allowedFileTypes,
       }),
     });
-
+  
     if (response.ok) {
       router.push({
         pathname: '/instructor/dashboard',
-        
       });
     } else {
       const errorData = await response.json();
       setError(errorData.message || "An error occurred while creating the assignment");
     }
   }, [title, description, dueDate, courseID, fileContent, groupAssignment, allowedFileTypes, router]);
+  
 
   if (loading) {
     return <p>Loading...</p>;
@@ -128,7 +145,10 @@ const Assignments: NextPage = () => {
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");
   }
-
+/**
+   * Renders the instructor course dashboard page.
+   * @returns {JSX.Element} The instructor course dashboard page.
+   */
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -164,19 +184,22 @@ const Assignments: NextPage = () => {
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
           />
-          <Autocomplete 
-          isRequired
-        label="Select a class"
-        placeholder="Search a class"
-        className="max-w-xs"
-        value={courseID}        
+          <Select
+           label="Select a Course"
+            className={styles.textbox}
+            value={courseID}
+            onChange={(e) => setCourseID(e.target.value)}
+          >
+            
+            {courses.map((courseItem) => (
+              <SelectItem
+                key={courseItem.courseID}
+                value={courseItem.courseID.toString()}
               >
-        {courses.map((courseItem) => (
-          <AutocompleteItem key={courseItem.courseID} value={courseItem.courseID.toString()}>
-            {courseItem.courseName}
-          </AutocompleteItem>
-        ))}
-      </Autocomplete>
+                {courseItem.courseName}
+              </SelectItem>
+            ))}
+          </Select>
       <div >
       <Checkbox
       className={styles.innerTitle}
@@ -221,7 +244,7 @@ const Assignments: NextPage = () => {
         
         <br />
         <CheckboxGroup
-        isRequired
+        
           color="default"
           value={allowedFileTypes}
         ><h3 className={styles.innerTitle}>Allowed file types:</h3>
