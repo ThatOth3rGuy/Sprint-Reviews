@@ -16,7 +16,7 @@ const Courses: NextPage = () => {
   const [institutionName, setDescription] = useState('');
   const [showEnrollPopup, setShowEnrollPopup] = useState(false);
   const [students, setStudents] = useState<{ userID: number }[]>([]);
-  const [missingData, setMissingData] = useState<number[]>([]);
+  const [missingData, setMissingData] = useState<string[]>([]);
   const router = useRouter();
 
   // Use the session validation hook to check if the user is logged in
@@ -72,6 +72,7 @@ const Courses: NextPage = () => {
         body: JSON.stringify({
           courseName: courseName,
           instructorID: instructorID,
+          missingData: missingData,
         }),
       });
 
@@ -85,7 +86,7 @@ const Courses: NextPage = () => {
 
       const studentIDs = students.map(student => student.userID);
 
-      // Call the enroll students API with studentIDs and courseID
+      // Call the enroll students API with studentIDs, courseID, and missingData
       const enrollStudentsResponse = await fetch(`/api/enrollStudents`, {
         method: 'POST',
         headers: {
@@ -94,6 +95,7 @@ const Courses: NextPage = () => {
         body: JSON.stringify({
           studentIDs: studentIDs,
           courseID: courseId,
+          missingData: missingData, // Include missingData here
         }),
       });
 
@@ -115,7 +117,7 @@ const Courses: NextPage = () => {
       console.error((error as Error).message);
       alert((error as Error).message); // Ensure alert is shown
     }
-  }, [courseName, students, router, session]);
+  }, [courseName, students, missingData, router, session]);
 
   if (loading) {
     return <p>Loading...</p>;
