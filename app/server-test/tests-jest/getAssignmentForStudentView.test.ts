@@ -5,7 +5,7 @@ import { getAssignmentForStudentView } from '../../src/db';
 describe('getAssignmentForStudentView Tests', () => {
   let connection: mysql.PoolConnection;
   // Since multiple tests are being run, use a baseID to ensure unique IDs
-  // then only test for getting theses specific courses
+  // then only test for getting these specific courses
   const uniqueID = Math.floor(Math.random() * 1000000); // Base value for unique IDs
 
   beforeAll(async () => {
@@ -19,8 +19,8 @@ describe('getAssignmentForStudentView Tests', () => {
     );
 
     await connection.query(
-      `INSERT INTO instructor (userID, isAdmin, departments) VALUES 
-      (${uniqueID + 1}, TRUE, 'Test Department')
+      `INSERT INTO instructor (instructorID, userID, isAdmin, departments) VALUES 
+      (${uniqueID + 1}, ${uniqueID + 1}, TRUE, 'Test Department')
       ON DUPLICATE KEY UPDATE departments = 'Test Department'`
     );
 
@@ -31,7 +31,7 @@ describe('getAssignmentForStudentView Tests', () => {
     );
 
     await connection.query(
-      `INSERT INTO assignment (assignmentID, title, description, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES 
+      `INSERT INTO assignment (assignmentID, title, descr, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES 
       (${uniqueID + 3}, 'Assignment 1', 'Description 1', 'Rubric 1', '2024-12-31 23:59:59', FALSE, ${uniqueID + 2}, 'pdf,docx')
       ON DUPLICATE KEY UPDATE title = VALUES(title)`
     );
@@ -54,7 +54,7 @@ describe('getAssignmentForStudentView Tests', () => {
     expect(assignment).toEqual({
       assignmentID: uniqueID + 3,
       title: 'Assignment 1',
-      description: 'Description 1',
+      descr: 'Description 1',
       deadline: '2024-12-31T23:59:59.000Z',
       rubric: 'Rubric 1',
       groupAssignment: 0,

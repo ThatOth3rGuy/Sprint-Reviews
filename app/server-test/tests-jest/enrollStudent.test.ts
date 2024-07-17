@@ -5,6 +5,7 @@ import { enrollStudent } from '../../src/db';
 describe('enrollStudent Tests', () => {
   let connection: mysql.PoolConnection;
 
+  // Setup database connection and initial data before all tests
   beforeAll(async () => {
     connection = await global.pool.getConnection();
 
@@ -18,14 +19,14 @@ describe('enrollStudent Tests', () => {
 
     // Ensure the student exists
     await connection.query(
-        `INSERT INTO student (userID, studentID, phoneNumber, homeAddress, dateOfBirth) VALUES 
-        (1000, 1000, '1234567890', '123 Test St', '2000-01-01')
-        ON DUPLICATE KEY UPDATE phoneNumber = '1234567890'`
+      `INSERT INTO student (studentID, userID, phoneNumber, homeAddress, dateOfBirth) VALUES 
+      (1000, 1000, '1234567890', '123 Test St', '2000-01-01')
+      ON DUPLICATE KEY UPDATE phoneNumber = '1234567890'`
     );
 
     // Ensure the instructor exists
     await connection.query(
-      `INSERT INTO instructor (userID, isAdmin, departments) VALUES (1001, TRUE, 'Test Department') ON DUPLICATE KEY UPDATE departments = 'Test Department'`
+      `INSERT INTO instructor (instructorID, userID, isAdmin, departments) VALUES (1001, 1001, TRUE, 'Test Department') ON DUPLICATE KEY UPDATE departments = 'Test Department'`
     );
 
     // Ensure the course exists
@@ -34,22 +35,26 @@ describe('enrollStudent Tests', () => {
     );
   });
 
+  // Clean up the database after all tests
   afterAll(async () => {
     if (connection) {
+      // Delete the test data from the enrollment, course, instructor, and user tables
       await connection.query(`DELETE FROM enrollment WHERE studentID = 1000 AND courseID = 2000`);
       await connection.query(`DELETE FROM course WHERE courseID = 2000`);
-      await connection.query(`DELETE FROM instructor WHERE userID = 1001`);
+      await connection.query(`DELETE FROM instructor WHERE instructorID = 1001`);
       await connection.query(`DELETE FROM user WHERE userID IN (1000, 1001)`);
-      connection.release();
+      connection.release(); 
     }
   });
 
+  // Test case to enroll a student successfully
   test('should enroll a student successfully', async () => {
     const userID = '1000';
     const courseID = '2000';
 
     await enrollStudent(userID, courseID, global.pool);
 
+    // Verify the student was enrolled
     const [rows]: [mysql.RowDataPacket[], mysql.FieldPacket[]] = await connection.query(
       `SELECT * FROM enrollment WHERE studentID = ? AND courseID = ?`,
       [userID, courseID]
@@ -57,15 +62,17 @@ describe('enrollStudent Tests', () => {
 
     expect(rows.length).toBe(1);
     expect(rows[0].studentID).toBe(parseInt(userID));
-    expect(rows[0].courseID).toBe(parseInt(courseID));
+    expect(rows[0].courseID).toBe(parseInt(courseID)); 
   });
 
+  // Test case to handle errors during enrollment
   test('should handle errors during enrollment', async () => {
     const userID = '1000';
     const invalidCourseID = '9999'; // Assume this ID does not exist
 
-    await expect(enrollStudent(userID, invalidCourseID, global.pool)).rejects.toThrow();
+    await expect(enrollStudent(userID, invalidCourseID, global.pool)).rejects.toThrow(); 
 
+    // Verify the student was not enrolled
     const [rows]: [mysql.RowDataPacket[], mysql.FieldPacket[]] = await connection.query(
       `SELECT * FROM enrollment WHERE studentID = ? AND courseID = ?`,
       [userID, invalidCourseID]

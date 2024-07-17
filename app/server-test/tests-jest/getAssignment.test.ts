@@ -5,7 +5,7 @@ import { getAssignments } from '../../src/db';
 describe('getAssignments Tests', () => {
   let connection: mysql.PoolConnection;
   // Since multiple tests are being run, use a baseID to ensure unique IDs
-  // then only test for getting theses specific courses
+  // then only test for getting these specific courses
   const uniqueID = Math.floor(Math.random() * 1000000); // Base value for unique IDs
 
   beforeAll(async () => {
@@ -20,13 +20,13 @@ describe('getAssignments Tests', () => {
     );
 
     await connection.query(
-      `INSERT INTO instructor (userID, isAdmin, departments) VALUES 
-      (${uniqueID + 1}, TRUE, 'Test Department')
+      `INSERT INTO instructor (instructorID, userID, isAdmin, departments) VALUES 
+      (${uniqueID + 1}, ${uniqueID + 1}, TRUE, 'Test Department')
       ON DUPLICATE KEY UPDATE departments = 'Test Department'`
     );
 
     await connection.query(
-      `INSERT INTO student (userID, studentID, phoneNumber, homeAddress, dateOfBirth) VALUES 
+      `INSERT INTO student (studentID, userID, phoneNumber, homeAddress, dateOfBirth) VALUES 
       (${uniqueID + 2}, ${uniqueID + 2}, '1234567890', '123 Test St', '2000-01-01')
       ON DUPLICATE KEY UPDATE phoneNumber = '1234567890'`
     );
@@ -38,9 +38,9 @@ describe('getAssignments Tests', () => {
     );
 
     await connection.query(
-      `INSERT INTO assignment (assignmentID, title, description, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES 
-      (${uniqueID + 4}, 'Assignment 1', 'Description 1', 'Rubric 1', '2024-12-31 23:59:59', FALSE, ${uniqueID + 3}, 'pdf'),
-      (${uniqueID + 5}, 'Assignment 2', 'Description 2', 'Rubric 2', '2024-12-31 23:59:59', FALSE, ${uniqueID + 3}, 'pdf')
+      `INSERT INTO assignment (assignmentID, title, descr, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES 
+      (${uniqueID + 4}, 'Assignment 1', 'Description 1', 'Rubric 1', '2024-12-31 23:59:59', FALSE, ${uniqueID + 3}, 'pdf,docx'),
+      (${uniqueID + 5}, 'Assignment 2', 'Description 2', 'Rubric 2', '2024-12-31 23:59:59', FALSE, ${uniqueID + 3}, 'pdf,docx')
       ON DUPLICATE KEY UPDATE title = VALUES(title)`
     );
   });
@@ -50,7 +50,7 @@ describe('getAssignments Tests', () => {
       await connection.query(`DELETE FROM assignment WHERE assignmentID IN (${uniqueID + 4}, ${uniqueID + 5})`);
       await connection.query(`DELETE FROM course WHERE courseID = ${uniqueID + 3}`);
       await connection.query(`DELETE FROM student WHERE userID = ${uniqueID + 2}`);
-      await connection.query(`DELETE FROM instructor WHERE userID = ${uniqueID + 1}`);
+      await connection.query(`DELETE FROM instructor WHERE instructorID = ${uniqueID + 1}`);
       await connection.query(`DELETE FROM user WHERE userID IN (${uniqueID + 1}, ${uniqueID + 2})`);
       connection.release();
     }
@@ -66,16 +66,16 @@ describe('getAssignments Tests', () => {
     expect(assignment1).toEqual({
       assignmentID: uniqueID + 4,
       title: 'Assignment 1',
-      description: 'Description 1',
-      deadline: '2024-12-31T23:59:59.000Z'
+      descr: 'Description 1',
+      deadline: '2024-12-31T23:59:59.000Z',
     });
 
     expect(assignment2).toBeDefined();
     expect(assignment2).toEqual({
       assignmentID: uniqueID + 5,
       title: 'Assignment 2',
-      description: 'Description 2',
-      deadline: '2024-12-31T23:59:59.000Z'
+      descr: 'Description 2',
+      deadline: '2024-12-31T23:59:59.000Z',
     });
   });
 
@@ -92,9 +92,9 @@ describe('getAssignments Tests', () => {
 
     // Reinsert assignments for cleanup
     await connection.query(
-      `INSERT INTO assignment (assignmentID, title, description, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES 
-      (${uniqueID + 4}, 'Assignment 1', 'Description 1', 'Rubric 1', '2024-12-31 23:59:59', FALSE, ${uniqueID + 3}, 'pdf'),
-      (${uniqueID + 5}, 'Assignment 2', 'Description 2', 'Rubric 2', '2024-12-31 23:59:59', FALSE, ${uniqueID + 3}, 'pdf')
+      `INSERT INTO assignment (assignmentID, title, descr, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES 
+      (${uniqueID + 4}, 'Assignment 1', 'Description 1', 'Rubric 1', '2024-12-31 23:59:59', FALSE, ${uniqueID + 3}, 'pdf,docx'),
+      (${uniqueID + 5}, 'Assignment 2', 'Description 2', 'Rubric 2', '2024-12-31 23:59:59', FALSE, ${uniqueID + 3}, 'pdf,docx')
       ON DUPLICATE KEY UPDATE title = VALUES(title)`
     );
   });

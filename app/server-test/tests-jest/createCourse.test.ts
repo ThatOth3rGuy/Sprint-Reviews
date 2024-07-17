@@ -7,7 +7,7 @@ describe('createCourse Tests', () => {
 
   test('should successfully create a course with valid data', async () => {
     const courseName = 'Test Course';
-    const instructorID = 3;
+    const instructorID = 1000;
 
     try {
       const courseID = await createCourse(courseName, instructorID, global.pool);

@@ -6,7 +6,7 @@ describe('getAllCourses Tests', () => {
   let connection: mysql.PoolConnection;
 
   // Since multiple tests are being run, use a baseID to ensure unique IDs
-  // then only test for getting theses specific courses
+  // then only test for getting these specific courses
   const baseID = Math.floor(Math.random() * 1000000); // Base value for unique IDs
 
   beforeAll(async () => {
@@ -21,13 +21,13 @@ describe('getAllCourses Tests', () => {
     );
 
     await connection.query(
-      `INSERT INTO instructor (userID, isAdmin, departments) VALUES 
-      (${baseID + 1}, TRUE, 'Test Department')
+      `INSERT INTO instructor (instructorID, userID, isAdmin, departments) VALUES 
+      (${baseID + 1}, ${baseID + 1}, TRUE, 'Test Department')
       ON DUPLICATE KEY UPDATE departments = 'Test Department'`
     );
 
     await connection.query(
-      `INSERT INTO student (userID, studentID, phoneNumber, homeAddress, dateOfBirth) VALUES 
+      `INSERT INTO student (studentID, userID, phoneNumber, homeAddress, dateOfBirth) VALUES 
       (${baseID + 2}, ${baseID + 2}, '1234567890', '123 Test St', '2000-01-01')
       ON DUPLICATE KEY UPDATE phoneNumber = '1234567890'`
     );
@@ -40,9 +40,9 @@ describe('getAllCourses Tests', () => {
     );
 
     await connection.query(
-      `INSERT INTO assignment (assignmentID, title, description, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES 
-      (${baseID + 5}, 'Assignment 1', 'Description 1', 'Rubric 1', '2024-12-31 23:59:59', FALSE, ${baseID + 3}, 'pdf'),
-      (${baseID + 6}, 'Assignment 2', 'Description 2', 'Rubric 2', '2024-12-31 23:59:59', FALSE, ${baseID + 4}, 'pdf')
+      `INSERT INTO assignment (assignmentID, title, descr, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES 
+      (${baseID + 5}, 'Assignment 1', 'Description 1', 'Rubric 1', '2024-12-31 23:59:59', FALSE, ${baseID + 3}, 'pdf,docx'),
+      (${baseID + 6}, 'Assignment 2', 'Description 2', 'Rubric 2', '2024-12-31 23:59:59', FALSE, ${baseID + 4}, 'pdf,docx')
       ON DUPLICATE KEY UPDATE title = VALUES(title)`
     );
 
@@ -60,7 +60,7 @@ describe('getAllCourses Tests', () => {
       await connection.query(`DELETE FROM assignment WHERE assignmentID IN (${baseID + 5}, ${baseID + 6})`);
       await connection.query(`DELETE FROM course WHERE courseID IN (${baseID + 3}, ${baseID + 4})`);
       await connection.query(`DELETE FROM student WHERE userID = ${baseID + 2}`);
-      await connection.query(`DELETE FROM instructor WHERE userID = ${baseID + 1}`);
+      await connection.query(`DELETE FROM instructor WHERE instructorID = ${baseID + 1}`);
       await connection.query(`DELETE FROM user WHERE userID IN (${baseID + 1}, ${baseID + 2})`);
       connection.release();
     }
