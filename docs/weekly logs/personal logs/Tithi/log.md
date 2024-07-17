@@ -1,5 +1,25 @@
 # Weekly Personal Logs
 
+## Personal Log For Week 10
+
+### 07/17/2024
+
+Topics Covered:
+*rebuilding existing application to use NextUI components and function correctly with api and database
+
+My contributions since Friday's log:
+
+Over the weekend, I spent a lot of my time working with Yatharth to create functional templates for each user type. We did pair-programming using the Live Share extension on VsCode from my laptop because it made it easier to build a consistent UI for the application. We were able to get most of the templates done by Monday, after which we merged the refactored database branch into the front-end-fixes-v2 branch. With the updated database and optimized api calls, we went through each page to make sure it was returning the right data. As of today, the application has some kind of template ready for any function required by the specific user. There are some issues with the student api functions, they work but the output is not what is expected. Overall, I think we are in a really good position for the UX testing on Friday because of the effort that was put into optimizing the application since the last cycle.
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Fix api calls for student assignment view | 07/18/2024 | WIP |
+| Implement a file/data storage using Firebase or some kind of cloud hosting service | 07/19/2024 | WIP |
+| Add a file viewing api similar to the file view on canvas | 07/21/2024 | WIP |
+| Set up email api for account confirmation and email notifications | 07/13/2024 | WIP |
+
+![week 10 time tracking](img/week10.png)
+
 ## Personal Log For Week 9
 
 ### 07/10/2024
@@ -14,10 +34,10 @@ Since Friday, I've been looking into my COSC 341 notes for HCI concepts and how 
 
 | Task | Due By | Status |
 | ------- | ------- | ------- |
-| Create templates for the rest of the student pages using the NextUI framework | 07/12/2024 | WIP |
+| Create templates for the rest of the student pages using the NextUI framework | 07/12/2024 | Complete |
 | Rebuild the navigation system to have slide out feature and favicons | 07/12/2024 | Complete |
-| Add frontend restrictions for users | 07/13/2024 | WIP |
-| Add FAQ or tooltips throughout the website for accessibility | 07/13/2024 | WIP |
+| Add frontend restrictions for users | 07/13/2024 | Mostly Complete |
+| Add FAQ or tooltips throughout the website for accessibility | 07/13/2024 | Mostly Complete |
 
 ![week 9 time tracking](img/week9.png)
 
