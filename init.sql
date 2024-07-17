@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS review_criteria (
     assignmentID INT NOT NULL,
     criterion VARCHAR(255),
     maxMarks INT,
-    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
+    FOREIGN KEY (assignmentID) REFERENCES submission(submissionID) ON DELETE CASCADE
 );
 
 -- Table for storing feedback information between students and assignments
@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS feedback (
     assignmentID INT NOT NULL,
     content TEXT,
     reviewerID INT,
-    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
+    FOREIGN KEY (assignmentID) REFERENCES submission(submissionID) ON DELETE CASCADE,
     FOREIGN KEY (reviewerID) REFERENCES student(studentID) ON DELETE SET NULL
 );
 
@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS selected_students (
     assignmentID INT,
     studentID INT,
     uniqueDeadline DATETIME,
-    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
+    FOREIGN KEY (assignmentID) REFERENCES submission(submissionID) ON DELETE CASCADE,
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
 
