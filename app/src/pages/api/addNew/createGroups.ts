@@ -4,8 +4,7 @@
 * It then calls the randomization function to create the groups, before calling the database query to add them.
 */
 
-// /pages/api/create-groups.ts
-
+// /pages/api/createNew/createGroups.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createGroups } from '../../../db';
 
@@ -27,14 +26,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { groupSize, studentIds } = req.body;
 
-  if (
-    !groupSize ||
-    !Array.isArray(studentIds) ||
-    studentIds.length === 0
-  ) {
+  if (!groupSize || !Array.isArray(studentIds) || studentIds.length === 0) {
     return res.status(400).json({ error: 'Invalid input' });
   }
-
 
   try {
     const groups = randomizeGroups(studentIds, groupSize);
