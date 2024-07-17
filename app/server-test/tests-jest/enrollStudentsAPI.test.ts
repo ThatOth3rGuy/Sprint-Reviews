@@ -1,5 +1,5 @@
 // tests-jest/enrollStudents.test.ts
-import handler from '../../src/pages/api/enrollStudents';
+import handler from '../../src/pages/api/addNew/enrollStudents';
 import { enrollStudent, getCourse } from '../../src/db';
 import { createMocks } from 'node-mocks-http';
 import fs from 'fs';

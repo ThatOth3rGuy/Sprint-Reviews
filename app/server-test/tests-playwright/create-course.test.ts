@@ -73,14 +73,14 @@ test.describe('Create Course Page', () => {
 
   // Check that the create course button can be clicked and that the appropriate API call is made
   test('should make API call to create course on button click', async ({ page }) => {
-    await page.route('**/api/createCourse', route => {
+    await page.route('**/api/addNew/createCourse', route => {
       route.fulfill({
         status: 200,
         body: JSON.stringify({ courseId: 1 }),
       });
     });
 
-    await page.route('**/api/enrollStudents', route => {
+    await page.route('**/api/addNew/enrollStudents', route => {
       route.fulfill({
         status: 200,
       });
@@ -100,7 +100,7 @@ test.describe('Create Course Page', () => {
 
   // Check for error handling when the create course API call fails
   test('should show error when create course API call fails', async ({ page }) => {
-    await page.route('**/api/createCourse', route => {
+    await page.route('**/api/addNew/createCourse', route => {
       route.fulfill({
         status: 500,
         body: JSON.stringify({ message: 'Failed to create course' }),
@@ -121,14 +121,14 @@ test.describe('Create Course Page', () => {
 
   // Check for error handling when the enroll students API call fails
   test('should show error when enroll students API call fails', async ({ page }) => {
-    await page.route('**/api/createCourse', route => {
+    await page.route('**/api/addNew/createCourse', route => {
       route.fulfill({
         status: 200,
         body: JSON.stringify({ courseId: 1 }),
       });
     });
 
-    await page.route('**/api/enrollStudents', route => {
+    await page.route('**/api/addNew/enrollStudents', route => {
       route.fulfill({
         status: 500,
         body: JSON.stringify({ message: 'Failed to enroll students' }),
