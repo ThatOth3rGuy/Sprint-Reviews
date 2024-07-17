@@ -1,7 +1,79 @@
 # Project 3: Peer Review System - Team 3 (SprintRunners)
 
 # Weekly Team Logs
+# Week 9 summary 
+##  July 10th (Wed) - July 17th (Wed)
+### Features in the Project Plan Cycle: 
+- All instructor pages front end and UX updated 
+- All students pages front end and UX updated
+- Application made ready for demo with the entire flow of all the features working, ready for testing 
+- More than 70 Jest tests written to have database tested 
+- Databse refactored and many functions optimized to clean db.ts 
 
+
+###  Tasks from the Project Board:
+![week7-kanban](./Images/week9Kanban.png)
+
+
+### Tasks for Next Cycle:
+
+![week5-done](./Images/week9Todo.png)
+
+### Burn-up Chart (Velocity):
+![week5-done](./Images/week9Burnup.png)
+
+### Times for Team/Individual:
+
+
+Clockify Times:
+
+![week5-done](./Images/week9Clokify.png)
+
+
+
+### Completed Tasks:
+![week5-done](./Images/week9Done.png)
+
+### In Progress Tasks/ To do:
+![week5-done](./Images/week9InProgress.png)
+
+### Overview:
+The project has seen significant advancements recently. Both the instructor and student pages have undergone front-end and UX updates, enhancing the overall user experience. The application is now demo-ready, with all features fully functional and prepared for testing. This includes a comprehensive flow of all the features, ensuring a smooth user journey. To ensure the robustness of the application, over 70 Jest tests have been written, providing thorough testing of the database. Lastly, the database has been refactored and optimized, with numerous functions cleaned up in the db.ts file, contributing to a more efficient and streamlined codebase. These updates collectively contribute to a more reliable, user-friendly application ready for demonstration and further testing. 
+##  July 5th (Fri) - July 10th (Wed)
+### Features in the Project Plan Cycle: 
+- Tests Database set up 
+- Playwright tests working and passing as per expected
+- Front end fixes and updates based on Parsa's and MVP feedback
+
+###  Tasks from the Project Board:
+![week7-kanban](./Images/week8Kanban.png)
+
+
+### Tasks for Next Cycle:
+
+![week5-done](./Images/week8Todo.png)
+
+### Burn-up Chart (Velocity):
+![week5-done](./Images/week8Burnup.png)
+
+### Times for Team/Individual:
+
+
+Clockify Times:
+
+![week5-done](./Images/week8clokify.png)
+
+
+
+### Completed Tasks:
+![week5-done](./Images/week8Done.png)
+
+### In Progress Tasks/ To do:
+![week5-done](./Images/week8InProgress.png)
+
+### Overview:
+Since our last meeting, we have been diligently working on several key tasks. We have successfully set up the Tests Database and ensured its smooth operation. Our Playwright tests are now functioning as expected and all the major tests are passing, confirming the robustness of our system.
+In response to the valuable feedback received from Parsa and the MVP presentation, we have to make the  necessary fixes and updates to the front end.
 # Week 8 summary ( post-MVP)
 ##  July 10th (Wed) - July 12th (Fri) 
 ### Features in the Project Plan Cycle: 
