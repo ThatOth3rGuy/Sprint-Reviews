@@ -1,6 +1,86 @@
  # Weekly Logs 
 ------------------------------------
 # Week 9 Summary 
+## Wednesday  (07/17/2024)
+### Timesheet Week 9 (07/10/2024- 07/13/2024)
+![alt text](images//week10_logs.png)
+
+
+### Current Tasks (Complete by the end of the day)
+- All instructor pages front end and UX updated 
+- All students pages front end and UX updated
+- Application made ready for demo with the entire flow of all the features working, ready for testing 
+- Databse refactored and many functions optimized to clean db.ts and work with create assignment. 
+
+
+
+### Progress Update 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Course Dashboard View Instructor and Students    
+        </td>
+        <!-- Status -->
+        <td> Done 
+        </td>
+    </tr>
+     <tr>
+        <!-- Task/Issue # -->
+        <td> All other page templates  
+        </td>
+        <!-- Status -->
+        <td> Done 
+        </td>
+    </tr>
+     <tr>
+        <!-- Task/Issue # -->
+        <td> Instructor and Student dashboard 
+        </td>
+        <!-- Status -->
+        <td> Done 
+        </td>
+    </tr>
+  <tr>
+        <!-- Task/Issue # -->
+        <td> Randomizer Algorithm   
+        </td>
+        <!-- Status -->
+        <td> In progress 
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> General Optimization of the Application  
+        </td>
+        <!-- Status -->
+        <td> Done 
+        </td>
+    </tr>
+    
+ 
+ <tr>
+
+     
+    
+</table>
+
+### Weekly Goal Review :
+The project has made substantial progress. Both the instructor and student pages have been updated in terms of front-end and UX, improving the overall user interaction. The application is now demo-ready, with a complete flow of all features operational and set for testing. This ensures a seamless user experience. The database has been refactored and optimized, with numerous functions in the db.ts file cleaned and improved to work efficiently with the ‘create assignment’ feature. These updates collectively result in a more efficient, user-friendly application that is ready for demonstration and further testing.
+
+
+### Next Cycle Goals:  
+* Randomizer algorithm and functionality 
+* Adding update features to all pages
+* Group Peer reviews and manual group creation 
+* Fix everything and hopefully have the entire platform with proper functionality ready for user testing 
+
+ 
 ## Friday  (07/12/2024)
 ### Timesheet Week 9 (07/10/2024- 07/13/2024)
 ![alt text](images//week9_indi2.png)
