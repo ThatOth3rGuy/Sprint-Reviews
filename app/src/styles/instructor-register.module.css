@@ -116,10 +116,11 @@
   
   .backIcon {
     position: absolute;
-    top: 9px;
-    left: 0px;
-    width: 100px;
-    height: 100px;
+    margin: 2vh 0 0 1vh;
+    top: 0;
+    left: 0;
+    width: 3vw;
+    height: 3vw;
     object-fit: cover;
     cursor: pointer;
   }

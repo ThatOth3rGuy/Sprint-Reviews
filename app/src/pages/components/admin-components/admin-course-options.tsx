@@ -27,7 +27,7 @@ const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ className = "", 
 
   const onArchiveContainerClick = useCallback(async () => {
     try {
-      const response = await fetch('/api/archiveCourse', {
+      const response = await fetch('/api/courses/archiveCourse', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

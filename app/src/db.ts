@@ -18,6 +18,7 @@ if (process.env.NODE_ENV === 'production') {
 // Use the production configuration if the NODE_ENV environment variable is set to 'production' but development config by default
 const pool = mysql.createPool(dbConfig);
 
+// main function to query the database with the given SQL query and values from pool
 export async function query(sql: string, values: any[] = [], customPool: mysql.Pool = pool): Promise<any> {
   try {
     const [result] = await customPool.execute(sql, values);
@@ -27,29 +28,43 @@ export async function query(sql: string, values: any[] = [], customPool: mysql.P
     throw error;
   }
 }
-
-export async function addInstructorToDatabase(firstName: string, lastName: string, email: string, password: string, role: string) {
+// function to add a user to the database
+export async function createUser(firstName: string, lastName: string, email: string, password: string, role: string) {
   const sql = `
     INSERT INTO user (firstName, lastName, email, pwd, userRole)
     VALUES (?, ?, ?, ?, ?)
   `;
   try {
-    await query(sql, [firstName, lastName, email, password, role]);
+    const result = await query(sql, [firstName, lastName, email, password, role]);
+    return result.insertId; // Return the inserted user ID for adding to the instructor or student table
   } catch (error) {
-    console.error('Error in addUserToDatabase:', error); // Log the error
+    console.error('Error in addUser:', error); // Log the error
     throw error;
   }
 }
-
-export async function addStudentToDatabase(firstName: string, lastName: string, email: string, password: string, role: string, institution: string) {
+// function to add an instructor to the database if the userRole is instructor
+export async function createInstructor(instructorID: number, userID: number, isAdmin: boolean) {
   const sql = `
-    INSERT INTO user (firstName, lastName, email, pwd, userRole, institution)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO instructor (instructorID, userID, isAdmin)
+    VALUES (?, ?, ?)
   `;
   try {
-    await query(sql, [firstName, lastName, email, password, role, institution]);
+    await query(sql, [instructorID, userID, isAdmin]);
   } catch (error) {
-    console.error('Error in addUserToDatabase:', error); // Log the error
+    console.error('Error in addInstructor:', error); // Log the error
+    throw error;
+  }
+}
+// function to add a student to the database if the userRole is student
+export async function createStudent(studentID: number, userID: number) {
+  const sql = `
+    INSERT INTO student (studentID, userID)
+    VALUES (?, ?)
+  `;
+  try {
+    await query(sql, [studentID, userID]);
+  } catch (error) {
+    console.error('Error in addStudent:', error); // Log the error
     throw error;
   }
 }
@@ -105,7 +120,7 @@ export async function getAllCourses(isArchived: boolean): Promise<any[]> {
       user.lastName AS instructorLastName,
       COALESCE(AVG(submission.grade), 0) AS averageGrade
     FROM course
-    JOIN instructor ON course.instructorID = instructor.userID
+    JOIN instructor ON course.instructorID = instructor.instructorID
     JOIN user ON instructor.userID = user.userID
     LEFT JOIN assignment ON course.courseID = assignment.courseID
     LEFT JOIN submission ON assignment.assignmentID = submission.assignmentID
@@ -114,7 +129,7 @@ export async function getAllCourses(isArchived: boolean): Promise<any[]> {
   `;
   try {
     const rows = await query(sql, [isArchived]);
-    return rows.map(row => ({
+    return rows.map((row: any) => ({
       ...row,
       averageGrade: row.averageGrade !== null ? parseFloat(row.averageGrade) : null,
     }));
@@ -123,7 +138,7 @@ export async function getAllCourses(isArchived: boolean): Promise<any[]> {
     throw error;
   }
 }
-export async function addAssignmentToDatabase(
+export async function addAssignmentToCourse(
   title: string, 
   description: string, 
   dueDate: string, 
@@ -137,7 +152,7 @@ export async function addAssignmentToDatabase(
   }
   const allowedFileTypesString = allowedFileTypes.join(',');
   const sql = `
-    INSERT INTO assignment (title, description, deadline, rubric, groupAssignment, courseID, allowedFileTypes)
+    INSERT INTO assignment (title, descr, deadline, rubric, groupAssignment, courseID, allowedFileTypes)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 
@@ -171,7 +186,7 @@ export async function addAssignmentToDatabase(
 
 
 export async function getAssignments(): Promise<any[]> {
-  const sql = 'SELECT assignmentID, title, description, DATE_FORMAT(deadline, "%Y-%m-%dT%H:%i:%s.000Z") as deadline FROM assignment';
+  const sql = 'SELECT assignmentID, title, descr, DATE_FORMAT(deadline, "%Y-%m-%dT%H:%i:%s.000Z") as deadline FROM assignment';
   try {
     const rows = await query(sql);
     console.log('Fetched assignments:', rows);
@@ -181,6 +196,7 @@ export async function getAssignments(): Promise<any[]> {
     throw error;
   }
 }
+
 export async function getCourses(): Promise<any[]> {
   const sql = 'SELECT * FROM course';
   try {
@@ -210,7 +226,7 @@ export async function getAssignmentsWithSubmissions() {
     SELECT 
       a.assignmentID, 
       a.title, 
-      a.description, 
+      a.descr as description, 
       DATE_FORMAT(a.deadline, '%Y-%m-%dT%H:%i:%s.000Z') as deadline,
       a.rubric,
       a.file,
@@ -226,7 +242,7 @@ export async function getAssignmentsWithSubmissions() {
     const rows = await query(sql);
     
     // Group submissions by assignment
-    const assignments = rows.reduce((acc, row) => {
+    const assignments = rows.reduce((acc: any[], row: any) => {
       const assignment = acc.find((a: { assignmentID: any; }) => a.assignmentID === row.assignmentID);
       if (assignment) {
         if (row.studentID) {
@@ -260,12 +276,11 @@ export async function getAssignmentsWithSubmissions() {
   }
 }
 
-
 export async function getCoursesByStudentID(studentID: number): Promise<any[]> {
   const sql = `SELECT c.courseID, c.courseName, u.firstName AS instructorFirstName
 FROM enrollment e
 JOIN course c ON e.courseID = c.courseID
-JOIN instructor i ON c.instructorID = i.userID
+JOIN instructor i ON c.instructorID = i.instructorID
 JOIN user u ON i.userID = u.userID
 WHERE e.studentID = ?
 ORDER BY c.courseID`;
@@ -278,6 +293,7 @@ ORDER BY c.courseID`;
     throw error;
   }
 }
+
 export async function createCourse(courseName: string, instructorID: number) {
   const sql = `
     INSERT INTO course (courseName, isArchived, instructorID)
@@ -297,7 +313,7 @@ export async function getAssignmentForStudentView(assignmentId: number) {
     SELECT 
       assignmentID, 
       title, 
-      description, 
+      descr, 
       DATE_FORMAT(deadline, '%Y-%m-%dT%H:%i:%s.000Z') as deadline,
       rubric,
       groupAssignment,
@@ -461,7 +477,7 @@ export async function updateAssignment(
 //   }
 // }
 
-export async function selectStudentsForAssignment(assignmentID: string, studentIDs: string[], uniqueDeadline: string | null): Promise<void> {
+export async function selectStudentsForAssignment(assignmentID: number, studentIDs: string[], uniqueDeadline: string | null): Promise<void> {
   const sql = `
     INSERT INTO selected_students (assignmentID, studentID, uniqueDeadline)
     VALUES (?, ?, ?)
@@ -469,17 +485,16 @@ export async function selectStudentsForAssignment(assignmentID: string, studentI
 
   try {
     for (const studentID of studentIDs) {
-      await query(sql, [assignmentID, studentID, uniqueDeadline]);
+      await query(sql, [assignmentID, Number(studentID), uniqueDeadline]);
     }
   } catch (error) {
     const err = error as Error;
     console.error(`Error selecting students for assignment:`, err.message);
   }
 }
-export async function getCourse(courseID: string): Promise<any> {
+export async function getCourse(courseID: number): Promise<any> {
   const sql = `
-    SELECT * FROM course WHERE courseID = ?
-  `;
+    SELECT courseID, courseName  FROM course WHERE instructorID = ?  `;
   try {
     const rows = await query(sql, [courseID]);
     return rows[0];
@@ -537,12 +552,12 @@ export async function enrollStudent(userID: string, courseID: string, customPool
   }
 }
 
-export async function getStudentsInCourse(courseID: string): Promise<any[]> {
+export async function getStudentsInCourse(courseID: number): Promise<any[]> {
   const sql = `
     SELECT u.userID, u.firstName, u.lastName, u.email, s.studentID
     FROM user u
     JOIN student s ON u.userID = s.userID
-    JOIN enrollment e ON s.userID = e.studentID
+    JOIN enrollment e ON s.studentID = e.studentID
     WHERE u.userRole = 'student' AND e.courseID = ?
     ORDER BY u.lastName, u.firstName
   `;

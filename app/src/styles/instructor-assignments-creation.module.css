@@ -36,6 +36,7 @@
   /* justify-content: space-around; */
   /* z-index: -1; */
   position: relative;
+  color : black;
 }
 
 .createButton{
