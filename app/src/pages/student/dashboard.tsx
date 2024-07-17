@@ -5,8 +5,8 @@ import StudentHeader from "../components/student-components/student-header";
 import StudentNavbar from "../components/student-components/student-navbar";
 import { useSessionValidation } from '../api/auth/checkSession';
 import { useRouter } from 'next/router';
-import { Button } from '@nextui-org/react';
-import styles from '../../styles/instructor-dashboard.module.css';
+import { Button, Spinner } from '@nextui-org/react';
+import styles from '../../styles/student-dashboard.module.css';
 import { Modal,Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 
 interface Course {
@@ -52,7 +52,9 @@ export default function Page() {
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <div className='w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto'>
+        <Spinner color='primary' size="lg" />
+      </div>;
   }
 
   if (!session || !session.user || !session.user.userID) {
@@ -64,7 +66,7 @@ export default function Page() {
 
   return (
     <>
-      <StudentNavbar />
+      <StudentNavbar home={{className: "bg-secondary-50"}}/>
 
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.topSection}>

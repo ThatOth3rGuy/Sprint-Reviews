@@ -1,14 +1,12 @@
 // course-dashboard.tsx
 import { useRouter } from "next/router";
-import InstructorHeader from "../components/instructor-components/instructor-header";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
-import AdminHeader from "../components/admin-components/admin-header";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/instructor-course-dashboard.module.css';
 import InstructorAssignmentCard from "../components/instructor-components/instructor-assignment-card";
-import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
 interface CourseData {
   courseID: string;
   courseName: string;
@@ -73,12 +71,7 @@ export default function Page() {
   };
 
   if (!courseData || loading) {
-    return <div className="instructor"><Progress
-    size="sm"
-    isIndeterminate
-    aria-label="Loading..."
-    color="secondary"
-  /></div>;;
+    return <Spinner color='primary' size="lg" className='instructor'/>
   }
 
   if (!session || !session.user || !session.user.userID) {
@@ -87,9 +80,7 @@ export default function Page() {
   }
   const isAdmin = session.user.role === 'admin';
 
-  const handleBackClick = async () => {
-    router.push('/instructor/dashboard');
-  }
+  
 
   const handleCreateAssignmentClick = () => {
     router.push('/instructor/create-assignment');

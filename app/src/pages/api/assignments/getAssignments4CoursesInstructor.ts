@@ -1,3 +1,4 @@
+//API DOES NOT USE ANY USER OR INSTRUCTOR OR STUDENT ID SO IT WORKS FOR ALL USERS
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { query } from '../../../db';
 

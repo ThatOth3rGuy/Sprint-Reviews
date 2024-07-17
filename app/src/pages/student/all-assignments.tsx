@@ -1,12 +1,10 @@
 import { useRouter } from "next/router";
-import InstructorHeader from "../components/instructor-components/instructor-header";
-import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import styles from '../../styles/instructor-course-dashboard.module.css';
-import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
-import AdminNavbar from "../components/admin-components/admin-navbar";
 import StudentNavbar from "../components/student-components/student-navbar";
+import StudentAssignmentCard from "../components/student-components/student-assignment-card";
 
 interface Assignment {
   assignmentID: number;
@@ -20,23 +18,18 @@ export default function AssignmentsPage() {
   const [loading, setLoading] = useState(true);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [session, setSession] = useState<any>(null);
-
+  const [selectedAssignmentType, setSelectedAssignmentType] = useState('all');
   useSessionValidation('student', setLoading, setSession);
   useEffect(() => {
     if (session && session.user && session.user.userID) {
       fetchAssignments(session.user.userID);
     }
   }, [session]);
+
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
     return null;
-  }
-  const isAdmin = session.user.role === 'admin';
-  const dummyassignments: Assignment[] = [
-    { assignmentID: 1, title: "Assignment 1", description: "Description 1", deadline: "2024-07-20" },
-    { assignmentID: 2, title: "Assignment 2", description: "Description 2", deadline: "2024-07-25" },
-  ];
-  
+  };
 
   const fetchAssignments = async (userID: string) => {
     try {
@@ -51,7 +44,9 @@ export default function AssignmentsPage() {
       console.error('Error fetching assignments:', error);
     }
   };
-
+  const handleCheckboxChange = (value: string) => {
+    setSelectedAssignmentType(value);
+  };
   const handleCreateAssignmentClick = () => {
     router.push('/instructor/create-assignment');
   };
@@ -73,17 +68,27 @@ export default function AssignmentsPage() {
     }
   };
   
+if (loading) {
+    return <div className='w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto'>
+                <Spinner color='primary' size="lg" />
+            </div>;
+  }
+  const handleHomeClick = async () => {
+    router.push('/instructor/dashboard');
+  }
 
   return (
     <>
       <StudentNavbar />
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
-          <h1>Assignments</h1>
+          <h1>All Assignments</h1>
+          <br />
           <Breadcrumbs>
-            <BreadcrumbItem onClick={() => router.push("/student/dashboard")}>Home</BreadcrumbItem>
-            <BreadcrumbItem>Assignments</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
+            <BreadcrumbItem> Home</BreadcrumbItem>
           </Breadcrumbs>
+          
         </div>
         <div className={styles.mainContent}>
           <div className={styles.assignmentsSection}>
@@ -96,22 +101,52 @@ export default function AssignmentsPage() {
             >
               <Checkbox value="assignments">All Assignments</Checkbox>
               <Checkbox value="peerReviews">Peer Reviews</Checkbox>
+              <Checkbox value="peerReviews">Peer Evaluations</Checkbox>
             </CheckboxGroup>
-            <h3 className={styles.innerTitle}>Assignments Created</h3>
-            <Divider className="instructor bg-secondary" />
+            
+            <h3 className={styles.innerTitle}>Assignments</h3>
+            <br /> <Divider className="instructor bg-secondary" /> <br />
             <div className={styles.courseCard}>
-              {assignments.map((assignment) => (
-                <div key={assignment.assignmentID} className={styles.courseCard}>
-                  <div className={styles.card}>
-                    <h2>{assignment.title}</h2>
-                    <p>{assignment.description}</p>
-                    <p>Deadline: {assignment.deadline}</p>
+              {assignments.length > 0 ? (
+                assignments.map((assignment) => (
+                  <div key={assignment.assignmentID} className={styles.courseCard}>
+                    <StudentAssignmentCard
+                      courseID={assignment.assignmentID}
+                      courseName={assignment.title}
+                      dueDate={assignment.deadline}
+                      color="#72a98f"
+                    />
                   </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p>No assignments found for this course.</p>
+              )}
+            </div><h3 className={styles.innerTitle}>Peer Reviews Created</h3>
+            <br /><Divider className="instructor bg-secondary" /><br />
+            <div className={styles.courseCard}>
+              {assignments.length > 0 ? (
+                assignments.map((assignment) => (
+                  <div key={assignment.assignmentID} className={styles.courseCard}>
+                    <StudentAssignmentCard
+                      courseID={45}
+                      courseName="Peer review Assignment"
+                      color="#72a98f" 
+                      dueDate={""}                    />
+                  </div>
+                ))
+              ) : (
+                <p>No assignments found for this course.</p>
+              )}
             </div>
           </div>
-          
+
+          <div className={styles.notificationsSection}>            
+            <hr />
+            <h2 className="my-3">Notifications</h2>
+            <div className={styles.notificationsContainer}>
+              <div className={styles.notificationCard}>Dummy Notification</div>
+            </div>
+          </div>
         </div>
       </div>
     </>

@@ -7,7 +7,7 @@ interface InstructorAssignmentCardProps {
   courseID: number;
   courseName: string;
   color: string;
-  
+
 }
 
 const InstructorAssignmentCard: React.FC<InstructorAssignmentCardProps> = ({ courseID, courseName, color }) => {
@@ -19,8 +19,7 @@ const InstructorAssignmentCard: React.FC<InstructorAssignmentCardProps> = ({ cou
 
   return (
     <Card shadow="sm" className={`${style.outerCard}`} isPressable onPress={handleClick}>
-      <CardBody className="overflow-visible p-0">
-        
+      <CardBody className="overflow-visible p-0">      
       </CardBody>
       <CardFooter className="text-small justify-between" style={{ backgroundColor: color }}>
         <b>{courseName}</b>

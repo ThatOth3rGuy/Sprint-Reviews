@@ -7,23 +7,23 @@ interface StudentAssignmentCardProps {
   courseID: number;
   courseName: string;
   color: string;
-  
+  dueDate: string;
 }
 
-const StudentAssignmentCard: React.FC<StudentAssignmentCardProps> = ({ courseID, courseName, color }) => {
+const StudentAssignmentCard: React.FC<StudentAssignmentCardProps> = ({ courseID, courseName, color, dueDate }) => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/student/assignment?assignmentID=${courseID}`);
+    router.push(`/student/assignment-dashboard?assignmentID=${courseID}`);
   };
 
   return (
     <Card shadow="sm" className={`${style.outerCard}`} isPressable onPress={handleClick}>
       <CardBody className="overflow-visible p-0">
-        
       </CardBody>
       <CardFooter className="text-small justify-between" style={{ backgroundColor: color }}>
         <b>{courseName}</b>
+        <p>{dueDate}</p>
       </CardFooter>
     </Card>
   );

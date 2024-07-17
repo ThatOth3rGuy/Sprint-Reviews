@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import AssignmentDetailCard from '../components/instructor-components/instructor-assignment-details';
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
 
 interface Assignment {
   assignmentID: number;
@@ -56,12 +56,7 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
   }, [assignmentID]);
 
   if (!assignment || loading) {
-    return <div className="instructor"><Progress
-    size="sm"
-    isIndeterminate
-    aria-label="Loading..."
-    color="secondary"
-  /></div>;
+    return  <Spinner color='primary' size="lg" className='instructor'/>
   }
 
   if (!session || !session.user || !session.user.userID) {
