@@ -1,21 +1,21 @@
 // tests-jest/addAssignment.test.ts
 import mysql from 'mysql2/promise';
-import { addAssignmentToDatabase } from '../../src/db';
+import { addAssignmentToCourse } from '../../src/db';
 
-describe('addAssignmentToDatabase Tests', () => {
+describe('addAssignmentToCourse Tests', () => {
   let connection: mysql.PoolConnection;
 
   test('should successfully add an assignment with valid data', async () => {
     const title = 'Test Assignment';
     const description = 'This is a test assignment';
-    const dueDate = '2024-12-31';
+    const dueDate = '2024-12-31 23:59:59';
     const file = 'test-file.pdf';
     const groupAssignment = false;
     const courseID = 1;
     const allowedFileTypes = ['pdf'];
 
     try {
-      const result = await addAssignmentToDatabase(
+      const result = await addAssignmentToCourse(
         title,
         description,
         dueDate,
@@ -34,13 +34,13 @@ describe('addAssignmentToDatabase Tests', () => {
         const [rows]: [mysql.RowDataPacket[], mysql.FieldPacket[]] = await connection.query(
           `SELECT * FROM assignment 
           WHERE title = ? 
-          AND description = ? 
+          AND descr = ? 
           AND deadline = ? 
           AND rubric = ? 
           AND groupAssignment = ? 
           AND courseID = ? 
           AND allowedFileTypes = ?`,
-          [title, description, new Date(dueDate), file, groupAssignment, courseID, allowedFileTypes.join(',')]
+          [title, description, dueDate, file, groupAssignment, courseID, allowedFileTypes.join(',')]
         );
 
         expect(rows).toBeDefined();
@@ -48,8 +48,8 @@ describe('addAssignmentToDatabase Tests', () => {
 
         // Clean up: Delete the inserted assignment
         await connection.query(
-          `DELETE FROM assignment WHERE title = ? AND description = ? AND deadline = ? AND rubric = ? AND groupAssignment = ? AND courseID = ? AND allowedFileTypes = ?`,
-          [title, description, new Date(dueDate), file, groupAssignment, courseID, allowedFileTypes.join(',')]
+          `DELETE FROM assignment WHERE title = ? AND descr = ? AND deadline = ? AND rubric = ? AND groupAssignment = ? AND courseID = ? AND allowedFileTypes = ?`,
+          [title, description, dueDate, file, groupAssignment, courseID, allowedFileTypes.join(',')]
         );
 
       } catch (error) {
@@ -61,10 +61,10 @@ describe('addAssignmentToDatabase Tests', () => {
 
     } catch (error) {
       if (error instanceof Error) {
-        console.error('Error in addAssignmentToDatabase with valid data:', error.message);
+        console.error('Error in addAssignmentToCourse with valid data:', error.message);
         throw error;
       } else {
-        console.error('Unknown error in addAssignmentToDatabase with valid data:', error);
+        console.error('Unknown error in addAssignmentToCourse with valid data:', error);
         throw new Error('Unknown error occurred');
       }
     }
@@ -73,13 +73,13 @@ describe('addAssignmentToDatabase Tests', () => {
   test('should throw an error for invalid courseID', async () => {
     const title = 'Test Assignment';
     const description = 'This is a test assignment';
-    const dueDate = '2024-12-31';
+    const dueDate = '2024-12-31 23:59:59';
     const file = 'test-file.pdf';
     const groupAssignment = false;
     const invalidCourseID = 'invalidID' as any;
     const allowedFileTypes = ['pdf'];
 
-    await expect(addAssignmentToDatabase(
+    await expect(addAssignmentToCourse(
       title,
       description,
       dueDate,
@@ -94,14 +94,14 @@ describe('addAssignmentToDatabase Tests', () => {
   test('should throw an error if no class is found with the given courseID', async () => {
     const title = 'Test Assignment';
     const description = 'This is a test assignment';
-    const dueDate = '2024-12-31';
+    const dueDate = '2024-12-31 23:59:59';
     const file = 'test-file.pdf';
     const groupAssignment = false;
     const nonExistentCourseID = 999; // Assume this ID does not exist in the database
     const allowedFileTypes = ['pdf'];
 
     try {
-      await addAssignmentToDatabase(
+      await addAssignmentToCourse(
         title,
         description,
         dueDate,
@@ -116,7 +116,7 @@ describe('addAssignmentToDatabase Tests', () => {
         expect(error).toBeInstanceOf(Error);
         expect(error.message).toBe(`No class found with ID ${nonExistentCourseID}`);
       } else {
-        console.error('Unknown error in addAssignmentToDatabase:', error);
+        console.error('Unknown error in addAssignmentToCourse:', error);
         throw new Error('Unknown error occurred');
       }
     }
@@ -125,7 +125,7 @@ describe('addAssignmentToDatabase Tests', () => {
   test('should handle errors during database operations', async () => {
     const title = 'Test Assignment';
     const description = 'This is a test assignment';
-    const dueDate = '2024-12-31';
+    const dueDate = '2024-12-31 23:59:59';
     const file = 'test-file.pdf';
     const groupAssignment = false;
     const courseID = 1;
@@ -144,7 +144,7 @@ describe('addAssignmentToDatabase Tests', () => {
     });
 
     try {
-      await expect(addAssignmentToDatabase(
+      await expect(addAssignmentToCourse(
         title,
         description,
         dueDate,
