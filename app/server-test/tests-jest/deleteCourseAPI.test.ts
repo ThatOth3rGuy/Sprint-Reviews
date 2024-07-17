@@ -1,5 +1,5 @@
 // tests-jest/deleteCourse.test.ts
-import handler from '../../src/pages/api/deleteCourse';
+import handler from '../../src/pages/api/courses/deleteCourse';
 import { query } from '../../src/db';
 import { createMocks } from 'node-mocks-http';
 import type { NextApiRequest, NextApiResponse } from 'next';

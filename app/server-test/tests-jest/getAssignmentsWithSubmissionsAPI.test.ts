@@ -1,5 +1,5 @@
 // tests-jest/getAssignmentsWithSubmissions.test.ts
-import handler from '../../src/pages/api/getAssignmentsWithSubmissions';
+import handler from '../../src/pages/api/assignments/getAssignmentWithSubmissions';
 import { getAssignmentsWithSubmissions } from '../../src/db';
 import { createMocks } from 'node-mocks-http';
 import type { NextApiRequest, NextApiResponse } from 'next';

@@ -1,5 +1,5 @@
 // tests-jest/archiveCourse.test.ts
-import handler from '../../src/pages/api/archiveCourse';
+import handler from '../../src/pages/api/courses/archiveCourse';
 import { query } from '../../src/db';
 import { createMocks } from 'node-mocks-http';
 import type { NextApiRequest, NextApiResponse } from 'next';

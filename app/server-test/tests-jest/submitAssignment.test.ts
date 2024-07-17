@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise';
-import { submitAssignment } from '../../src/db'; // Adjust the import path as necessary
+import { submitAssignment } from '../../src/db';
 import * as fs from 'fs/promises';
 import path from 'path';
 import { jest } from '@jest/globals';

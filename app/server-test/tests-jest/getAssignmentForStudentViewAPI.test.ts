@@ -1,5 +1,5 @@
 // tests-jest/getAssignment.test.ts
-import handler from '../../src/pages/api/getAssignmentForStudentView';
+import handler from '../../src/pages/api/assignments/getAssignmentForStudentView';
 import { getAssignmentForStudentView } from '../../src/db';
 import { createMocks } from 'node-mocks-http';
 import type { NextApiRequest, NextApiResponse } from 'next';

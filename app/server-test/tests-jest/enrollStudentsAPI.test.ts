@@ -1,5 +1,5 @@
 // tests-jest/enrollStudent.test.ts
-import handler from '../../src/pages/api/enrollStudents';
+import handler from '../../src/pages/api/addNew/enrollStudents';
 import { enrollStudent } from '../../src/db';
 import { createMocks } from 'node-mocks-http';
 import type { NextApiRequest, NextApiResponse } from 'next';

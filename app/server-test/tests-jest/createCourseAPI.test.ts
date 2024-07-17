@@ -1,5 +1,5 @@
 // tests-jest/createCourse.test.ts
-import handler from '../../src/pages/api/createCourse';
+import handler from '../../src/pages/api/addNew/createCourse';
 import { createCourse } from '../../src/db';
 import { createMocks } from 'node-mocks-http';
 import type { NextApiRequest, NextApiResponse } from 'next';

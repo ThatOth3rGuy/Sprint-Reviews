@@ -1,6 +1,6 @@
 // tests-jest/deleteCourse.test.ts
 import mysql from 'mysql2/promise';
-import deleteCourseHandler from '../../src/pages/api/deleteCourse';
+import deleteCourseHandler from '../../src/pages/api/courses/deleteCourse';
 import { mockNextApi } from '../utils/mockNextApi';
 
 describe('deleteCourse API Tests', () => {

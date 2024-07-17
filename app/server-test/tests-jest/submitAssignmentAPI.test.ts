@@ -1,4 +1,4 @@
-import handler from '../../src/pages/api/submitAssignment';
+import handler from '../../src/pages/api/assignments/submitAssignment';
 import { submitAssignment } from '../../src/db';
 import { createMocks } from 'node-mocks-http';
 import type { NextApiRequest, NextApiResponse } from 'next';
