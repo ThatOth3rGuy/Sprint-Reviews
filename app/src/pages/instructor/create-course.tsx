@@ -60,7 +60,7 @@ const Courses: NextPage = () => {
 
     try {
       // Call the create course API with courseName and instructorID
-      const createCourseResponse = await fetch('/api/createCourse', {
+      const createCourseResponse = await fetch('/api/addNew/createCourse', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ const Courses: NextPage = () => {
       const studentIDs = students.map(student => student.userID);
 
       // Call the enroll students API with studentIDs and courseID
-      const enrollStudentsResponse = await fetch(`/api/enrollStudents`, {
+      const enrollStudentsResponse = await fetch(`/api/addNew/enrollStudents`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -143,7 +143,10 @@ const Courses: NextPage = () => {
       <div className={styles.container}>
         <div className={styles.rectangle}>
           <i style={{width: "368px", position: "relative", fontSize: "35px", display: "flex", fontWeight: "700", fontFamily: "'Inria Serif'", color: "#04124b", textAlign: "left", alignItems: "center", height: "22px"}}>Create a Course</i>
-          <input type="text" placeholder="Course Name" className={styles.textbox} value={courseName} onChange={e => setTitle(e.target.value)} />
+          
+          
+        <input type="text" placeholder="Course Name" className={styles.textbox} value={courseName} onChange={e => setTitle(e.target.value)} />
+          
           <p>Upload Student List: {' '}
           <input type="file" onChange={handleFileUpload} /></p>
           <div className={styles.button} onClick={onCreateCourseButtonClick}>

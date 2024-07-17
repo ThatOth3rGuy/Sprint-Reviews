@@ -24,7 +24,7 @@ const ViewAssignments = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/getAssignments')
+    fetch('/api/assignments/getAssignments')
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');

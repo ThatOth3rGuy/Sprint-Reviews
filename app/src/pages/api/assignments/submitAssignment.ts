@@ -1,7 +1,7 @@
 // pages/api/submitAssignment.ts
 import type { NextApiRequest, NextApiResponse } from 'next'
 import multer from 'multer';
-import { submitAssignment } from '../../db'; 
+import { submitAssignment } from '../../../db'; 
 
 export const config = {
   api: {

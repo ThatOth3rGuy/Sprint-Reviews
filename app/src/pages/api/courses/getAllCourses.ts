@@ -1,6 +1,6 @@
 //getcourses4assign.ts
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getCourses} from '../../db';
+import { getCourses} from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
