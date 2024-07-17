@@ -9,7 +9,7 @@ jest.mock('fs/promises');
 describe('submitAssignment Tests', () => {
   let connection: mysql.PoolConnection;
   const uniqueID = Math.floor(Math.random() * 1000000); // Base value for unique IDs
-  const filePath = path.join(__dirname, 'testFile.pdf');
+  const filePath = path.join(__dirname, '../test-files/testFile.pdf');
 
   beforeAll(async () => {
     connection = await global.pool.getConnection();
@@ -68,15 +68,22 @@ describe('submitAssignment Tests', () => {
     }
   });
 
+  beforeEach(async () => {
+    await fs.writeFile(filePath, 'file content');
+    jest.spyOn(fs, 'readFile').mockResolvedValue(Buffer.from('file content'));
+    jest.spyOn(fs, 'unlink').mockResolvedValue(undefined);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('should submit an assignment successfully', async () => {
     const file = {
       path: filePath,
       originalname: 'testFile.pdf',
       mimetype: 'application/pdf',
     } as Express.Multer.File;
-
-    jest.spyOn(fs, 'readFile').mockResolvedValue(Buffer.from('file content'));
-    jest.spyOn(fs, 'unlink').mockResolvedValue(undefined);
 
     const response = await submitAssignment(uniqueID + 4, uniqueID + 2, file, global.pool);
 
@@ -109,7 +116,6 @@ describe('submitAssignment Tests', () => {
       mimetype: 'application/pdf',
     } as Express.Multer.File;
 
-    jest.spyOn(fs, 'readFile').mockResolvedValue(Buffer.from('file content'));
     const mockPool = {
       execute: jest.fn().mockImplementation(() => {
         throw new Error('Simulated database error');

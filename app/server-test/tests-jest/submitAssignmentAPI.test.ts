@@ -1,4 +1,3 @@
-// tests-jest/submitAssignment.test.ts
 import handler from '../../src/pages/api/submitAssignment';
 import { submitAssignment } from '../../src/db';
 import { createMocks } from 'node-mocks-http';
@@ -14,11 +13,15 @@ jest.mock('multer', () => {
   const multer = jest.fn(() => {
     const instance = {
       single: jest.fn((fieldName: string) => (req: any, res: any, next: any) => {
-        req.file = {
-          path: '/tmp/testfile',
-          originalname: 'testfile.txt',
-        };
-        next();
+        if (req.testError) {
+          next(new Error('Upload error'));
+        } else {
+          req.file = {
+            path: '/tmp/testfile',
+            originalname: 'testfile.txt',
+          };
+          next();
+        }
       }),
       array: jest.fn(),
       fields: jest.fn(),
@@ -68,14 +71,12 @@ describe('API endpoint handler tests', () => {
   });
 
   test('should return 500 if there is an error uploading file', async () => {
-    const mockMulter = multer();
-    mockMulter.single = jest.fn((fieldName: string) => (req: any, res: any, next: any) => {
-      next(new Error('Upload error'));
-    });
-
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: 'POST',
     });
+
+    // Simulate multer error
+    (req as any).testError = true;
 
     await handler(req, res);
 
