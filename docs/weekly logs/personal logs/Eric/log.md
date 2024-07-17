@@ -1,5 +1,85 @@
 # Weekly Logs
 
+# Week 10
+
+## Friday - July 12, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%2010.1.png)
+
+### Cycle Review
+
+For the first half of this cycle I was still in Calgary, so I made sure to do as much as possible on Monday and Tuesday but it was still less than I would normally have done during this split. With that said, I still managed to get in a little over 11 hours working on finishing catching up the testing for the application, and refactoring the course creation/student enrollment to properly handle enrolling students that haven't created accounts yet. While I was doing this the rest of the team has been working on finishing the front-end for everything, and refactoring the majority of the backend functions.
+
+### Current Tasks
+  * 1: Writing jest tests
+  * 2: Updating jest tests to work with database refactor
+  * 3: Refactoring student enrollment
+
+### Progress Update: Fri-Tue
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Writing jest tests
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Updating jest tests to work with database refactor
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Refactoring student enrollment
+        </td>
+        <!-- Status -->
+        <td>Done
+        </td>
+    </tr>
+</table>
+
+## Wednesday - July 17, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%2010.2.png)
+
+### Cycle Review
+    
+-
+
+### Current Tasks
+  * 1: -
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> -
+        </td>
+        <!-- Status -->
+        <td> -
+        </td>
+    </tr>
+</table>
+
 # Week 9
 
 ## Friday - July 5, 2024
