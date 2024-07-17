@@ -61,7 +61,7 @@ export default function Page() {
 
   return (
     <>
-{isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
+{isAdmin ? <AdminNavbar home={{className: "bg-primary-500"}} /> : <InstructorNavbar home={{className: "bg-primary-500"}} />}
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.topSection}>
           <h1>Dashboard  </h1>

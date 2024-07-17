@@ -49,9 +49,8 @@ export default function Page() {
   }
   return (
     <>
-      {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
+      {isAdmin ? <AdminNavbar settings={{ className: "bg-primary-500" }} /> : <InstructorNavbar settings={{ className: "bg-primary-500" }} />}
       <div className={`instructor text-primary-900 ${styles.container}`}>
-        <div className={styles.header}>
         <div className={styles.header}>
           <h1>Settings</h1>
           <br />
@@ -59,37 +58,27 @@ export default function Page() {
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
             <BreadcrumbItem>Settings</BreadcrumbItem>
           </Breadcrumbs>
-          
-        </div>
-          
         </div>
         <div className={styles.mainContent}>
-          <div className={` ${styles.assignmentsSection} mx-auto`}>
-          <div className="flex flex-col w-full min-h-screen">
-      
-      <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
-        {/* I am not sure what the
-         settings page will have but for now its a template to edit profile details */}
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardBody className="text-sm font-medium">User Profile</CardBody>
-          </CardHeader>
-          <CardBody className="flex flex-col items-center">
-            <Avatar className="h-24 w-24 mb-4">
-              <Avatar src="/placeholder-user.jpg" />
-              
-            </Avatar>
-            <div className="text-2xl font-bold">Username</div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">User's email</p>
-            <Button className="mt-4">Edit Profile</Button>
-          </CardBody>
-        </Card>
-      </main>
-    </div>
+          <div className={` ${styles.assignmentsSection}`}>
+           <h3>Customization Settings Below</h3>
+           <br />
+            <p>This will be a place where user can customize any changes that they may want to make.</p>
+            
+            <Progress
+      size="sm"
+      isIndeterminate
+      aria-label="Loading..."
+      className="max-w-md mx-auto my-auto"
+    />      </div>
+          <div className="w-[25%] h-[100%] flex-col p-[1%]">
+            {/* Add buttons as needed */}
+            {/* <Button color="primary" variant="ghost" className="w-[100%] m-1">Edit Profile</Button>
+            <Button color="danger" variant="ghost" className="w-[100%] m-1">Delete Account</Button> */}
           </div>
         </div>
       </div>
+
     </>
   );
 }

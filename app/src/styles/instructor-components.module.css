@@ -15,7 +15,7 @@
 
 .navButton {
   height: 10vh;
-  margin-top: 1px;
+  /* margin-top: 1px; */
   text-align: left;
   cursor: pointer;
   font-size: small;

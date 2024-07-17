@@ -156,7 +156,7 @@ export default function Page() {
           { href: "./archived-courses", title: "Archived Courses" },
         ]}
       /> */}
-          <AdminNavbar />
+          <AdminNavbar admin={{ className: "bg-primary-500" }} />
         </div>
       </div>
     </>

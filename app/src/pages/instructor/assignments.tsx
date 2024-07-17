@@ -75,7 +75,7 @@ export default function AssignmentsPage() {
 
   return (
     <>
-      {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
+      {isAdmin ? <AdminNavbar  assignments={{className: "bg-primary-500"}}/> : <InstructorNavbar assignments={{className: "bg-primary-500"}} />}
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
           <h1>Assignments</h1>

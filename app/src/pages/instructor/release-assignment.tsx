@@ -7,9 +7,8 @@ import InstructorHeader from "../components/instructor-components/instructor-hea
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
-import Modal from "react-modal";
 import styles from "../../styles/instructor-assignments-creation.module.css";
-import { Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select } from "@nextui-org/react";
+import { Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
 
 // Define the structure for assignment and Rubric items
 interface Assignment {
@@ -54,15 +53,15 @@ const ReleaseAssignment: React.FC = () => {
   const questions = ['Was the work clear and easy to understand?', 'Was the content relevant and meaningful?', 'Was the work well-organized and logically structured?', 'Did the author provide sufficient evidence or examples to support their arguments or points?', 'Improvements: What suggestions do you have for improving the work?'];
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
-
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   // Handle open and close for modal
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
+  // const openModal = () => {
+  //   setIsModalOpen(true);
+  // };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  // const closeModal = () => {
+  //   setIsModalOpen(false);
+  // };
 
   // Fetch assignments and students in the course when the component mounts
   useEffect(() => {
@@ -256,9 +255,9 @@ const ReleaseAssignment: React.FC = () => {
                   {rubric.map((item, index) => (
                     <div key={index} className={styles.rubricItem}>
                       <Input
-                      size="sm"
-                      label="Review Criterion"
-                      variant="bordered"
+                        size="sm"
+                        label="Review Criterion"
+                        variant="bordered"
                         type="text"
                         value={item.criterion}
                         onChange={(e) =>
@@ -271,8 +270,8 @@ const ReleaseAssignment: React.FC = () => {
                       <br />
                       {/* <label>Enter the maximum number of marks allowed:</label> */}
                       <Input
-                      label="Maximum Marks for Criterion"
-                      variant="bordered"
+                        label="Maximum Marks for Criterion"
+                        variant="bordered"
                         type="number"
                         value={item.maxMarks.toString()}
                         onChange={(e) =>
@@ -281,7 +280,7 @@ const ReleaseAssignment: React.FC = () => {
                         required
                       />
                       <Button
-                      size="sm"
+                        size="sm"
                         variant="ghost"
                         color="danger"
                         type="button"
@@ -295,10 +294,10 @@ const ReleaseAssignment: React.FC = () => {
                   ))}
                   <br />
                   <Button
-                  variant="ghost"
-                  color="success"
+                    variant="ghost"
+                    color="success"
                     onClick={addRubricItem}
-                    // className={styles.criterion}
+                  // className={styles.criterion}
                   >Add Criterion
                   </Button>
                 </div>
@@ -307,88 +306,104 @@ const ReleaseAssignment: React.FC = () => {
               <label>Enter Due Date:</label>
               <br />
               <Input
-              variant="bordered"
+                variant="bordered"
                 type="datetime-local"
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
                 // className={styles.textbox}
                 color="primary"
                 required
-                
-              />
-              <button onClick={openModal} className={styles.advancedButton}>Advanced Options</button>
 
-              <Modal isOpen={isModalOpen} onRequestClose={closeModal} className={styles.advancedOptions}>
-                <h2>Advanced Options</h2>
-                <div className={styles.innerAdvanced}>
-                  <p className={styles.innerAdvanced}>
-                    <Select
-                      label="Select Students"
-                      selectionMode="multiple"
-                      placeholder="Select students"
-                      onChange={(selectedValues) => {
-                        setSelectedStudents(selectedValues.map(Number));
-                      }}
-                    >
-                      {students.map((student) => (
-                        <SelectItem key={student.id} value={student.id.toString()}>
-                          {student.name}
-                        </SelectItem>
-                      ))}
-                    </Select>
-                  </p>
-                </div>
-                <div className={styles.innerAdvanced}>
-                  <h3>Unique Due Date</h3>
-                  <form onSubmit={handleStudentSelectionSubmit}>
-                    <div className={styles.studentList}>
-                      {students.map((student) => (
-                        <div key={student.id}>
-                          <input
-                            type="checkbox"
-                            id={`student-${student.id}`}
-                            checked={selectedStudents.includes(student.id)}
-                            onChange={() => handleStudentSelection(student.id)}
-                          />
-                          <label htmlFor={`student-${student.id}`}>
-                            {student.name}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                    <input
-                    
-                      type="datetime-local"
-                      value={uniqueDueDate}
-                      onChange={(e) => setUniqueDueDate(e.target.value)}
-                      className={styles.textbox}
-                      required
-                    />
-                    <button type="submit" className={styles.setDueDate}>
-                      Set Unique Due Date
-                    </button>
-                  </form>
-                  <button onClick={closeModal} className={styles.closeModal}>Close</button>
-                </div>
-              </Modal>
-              <br />
-              <Button color="primary" variant="ghost" className={styles.createButton}>
+              />
+              <Button color="primary" variant="solid" className="float-right m-4" size="sm">
                 <b>Release</b>
               </Button>
+              {/* TODO: fix select students in advanced options */}
+              <Button variant="bordered" onPress={onOpen} color="primary" className="float-left m-4 ml-0" size="sm">
+                Advanced Options</Button>
+              <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="instructor"
+              // className={styles.advancedOptions}
+              >
+                <ModalContent>
+                  {(onClose) => (
+                    <>
+                      <ModalHeader>Advanced Options</ModalHeader>
+                      <ModalBody>
+                        <div >
+                        <p className="text-left p-0 m-0 mb-2">Assign a unique due date to select students:</p>
+                          <p>
+                            <Select
+                            size="sm"
+                              label="Select Students"
+                              selectionMode="multiple"
+                              // placeholder="Select students"
+                              onChange={(selectedValues) => {
+                                setSelectedStudents(selectedValues.map(Number));
+                              }}
+                            >
+                              {students.map((student) => (
+                                <SelectItem key={student.id} value={student.id.toString()}>
+                                  {student.name}
+                                </SelectItem>
+                              ))}
+                            </Select>
+                          </p>
+                        </div>
+                        <div >
+                          <form onSubmit={handleStudentSelectionSubmit}>
+                            <div >
+                              {students.map((student) => (
+                                <div key={student.id}>
+                                  <Input
+                                    type="checkbox"
+                                    id={`student-${student.id}`}
+                                    checked={selectedStudents.includes(student.id)}
+                                    onChange={() => handleStudentSelection(student.id)}
+                                  />
+                                  <label htmlFor={`student-${student.id}`}>
+                                    {student.name}
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
+                            <Input
+                              type="datetime-local"
+                              value={uniqueDueDate}
+                              onChange={(e) => setUniqueDueDate(e.target.value)}
+                              // className={styles.textbox}
+                              required
+                            />
+                            <br />
+                            <Button variant="ghost" type="submit" color="primary">
+                              Set Unique Due Date
+                            </Button>
+                          </form>
+                          {/* <button onClick={closeModal} className={styles.closeModal}>Close</button> */}
+                        </div>
+                      </ModalBody>
+                    </>
+                  )}
+                </ModalContent>
+                {/* <h2>Advanced Options</h2> */}
+
+
+              </Modal>
+              <br />
+              
             </form>
           </div>
-        
-        <div className={`h-50% overflow-y-auto ${styles.groupReview}`}>
-          <h2> Student Groups</h2>
-          {/* <div className={styles.questionCard}>
+
+          <div className={`h-50% overflow-y-auto ${styles.groupReview}`}>
+            <h2> Student Groups</h2>
+            {/* <div className={styles.questionCard}>
       {questions.map((question, index) => (
         <Card key={index} style={{ width: '100%' }}>
           {question}
         </Card>
       ))}
     </div> */}
+          </div>
         </div>
-      </div>
       </div>
     </>
   );

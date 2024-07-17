@@ -5,7 +5,7 @@ import AdminHeader from "../components/admin-components/admin-header";
 import { JSX, SVGProps, useState } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/instructor-course-dashboard.module.css';
-import { CardBody,User, Avatar,AvatarIcon,SelectItem, Select,Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Link, CardHeader, Card } from "@nextui-org/react";
+import { CardBody, User, Avatar, AvatarIcon, SelectItem, Select, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Link, CardHeader, Card } from "@nextui-org/react";
 import router from "next/router";
 
 export default function Page() {
@@ -49,9 +49,8 @@ export default function Page() {
   }
   return (
     <>
-      {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
+      {isAdmin ? <AdminNavbar profile={{ className: "bg-primary-500" }} /> : <InstructorNavbar profile={{ className: "bg-primary-500" }} />}
       <div className={`instructor text-primary-900 ${styles.container}`}>
-        <div className={styles.header}>
         <div className={styles.header}>
           <h1>Profile</h1>
           <br />
@@ -59,35 +58,35 @@ export default function Page() {
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
             <BreadcrumbItem>Profile</BreadcrumbItem>
           </Breadcrumbs>
-          
-        </div>
-          
         </div>
         <div className={styles.mainContent}>
-          <div className={` ${styles.assignmentsSection} mx-auto`}>
-          <div className="flex flex-col w-full min-h-screen">
-      
-      <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
-        {/* This is where the data can just be parsed here from the functions to display pofile details here */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardBody className="text-sm font-medium">User Profile</CardBody>
-          </CardHeader>
-          <CardBody className="flex flex-col items-center">
-            <Avatar className="h-24 w-24 mb-4">
-              <Avatar src="/placeholder-user.jpg" />
-              
-            </Avatar>
-            <div className="text-2xl font-bold">Username</div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">User's email</p>
-            
-          </CardBody>
-        </Card>
-      </main>
-    </div>
+          <div className={` ${styles.assignmentsSection}`}>
+            {/* <div className="flex flex-col w-full min-h-screen"> */}
+
+            {/* <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10"> */}
+            {/* This is where the data can just be parsed here from the functions to display pofile details here */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardBody className="text-sm font-medium">User Profile</CardBody>
+              </CardHeader>
+              <CardBody className="flex flex-col items-center">
+                <Avatar className="h-24 w-24 mb-4">
+                  <Avatar src="/placeholder-user.jpg" />
+
+                </Avatar>
+                <div className="text-2xl font-bold">Username</div>
+                <p className="text-xs text-gray-500 dark:text-gray-400">User's email</p>
+              </CardBody>
+            </Card>
+
+          </div>
+          <div className="w-[25%] h-[100%] flex-col p-[1%]">
+            <Button color="primary" variant="ghost" className="w-[100%] m-1">Edit Profile</Button>
+            <Button color="danger" variant="ghost" className="w-[100%] m-1">Delete Account</Button>
           </div>
         </div>
       </div>
+
     </>
   );
 }

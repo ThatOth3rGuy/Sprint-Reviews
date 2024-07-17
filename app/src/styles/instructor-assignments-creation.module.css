@@ -28,6 +28,15 @@
   margin-bottom: auto;
   min-height: 80%;
 }
+.notificationsSection {
+  width: 25%;
+  background-color: #ffffff;
+  padding: 1%;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 .card{
   width: 80%;
   height: fit-content;
@@ -68,7 +77,7 @@
 .rectangle {
   display: flex;
   flex-direction: column;
-  width: 40%;
+  width: 60%;
   background-color: #ffffff;
   padding: 1.5%;
   padding-top: 1%;
@@ -116,10 +125,7 @@ grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   padding: 2%;
   cursor: pointer;
   text-align: center;
-  font-size: medium;
-  color: #fcf9f7;
-  background-color: #04124b;
-  border-radius: 10px;
+
   font-family: 'Inria Serif';
 }
 
@@ -161,12 +167,10 @@ grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 }
 
 .textbox {
-  width: 80%;
-  padding: 10px;
-  margin-bottom: 20px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  width: 100%;
+  padding: 1%;
+  text-align: left;
+  font-size: small;
 }
 
 .title_textbox {

@@ -199,8 +199,6 @@ JOIN enrollment e ON c.courseID = e.courseID
 JOIN student s ON e.studentID = s.studentID
 JOIN user u ON s.userID = u.userID
 WHERE u.userID = ?;
-
-  
   `;
   try {
     const results = await query(sql, [userID]);

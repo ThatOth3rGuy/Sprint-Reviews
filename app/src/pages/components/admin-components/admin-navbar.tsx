@@ -10,13 +10,15 @@ interface ButtonProps { //used to pass css styles to Button type
 }
 interface AdminNavbarProps { //used to accept a Button prop for each specific button
   home?: ButtonProps;
-  courses?: ButtonProps;
+  courses?: ButtonProps; //added as an option in case we want to implement a course tab in future
   assignments?: ButtonProps;
   grades?: ButtonProps;
   profile?: ButtonProps;
   settings?: ButtonProps;
+  admin? : ButtonProps;
+
 }
-const AdminNavbar: NextPage<AdminNavbarProps> = ({ home, courses, assignments, grades, profile, settings }) => {
+const AdminNavbar: NextPage<AdminNavbarProps> = ({ home, courses, assignments, grades, profile, settings, admin }) => {
   const router = useRouter();
 
   const handleNavigation = (path: string) => {
@@ -83,7 +85,7 @@ const AdminNavbar: NextPage<AdminNavbarProps> = ({ home, courses, assignments, g
         <div
           className={style.navButton}
         >
-          <Link className="w-[98%] p-2 text-primary-50 " onClick={() => handleNavigation("/admin/portal-home")}><img className={style.navImg} src="/images/Instructor/Admin.png" />Admin</Link>
+          <Link className={`w-[98%] p-2  ${admin?.className} text-primary-50 `} onClick={() => handleNavigation("/admin/portal-home")}><img className={style.navImg} src="/images/Instructor/Admin.png" />Admin</Link>
         </div>
         <div className={style.logoutWrapper}>
           <div
