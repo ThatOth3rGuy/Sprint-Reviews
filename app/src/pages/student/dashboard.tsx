@@ -6,12 +6,15 @@ import StudentNavbar from '../components/student-components/student-navbar';
 import styles from '../../styles/student-dashboard.module.css';
 import { useSessionValidation } from '../api/auth/checkSession';
 import { useRouter } from 'next/router';
+import StudentCourseCard from '../components/student-components/student-course';
+import { Breadcrumbs, BreadcrumbItem, Button } from '@nextui-org/react';
 
 // Define the types for course and session
 interface Course {
   courseID: number;
   courseName: string;
   instructorFirstName: string;
+  instructorLastName: string;
 }
 
 function Page() {
@@ -21,17 +24,19 @@ function Page() {
   const router = useRouter();
 
   // Use the session validation hook to check if the user is logged in
-  useSessionValidation('student', setLoading, setSession);
+  useSessionValidation("student", setLoading, setSession);
 
   useEffect(() => {
     const fetchCourses = async () => {
       if (session) {
         try {
-          const response = await fetch(`/api/getCourses?studentID=${session.user.userID}`);
+          const response = await fetch(
+            `/api/courses/getCoursesByStudent?studentID=${session.user.studentID}` //Needs to be fixed to match db changes
+          );
           const data = await response.json();
           setCourses(data);
         } catch (error) {
-          console.error('Error fetching courses:', error);
+          console.error("Error fetching courses:", error);
         }
       }
     };
@@ -39,12 +44,15 @@ function Page() {
     fetchCourses();
   }, [session]);
 
-  const onCoursesContainerClick = useCallback((courseID: number) => {
-    router.push({
-      pathname: '/student/course-dashboard',
-      query: { courseID },
-    });
-  }, [router]);
+  const onCoursesContainerClick = useCallback(
+    (courseID: number) => {
+      router.push({
+        pathname: "/student/course-dashboard",
+        query: { courseID },
+      });
+    },
+    [router]
+  );
 
   const onAssignmentsContainerClick = useCallback(() => {
     // Redirect to the assignments page
@@ -56,34 +64,36 @@ function Page() {
 
   return (
     <>
-      <div className={styles.studentHome}>
-	  <b className={styles.breadcrumbs}>Breadcrumbs</b>
-        {courses.map((course) => (
-          <div key={course.courseID} className={styles.courseCard} onClick={() => onCoursesContainerClick(course.courseID)}>
-            <img className={styles.courseCardChild} alt="" src="/CourseCard-outline.svg" />
-            <div className={styles.courseCardItem} />
-            <b className={styles.courseName}>{course.courseName}</b>
-            <i className={styles.instructor}>{course.instructorFirstName}</i>
-          </div>
-        ))}
-        <div className={styles.pendingAssignments}>
-          <div className={styles.pendingAssignmentsChild} />
-          <div className={styles.pendingAssignmentsItem} />
-          <b className={styles.pendingAssignments1}>Pending Assignments</b>
-          <div className={styles.assignmentDetails} onClick={onAssignmentsContainerClick}>
-            <b className={styles.assignment}>Assignment</b>
-            <b className={styles.due010101}>Due: 01/01/01</b>
-            <b className={styles.course}>Course</b>
-          </div>
+      {/* <StudentHeader title="Dashboard" /> */}
+      
+      <div className='inline-block mx-0 '>
+        <StudentNavbar home={{ className: "bg-secondary-50" }} />
+      </div>
+      <div className={styles.content}>
+      <h2>Dashboard</h2>
+        <div className={styles.topSection}>
+          {/* <Breadcrumbs variant='bordered' color='secondary'>
+            <BreadcrumbItem>Dashboard</BreadcrumbItem>
+          </Breadcrumbs> */}
+
         </div>
-        <div className={styles.assignmentDetails1} onClick={onAssignmentsContainerClick}>
-          <b className={styles.assignment}>Assignment</b>
-          <b className={styles.due010101}>Due: 01/01/01</b>
-          <b className={styles.course}>Course</b>
+        <div className={styles.studentHome}>
+          {courses.map((course) => (
+            <div
+            className={styles.courseCard}
+              key={course.courseID}
+              onClick={() => onCoursesContainerClick(course.courseID)}
+            >
+              <StudentCourseCard
+                courseID={course.courseID}
+                courseName={course.courseName} color={''} img="/logo-transparent-png.png"
+                instructorName={course.instructorFirstName + " " + course.instructorLastName}>
+              </StudentCourseCard>
+            </div>
+          ))}
         </div>
       </div>
-      <StudentHeader title="Dashboard" />
-      <StudentNavbar />
+
     </>
   );
 }

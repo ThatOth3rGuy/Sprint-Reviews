@@ -33,7 +33,7 @@ To run the Jest unit tests you can use the following commands:
 
 ```bash
 # To run the app and test database (detached so you can still use the terminal)
-docker-compose -f dev.yml -f dev.test.yml up app test -d
+docker-compose -f dev.yml -f dev.test.yml up test -d
 
 # To change directory into the test folder
 cd ./app/server-test/

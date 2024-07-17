@@ -55,7 +55,7 @@ test.describe('Archived Courses Page', () => {
 
   // Mock an error response for fetching archived courses
   test('should display error message on failed courses fetch', async ({ page }) => {
-    await page.route('/api/getAllCourses?isArchived=true', route => {
+    await page.route('**/api/getAllCourses?isArchived=true', route => {
       route.fulfill({
         status: 500,
         body: JSON.stringify({ message: 'Failed to fetch courses' })

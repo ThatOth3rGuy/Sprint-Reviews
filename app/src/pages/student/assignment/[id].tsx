@@ -29,7 +29,7 @@ const AssignmentDetails = () => {
   useEffect(() => {
     console.log("Assignment ID:", id); // Log the ID
     if (id) {
-      fetch(`/api/getAssignmentForStudentView?id=${id}`)
+      fetch(`/api/assignments/getAssignmentForStudentView?id=${id}`)
         .then(response => {
           console.log("API Response:", response); // Log the response
           if (!response.ok) {
@@ -83,7 +83,7 @@ const AssignmentDetails = () => {
       formData.append('studentID', 'YOUR_STUDENT_ID_HERE');
 
       try {
-        const response = await fetch('/api/submitAssignment', {
+        const response = await fetch('/api/assignments/submitAssignment', {
           method: 'POST',
           body: formData,
         });

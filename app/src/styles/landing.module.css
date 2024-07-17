@@ -1,103 +1,65 @@
-.roleSelection {
-  width: 100%;
-  max-width: 1366px;
-  height: 100vh;
-  position: relative;
-  margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.roleButton {
-  width: 450px;
-  height: 60px;
-  position: absolute;
-  left: 51.5%;
-  top: 100px;
-  transform: translateX(-50%);
-  background-color: #002975;
-  border-radius: 15px;
-  border: 1px solid #CDAF75;
-  text-align: center;
-  font-family: 'Inria Serif', serif;
-  font-size: 22px;
-  font-weight: bold;
-  color: #fff;
+.roleSelection{
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  background-color: #fffdfc;
+  max-width: 40vw;
+  max-height: 40vw;
+  padding: 5vw;
+  padding-top: 1;
+  margin: auto;
   justify-content: center;
-}
-
-.image {
-  width: 300px;
-  height: 275px;
-  position: absolute;
-  left: 50px;
-  top: 150px;
-  mix-blend-mode: multiply;
-}
-
-.line {
-  width: 500px;
-  height: 0;
-  position: absolute;
-  left: 30%;
-  top: 50%;
-  transform: translate(-50%, -50%) rotate(-90deg);
-  border: 1px solid black;
-}
-
-.description {
-  width: 100%;
   text-align: center;
-  position: absolute;
-  top: 150px;
-  color: #000000;
-  font-size: 25px;
-  font-family: 'Inria Serif', serif;
-  font-weight: bold;
-}
-
-.iAmA {
-  width: 100%;
-  text-align: center;
-  position: absolute;
-  top: 190px;
-  color: #000000;
-  font-size: 25px;
-  font-family: 'Inria Serif', serif;
-  font-weight: bold;
-}
-
-.roleButtons {
-  display: flex;
-  position: absolute;
-  left: 33.5%;
-  top: 300px;
-  gap: 45px; /* Adjusted for spacing between buttons */
-}
-
-.studentButton, .instructorButton {
-  width: 200px;
-  height: 50px;
-  border-radius: 15px;
-  border: 1px solid #CDAF75;
-  font-family: 'Inria Serif', serif;
-  font-size: 25px;
-  font-weight: bold;
-  color: #fafaf9;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  text-decoration: none; /* Ensure no underline */
-  background: none; /* Remove any default button background */
+  box-shadow: 0 0 10px #002975;
+  border: 2px solid #002975;
+  border-radius: 10px;
+  
+}
+.description{
+  color: black;
+  padding: 5%;
+  z-index: 0;
 }
 
-.studentButton {
-  background-color: #64AB9D;
+.roleButton{
+  font-size: large;
+  color: black;
+  padding: 3%;
+  width: 100%;
+  z-index: 0;
+  
 }
 
-.instructorButton {
-  background-color: #028090;
+.studentButton{
+  background-color: #b1d4cd;
+  border: 1px solid #657a76;
+  border-radius: 5px;
+  padding: 1% 3% 1% 3%;
+  box-shadow: 0 0 3px #657a76;
+  z-index: 0;
 }
+.instructorButton{
+  background-color: #90ab93;
+  border: 1px solid #374a46;
+  border-radius: 5px;
+  padding: 1% 3% 1% 3%;
+  box-shadow: 0 0 3px #374a46;
+  z-index: 0;
+}
+
+.studentButton:hover,.instructorButton:hover{
+  box-shadow: 1px -1px #374a46 inset;
+  z-index: 0;
+}
+.gradient-background {
+  background: linear-gradient(to right, navy, blue);
+}
+
+
+
+
+
+
+  
+
+  
