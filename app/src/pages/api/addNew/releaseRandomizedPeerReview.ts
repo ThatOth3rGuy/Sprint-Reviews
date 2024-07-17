@@ -1,31 +1,26 @@
 /*
-* This API call is used to create randomized peer review groups for a specific assignment.
+* This API call is used to randomly assign peer reviews to students.
 * It will take an int as the number of peer reviews per assignment, an array of student IDs mapped to their assignmentID.
-* It then calls the randomization function to create the groups, before calling the database query to add them.
+* It then calls the randomization function to give each student assignments to review, before calling the database query to add them.
 */
 
-// /pages/api/create-peer-review-groups.ts
+// /pages/api/createNew/releaseRandomizedPeerReview.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { insertPeerReviewGroups } from '../../../db';
+import { releaseRandomizedPeerReviews } from '../../../db';
 
 const randomizePeerReviewGroups = (students: { studentID: number, assignmentID: number }[], reviewsPerAssignment: number) => {
-  const peerReviewGroups: { assignmentID: number, reviewerID: number, revieweeID: number }[] = [];
-  const shuffledStudents = students.sort(() => Math.random() - 0.5);
+  // This function will randomize the students and assign them to peer review groups
 
-  for (const student of shuffledStudents) {
-    const possibleReviewees = shuffledStudents.filter(s => s.studentID !== student.studentID && s.assignmentID === student.assignmentID);
-    const selectedReviewees = possibleReviewees.slice(0, reviewsPerAssignment);
+    /*
+    - Loops through each student in course and randomly assigns them to X assignments for review
+    - Each student must have minimum assignments to review as directed by instructor and no more than provided maximum
+    - No student can review their own assignment or have more than 1 instance of any assignment
+    - If any students are manually selected for review of a particular assignment they are not considered for that iteration
+    */
 
-    selectedReviewees.forEach(reviewee => {
-      peerReviewGroups.push({
-        assignmentID: student.assignmentID,
-        reviewerID: student.studentID,
-        revieweeID: reviewee.studentID
-      });
-    });
-  }
-
-  return peerReviewGroups;
+    // It returns an array of objects, where each object contains the student ID 
+    // and the list of assignment IDs they are assigned to review.
+    // (Or a 2d array, or any other data type that can represent this information)
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -42,7 +37,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const peerReviewGroups = randomizePeerReviewGroups(studentAssignments, reviewsPerAssignment);
 
-    await insertPeerReviewGroups(peerReviewGroups);
+    await releaseRandomizedPeerReviews(peerReviewGroups);
 
     res.status(201).json({ message: 'Peer review groups created successfully', peerReviewGroups });
   } catch (error) {
