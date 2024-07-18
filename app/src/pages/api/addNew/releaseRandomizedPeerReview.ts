@@ -1,7 +1,7 @@
 /*
 * This API call is used to randomly assign peer reviews to students.
 * It will take an int as the number of peer reviews per assignment, an array of student IDs mapped to their assignmentID.
-* It then calls the randomization function to give each student assignments to review, before calling the database query to add them.
+* It then calls the randomization function to assignment a list of students to review it, before calling the database query to add them.
 */
 
 // /pages/api/createNew/releaseRandomizedPeerReview.ts
