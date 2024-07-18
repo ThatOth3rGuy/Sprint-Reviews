@@ -8,9 +8,9 @@ This example contains everything needed to get a Next.js development and product
 - Easy to run, consistent development environment across macOS, Windows, and Linux teams
 - Run multiple Next.js apps, databases, and other microservices in a single deployment
 - Multistage builds combined with [Output Standalone](https://nextjs.org/docs/advanced-features/output-file-tracing#automatically-copying-traced-files) outputs up to 85% smaller apps (Approximately 110 MB compared to 1 GB with create-next-app)
-- Easy configuration with YAML files
+- Easy configuration with YAML files 
 
-## How to use
+## How to use 
 ## Prerequisites
 
 Install [Docker Desktop](https://docs.docker.com/get-docker) for Mac, Windows, or Linux. Docker Desktop includes Docker Compose as part of the installation.
