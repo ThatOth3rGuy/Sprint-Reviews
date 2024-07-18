@@ -3,13 +3,13 @@ import { createStudent, createUser } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { uID, firstName, lastName, email, password, role } = req.body;
+    const { firstName, lastName, email, password, role, studentID } = req.body;
     try {
       // Create the user
-      const accId = await createUser(firstName, lastName, email, password, role);
+      const userID = await createUser(firstName, lastName, email, password, role);
 
       // Create the student with the user ID 
-      await createStudent(uID, accId);
+      await createStudent(studentID, userID);
 
       res.status(200).json({ message: 'User added successfully' });
     } catch (error) {

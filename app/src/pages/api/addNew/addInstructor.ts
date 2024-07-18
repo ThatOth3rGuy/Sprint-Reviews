@@ -3,13 +3,13 @@ import { createInstructor, createUser } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    const { uID, firstName, lastName, email, password, role } = req.body;
+    const { uID, firstName, lastName, email, password, role, instructorID } = req.body;
     try {
       // Create the user
-      const accId = await createUser(firstName, lastName, email, password, role);
+      const userID = await createUser(firstName, lastName, email, password, role);
 
       // Create the instructor
-      await createInstructor(uID, accId, false);
+      await createInstructor(instructorID, userID, false);
 
       res.status(200).json({ message: 'User added successfully' });
     } catch (error) {
