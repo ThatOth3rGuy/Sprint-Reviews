@@ -18,6 +18,13 @@ const randomizeGroups = (students: number[], groupSize: number) => {
   }
   return groups;
 };
+/* 
+* Currently this function sets the remainder of students that don't fit into a group as their own group.
+* This should be modified to allow for a more even distribution of students. As an example,
+* if there are 10 students and 3 students per group, the function will result in 3 groups of 3 students 
+* and 1 group of 1 student.
+* It could also be left as is, as long as there's a way to manually adjust groups later.
+*/
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {
