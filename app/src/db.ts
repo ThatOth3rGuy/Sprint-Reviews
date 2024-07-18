@@ -19,9 +19,9 @@ if (process.env.NODE_ENV === 'production') {
 const pool = mysql.createPool(dbConfig);
 
 // main function to query the database with the given SQL query and values from pool
-export async function query(sql: string, values: any[] = []): Promise<any> {
+export async function query(sql: string, values: any[] = [], customPool: mysql.Pool = pool): Promise<any> {
   try {
-    const [result] = await pool.execute(sql, values);
+    const [result] = await customPool.execute(sql, values);
     return result;
   } catch (error) {
     console.error('Database query error:', error);
@@ -504,45 +504,47 @@ export async function getCourse(courseID: number): Promise<any> {
   }
 }
   // grab all students from the database matching the first and last name
-export async function getStudentsByName(firstName:string, lastName:string) {
-  const sql = `
-    SELECT user.*, student.studentID FROM user JOIN student ON user.userID = student.userID WHERE user.firstName = ? AND user.lastName = ? AND user.userRole = 'student'
-  `;
-  try {
-    const rows = await query(sql, [firstName, lastName]);
-    if (rows.length > 0) {
-      return rows[0];
-    }
-  } catch (error) {
-    console.error('Error in getStudents:', error);
-    throw error;
-  }
-}
-  // grab all students from the database matching the first and last name
-  export async function getStudentsById(studentID: number) {
+  export async function getStudentsByName(firstName:string, lastName:string) {
     const sql = `
-      SELECT student.*, user.* FROM student JOIN user ON student.userID = user.userID WHERE studentID = ?
+      SELECT user.*, student.studentID FROM user JOIN student ON user.userID = student.userID WHERE user.firstName = ? AND user.lastName = ? AND user.userRole = 'student'
     `;
     try {
-      const rows = await query(sql, [studentID]);
+      const rows = await query(sql, [firstName, lastName]);
       if (rows.length > 0) {
         return rows[0];
+      } else {
+        return null; // Return null if no student is found
       }
     } catch (error) {
       console.error('Error in getStudents:', error);
       throw error;
     }
   }
+    // grab all students from the database matching their student ID's
+    export async function getStudentsById(studentID: number, customPool: mysql.Pool = pool) {
+      const sql = `
+        SELECT student.*, user.* FROM student JOIN user ON student.userID = user.userID WHERE studentID = ?
+      `;
+      try {
+        const rows = await query(sql, [studentID], customPool);
+        if (rows.length > 0) {
+          return rows[0];
+        } else {
+          return null; // Return null if no student is found
+        }
+      } catch (error) {
+        console.error('Error in getStudents:', error);
+        throw error;
+      }
+    }
 //  enroll student in a course
-export async function enrollStudent(userID: number, courseID: number): Promise<void> {
+export async function enrollStudent(userID: string, courseID: string, customPool: mysql.Pool = pool): Promise<void> {
   const sql = `
     INSERT INTO enrollment (studentID, courseID)
     VALUES (?, ?)
   `;
   try {
-    //const result = 
-    await query(sql, [userID, courseID]);
-    //return result;
+    const result = await query(sql, [userID, courseID], customPool);
   } catch (error) {
     const err = error as Error;
     console.error(`Error enrolling student ${userID} in course ${courseID}:`, err.message);
