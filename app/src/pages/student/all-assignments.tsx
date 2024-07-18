@@ -1,11 +1,10 @@
-// pages/student/view-assignments.tsx
-import { useState, useEffect } from "react";
-import StudentHeader from "../components/student-components/student-header";
-import StudentNavbar from "../components/student-components/student-navbar";
-import style from "../../styles/student-components.module.css";
-import Link from "next/link";
-import { Card, CardBody, CardHeader, CardFooter, Divider } from "@nextui-org/react";
+import { useRouter } from "next/router";
+import styles from '../../styles/instructor-course-dashboard.module.css';
+import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
+import StudentNavbar from "../components/student-components/student-navbar";
+import StudentAssignmentCard from "../components/student-components/student-assignment-card";
 
 interface Assignment {
   assignmentID: number;
@@ -14,79 +13,144 @@ interface Assignment {
   deadline: string;
 }
 
-const ViewAssignments = () => {
+export default function AssignmentsPage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState<any>(null);
-
-  // Use the session validation hook to check if the user is logged in
-  useSessionValidation('student', setLoading, setSession);
-
   const [assignments, setAssignments] = useState<Assignment[]>([]);
-
+  const [session, setSession] = useState<any>(null);
+  const [selectedAssignmentType, setSelectedAssignmentType] = useState('all');
+  useSessionValidation('student', setLoading, setSession);
   useEffect(() => {
-    fetch("/api/assignments/getAssignments")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setAssignments(data.courses);
-      })
-      .catch((error) => {
-        console.error(
-          "There has been a problem with your fetch operation:",
-          error
-        );
-      });
-  }, []);
+    if (session && session.user && session.user.userID) {
+      fetchAssignments(session.user.userID);
+    }
+  }, [session]);
 
-  if (loading) {
-    return <p>Loading...</p>;
+  if (!session || !session.user || !session.user.userID) {
+    console.error('No user found in session');
+    return null;
+  };
+
+  const fetchAssignments = async (userID: string) => {
+    try {
+      const response = await fetch(`/api/getAllAssignmentsStudent?userID=${userID}`);
+      if (response.ok) {
+        const data = await response.json();
+        setAssignments(data.assignments);
+      } else {
+        console.error('Failed to fetch assignments');
+      }
+    } catch (error) {
+      console.error('Error fetching assignments:', error);
+    }
+  };
+  const handleCheckboxChange = (value: string) => {
+    setSelectedAssignmentType(value);
+  };
+  const handleCreateAssignmentClick = () => {
+    router.push('/instructor/create-assignment');
+  };
+
+  const handleCreatePeerReviewAssignmentClick = () => {
+    router.push('/instructor/release-assignment');
+  };
+
+  const handleAction = (key: any) => {
+    switch (key) {
+      case "create":
+        handleCreateAssignmentClick();
+        break;
+      case "peer-review":
+        handleCreatePeerReviewAssignmentClick();
+        break;
+      default:
+        console.log("Unknown action:", key);
+    }
+  };
+  
+if (loading) {
+    return <div className='w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto'>
+                <Spinner color='primary' size="lg" />
+            </div>;
+  }
+  const handleHomeClick = async () => {
+    router.push('/instructor/dashboard');
   }
 
   return (
     <>
-      {/* <StudentHeader
-        title="Assignments"
-        addLink={[
-          { href: "./all-assignments", title: "View All" },
-          { href: "./peer-eval-assignments", title: "Peer Evaluations" },
-        ]}
-      /> */}
-      {/* TODO: add a selection button that allows a student to view only a certain type of assignments */}
       <StudentNavbar />
-      <div className={style.assignment}>
-        <h1>Assignments</h1>
-        <ul>
-          {assignments.map((assignment) => (
-            <li key={assignment.assignmentID}>
-              <Link href={`/student/assignment/${assignment.assignmentID}`}>
-                <h3>{assignment.title}</h3>
-              </Link>
-              <p>{assignment.description}</p>
-              <p>
-                Due date: {new Date(assignment.deadline).toLocaleDateString()}
-              </p>
-            </li>
-          ))}
-        </ul>
-        {/* {assignments.map((assignment) => (
-          <Card key={assignment.assignmentID} className="w-[70vw]">
-            <CardHeader><Link href={`/student/assignment/${assignment.assignmentID}`}>
-              <b>{assignment.title}</b>
-            </Link></CardHeader>
-            <Divider/>
-            <CardBody>
-            {assignment.description}
-            </CardBody>
-          </Card>
-          ))} */}
+      <div className={`instructor text-primary-900 ${styles.container}`}>
+        <div className={styles.header}>
+          <h1>All Assignments</h1>
+          <br />
+          <Breadcrumbs>
+            <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
+            <BreadcrumbItem> Home</BreadcrumbItem>
+          </Breadcrumbs>
+          
+        </div>
+        <div className={styles.mainContent}>
+          <div className={styles.assignmentsSection}>
+            <CheckboxGroup
+              label="Select assignment type:"
+              orientation="horizontal"
+              color="primary"
+              size="sm"
+              className="text-left flex-row mb-2 text-primary-900 "
+            >
+              <Checkbox value="assignments">All Assignments</Checkbox>
+              <Checkbox value="peerReviews">Peer Reviews</Checkbox>
+              <Checkbox value="peerReviews">Peer Evaluations</Checkbox>
+            </CheckboxGroup>
+            
+            <h3 className={styles.innerTitle}>Assignments</h3>
+            <br /> <Divider className="instructor bg-secondary" /> <br />
+            <div className={styles.courseCard}>
+              {assignments.length > 0 ? (
+                assignments.map((assignment) => (
+                  <div key={assignment.assignmentID} className={styles.courseCard}>
+                    <StudentAssignmentCard
+                      courseID={assignment.assignmentID}
+                      courseName={assignment.title}
+                      dueDate={assignment.deadline}
+                      color="#72a98f"
+                    />
+                  </div>
+                ))
+              ) : (
+                <p>No assignments found for this course.</p>
+              )}
+            </div><h3 className={styles.innerTitle}>Peer Reviews Created</h3>
+            <br /><Divider className="instructor bg-secondary" /><br />
+            <div className={styles.courseCard}>
+              {assignments.length > 0 ? (
+                assignments.map((assignment) => (
+                  <div key={assignment.assignmentID} className={styles.courseCard}>
+                    <StudentAssignmentCard
+                      courseID={45}
+                      courseName="Peer review Assignment"
+                      color="#72a98f" 
+                      dueDate={""}                    />
+                  </div>
+                ))
+              ) : (
+                <p>No assignments found for this course.</p>
+              )}
+            </div>
+          </div>
+
+          <div className={styles.notificationsSection}>            
+            <hr />
+            <h2 className="my-3">Notifications</h2>
+            <div className={styles.notificationsContainer}>
+              <div className={styles.notificationCard}>Dummy Notification</div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
-};
+}
 
-export default ViewAssignments;
+

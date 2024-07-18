@@ -3,6 +3,9 @@ import InstructorHeader from "../components/instructor-components/instructor-hea
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import styles from '../../styles/instructor-course-dashboard.module.css';
 import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress } from "@nextui-org/react";
+import { useEffect, useState } from "react";
+import { useSessionValidation } from '../api/auth/checkSession';
+import AdminNavbar from "../components/admin-components/admin-navbar";
 
 interface Assignment {
   assignmentID: number;
@@ -13,11 +16,40 @@ interface Assignment {
 
 export default function AssignmentsPage() {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [session, setSession] = useState<any>(null);
 
-  const assignments: Assignment[] = [
+  useSessionValidation('instructor', setLoading, setSession);
+  useEffect(() => {
+    if (session && session.user && session.user.userID) {
+      fetchAssignments(session.user.userID);
+    }
+  }, [session]);
+  if (!session || !session.user || !session.user.userID) {
+    console.error('No user found in session');
+    return null;
+  }
+  const isAdmin = session.user.role === 'admin';
+  const dummyassignments: Assignment[] = [
     { assignmentID: 1, title: "Assignment 1", description: "Description 1", deadline: "2024-07-20" },
     { assignmentID: 2, title: "Assignment 2", description: "Description 2", deadline: "2024-07-25" },
   ];
+  
+
+  const fetchAssignments = async (userID: string) => {
+    try {
+      const response = await fetch(`/api/getAllAssignmentsInstructor?userID=${userID}`);
+      if (response.ok) {
+        const data = await response.json();
+        setAssignments(data.assignments);
+      } else {
+        console.error('Failed to fetch assignments');
+      }
+    } catch (error) {
+      console.error('Error fetching assignments:', error);
+    }
+  };
 
   const handleCreateAssignmentClick = () => {
     router.push('/instructor/create-assignment');
@@ -39,10 +71,11 @@ export default function AssignmentsPage() {
         console.log("Unknown action:", key);
     }
   };
+  
 
   return (
     <>
-      <InstructorNavbar />
+      {isAdmin ? <AdminNavbar  assignments={{className: "bg-primary-500"}}/> : <InstructorNavbar assignments={{className: "bg-primary-500"}} />}
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
           <h1>Assignments</h1>
@@ -77,7 +110,7 @@ export default function AssignmentsPage() {
               ))}
             </div>
           </div>
-          <div className={styles.actionButtons}>
+          <div className={styles.notificationsSection}>
             <Listbox aria-label="Actions" onAction={handleAction}>
               <ListboxItem key="create">Create Assignment</ListboxItem>
               <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
@@ -88,3 +121,5 @@ export default function AssignmentsPage() {
     </>
   );
 }
+
+

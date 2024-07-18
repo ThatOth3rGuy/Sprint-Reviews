@@ -1,14 +1,12 @@
 // course-dashboard.tsx
 import { useRouter } from "next/router";
-import InstructorHeader from "../components/instructor-components/instructor-header";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
-import AdminHeader from "../components/admin-components/admin-header";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/instructor-course-dashboard.module.css';
 import InstructorAssignmentCard from "../components/instructor-components/instructor-assignment-card";
-import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
 interface CourseData {
   courseID: string;
   courseName: string;
@@ -54,9 +52,13 @@ export default function Page() {
   const handleHomeClick = async () => {
     router.push("/instructor/dashboard")
   }
+  /**
+   * Fetches assignments based on the provided course ID.
+   * @param {string | string[]} courseID - The ID of the course to fetch assignments for.
+   */
   const fetchAssignments = async (courseID: string | string[]) => {
     try {
-      const response = await fetch(`/api/getAssignments?courseID=${courseID}`);
+      const response = await fetch(`/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`);
       if (response.ok) {
         const data = await response.json();
         setAssignments(data.courses);
@@ -69,12 +71,7 @@ export default function Page() {
   };
 
   if (!courseData || loading) {
-    return <div className="instructor"><Progress
-    size="sm"
-    isIndeterminate
-    aria-label="Loading..."
-    color="secondary"
-  /></div>;;
+    return <Spinner color='primary' size="lg" className='instructor'/>
   }
 
   if (!session || !session.user || !session.user.userID) {
@@ -83,9 +80,7 @@ export default function Page() {
   }
   const isAdmin = session.user.role === 'admin';
 
-  const handleBackClick = async () => {
-    router.push('/instructor/dashboard');
-  }
+  
 
   const handleCreateAssignmentClick = () => {
     router.push('/instructor/create-assignment');
@@ -94,8 +89,12 @@ export default function Page() {
     router.push('/instructor/release-assignment');
   };
   const handleCreateGroupPeerReviewAssignmentClick = () => {
-    router.push('/instructor/create-assignment');
+    router.push('/instructor/create-groups');
   };
+  /**
+   * Handles the action based on the key provided.
+   * @param {any} key - The key representing the action to be performed.
+   */
   const handleAction = (key: any) => {
     switch (key) {
       case "create":
@@ -115,6 +114,10 @@ export default function Page() {
         console.log("Unknown action:", key);
     }
   };
+  /**
+   * Renders the instructor course dashboard page.
+   * @returns {JSX.Element} The instructor course dashboard page.
+   */
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -181,7 +184,7 @@ export default function Page() {
               <Listbox aria-label="Actions" onAction={handleAction}>
                 <ListboxItem key="create">Create Assignment</ListboxItem>
                 <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
-                <ListboxItem key="group-review">Create Group Peer Review</ListboxItem>
+                <ListboxItem key="group-review">Create Student Groups</ListboxItem>
                 <ListboxItem key="delete" className="text-danger" color="danger">
                   Archive Course
                 </ListboxItem>
@@ -196,6 +199,7 @@ export default function Page() {
         </div>
       </div>
 
+      
 
     </>
   );
