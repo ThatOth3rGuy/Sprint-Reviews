@@ -639,7 +639,86 @@ export async function getStudentsInCourse(courseID: number): Promise<any[]> {
     throw error;
   }
 }
+// Inserts a student into the selected_students table for the defined submission in a course.
+export async function selectStudentForSubmission(studentID: number, assignmentID: number, courseID: number, submissionID: number): Promise<void> {
+  const createTableSql = `
+    CREATE TABLE IF NOT EXISTS student_groups (
+      studentID INT,
+      assignmentID INT,
+      courseID INT,
+      submissionID INT,
+      PRIMARY KEY (studentID, submissionID),
+      FOREIGN KEY (studentID) REFERENCES student(studentID),
+      FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
+      FOREIGN KEY (courseID) REFERENCES course(courseID),
+      FOREIGN KEY (submissionID) REFERENCES submission(submissionID)
+    )
+  `;
 
+  const insertSql = `
+    INSERT INTO student_groups (studentID, assignmentID, courseID, submissionID)
+    VALUES (?, ?, ?, ?)
+  `;
+
+  try {
+    await query(createTableSql);
+    await query(insertSql, [studentID, assignmentID, courseID, submissionID]);
+  } catch (error) {
+    const err = error as Error;
+    console.error(`Error selecting student ${studentID} for assignment ${assignmentID}:`, err.message);
+    throw err;
+  }
+}
+// Updates the assignment for a student to review with given submissionID
+export async function updateReviewer(studentID: number, assignmentID: number, submissionID: number): Promise<void> {
+  // Assuming getReviewGroups is imported or available in this context
+  // and it returns an array of existing records based on the provided parameters
+
+  // Update SQL template
+  const updateSql = `
+    UPDATE student_groups
+    SET ${assignmentID ? 'assignmentID = ?' : ''}${assignmentID && submissionID ? ', ' : ''}${submissionID ? 'submissionID = ?' : ''}
+    WHERE studentID = ?
+  `;
+
+  // Parameters for the update query
+  const updateParams = [...(assignmentID ? [assignmentID] : []), ...(submissionID ? [submissionID] : []), studentID];
+
+  try {
+    // Use getReviewGroups to check if the record exists
+    const existingRecords = await getReviewGroups(studentID, assignmentID, submissionID);
+    if (existingRecords.length > 0) {
+      console.log(`The studentID ${studentID} with assignmentID ${assignmentID} or submissionID ${submissionID} already exists.`);
+      return; // Skip update if exists
+    }
+
+    // Proceed with update if not exists
+    await query(updateSql, updateParams);
+    console.log(`Updated studentID ${studentID} with new assignmentID ${assignmentID} or new submissionID ${submissionID}.`);
+  } catch (error) {
+    const err = error as Error;
+    console.error(`Error updating student ${studentID}:`, err.message);
+    throw err;
+  }
+}
+// Get review groups for a student based on the provided parameters
+export async function getReviewGroups(studentID?: number, assignmentID?: number, submissionID?: number, groupBy?: string) {
+  const sql = `
+    SELECT *
+    FROM student_groups
+    WHERE ${studentID ? 'studentID = ?' : ''}${studentID && (assignmentID || submissionID) ? ' AND ' : ''}${assignmentID ? 'assignmentID = ?' : ''}${assignmentID && submissionID ? ' AND ' : ''}${submissionID ? 'submissionID = ?' : ''}
+    ${groupBy ? `GROUP BY ${groupBy}` : ''}
+  `;
+
+  try {
+    const params = [studentID, assignmentID, submissionID].filter(value => value !== undefined);
+    const rows = await query(sql, params);
+    return rows;
+  } catch (error) {
+    console.error('Error fetching review groups:', error);
+    throw error;
+  }
+}
 //Get students for setting unique due date
 // export async function getStudents(): Promise<any[]> {
 //   const sql = `
