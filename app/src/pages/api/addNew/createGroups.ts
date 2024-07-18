@@ -1,5 +1,5 @@
 /*
-* This API call is used to create randomized groups.
+* This API call is used to create randomized groups, as well as a courseID.
 * It will take an int as the number of students per group, and an array of student IDs.
 * It then calls the randomization function to create the groups, before calling the database query to add them.
 */
@@ -34,7 +34,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { groupSize, studentIds } = req.body;
+  const { groupSize, studentIds, courseID } = req.body;
 
   if (!groupSize || !Array.isArray(studentIds) || studentIds.length === 0) {
     return res.status(400).json({ error: 'Invalid input' });
@@ -43,8 +43,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const groups = randomizeGroups(studentIds, groupSize);
 
-    // This function will insert the rows of students into the groups table.
-    await createGroups(groups);
+    // This function will insert the rows of students into the groups table, connected to the courseID.
+    await createGroups(groups, courseID);
 
     res.status(201).json({ message: 'Groups created successfully', groups });
   } catch (error) {
