@@ -1,4 +1,4 @@
-//getcourses4assign.ts
+//getAllCourses.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getCourses} from '../../../db';
 

@@ -1,11 +1,11 @@
 // tests-jest/getCourses.test.ts
 import handler from '../../src/pages/api/courses/getAllCourses';
-import { getAllCourses } from '../../src/db';
+import { getCourses } from '../../src/db';
 import { createMocks } from 'node-mocks-http';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 jest.mock('../../src/db', () => ({
-  getAllCourses: jest.fn(),
+  getCourses: jest.fn(),
 }));
 
 describe('API endpoint handler tests', () => {
@@ -19,7 +19,7 @@ describe('API endpoint handler tests', () => {
       { id: 2, name: 'Course 2', isArchived: false },
     ];
 
-    (getAllCourses as jest.Mock).mockResolvedValueOnce(courses);
+    (getCourses as jest.Mock).mockResolvedValueOnce(courses);
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: 'GET',
@@ -32,7 +32,7 @@ describe('API endpoint handler tests', () => {
 
     expect(res._getStatusCode()).toBe(200);
     expect(res._getJSONData()).toEqual(courses);
-    expect(getAllCourses).toHaveBeenCalledWith(false);
+    expect(getCourses).toHaveBeenCalledTimes(1);
   });
 
   test('should return archived courses successfully', async () => {
@@ -41,7 +41,7 @@ describe('API endpoint handler tests', () => {
       { id: 4, name: 'Course 4', isArchived: true },
     ];
 
-    (getAllCourses as jest.Mock).mockResolvedValueOnce(courses);
+    (getCourses as jest.Mock).mockResolvedValueOnce(courses);
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: 'GET',
@@ -54,12 +54,12 @@ describe('API endpoint handler tests', () => {
 
     expect(res._getStatusCode()).toBe(200);
     expect(res._getJSONData()).toEqual(courses);
-    expect(getAllCourses).toHaveBeenCalledWith(true);
+    expect(getCourses).toHaveBeenCalledTimes(1);
   });
 
   test('should return 500 if there is an internal server error', async () => {
     const mockError = new Error('Database error');
-    (getAllCourses as jest.Mock).mockRejectedValueOnce(mockError);
+    (getCourses as jest.Mock).mockRejectedValueOnce(mockError);
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: 'GET',
@@ -68,6 +68,17 @@ describe('API endpoint handler tests', () => {
     await handler(req, res);
 
     expect(res._getStatusCode()).toBe(500);
-    expect(res._getJSONData()).toEqual({ error: 'Internal Server Error' });
+    expect(res._getJSONData()).toEqual({ message: 'An error occurred while fetching the courses.' });
+  });
+
+  test('should return 405 if method is not GET', async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: 'POST',
+    });
+
+    await handler(req, res);
+
+    expect(res._getStatusCode()).toBe(405);
+    expect(res._getJSONData()).toEqual({ message: 'Method not allowed.' });
   });
 });

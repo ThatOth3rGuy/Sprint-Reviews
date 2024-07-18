@@ -13,30 +13,27 @@ describe('submitAssignment Tests', () => {
 
   beforeAll(async () => {
     connection = await global.pool.getConnection();
+  });
 
+  beforeEach(async () => {
     // Ensure the user exists
     await connection.query(
       `INSERT INTO user (userID, firstName, lastName, email, pwd, userRole) VALUES 
-      (${uniqueID + 1}, 'Test', 'Instructor', 'test.instructor@example.com', 'password123', 'instructor')
+      (${uniqueID + 1}, 'Test', 'Instructor', 'test.instructor.${uniqueID}@example.com', 'password123', 'instructor'),
+      (${uniqueID + 2}, 'Test', 'Student', 'test.student.${uniqueID}@example.com', 'password123', 'student')
       ON DUPLICATE KEY UPDATE email = VALUES(email)`
     );
 
     // Ensure the instructor exists
     await connection.query(
-      `INSERT INTO instructor (userID, isAdmin, departments) VALUES 
-      (${uniqueID + 1}, TRUE, 'Test Department')
+      `INSERT INTO instructor (instructorID, userID, isAdmin, departments) VALUES 
+      (${uniqueID + 1}, ${uniqueID + 1}, TRUE, 'Test Department')
       ON DUPLICATE KEY UPDATE departments = 'Test Department'`
     );
 
     // Ensure the student exists
     await connection.query(
-      `INSERT INTO user (userID, firstName, lastName, email, pwd, userRole) VALUES 
-      (${uniqueID + 2}, 'Test', 'Student', 'test.student@example.com', 'password123', 'student')
-      ON DUPLICATE KEY UPDATE email = VALUES(email)`
-    );
-
-    await connection.query(
-      `INSERT INTO student (userID, studentID, phoneNumber, homeAddress, dateOfBirth) VALUES 
+      `INSERT INTO student (studentID, userID, phoneNumber, homeAddress, dateOfBirth) VALUES 
       (${uniqueID + 2}, ${uniqueID + 2}, '555-1234', '123 Test St', '2000-01-01')
       ON DUPLICATE KEY UPDATE phoneNumber = VALUES(phoneNumber)`
     );
@@ -50,32 +47,30 @@ describe('submitAssignment Tests', () => {
 
     // Ensure the assignment exists
     await connection.query(
-      `INSERT INTO assignment (assignmentID, title, description, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES 
+      `INSERT INTO assignment (assignmentID, title, descr, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES 
       (${uniqueID + 4}, 'Test Assignment', 'Test Description', 'Test Rubric', '2024-12-31 23:59:59', FALSE, ${uniqueID + 3}, 'pdf')
       ON DUPLICATE KEY UPDATE title = VALUES(title)`
     );
-  });
 
-  afterAll(async () => {
-    if (connection) {
-      await connection.query(`DELETE FROM submission WHERE assignmentID = ${uniqueID + 4}`);
-      await connection.query(`DELETE FROM assignment WHERE assignmentID = ${uniqueID + 4}`);
-      await connection.query(`DELETE FROM course WHERE courseID = ${uniqueID + 3}`);
-      await connection.query(`DELETE FROM student WHERE userID = ${uniqueID + 2}`);
-      await connection.query(`DELETE FROM instructor WHERE userID = ${uniqueID + 1}`);
-      await connection.query(`DELETE FROM user WHERE userID IN (${uniqueID + 1}, ${uniqueID + 2})`);
-      connection.release();
-    }
-  });
-
-  beforeEach(async () => {
     await fs.writeFile(filePath, 'file content');
     jest.spyOn(fs, 'readFile').mockResolvedValue(Buffer.from('file content'));
     jest.spyOn(fs, 'unlink').mockResolvedValue(undefined);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    await connection.query(`DELETE FROM submission WHERE assignmentID = ${uniqueID + 4}`);
+    await connection.query(`DELETE FROM assignment WHERE assignmentID = ${uniqueID + 4}`);
+    await connection.query(`DELETE FROM course WHERE courseID = ${uniqueID + 3}`);
+    await connection.query(`DELETE FROM student WHERE userID = ${uniqueID + 2}`);
+    await connection.query(`DELETE FROM instructor WHERE userID = ${uniqueID + 1}`);
+    await connection.query(`DELETE FROM user WHERE userID IN (${uniqueID + 1}, ${uniqueID + 2})`);
     jest.clearAllMocks();
+  });
+
+  afterAll(async () => {
+    if (connection) {
+      connection.release();
+    }
   });
 
   test('should submit an assignment successfully', async () => {
@@ -104,9 +99,10 @@ describe('submitAssignment Tests', () => {
       mimetype: 'application/pdf',
     } as Express.Multer.File;
 
-    jest.spyOn(fs, 'readFile').mockRejectedValue(new Error('File read error'));
+    const mockReadFile = jest.spyOn(fs, 'readFile').mockRejectedValue(new Error('File read error'));
 
     await expect(submitAssignment(uniqueID + 4, uniqueID + 2, file, global.pool)).rejects.toThrow('File read error');
+    expect(mockReadFile).toHaveBeenCalled();
   });
 
   test('should handle database errors', async () => {

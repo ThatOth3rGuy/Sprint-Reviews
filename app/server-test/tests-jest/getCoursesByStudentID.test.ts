@@ -5,7 +5,7 @@ import { getCoursesByStudentID } from '../../src/db';
 describe('getCoursesByStudentID Tests', () => {
   let connection: mysql.PoolConnection;
   // Since multiple tests are being run, use a baseID to ensure unique IDs
-  // then only test for getting theses specific courses
+  // then only test for getting these specific courses
   const uniqueID = Math.floor(Math.random() * 1000000); // Base value for unique IDs
 
   beforeAll(async () => {
@@ -14,21 +14,21 @@ describe('getCoursesByStudentID Tests', () => {
     // Ensure the user, instructor, student, course, and enrollment exist
     await connection.query(
       `INSERT INTO user (userID, firstName, lastName, email, pwd, userRole) VALUES 
-      (${uniqueID + 1}, 'Test', 'Instructor', 'test.instructor@example.com', 'password123', 'instructor'),
-      (${uniqueID + 2}, 'Test', 'Student', 'test.student@example.com', 'password123', 'student')
+      (${uniqueID + 1}, 'Test', 'Instructor', 'test.instructor.${uniqueID}@example.com', 'password123', 'instructor'),
+      (${uniqueID + 2}, 'Test', 'Student', 'test.student.${uniqueID}@example.com', 'password123', 'student')
       ON DUPLICATE KEY UPDATE email = VALUES(email)`
     );
 
     await connection.query(
-      `INSERT INTO instructor (userID, isAdmin, departments) VALUES 
-      (${uniqueID + 1}, TRUE, 'Test Department')
+      `INSERT INTO instructor (instructorID, userID, isAdmin, departments) VALUES 
+      (${uniqueID + 1}, ${uniqueID + 1}, TRUE, 'Test Department')
       ON DUPLICATE KEY UPDATE departments = 'Test Department'`
     );
 
     await connection.query(
-      `INSERT INTO student (userID, studentID, phoneNumber, homeAddress, dateOfBirth) VALUES 
+      `INSERT INTO student (studentID, userID, phoneNumber, homeAddress, dateOfBirth) VALUES 
       (${uniqueID + 2}, ${uniqueID + 2}, '1234567890', '123 Test St', '2000-01-01')
-      ON DUPLICATE KEY UPDATE phoneNumber = '1234567890'`
+      ON DUPLICATE KEY UPDATE phoneNumber = VALUES(phoneNumber)`
     );
 
     await connection.query(
@@ -79,11 +79,11 @@ describe('getCoursesByStudentID Tests', () => {
     const newStudentID = uniqueID + 5;
     await connection.query(
       `INSERT INTO user (userID, firstName, lastName, email, pwd, userRole) VALUES 
-      (${newStudentID}, 'New', 'Student', 'new.student@example.com', 'password123', 'student')
+      (${newStudentID}, 'New', 'Student', 'new.student.${uniqueID}@example.com', 'password123', 'student')
       ON DUPLICATE KEY UPDATE email = VALUES(email)`
     );
     await connection.query(
-      `INSERT INTO student (userID, studentID, phoneNumber, homeAddress, dateOfBirth) VALUES 
+      `INSERT INTO student (studentID, userID, phoneNumber, homeAddress, dateOfBirth) VALUES 
       (${newStudentID}, ${newStudentID}, '1234567890', '123 New St', '2000-01-01')
       ON DUPLICATE KEY UPDATE phoneNumber = '1234567890'`
     );
@@ -98,11 +98,12 @@ describe('getCoursesByStudentID Tests', () => {
   });
 
   test('should handle errors during course fetching', async () => {
-    try {
-      // Simulate a database error by providing an invalid pool
-      await getCoursesByStudentID(uniqueID + 2, {} as mysql.Pool);
-    } catch (error) {
-      expect(error).toBeInstanceOf(Error);
-    }
+    const mockPool = {
+      execute: jest.fn().mockImplementation(() => {
+        throw new Error('Simulated database error');
+      }),
+    };
+
+    await expect(getCoursesByStudentID(uniqueID + 2, mockPool as unknown as mysql.Pool)).rejects.toThrow('Simulated database error');
   });
 });

@@ -5,7 +5,7 @@ import { getAssignmentsWithSubmissions } from '../../src/db';
 describe('getAssignmentsWithSubmissions Tests', () => {
   let connection: mysql.PoolConnection;
   // Since multiple tests are being run, use a baseID to ensure unique IDs
-  // then only test for getting theses specific courses
+  // then only test for getting these specific courses
   const uniqueID = Math.floor(Math.random() * 1000000); // Base value for unique IDs
 
   beforeAll(async () => {
@@ -14,19 +14,19 @@ describe('getAssignmentsWithSubmissions Tests', () => {
     // Ensure the user, instructor, student, course, assignments, and submissions exist
     await connection.query(
       `INSERT INTO user (userID, firstName, lastName, email, pwd, userRole) VALUES 
-      (${uniqueID + 1}, 'Test', 'Instructor', 'test.instructor@example.com', 'password123', 'instructor'),
-      (${uniqueID + 2}, 'Test', 'Student', 'test.student@example.com', 'password123', 'student')
+      (${uniqueID + 1}, 'Test', 'Instructor', 'test.instructor.${uniqueID}@example.com', 'password123', 'instructor'),
+      (${uniqueID + 2}, 'Test', 'Student', 'test.student.${uniqueID}@example.com', 'password123', 'student')
       ON DUPLICATE KEY UPDATE email = VALUES(email)`
     );
 
     await connection.query(
-      `INSERT INTO instructor (userID, isAdmin, departments) VALUES 
-      (${uniqueID + 1}, TRUE, 'Test Department')
+      `INSERT INTO instructor (instructorID, userID, isAdmin, departments) VALUES 
+      (${uniqueID + 1}, ${uniqueID + 1}, TRUE, 'Test Department')
       ON DUPLICATE KEY UPDATE departments = 'Test Department'`
     );
 
     await connection.query(
-      `INSERT INTO student (userID, studentID, phoneNumber, homeAddress, dateOfBirth) VALUES 
+      `INSERT INTO student (studentID, userID, phoneNumber, homeAddress, dateOfBirth) VALUES 
       (${uniqueID + 2}, ${uniqueID + 2}, '1234567890', '123 Test St', '2000-01-01')
       ON DUPLICATE KEY UPDATE phoneNumber = '1234567890'`
     );
@@ -38,14 +38,14 @@ describe('getAssignmentsWithSubmissions Tests', () => {
     );
 
     await connection.query(
-      `INSERT INTO assignment (assignmentID, title, description, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES 
+      `INSERT INTO assignment (assignmentID, title, descr, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES 
       (${uniqueID + 4}, 'Assignment 1', 'Description 1', 'Rubric 1', '2024-12-31 23:59:59', FALSE, ${uniqueID + 3}, 'pdf,docx')
       ON DUPLICATE KEY UPDATE title = VALUES(title)`
     );
 
     await connection.query(
-      `INSERT INTO submission (submissionID, assignmentID, studentID, fileName, submissionDate) VALUES 
-      (${uniqueID + 5}, ${uniqueID + 4}, ${uniqueID + 2}, 'submission1.pdf', '2024-12-01 12:00:00')
+      `INSERT INTO submission (submissionID, assignmentID, studentID, fileName, fileContent, fileType, submissionDate) VALUES 
+      (${uniqueID + 5}, ${uniqueID + 4}, ${uniqueID + 2}, 'submission1.pdf', NULL, 'pdf', '2024-12-01 12:00:00')
       ON DUPLICATE KEY UPDATE fileName = VALUES(fileName)`
     );
   });
@@ -86,7 +86,7 @@ describe('getAssignmentsWithSubmissions Tests', () => {
   test('should handle assignments with no submissions', async () => {
     // Insert an assignment with no submissions
     await connection.query(
-      `INSERT INTO assignment (assignmentID, title, description, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES 
+      `INSERT INTO assignment (assignmentID, title, descr, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES 
       (${uniqueID + 6}, 'Assignment 2', 'Description 2', 'Rubric 2', '2024-12-31 23:59:59', FALSE, ${uniqueID + 3}, 'pdf,docx')
       ON DUPLICATE KEY UPDATE title = VALUES(title)`
     );

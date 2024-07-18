@@ -5,7 +5,7 @@ import { getCourses } from '../../src/db';
 describe('getCourses Tests', () => {
   let connection: mysql.PoolConnection;
   // Since multiple tests are being run, use a baseID to ensure unique IDs
-  // then only test for getting theses specific courses
+  // then only test for getting these specific courses
   const uniqueID = Math.floor(Math.random() * 1000000); // Base value for unique IDs
 
   beforeAll(async () => {
@@ -14,13 +14,13 @@ describe('getCourses Tests', () => {
     // Ensure the instructor and courses exist
     await connection.query(
       `INSERT INTO user (userID, firstName, lastName, email, pwd, userRole) VALUES 
-      (${uniqueID + 1}, 'Test', 'Instructor', 'test.instructor@example.com', 'password123', 'instructor')
+      (${uniqueID + 1}, 'Test', 'Instructor', 'test.instructor.${uniqueID}@example.com', 'password123', 'instructor')
       ON DUPLICATE KEY UPDATE email = VALUES(email)`
     );
 
     await connection.query(
-      `INSERT INTO instructor (userID, isAdmin, departments) VALUES 
-      (${uniqueID + 1}, TRUE, 'Test Department')
+      `INSERT INTO instructor (instructorID, userID, isAdmin, departments) VALUES 
+      (${uniqueID + 1}, ${uniqueID + 1}, TRUE, 'Test Department')
       ON DUPLICATE KEY UPDATE departments = 'Test Department'`
     );
 
@@ -100,12 +100,6 @@ describe('getCourses Tests', () => {
       }),
     };
 
-    try {
-      await getCourses(mockPool as unknown as mysql.Pool);
-    } catch (error) {
-      const err = error as Error;
-      expect(err).toBeInstanceOf(Error);
-      expect(err.message).toContain('Simulated database error');
-    }
+    await expect(getCourses(mockPool as unknown as mysql.Pool)).rejects.toThrow('Simulated database error');
   });
 });
