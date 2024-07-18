@@ -18,8 +18,8 @@ const randomizePeerReviewGroups = (students: { studentID: number, assignmentID: 
     - If any students are manually selected for review of a particular assignment they are not considered for that iteration
     */
 
-    // It returns an array of objects, where each object contains the student ID 
-    // and the list of assignment IDs they are assigned to review.
+    // It returns an array of objects, where each object contains the assignment ID 
+    // and the list of student IDs that are assigned to review that specific assignment.
     // (Or a 2d array, or any other data type that can represent this information)
 };
 
@@ -37,6 +37,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const peerReviewGroups = randomizePeerReviewGroups(studentAssignments, reviewsPerAssignment);
 
+    // This function will insert the rows of students to review the single assignment, 
+    // for each assignment in the peerReviewGroups array.
     await releaseRandomizedPeerReviews(peerReviewGroups);
 
     res.status(201).json({ message: 'Peer review groups created successfully', peerReviewGroups });

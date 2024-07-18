@@ -10,6 +10,9 @@ import { createGroups } from '../../../db';
 
 // randomizeGroups function takes an array of student IDs and a group size, 
 // then returns an array of groups with each group containing the specified student IDs.
+/* e.g.
+* randomizeGroups([1, 2, 3, 4, 5], 2) => [[1, 2], [3, 4], [5]]
+*/
 const randomizeGroups = (students: number[], groupSize: number) => {
   const shuffledStudents = students.sort(() => Math.random() - 0.5);
   const groups = [];
@@ -40,6 +43,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const groups = randomizeGroups(studentIds, groupSize);
 
+    // This function will insert the rows of students into the groups table.
     await createGroups(groups);
 
     res.status(201).json({ message: 'Groups created successfully', groups });
