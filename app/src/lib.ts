@@ -29,13 +29,33 @@ export async function decrypt(input: string): Promise<any> {
 export async function login({ email, password, role }: { email: string; password: string, role: string }, res: NextApiResponse) {
   // Query the database for the userID
   const result = await query('SELECT userID FROM user WHERE email = ? AND pwd = ?', [email, password]);
-  const userID = result[0]?.userID;
 
-  if (!userID) {
+  if (!result || result.length === 0) {
     throw new Error('User not found');
   }
 
-  const user = { email, role, userID }; // Include the userID in the user object
+  const userID = result[0].userID;
+
+  // Determine the appropriate table based on the role
+  let table = '';
+  if (role === 'admin' || role === 'instructor') { 
+    role = 'instructor';
+    table = 'instructor';
+  } else if (role === 'student') {
+    table = 'student';
+  } else {
+    throw new Error('Invalid role');
+  }
+
+  const userResult = await query(`SELECT ${role}ID FROM ${table} WHERE userID = ?`, [userID]);
+
+  if (!userResult || userResult.length === 0) {
+    throw new Error('User not found in role table');
+  }
+
+  const roleID = userResult[0][`${role}ID`];
+  const user = { email, role, userID: roleID }; // Include the roleID in the user object
+
   const expires = new Date(Date.now() + 10 * 60 * 1000); // Each session expires in 10 minutes
   const session = await encrypt({ user, expires });
 
