@@ -63,6 +63,7 @@ const Courses: NextPage = () => {
 
     const instructorID = session.user.userID;
 
+
     try {
       // Call the create course API with courseName and instructorID
       const createCourseResponse = await fetch('/api/addNew/createCourse', {

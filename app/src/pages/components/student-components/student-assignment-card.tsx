@@ -7,10 +7,10 @@ interface StudentAssignmentCardProps {
   courseID: number;
   courseName: string;
   color: string;
-  dueDate: string;
+  // dueDate: string;
 }
 
-const StudentAssignmentCard: React.FC<StudentAssignmentCardProps> = ({ courseID, courseName, color, dueDate }) => {
+const StudentAssignmentCard: React.FC<StudentAssignmentCardProps> = ({ courseID, courseName, color }) => {
   const router = useRouter();
 
   const handleClick = () => {
@@ -23,7 +23,7 @@ const StudentAssignmentCard: React.FC<StudentAssignmentCardProps> = ({ courseID,
       </CardBody>
       <CardFooter className="text-small justify-between" style={{ backgroundColor: color }}>
         <b>{courseName}</b>
-        <p>{dueDate}</p>
+        {/* <p>{dueDate}</p> */}
       </CardFooter>
     </Card>
   );

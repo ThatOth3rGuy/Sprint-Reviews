@@ -1,3 +1,4 @@
+//assignment-dashboard.tsx
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
@@ -5,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import AssignmentDetailCard from '../components/instructor-components/instructor-assignment-details';
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner, Link } from "@nextui-org/react";
 import StudentNavbar from "../components/student-components/student-navbar";
 
 interface Assignment {
@@ -13,7 +14,6 @@ interface Assignment {
     title: string;
     description: string;
     deadline: string;
-    
 }
 
 interface CourseData {
@@ -45,7 +45,7 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
                 .catch((error) => console.error('Error fetching assignment data:', error));
 
             // Fetch course data
-            fetch(`/api/courses/${courseId}`) // Replace `courseID` with the actual course ID
+            fetch(`/api/studentCourses/${courseId}`) // Replace `courseID` with the actual course ID
                 .then((response) => response.json())
                 .then((data: CourseData) => {
                     console.log("Fetched course data:", data);
@@ -66,8 +66,6 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
         return null;
     }
 
-    const isAdmin = session.user.role === 'admin';
-
     // Dummy data for submittedStudents and remainingStudents
     const submittedStudents = ["Student A", "Student B", "Student C"];
     const remainingStudents = ["Student D", "Student E", "Student F"];
@@ -87,7 +85,7 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
                     <br />
                     <Breadcrumbs>
                         <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-                        <BreadcrumbItem onClick={handleBackClick}>{courseData ? courseData.courseName : "Course Dashboard"}</BreadcrumbItem>
+                        {/* <BreadcrumbItem onClick={handleBackClick}>{courseData ? courseData.courseName : "Course Dashboard"}</BreadcrumbItem> */}
                         <BreadcrumbItem>{assignment.title ? assignment.title : "Assignment Name"} </BreadcrumbItem>
                     </Breadcrumbs>
                 </div>
@@ -101,6 +99,9 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
                             remainingStudents={remainingStudents}
                         />
                     )}
+                    <Link href={`/assignment/submit-assignment/${assignment.assignmentID}`}>
+                <a>Submit Assignment</a>
+              </Link>
                 </div>
             </div>
 

@@ -128,6 +128,22 @@ export async function authenticateStudent(email: string, password: string): Prom
     throw error;
   }
 }
+export async function getInstructorID(userID: number): Promise<number | null> {
+  if (typeof userID !== 'number' || isNaN(userID)) {
+    throw new Error(`Invalid userID: ${userID}`);
+  }
+  const sql = 'SELECT instructorID FROM instructor WHERE userID = ?';
+  try {
+    const rows = await query(sql, [userID]);
+    if (rows.length === 0) {
+      return null; // No instructor found for this userID
+    }
+    return rows[0].instructorID;
+  } catch (error) {
+    console.error('Database query error:', error);
+    throw error;
+  }
+}
 
 export async function getAllCourses(isArchived: boolean): Promise<any[]> {
   const sql = `

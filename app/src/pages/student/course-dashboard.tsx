@@ -8,6 +8,7 @@ import styles from '../../styles/instructor-course-dashboard.module.css';
 import InstructorAssignmentCard from "../components/instructor-components/instructor-assignment-card";
 import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
 import StudentNavbar from "../components/student-components/student-navbar";
+import StudentAssignmentCard from "../components/student-components/student-assignment-card";
 interface CourseData {
   courseID: string;
   courseName: string;
@@ -18,6 +19,7 @@ interface Assignment {
   title: string;
   description: string;
   deadline: string;
+  rubric: string;
 }
 
 export default function Page() {
@@ -51,7 +53,7 @@ export default function Page() {
     }
   }, [courseId]);
   const handleHomeClick = async () => {
-    router.push("/instructor/dashboard")
+    router.push("/student/dashboard")
   }
   /**
    * Fetches assignments based on the provided course ID.
@@ -59,7 +61,7 @@ export default function Page() {
    */
   const fetchAssignments = async (courseID: string | string[]) => {
     try {
-      const response = await fetch(`/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`);
+      const response = await fetch(`/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`); //api works in a general fashion which is why it is used here
       if (response.ok) {
         const data = await response.json();
         setAssignments(data.courses);
@@ -153,7 +155,7 @@ export default function Page() {
               {assignments.length > 0 ? (
                 assignments.map((assignment) => (
                   <div key={assignment.assignmentID} className={styles.courseCard}>
-                    <InstructorAssignmentCard
+                    <StudentAssignmentCard
                       courseID={assignment.assignmentID}
                       courseName={assignment.title}
                       color="#72a98f"
@@ -169,7 +171,7 @@ export default function Page() {
               {assignments.length > 0 ? (
                 assignments.map((assignment) => (
                   <div key={assignment.assignmentID} className={styles.courseCard}>
-                    <InstructorAssignmentCard
+                    <StudentAssignmentCard
                       courseID={45}
                       courseName="Peer review Assignment"
                       color="#72a98f"
@@ -189,9 +191,6 @@ export default function Page() {
             </div>          
         </div>
       </div>
-
-      
-
     </>
   );
 }
