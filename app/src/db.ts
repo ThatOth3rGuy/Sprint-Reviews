@@ -41,6 +41,24 @@ export async function createUser(firstName: string, lastName: string, email: str
     throw error;
   }
 }
+export async function getInstructorIDFromUserID(userID: number): Promise<number> {
+  const sql = `
+    SELECT instructorID
+    FROM instructor
+    WHERE userID = ?
+  `;
+  try {
+    const result = await query(sql, [userID]);
+    if (result.length > 0) {
+      return result[0].instructorID;
+    } else {
+      throw new Error('No instructor found with the provided userID');
+    }
+  } catch (error) {
+    console.error('Error in getInstructorIDFromUserID:', error);
+    throw error;
+  }
+}
 // function to add an instructor to the database if the userRole is instructor
 export async function createInstructor(instructorID: number, userID: number, isAdmin: boolean) {
   const sql = `
@@ -183,7 +201,41 @@ export async function addAssignmentToCourse(
     throw error;
   }
 }
+export async function getAllAssignmentsStudent(userID: number) {
+  const sql = `
+    SELECT a.*
+FROM assignment a
+JOIN course c ON a.courseID = c.courseID
+JOIN enrollment e ON c.courseID = e.courseID
+JOIN student s ON e.studentID = s.studentID
+JOIN user u ON s.userID = u.userID
+WHERE u.userID = ?;
+  `;
+  try {
+    const results = await query(sql, [userID]);
+    return results;
+  } catch (error) {
+    console.error('Error in getAllAssignments:', error);
+    throw error;
+  }
+}
+export async function getAllAssignmentsInstructor(userID: number) {
+  const sql = `
+    SELECT a.*
+FROM assignment a
+JOIN course c ON a.courseID = c.courseID
+JOIN instructor i ON c.instructorID = i.instructorID
+JOIN user u ON i.userID = u.userID
+WHERE u.userID = ?`;
 
+  try {
+    const results = await query(sql, [userID]);
+    return results;
+  } catch (error) {
+    console.error('Error in getAllAssignments:', error);
+    throw error;
+  }
+}
 export async function getAssignments(customPool?: mysql.Pool): Promise<any[]> {
   const sql = 'SELECT assignmentID, title, descr, DATE_FORMAT(deadline, "%Y-%m-%dT%H:%i:%s.000Z") as deadline FROM assignment';
   try {
@@ -503,37 +555,41 @@ export async function getCourse(courseID: number): Promise<any> {
   }
 }
   // grab all students from the database matching the first and last name
-export async function getStudentsByName(firstName:string, lastName:string) {
-  const sql = `
-    SELECT user.*, student.studentID FROM user JOIN student ON user.userID = student.userID WHERE user.firstName = ? AND user.lastName = ? AND user.userRole = 'student'
-  `;
-  try {
-    const rows = await query(sql, [firstName, lastName]);
-    if (rows.length > 0) {
-      return rows[0];
-    }
-  } catch (error) {
-    console.error('Error in getStudents:', error);
-    throw error;
-  }
-}
-  // grab all students from the database matching the first and last name
-  export async function getStudentsById(studentID: number) {
+  export async function getStudentsByName(firstName:string, lastName:string) {
     const sql = `
-      SELECT student.*, user.* FROM student JOIN user ON student.userID = user.userID WHERE studentID = ?
+      SELECT user.*, student.studentID FROM user JOIN student ON user.userID = student.userID WHERE user.firstName = ? AND user.lastName = ? AND user.userRole = 'student'
     `;
     try {
-      const rows = await query(sql, [studentID]);
+      const rows = await query(sql, [firstName, lastName]);
       if (rows.length > 0) {
         return rows[0];
+      } else {
+        return null; // Return null if no student is found
       }
     } catch (error) {
       console.error('Error in getStudents:', error);
       throw error;
     }
   }
+    // grab all students from the database matching their student ID's
+    export async function getStudentsById(studentID: number, customPool: mysql.Pool = pool) {
+      const sql = `
+        SELECT student.*, user.* FROM student JOIN user ON student.userID = user.userID WHERE studentID = ?
+      `;
+      try {
+        const rows = await query(sql, [studentID], customPool);
+        if (rows.length > 0) {
+          return rows[0];
+        } else {
+          return null; // Return null if no student is found
+        }
+      } catch (error) {
+        console.error('Error in getStudents:', error);
+        throw error;
+      }
+    }
 //  enroll student in a course
-export async function enrollStudent(userID: string, courseID: string, customPool?: mysql.Pool): Promise<void> {
+export async function enrollStudent(userID: string, courseID: string, customPool: mysql.Pool = pool): Promise<void> {
   const sql = `
     INSERT INTO enrollment (studentID, courseID)
     VALUES (?, ?)

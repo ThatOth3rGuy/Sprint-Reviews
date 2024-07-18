@@ -11,11 +11,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const course = await getCourse(courseID);
+    const course = await getCourse(Number(courseID));
 
     if (course) {
       res.status(200).json(course);
-      console.log(course)
     } else {
       res.status(404).json({ error: 'Course not found' });
     }
@@ -24,7 +23,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(500).json({ error: 'Internal server error' });
   }
 }
-
 async function getCourse(courseID: string) {
   const sql = `
     SELECT courseID, courseName

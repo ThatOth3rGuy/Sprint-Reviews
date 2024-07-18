@@ -1,38 +1,94 @@
-.breadcrumbsBase {
-    position: absolute;
-    top: 8%;
-    font-size: 18px;
+.container {
     display: flex;
-    color: #627264;
-    text-align: left;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    padding: 2%;
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  .header{
+    display: flex;
+    flex-direction: column;
+    background: inherit;
     width: 100%;
-    height: 2.5%;
+    margin-bottom: auto;
+    margin-left: 11vw;
+    padding: 1%;
+    padding-top: 0;
+    margin-top: 0;
+    text-align: left;
+  }
+
+  .mainContent {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100%;
+    align-items: center;
+    margin-bottom: auto;
+    min-height: 80%;
+  }
+  .assignmentsSection {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    background-color: #ffffff;
+    /* padding: 1.5%; */
+    padding-top: 1%;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+    overflow: auto;
+    overflow-x: hidden;
+    margin: 1%;
+    margin-left: auto;
+    margin-right: 2%;
+    text-align: center;
+    height: 100%;
+  }
+
+  .notificationsSection {
+    width: 25%;
+    background-color: #ffffff;
+    padding: 1%;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .notificationsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
   
-  .breadcrumbs {
-    left: -33%;
+  .notificationCard {
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
   }
   
-  .archivedBreadcrumbs {
-    left: -27%;
+  .courseCards {
+    margin-top: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: left;
+    /* min-width: 50vw; */
+    /* max-width: 20vw; */
+    gap: 2%;
+    text-align: left;
+    justify-content: center;
   }
   
-  .breadcrumbsBase a {
-    color: #627264;
-    text-decoration: none;
-    margin-right: 5px;
+  .courseCard {
+    margin: 2%;
+    min-width: 30vw;
   }
-  
-  .breadcrumbsBase a:hover {
-    text-decoration: underline;
-  }
-  
-  .breadcrumbsBase span {
-    color: #000;
-  }
-.institution {
+  /* .institution {
     position: absolute;
     height: 2.15%;
     width: 17.5%;
@@ -157,5 +213,5 @@
     font-size: 25px;
     color: #04124b;
     font-family: 'Inria Serif';
-}
+} */
 

@@ -8,7 +8,8 @@ import { useSessionValidation } from '../api/auth/checkSession';
 import { useRouter } from 'next/router';
 import { Button } from '@nextui-org/react';
 import styles from '../../styles/instructor-dashboard.module.css';
-import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
+import { Modal,Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
+
 interface Course {
   courseID: number;
   courseName: string;
@@ -27,9 +28,12 @@ export default function Page() {
       fetchCourses(session.user.userID);
     }
   }, [session]);
+
+
   const handleCreateCourseClick = () => {
     router.push('/instructor/create-course');
   };
+  
   const fetchCourses = async (instructorID: number) => {
     try {
       const response = await fetch(`/api/getCourse4Instructor?instructorID=${instructorID}`);
@@ -57,10 +61,10 @@ export default function Page() {
 
   return (
     <>
-{isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
+{isAdmin ? <AdminNavbar home={{className: "bg-primary-500"}} /> : <InstructorNavbar home={{className: "bg-primary-500"}} />}
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.topSection}>
-          <h1>Dashboard</h1>
+          <h1>Dashboard  </h1>
           <Button size='sm' color="secondary" variant='ghost' className=' self-end' onClick={handleCreateCourseClick}>Create Course</Button>
         </div>
         <div >
@@ -71,7 +75,7 @@ export default function Page() {
                 <InstructorCourseCard
                   courseID={course.courseID}
                   courseName={course.courseName}
-                  color="#4c9989"
+                  color="#9fc3cf"
                   img="/logo-transparent-png.png"
                 />
               </div>
@@ -79,7 +83,7 @@ export default function Page() {
           </div>
         </div>
       </div>
-
+        
     </>
   );
 }

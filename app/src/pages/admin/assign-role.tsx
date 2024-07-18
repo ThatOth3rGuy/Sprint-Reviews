@@ -21,7 +21,7 @@ export default function Page() {
       <br />
       <AdminHeader title="Admin Portal"
       addLink={[{href: "./view-users", title: "View Users"}, {href: "./join-requests", title: "Join Requests"}, {href: "./archived-courses", title: "Archived Courses"}]}/>
-      <AdminNavbar />
+      <AdminNavbar admin={{ className: "bg-primary-500" }} />
     </>
   );
 }

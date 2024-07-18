@@ -8,6 +8,8 @@ import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/admin-portal-home.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
+import { Button, Divider, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 
 interface Course {
   courseID: number;
@@ -30,7 +32,7 @@ export default function Page() {
   useEffect(() => {
     async function fetchCourses() {
       try {
-        const response = await fetch('/api/getAllCourses?isArchived=false');
+        const response = await fetch('/api/courses/getAllArchivedCourses?isArchived=false');
         if (!response.ok) {
           throw new Error('Failed to fetch courses');
         }
@@ -68,54 +70,90 @@ export default function Page() {
       query: { courseID },
     });
   };
-
+  const handleViewUsersClick = () => {
+    router.push('/admin/view-users');
+  };
+  const handleJoinRequestClick = () => {
+    router.push('/admin/join-requests');
+  };
+  const handleArchivedCoursesClick = () => {
+    router.push('/admin/archived-courses');
+  };
+  const handleAction = (key: any) => {
+    switch (key) {
+      case "view":
+        handleViewUsersClick();
+        break;
+      case "join":
+        handleJoinRequestClick();
+        break;
+      case "archives":
+        handleArchivedCoursesClick();
+        break;
+      // case "delete":
+      //   // Implement delete course functionality
+      //   console.log("Delete course");
+      //   break;
+      default:
+        console.log("Unknown action:", key);
+    }
+  };
   return (
     <>
-      <div className={styles.adminHome}>
-      <nav className={`${styles.breadcrumbsBase} ${styles.breadcrumbs}`}>
-
-          <Link href="/instructor/dashboard">Dashboard</Link>
-          {' / '}
-          <Link href="/admin/portal-home">Admin Portal</Link>
-        </nav>
-        <div className={styles.filtersort}>
-          <div className={styles.filterButton}>
-            <div className={styles.filterButtonChild} />
-            <div className={styles.filter}>
-              <b className={styles.filter1}>Filter</b>
-              <img className={styles.filterIcon} alt="" src="/Images/Filter.png" />
-            </div>
-          </div>
-          <div className={styles.sortButton}>
-            <div className={styles.filterButtonChild} />
-            <div className={styles.sort}>
-              <b className={styles.sort1}>Sort</b>
-              <img className={styles.descendingSortingIcon} alt="" src="/Images/Descending Sorting.png" />
-            </div>
-          </div>
+      <div className={`instructor text-primary-900 ${styles.container}`}>
+        <div className={styles.header}>
+          <h1>Admin Dashboard</h1>
+          {/* <Button size='sm' color="secondary" variant='ghost' className=' self-end' onClick={handleCreateCourseClick}>Create Course</Button> */}
+          <h3 className="my-1">All Active Courses</h3>
+          <Divider className="my-1" />
         </div>
-        <br />
-        <br />
-        {courses.map((course, index) => (
-          <AdminCourseCard
-            key={index}
-            courseName={course.courseName}
-            instructor={`${course.instructorFirstName} ${course.instructorLastName}`}
-            averageGrade={course.averageGrade}
-            courseID={course.courseID}
-            onClick={() => handleCourseClick(course.courseID)}
-          />
-        ))}
-      </div>
-      <AdminHeader
+        <div className={styles.mainContent}>
+          <div className={styles.assignmentsSection}>
+            {/* TODO: add functionality to search bar to search from all active courses */}
+            <Input className="m-1 mx-4 pr-7" placeholder="Search for course" size="sm" type="search" />
+
+            <div className={styles.courseCards}>
+              {courses.map((course, index) => (
+                <div className={styles.courseCard}>
+                  <AdminCourseCard
+                    key={index}
+                    courseName={course.courseName}
+                    instructor={`${course.instructorFirstName} ${course.instructorLastName}`}
+                    averageGrade={course.averageGrade}
+                    courseID={course.courseID}
+                    img="/logo-transparent-png.png"
+                  />
+                  
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.notificationsSection}>
+            <div className={styles.actionButtons}>
+              <Listbox aria-label="Actions" onAction={handleAction}>
+                <ListboxItem key="join">Join Requests</ListboxItem>
+                <ListboxItem key="view">View Users</ListboxItem>
+                <ListboxItem key="archives">Archived Courses</ListboxItem>
+              </Listbox>
+            </div>
+            <hr />
+            <h2 className="my-3">Notifications</h2>
+            <div className={styles.notificationsContainer}>
+              <div className={styles.notificationCard}>Dummy Notification</div>
+            </div>
+          </div>
+          {/* <AdminHeader
         title="Admin Portal"
         addLink={[
           { href: "./view-users", title: "View Users" },
           { href: "./join-requests", title: "Join Requests" },
           { href: "./archived-courses", title: "Archived Courses" },
         ]}
-      />
-      <AdminNavbar />
+      /> */}
+          <AdminNavbar admin={{ className: "bg-primary-500" }} />
+        </div>
+      </div>
     </>
   );
 }

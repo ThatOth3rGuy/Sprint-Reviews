@@ -17,9 +17,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 async function getCoursesByInstructorID(instructorID: number) {
   const sql = `
-    SELECT courseID, courseName
-    FROM course
-    WHERE instructorID = ? AND isArchived = false
+    SELECT courseID, courseName, userID
+    FROM course c join instructor i on c.instructorID=i.instructorID
+    WHERE userID = ? AND isArchived = false
   `;
   try {
     const results = await query(sql, [instructorID]);
