@@ -1,6 +1,6 @@
 /*
-* This API call is used to create randomized groups, as well as a courseID.
-* It will take an int as the number of students per group, and an array of student IDs.
+* This API call is used to create randomized groups.
+* It will take an int as the number of students per group, an array of student IDs, as well as a courseID.
 * It then calls the randomization function to create the groups, before calling the database query to add them.
 */
 
