@@ -9,6 +9,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { selectStudentForSubmission } from '../../../db';
 
+type Student = {
+  studentID: number;
+  submissionID: number;
+};
+
+type ReviewGroup = {
+  submissionID: number;
+  reviewers: number[];
+};
+
 const randomizePeerReviewGroups = (students: { studentID: number, submissionID: number }[], reviewsPerAssignment: number) => {
   // This function will randomize the students and assign them to peer review groups
 
@@ -19,10 +29,106 @@ const randomizePeerReviewGroups = (students: { studentID: number, submissionID: 
     - If any students are manually selected for review of a particular submission they are not considered for that iteration
     */
 
-    // It returns an array of objects, where each object contains the submission ID 
-    // and the list of student IDs that are assigned to review that specific submission.
-    // (Or a 2d array, or any other data type that can represent this information)
-    return [];
+  // It returns an array of objects, where each object contains the submission ID 
+  // and the list of student IDs that are assigned to review that specific submission.
+
+  // Shuffle function to randomize an array using the Fisher-Yates algorithm
+  const shuffleArray = (array: any[]): void => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  };
+
+  // Initialize the review groups for each submission
+  const submissionReviews: { [key: number]: number[] } = {};
+  students.forEach(student => {
+    if (!submissionReviews[student.submissionID]) {
+      submissionReviews[student.submissionID] = [];
+    }
+  });
+
+  // Create a map to keep track of how many reviews each student has done
+  const studentReviewsCount: { [key: number]: number } = {};
+  students.forEach(student => {
+    studentReviewsCount[student.studentID] = 0;
+  });
+
+  // First pass: Ensure every student reviews the minimum number of assignments
+  for (let student of students) {
+    const studentID = student.studentID;
+
+    // Skip this student if they've already reviewed enough assignments
+    if (studentReviewsCount[studentID] >= reviewsPerAssignment) continue;
+
+    // Create a list of all possible reviews (excluding own submission)
+    const possibleReviews = students
+      .filter(s => s.studentID !== studentID && s.submissionID !== student.submissionID)
+      .map(s => s.submissionID);
+
+    // Shuffle the possible reviews to ensure randomness
+    shuffleArray(possibleReviews);
+
+    // Assign reviews from the shuffled list until the student reaches the review limit
+    for (let reviewSubmissionID of possibleReviews) {
+      if (studentReviewsCount[studentID] >= reviewsPerAssignment) break;
+      if (submissionReviews[reviewSubmissionID].length >= reviewsPerAssignment) continue;
+
+      submissionReviews[reviewSubmissionID].push(studentID);
+      studentReviewsCount[studentID]++;
+    }
+  }
+
+  // Verify and adjust: Ensure every submission gets exactly minReviewsPerSubmission reviews
+  const allSubmissions = students.map(student => student.submissionID);
+
+  for (const submissionID of allSubmissions) {
+    while (submissionReviews[submissionID].length < reviewsPerAssignment) {
+      // Filter potential reviewers who have not reviewed this submission and have not reached their review limit
+      const potentialReviewers = students.filter(student =>
+        student.submissionID !== Number(submissionID) &&
+        !submissionReviews[submissionID].includes(student.studentID) &&
+        studentReviewsCount[student.studentID] < reviewsPerAssignment
+      );
+
+      // If no valid reviewers found, assign any student who hasn't reviewed this submission yet
+      if (potentialReviewers.length === 0) {
+        const excessReviewers = students.filter(student =>
+          student.submissionID !== Number(submissionID) &&
+          !submissionReviews[submissionID].includes(student.studentID)
+        );
+
+        shuffleArray(excessReviewers);
+        const reviewer = excessReviewers[0];
+        submissionReviews[submissionID].push(reviewer.studentID);
+        studentReviewsCount[reviewer.studentID]++;
+      } else {
+        // Shuffle the potential reviewers to ensure randomness
+        shuffleArray(potentialReviewers);
+        const reviewer = potentialReviewers[0];
+        submissionReviews[submissionID].push(reviewer.studentID);
+        studentReviewsCount[reviewer.studentID]++;
+      }
+    }
+  }
+
+  // Convert submissionReviews object to array of objects for the required format
+  const result: ReviewGroup[] = Object.keys(submissionReviews).map(submissionID => ({
+    submissionID: Number(submissionID),
+    reviewers: submissionReviews[Number(submissionID)]
+  }));
+
+  return result;
+};
+
+// This function will insert the rows of students to review the single submission, 
+// for each submission in the peerReviewGroups array, connected to the courseID and assignmentID.
+const processPeerReviewGroups = async (peerReviewGroups: ReviewGroup[], assignmentID: Number, courseID: Number) => {
+  for (const group of peerReviewGroups) {
+    for (const student of group.reviewers) {
+      await selectStudentForSubmission(student, assignmentID, courseID, group.submissionID);
+    }
+  }
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -37,15 +143,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
+    // Call the randomizePeerReviewGroups function to create the peer review groups
     const peerReviewGroups = randomizePeerReviewGroups(studentSubmissions, reviewsPerAssignment);
 
-    // This function will insert the rows of students to review the single submission, 
-    // for each submission in the peerReviewGroups array, connected to the courseID and assignmentID.
-    for (const group of peerReviewGroups) {
-      for (const student of group) {
-        await selectStudentForSubmission(student, assignmentID, courseID, group); //group is the submissionID
-      }
-    }
+    // Call the randomizePeerReviewGroups function to create the peer review groups
+    processPeerReviewGroups(peerReviewGroups, assignmentID, courseID);
 
     res.status(201).json({ message: 'Peer review groups created successfully', peerReviewGroups });
   } catch (error) {
