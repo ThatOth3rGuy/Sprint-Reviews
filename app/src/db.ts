@@ -344,6 +344,20 @@ export async function getAssignmentsWithSubmissions() {
     console.error('Error in getAssignmentsWithSubmissions:', error);
   }
 }
+export async function getStudentSubmissions(assignmentId: number): Promise<Array<{ submissionID: number; studentID: number }>> {
+  const sql = `
+    SELECT submissionID, studentID
+    FROM submission
+    WHERE assignmentID = ?
+  `;
+  try {
+    const results = await query(sql, [assignmentId]);
+    return results;
+  } catch (error) {
+    console.error('Error in getSubmissionsByAssignmentId:', error);
+    throw error;
+  }
+}
 
 export async function getCoursesByStudentID(studentID: number): Promise<any[]> {
   const sql = `SELECT c.courseID, c.courseName, u.firstName AS instructorFirstName

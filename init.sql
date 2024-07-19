@@ -124,6 +124,17 @@ CREATE TABLE IF NOT EXISTS review (
     deadline DATETIME,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
+CREATE TABLE IF NOT EXISTS student_groups (
+    studentID INT,
+    assignmentID INT,
+    courseID INT,
+    submissionID INT,
+    PRIMARY KEY (studentID, submissionID),
+    FOREIGN KEY (studentID) REFERENCES student(studentID),
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
+    FOREIGN KEY (courseID) REFERENCES course(courseID),
+    FOREIGN KEY (submissionID) REFERENCES submission(submissionID)
+);
 -- Insert a sample user (student) into the user table
 INSERT INTO user (firstName, lastName, email, pwd, userRole)
 VALUES ('John', 'Doe', 'john.doe@example.com', 'password123', 'student');

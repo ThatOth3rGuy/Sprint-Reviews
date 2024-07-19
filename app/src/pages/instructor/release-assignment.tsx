@@ -172,7 +172,7 @@ const ReleaseAssignment: React.FC = () => {
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   try {
-    const response = await fetch("/api/assignments/releaseAssignment", {
+    const responseReleaseAssignment = await fetch("/api/assignments/releaseAssignment", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -183,15 +183,40 @@ const handleSubmit = async (e: React.FormEvent) => {
         deadline,
       }),
     });
-
-    if (response.ok) {
-      alert("Assignment released for review successfully");
-      router.push("/instructor/dashboard");
-    } else {
-      console.error("Failed to release assignment for review");
+  
+    if (!responseReleaseAssignment.ok) {
+      throw new Error("Failed to release assignment for review");
     }
+  
+    // Second API call to release randomized peer reviews
+    const studentSubmissions = await fetch("/api/assignments/getSubmissionList",{
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        assignmentID: selectedAssignment,
+      }),
+    });
+    
+    const responseReleasePeerReviews = await fetch("/api/addNew/releaseRandomizedPeerReviews", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+      reviewsPerAssignment: 4,
+      studentSubmissions,
+      assignmentID: selectedAssignment,
+      courseID: session.user.courseID,
+      }),
+    });
+  
+    if (!responseReleasePeerReviews.ok) {
+      throw new Error("Failed to release randomized peer reviews");
+    }
+  
+    // If both requests are successful
+    alert("Assignment and peer reviews released for review successfully");
+    router.push("/instructor/dashboard");
   } catch (error) {
-    console.error("Error releasing assignment for review:", error);
+    console.error("Error releasing assignment or peer reviews for review:", error);
   }
 };
 

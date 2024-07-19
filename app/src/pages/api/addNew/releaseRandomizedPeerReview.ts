@@ -17,7 +17,7 @@ type ReviewGroup = {
 
 // This function will insert the rows of students to review the single submission, 
 // for each submission in the peerReviewGroups array, connected to the courseID and assignmentID.
-const processPeerReviewGroups = async (peerReviewGroups: ReviewGroup[], assignmentID: Number, courseID: Number) => {
+const processPeerReviewGroups = async (peerReviewGroups: ReviewGroup[], assignmentID: number, courseID: number) => {
   for (const group of peerReviewGroups) {
     for (const student of group.reviewers) {
       await selectStudentForSubmission(student, assignmentID, courseID, group.submissionID);
