@@ -209,7 +209,9 @@ const handleSubmit = async (e: React.FormEvent) => {
   const isAdmin = session?.user?.role === 'admin';
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+    <Spinner color='primary' size="lg" />
+</div>;
   }
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");

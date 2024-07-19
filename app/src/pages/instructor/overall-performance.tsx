@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import styles from "../../styles/instructor-assignments-creation.module.css";
-import { Button, Card, CardHeader, CardBody, CardFooter, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem } from "@nextui-org/react";
+import { Button, Card, CardHeader, CardBody, CardFooter, Breadcrumbs, BreadcrumbItem, Spinner, Listbox, ListboxItem } from "@nextui-org/react";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import router from "next/router";
 
@@ -21,6 +21,13 @@ export default function Component() {
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");
   }
+
+  if(loading){
+    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+    <Spinner color='primary' size="lg" />
+</div>;
+  }
+
   return (
     <>
       {isAdmin ? <AdminNavbar grades={{ className: "bg-primary-500" }} /> : <InstructorNavbar grades={{ className: "bg-primary-500" }} />}
