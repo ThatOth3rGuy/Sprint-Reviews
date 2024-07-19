@@ -6,7 +6,7 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import { useSessionValidation } from '../api/auth/checkSession';
 import { useRouter } from 'next/router';
-import { Button } from '@nextui-org/react';
+import { Button, Spinner } from '@nextui-org/react';
 import styles from '../../styles/instructor-dashboard.module.css';
 import { Modal,Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 
