@@ -1,5 +1,201 @@
 # Weekly Logs
 
+# Week 8
+
+## Friday - June 28, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%208.1.png)
+
+### Cycle Review
+
+As of the end of Friday we will have the major features necessary for the MVP completed independently. The plan for this week is to merge them all together so they're demoable, then write some tests (even if they only run on Brenden's PC). That should be done by Wednesday, then afterwards we can start working on some extra features / fix some front end work.
+
+### Current Tasks
+  * 1: Admin dashboard page
+  * 2: Merge all MVP features to development branch
+  * 3: Write Playwright tests
+
+### Progress Update: Fri-Tue
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Admin dashboard page
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Student course registration
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Merge all MVP features to development branch
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Write Playwright tests
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
+## Wednesday - July 3, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%208.2.png)
+
+### Cycle Review
+    
+All the features for the MVP demo on Friday are complete. Now that the playwright tests are finally running (locally, not through docker) we need to write a bunch of tests so we have some kind of test report for the demo. Once that's done we just need to move all the features into a demo branch and update the front-end to make sure everything is presentable
+
+### Current Tasks
+  * 1: Write playwright tests
+  * 2: Update front-end before demo
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Write playwright tests
+        </td>
+        <!-- Status -->
+        <td> In Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Update front-end before demo
+        </td>
+        <!-- Status -->
+        <td> Complete
+        </td>
+    </tr>
+</table>
+
+# Week 7
+
+## Friday - June 21, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%207.1.png)
+
+### Cycle Review
+
+We have the majority of the features we need to complete for the MVP made into issues, this split is simply working on finishing as much as we can. During this cycle meeting we also discussed and made a workaround to some database issues we're having, for the time being we can't use the init.sql schema to make any adjustments to the database.
+
+### Current Tasks
+  * 1: Instructor course creation
+  * 2: Student course registration
+  * 3: Course enrollment via student list (helping Brendan)
+
+### Progress Update: Fri-Tue
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Instructor course creation
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Student course registration
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Course enrollment via student list (helping Brendan)
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
+## Wednesday - June 26, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%207.2.png)
+
+### Cycle Review
+    
+During the meeting today we spent some time working on the testing framework. Automated testing finally works for Brendan but the rest of us are still having issues getting the tests to run. After that we figured out what the next few features we need to work on are, as the course/assignment features we've been working on are mostly finished.
+
+### Current Tasks
+  * 1: Admin dashboard page
+  * 2: Playwright testing
+  * 3: Pull requests and merging features from last week
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Admin dashboard page
+        </td>
+        <!-- Status -->
+        <td> In Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Playwright testing
+        </td>
+        <!-- Status -->
+        <td> Todo
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Pull requests and merging features from last week
+        </td>
+        <!-- Status -->
+        <td> In progress
+        </td>
+    </tr>
+</table>
+
+
 # Week 6
 
 ## Friday - June 14, 2024
@@ -59,16 +255,16 @@ Our Monday meeting was moved to Sunday, where we sat down and went over every fe
 ## Wednesday - June 19, 2024
 
 ### Timesheet
-![Clockify Timesheet]()
+![Clockify Timesheet](./images/EricClockify%206.2.png)
 
 ### Cycle Review
     
----
+Not much to talk about for this cycle, it was just continuing on with the tasks we've been working on from the start of the week.
 
 ### Current Tasks
-  * 1: ---
-  * 2: ---
-  * 3: ---
+  * 1: Instructor Course Creation
+  * 2: Instructor Course dashboard view
+  * 3: Adding students to course
 
 ### Progress Update: Wed-Fri
 <table>
@@ -80,26 +276,26 @@ Our Monday meeting was moved to Sunday, where we sat down and went over every fe
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> ---
+        <td> Instructor Course Creation
         </td>
         <!-- Status -->
-        <td>Todo
+        <td> In Progress
         </td>
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> ---
+        <td> Instructor Course dashboard view
         </td>
         <!-- Status -->
-        <td>Todo
+        <td> In Progress
         </td>
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> ---
+        <td> Adding students to course
         </td>
         <!-- Status -->
-        <td>Todo
+        <td> Todo
         </td>
     </tr>
 </table>

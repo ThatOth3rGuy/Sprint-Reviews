@@ -1,5 +1,121 @@
 # Weekly Personal Logs
 
+## Personal Log For Week 8
+
+### 07/03/2024
+
+Topics Covered:
+* testing all the features we've worked on so far
+* merging and integrating sub-features into their respective features branch and completed features into development
+
+My contributions since Friday's log:
+
+Since Friday, I've been working on the peer review form, and the advanced options part of the form. I had some issues with the advanced options, some of the functions weren't working properly and I wasn't getting the right data from the database which is why it took me so long to complete. We decided that the unique due date aspect of the advanced options is going to be moved to instead allow the instructor to edit individual due dates. 
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Work on integrating the peer review form into the student pages | 07/07/2024 | WIP |
+| Write tests for the functions I've been working on | 07/04/2024 | Complete |
+| Update UI to be consistent with prototype | 07/04/2024 | Complete |
+
+![week 8 time tracking](img/week8.png)
+
+### 07/05/2024
+
+My contributions since Wednesday's log:
+* wrote tests for student view and submit assignment
+* created slide deck for MVP presentation
+* worked on getting frontend presentable for MVP
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Update UI according to Parsa's inputs | 07/04/2024 | WIP |
+| Integrate Peer Review Submission into student pages | 07/08/2024 | WIP |
+| Make sure frontend has functional restrictions for user | 07/08/2024 | WIP |
+
+#### Cycle Review and Goals
+
+This last cycle was pretty hectic with getting tests done and making sure all of our key features for the MVP are functioning. We were pretty good about keeping up our pace for working and we spent the last couple of days making sure our features were functional, we had tests written for them, and the UI was up to date. I wasn't able to get to integrating the student Peer Review Submission form because to do that I need to change multiple assignment pages and add props or components that will build a page depending on the type of assignment. This also means making database changes which I'm holding off on because we want to optimize our database after the MVP presentation.
+
+![week 8.2 time tracking](img/week8.2.png)
+
+## Personal Log For Week 7
+
+### 06/26/2024
+
+Topics Covered:
+
+* task split for assignment creation, assignment view, course creation, and course registration.
+* get testing completely set up
+
+My Contributions since Friday's log:
+* made the upload file function, works with the instructor assignment creation form where instructor can upload a file with assignment details
+* made the student assignments view, it shows all assignments that the student has received, and students can click on an assignment to see more details and submit the assignment
+* worked with Yatharth on integrating the database to work with functions for file restrictions 
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Make upload file function to store assignment rubric in database | 06/23/2024 | Complete |
+| Make student view and functionality for viewing all assignments | 06/23/2024 | Complete |
+| Make student view and functionality for viewing selected assignment | 06/23/2024 | Complete |
+| Make student view and functionality for uploading a restricted file for assignment  | 06/23/2024 | Complete; just needs state management for uploading submission to database |
+| Make student view and functionality for viewing all assignments | 06/23/2024 | Complete |
+| Make advanced options- restrictions section and functions for peer review page | 06/28/2024 | Complete |
+
+![week 7 time tracking](img/week7.png)
+
+### 06/26/2024
+
+My Contributions since Wednesday's log:
+
+I didn't get much work done since the last meeting because I had a final exam on the 27th. I'm planning to spend some more time working this weekend to make up for not working on the project for the last couple of days. 
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Make advanced options- restrictions section and functions for peer review page | 06/28/2024 | WIP |
+| Work on tidying up the front-end design on the registration, login, dashboard, and assignment pages  | 06/29/2024 | WIP |
+| Work on connecting the backend for the peer-review page  | 06/29/2024 | WIP |
+
+
+#### Cycle Review And Goals
+
+As a team, we got a lot of work done for the project this week despite how busy we all were with exams and jobs and such. In terms of my contributions, I got a lot of my work done earlier this week so I could focus on my final exam that was on the 27th. Half of the assignments section is complete, the half that remains is the peer-review and peer-evaluation portion which we are planning to work on this weekend. I want to get my tasks for the weekend done by Friday or Saturday so we can do testing and begin the peer evaluation feature.
+
+## Personal Log For Week 6
+
+### 06/19/2024
+
+Topics Covered:
+
+* feature breakdown
+* testing drone with docker and working on features for mini-presentation
+* feature task split between members
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Making page templates for all UI pages on Figma | 06/18/2024 | Complete |
+| Setting up system navigation among all pages | 06/18/2024 | Complete |
+| Upload file function on assignment creation for instructor  | 06/18/2024 | Complete |
+| File viewer api for students to view assignment | 06/21/2024 | WIP |
+
+![week 6 time tracking](img/week6.1.png)
+
+### 06/21/2024
+
+Topics Covered:
+
+* researching on options uploading file to db and ui api options for it
+* researching pdf viewer options for student view assignments
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| File viewer api for students to view assignment | 06/21/2024 | WIP |
+| Student view and submit assignment page | 06/21/2024 | WIP |
+
+#### Cycle Review
+
+This week was a little less work heavy in terms of hours spent. I think I completed a decent amount of work for the features we need done for tomorrow. I will have the student view and upload done by the end of day tomorrow so we can move onto testing the features over the weekend. We did have some issues working with the database this week so I was helping Yatharth with breaking down and fixing the issue. The goal is to be done with the assignment creation, course creation, assignment submission, and course registration by next Wednesday.
+
 ## Personal Log For Week 5
 
 ### 06/10/2024
