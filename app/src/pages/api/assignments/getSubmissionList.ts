@@ -7,7 +7,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { assignmentID } = req.query;
     try {
       const studentSubmissions = await getStudentSubmissions(Number(assignmentID));
-      res.status(200).json({ studentSubmissions });
+      const formattedSubmissions = studentSubmissions.map(submission => ({
+      studentID: submission.studentID,
+      submissionID: submission.submissionID
+    }));
+    res.status(200).json({ formattedSubmissions });
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch courses' });
     }

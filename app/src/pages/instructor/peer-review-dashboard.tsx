@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from "../../styles/AssignmentDetailCard.module.css";
 import { Listbox,ListboxItem,Breadcrumbs, BreadcrumbItem, Spinner } from "@nextui-org/react";
+import { group } from "console";
 
 interface Review {
   reviewID: number;
@@ -60,6 +61,15 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
           setCourseData(data);
         })
         .catch((error) => console.error('Error fetching course data:', error));
+    }
+    if (review) {
+      fetch(`/api/reviews/${review.assignmentID}`)
+        .then((response) => response.json())
+        .then((data: SubmissionGroups) => {
+          console.log("Fetched course data:", data);
+          setsubmissionGroups(data);
+        })
+        .catch((error) => console.error('Error fetching course data:', error));  
     }
   }, [reviewID]);
 

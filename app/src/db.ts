@@ -346,7 +346,7 @@ export async function getAssignmentsWithSubmissions() {
 }
 export async function getStudentSubmissions(assignmentId: number): Promise<Array<{ submissionID: number; studentID: number }>> {
   const sql = `
-    SELECT submissionID, studentID
+    SELECT studentID, submissionID
     FROM submission
     WHERE assignmentID = ?
   `;

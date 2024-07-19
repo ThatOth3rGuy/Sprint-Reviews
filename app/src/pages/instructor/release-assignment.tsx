@@ -209,7 +209,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     }
   
     // Second API call to release randomized peer reviews
-    const responseReleasePeerReviews = await fetch("/api/addNew/releaseRandomizedPeerReviews", {
+    const responseReleasePeerReviews = await fetch("/api/addNew/releaseRandomizedPeerReview", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
