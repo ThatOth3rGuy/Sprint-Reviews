@@ -2,6 +2,41 @@
 
 # Weekly Team Logs
 # Week 9 summary 
+##  July 17th (Wed) - July 19th (Wed) (TestoRama)
+### Features in the Project Plan Cycle: 
+- Randomizer Apis, Database setup and functions to work for the randomizer
+- Randomizer Algorithm
+- UI/UX changes to meet expectations for Friday (TestoRama)
+
+
+###  Tasks from the Project Board:
+![week9Kanban2](https://github.com/user-attachments/assets/701b91bc-5ef7-405b-8699-12e071c37af0)
+
+
+### Tasks for Next Cycle:
+
+![week5-done](./Images/week9Todo2.png)
+
+### Burn-up Chart (Velocity):
+![week5-done](./Images/week9Burnup2.png)
+
+### Times for Team/Individual:
+
+
+Clockify Times:
+
+![week5-done](./Images/week9Clokify2.png)
+
+
+### Completed Tasks:
+![week5-done](./Images/week9Done2.png)
+
+### In Progress Tasks/ To do:
+![week5-done](./Images/week9InProgress2.png)
+
+### Overview:
+Since the last meeting, the team has made significant progress. We have started the randomization algorithm, with the queries, APIs, and the algorithm to randomize peer reviews. We worked on integrating the updated UI into the development branch and ensuring all of the features we have worked on are functioning. The course registration has been updated to give a list of students who were not able to be registered to a course. The student assignment dashboard is fully functional and can handle assignment submissions. More front-end restrictions were added to the application as well.  
+
 ##  July 10th (Wed) - July 17th (Wed)
 ### Features in the Project Plan Cycle: 
 - All instructor pages front end and UX updated 
