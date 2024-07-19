@@ -1,6 +1,247 @@
 
 # Weekly Logs
 ------------------------------------
+# Week 10
+## Wednesday - July 17, 2024
+**Timesheet Tracking (Friday-Tuesday)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_07_12_2024-07_16_2024.pdf)
+### Cycle Review
+
+This past cycle was key for the final stretch of our projects' development. Though we did not complete the near remainder of our features, we have now fully completed all the fixes that were
+required. Much time was spent completing a ton of UI and Database Changes, where it's only half of the same project as it was before the MVP. While Tithi and Yatharth spent the week working 
+on the UI, and Eric on testing as well as helping me with some backend fixes, I spent all the time I could refactoring our DB schema in order to fix alot of the issues we have been running into.
+The DB changes allow for more streamlined queries and table references, and will really help with the randomization algorithm we are currently working on. Along with the fixes, many changes
+to our existing UI and API function files needed changes to properly handle the new schema, which I have completed. We now have a properly running database and the UI looks so much nicer.
+I could say we are worried a little about having everything we planned done by the deadline with it rapidly approaching, however this week provided major help with the rest of the features.
+Thanks to the refactoring, we are likely able to reuse a large amount of code we have already implemented the only thing needed from scratch is the randomization feature.
+I think we are slightly behind just because of the amount of time we spent nearly rebuilding our application as well as some personal conflicts reducing the time able to spend on coding.
+Overall, we should have the peer review feature and most of all the user views done for the UI Testing on Friday. Once those two are done all thats left is the simple grades and profile pages,
+which we should be able to complete by the end of next week, if we stick to our plan and grind out the features the rest of the week.
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Create Feature Definition and Sub-divisions on Project Board For Team Division
+  * #3: Run and Configure Tests For Database/API Changes
+  * #4: Review Branch Pull Requests and Complete Necessary Fixes
+  * #5: Refactor Database Schema to Handle Appropriate Input & Update API/UI Code to handle new DB Tables/Queries
+  * #6: Add Final Component to the Peer-Review Assignment Creation by implementing the Randomizer Query/Algorithm
+
+### Progress Update: Fri-Wed
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Ongoing
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Feature breakdown/sub-division for parallel task work
+        </td>
+        <!-- Status -->
+        <td>Partly Complete (Recurring)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create and Run Integration Tests on Database/API Updates
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Fix Database for API Handler Queries (Refactoring)
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Review Pull Requests and Make Fixes to Main Branches
+        </td>
+        <!-- Status -->
+        <td>Complete-ish
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Make Changes to UI and Query Functions According To DB Updates
+        </td>
+        <!-- Status -->
+        <td>Complete*
+        </td>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Complete Peer-Review Assignment Creation - Add Student Randomizer
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+</table>
+
+#
+# Week 9
+## Friday - July 12, 2024
+**Timesheet Tracking (Wednesday-Thursday)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_07_10_2024-07_11_2024.pdf)
+### Cycle Review
+
+My time spent on the project this cycle was regrettably very minimal. I was really only able to complete some work and complete fixes on Wednesday. We started the morning with a team meeting to discuss our current standing and plan moving forward. This week we want to finish up some updates/fixes to our code/database, then continue on developing the remainder of our features. Unfortunately, I have not yet completed those database changes due to my current situation; packing my house to move into my new place for the end of the month (possibly sooner). I needed to utilize Thursday to pack up things, plus I work from 8-4pm every Thursday. This was a very minimal cycle for me, however for this next cycle I will be completing all the database changes to make our implemented API handlers fully functional as some errors currently exist in how the queries are called. Once that work is done, I will work with the team to implement the next intended features; the randomization algorithm and site-wide assignment view. I believe we are still on track and will complete what is necessary this week and by the project deadline.
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Create Feature Definition and Sub-divisions on Project Board For Team Division
+  * #3: Run Integration Tests for pushed features (Fix Testing Server Connection)
+  * #4: Review Branch Pull Requests and Complete Necessary Fixes
+  * #5: Reconfigure App Server & Database Connection for Local or Dockerized Development
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Ongoing
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Feature breakdown/sub-division for parallel task work
+        </td>
+        <!-- Status -->
+        <td>Partly Complete (Recurring)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create and Run Integration Tests on Pushed Features
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Fix Database for API Handler Queries (Refactoring)
+        </td>
+        <!-- Status -->
+        <td>To-do
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Review Pull Requests and Make Fixes to Main Branches
+        </td>
+        <!-- Status -->
+        <td>Complete-ish
+        </td>
+    </tr>
+</table>
+
+#
+## Wednesday - July 10, 2024
+**Timesheet Tracking (Friday-Tuesday)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_07_05_2024-07_09_2024.pdf)
+### Cycle Review
+
+Between Friday's MVP Demo and Wednesday, the team had quite a bit to take care of. Our Demo didn't go exactly as planned with some errors during runtime, the server not wanting to connect, API calls not working as expected, and general CSS issues. Our plan for the cycle was to focus on the issues present and fix them immediately before continuing on other feature development. Luckily we were able to sort out the glaring issues for our database connection, and inability to properly run tests. Over the weekend I was able to go through and fix our database connection, so we can connect to it when running the app server on our devices localhost instead of docker. With this fix we are now able to make use of the NextJS Dynamic Refresh ability. Prior to this fix, we had to rebuild docker containers to view changes on front-end pages as docker disables the dynamic refresh when we make changes to the code of pages. It made it more difficult to quickly fix CSS issues or API calls when we are constantly rebuilding docker. Another benefit of this fix is the ability to run all our tests easily via localhost connection, bypassing our issue of tests not connecting to dockers server. 
+
+Overall we managed to fix a lot of things this cycle, giving us a much better ability to continue development of features and complete testing without Docker breaking the computers. Now that we have a separate test database, simple server connection, and 2 test frameworks all running, we can continue developing the remaining features and complete the requirements of our project by the deadline as expected. The goal for the next cycle and the next week as a whole, is to make sure all of our API calls are working in all possible cases, possibly refactoring a couple functions for simplicity, and start on the overall assignment view functionality as well as the peer review group randomization. I believe the refactoring will be done before Friday and we will have a start on the features, while by this time next week those features will be nearly if not completely implemented (though may still need some testing). I feel that with the progress made this last cycle and feedback from the MVP, we should be able to finish all requirements before the end of July and spend the remaining time Testing, fixing, and documenting our project for production!
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Refine Docker Environment and Testing Framework For Future Development
+  * #3: Create Feature Definition and Sub-divisions on Project Board For Team Division
+  * #4: Run Integration Tests for pushed features (Fix Testing Server Connection)
+  * #5: Review Branch Pull Requests and Fixes for MVP Demo Branch
+  * #6: Prepare and Present MVP Demo
+  * #7: Reconfigure App Server & Database Connection for Local or Dockerized Development
+
+### Progress Update: Fri-Wed
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Ongoing
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Feature breakdown/sub-division for parallel task work
+        </td>
+        <!-- Status -->
+        <td>Partly Complete (Recurring)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Update Docker and Testing Setup for Ongoing Development
+        </td>
+        <!-- Status -->
+        <td>FINALLY COMPLETE
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create and Run Integration Tests on Pushed Features
+        </td>
+        <!-- Status -->
+        <td>In-Progress (Mostly Done)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Fix Localized and Docker App Server Config For Simple DB Connection/Testing
+        </td>
+        <!-- Status -->
+        <td>Complete!
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Review Pull Requests and Make Fixes to Main Branches
+        </td>
+        <!-- Status -->
+        <td>Complete*
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Prepare MVP Demo Presentation/Watch Other Demos
+        </td>
+        <!-- Status -->
+        <td>Done
+        </td>
+    </tr>
+</table>
+
+#
 # Week 8
 ## Friday - July 5, 2024
 **Timesheet Tracking (Wednesday-Thursday)**

@@ -1,5 +1,87 @@
 # Weekly Personal Logs
 
+## Personal Log For Week 10
+
+### 07/17/2024
+
+Topics Covered:
+*rebuilding existing application to use NextUI components and function correctly with api and database
+
+My contributions since Friday's log:
+
+Over the weekend, I spent a lot of my time working with Yatharth to create functional templates for each user type. We did pair-programming using the Live Share extension on VsCode from my laptop because it made it easier to build a consistent UI for the application. We were able to get most of the templates done by Monday, after which we merged the refactored database branch into the front-end-fixes-v2 branch. With the updated database and optimized api calls, we went through each page to make sure it was returning the right data. As of today, the application has some kind of template ready for any function required by the specific user. There are some issues with the student api functions, they work but the output is not what is expected. Overall, I think we are in a really good position for the UX testing on Friday because of the effort that was put into optimizing the application since the last cycle.
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Fix api calls for student assignment view | 07/18/2024 | Complete |
+| Implement a file/data storage using Firebase or some kind of cloud hosting service | 07/21/2024 | WIP |
+| Add a file viewing api similar to the file view on canvas | 07/21/2024 | WIP |
+| Set up email api for account confirmation and email notifications | 07/21/2024 | WIP |
+
+![week 10 time tracking](img/week10.png)
+
+### 07/19/2024
+
+Topics Covered:
+*fixing student view assignment api calls and submit assignment
+
+My contributions since Wednesday's log:
+
+I have been working on getting the student view of the assignment to work. The issue here was that it was routing the student to the instructor login instead of the student assignment dashboard. I was able to fix the routing and generalized a database call to get to the assignment dashboard. I also reconfigured the submit assignment function that I had worked on for the MVP to work with the updated database. I also was able to get the file stored into the database with some help from Eric.
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Fix assignment submission to have edge cases | 07/21/2024 | WIP |
+| Set up student view for peer review assignments | 07/21/2024 | WIP |
+| Set up student submission for peer review assignments | 07/21/2024 | WIP |
+
+#### Cycle Review and Goals
+
+This cycle was a very work heavy cycle. We were able to rebuild the entier UI design based on Parsa's inputs. We spent a lot of time creating a consistent look for all of the student and instructor pages. I spent some time making sure the refactored database and api calls were being implemented correctly. After the entire rebuild., I worked on getting the student assignment view set up and submit assignment function for student. For the upcoming cycle, we are going to work towards having our randomization algorithm successfully implemented and working on getting the grades functionality implemented.
+
+![week 10 time tracking](img/week10.2.png)
+
+## Personal Log For Week 9
+
+### 07/10/2024
+
+Topics Covered:
+* researching HCI concepts and its applications
+* researching UI toolkits for React.js/Next.js
+
+My contributions since Friday's log:
+
+Since Friday, I've been looking into my COSC 341 notes for HCI concepts and how to improve our UI design as per Parsa's inputs which we received last Wednesday. We had decided to focus on our integration rather than our frontend for most of the features we have been working on so a lot of the feedback we received was expected. For the demo, we made so minor UI changes so that our application looked presentable but the major changes are planned for the upcoming week. I found a Next.js UI framework called NextUI which I have been working on integrating with our system. I'm still having some issues with setting up the themes in the tailwind.config.ts file but the framework is pretty well integrated into the system regardless. I also updated the landing and registration pages for the student users using the framework.
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Create templates for the rest of the student pages using the NextUI framework | 07/12/2024 | Complete |
+| Rebuild the navigation system to have slide out feature and favicons | 07/12/2024 | Complete |
+| Add frontend restrictions for users | 07/13/2024 | Mostly Complete |
+| Add FAQ or tooltips throughout the website for accessibility | 07/13/2024 | Mostly Complete |
+
+![week 9 time tracking](img/week9.png)
+
+### 07/12/2024
+
+My contributions since Wednesday's log:
+
+So far, I have worked on getting the theme configuration working, setting a simple background for login/registration/landing pages, and fixing the layout and UI for said pages. I was also able to refactor the navbar for all of the users. Each navbar now is consistent with icons and layout, with each having its own theme depending on the user. The only aspect left to add to the navbar is any dropdowns for course list. I am planning to work on the templates for the student side of the application today and hopefully be done with majority of the frontend changes by end of day.
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Create templates for the rest of the student pages using the NextUI framework | 07/12/2024 | Complete |
+| Add FAQ or tooltips throughout the website for accessibility | 07/13/2024 | Complete |
+| Frontend restrictions | 07/13/2024 | Complete |
+
+![week 9 time tracking](img/week9.png)
+
+#### Cycle Review and Goals
+
+This cycle was spent on implementing all of the changes that Parsa suggested for our design. Majority of the changes have been implemented by configuring the NextUI framework into our application and using the components it provides to create a consistent theme. We are making sure that the frontend design follows the 10 design heuristics. We covered a good amount of work this week even though we haven't implemented new features yet. Our goals for the next cycle are to have the randomization algorithm setup along with at least two other features.
+
+![week 9 time tracking](img/week9.2.png)
+
 ## Personal Log For Week 8
 
 ### 07/03/2024

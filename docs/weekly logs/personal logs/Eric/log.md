@@ -1,5 +1,202 @@
 # Weekly Logs
 
+# Week 10
+
+## Friday - July 12, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%2010.1.png)
+
+### Cycle Review
+
+For the first half of this cycle I was still in Calgary, so I made sure to do as much as possible on Monday and Tuesday but it was still less than I would normally have done during this split. With that said, I still managed to get in a little over 11 hours working on finishing catching up the testing for the application, and refactoring the course creation/student enrollment to properly handle enrolling students that haven't created accounts yet. While I was doing this the rest of the team has been working on finishing the front-end for everything, and refactoring the majority of the backend functions.
+
+### Current Tasks
+  * 1: Writing jest tests
+  * 2: Updating jest tests to work with database refactor
+  * 3: Refactoring student enrollment
+
+### Progress Update: Fri-Tue
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Writing jest tests
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Updating jest tests to work with database refactor
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Refactoring student enrollment
+        </td>
+        <!-- Status -->
+        <td>Done
+        </td>
+    </tr>
+</table>
+
+## Wednesday - July 17, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%2010.2.png)
+
+### Cycle Review
+    
+This cycle is the final prep before the Test-O-Rama event on Friday. For this cycle the main goal is to complete the anonymous peer review assignment submissions for random students. My tasks to complete this are to write the API handlers that connect the front-end code to the back-end, and to write the actual randomization algorithm. As well as this everyone will be working together to merge everything into 1 branch for the demo. Finally, I am still working on writing all the tests for the application so far.
+
+### Current Tasks
+  * 1: Create API handlers for peer-review randomization
+  * 2: Write the randomization algorithms
+  * 3: Merge all current features into demo branch
+  * 4: Write jest/playwright tests
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Create API handlers for peer-review randomization
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Write the randomization algorithms
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Merge all current features into demo branch
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Write jest/playwright tests
+        </td>
+        <!-- Status -->
+        <td> In Progress
+        </td>
+    </tr>
+</table>
+
+# Week 9
+
+## Friday - July 5, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%209.1-1.png)
+![Clockify Timesheet](./images/EricClockify%209.1-2.png)
+
+### Cycle Review
+
+During the presentation of the MVP we had some issues with our features not connecting together properly. So this cycle we're planning on finializing all of those features so they connect together. My main focus during this time was getting the testing working and writing automated tests for everything we've done so far.
+
+### Current Tasks
+  * 1: Set up testing database
+  * 2: Set up Jest framework
+  * 3: Fix all current playwright tests
+  * 4: Write Jest tests
+
+### Progress Update: Fri-Tue
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Set up testing database
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Set up Jest framework
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Fix all current playwright tests
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Write Jest tests
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
+## Wednesday - July 10, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%209.2.png)
+
+### Cycle Review
+    
+I'm in Calgary for this portion of the cycle, so the vast majority of my time this week was spent in the Fri-Wed split. With that being said, I still managed to spend some time working on the Jest tests.
+
+### Current Tasks
+  * 1: Write Jest tests
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Write Jest tests
+        </td>
+        <!-- Status -->
+        <td> In Progress
+        </td>
+    </tr>
+</table>
+
 # Week 8
 
 ## Friday - June 28, 2024

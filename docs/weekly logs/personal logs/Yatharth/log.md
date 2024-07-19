@@ -1,6 +1,7 @@
  # Weekly Logs 
 ------------------------------------
 # Week 9 Summary 
+
 ## Friday (07/19/2024)
 ### Timesheet Week 9 (07/10/2024- 07/13/2024)
 ![alt text](images//week10_2logs.png)
@@ -76,9 +77,11 @@ This cycle felt both short and long! We've finally managed to get the entire ass
 * Randomizer algorithm and functionality 
 * Adding update features to all pages
 * Group Peer reviews and manual group creation
+
 ## Wednesday  (07/17/2024)
 ### Timesheet Week 9 (07/10/2024- 07/13/2024)
 ![alt text](images//week10_logs.png)
+
 
 ### Current Tasks (Complete by the end of the day)
 - All instructor pages front end and UX updated 
