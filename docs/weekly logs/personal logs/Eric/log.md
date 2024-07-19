@@ -57,10 +57,13 @@ For the first half of this cycle I was still in Calgary, so I made sure to do as
 
 ### Cycle Review
     
--
+This cycle is the final prep before the Test-O-Rama event on Friday. For this cycle the main goal is to complete the anonymous peer review assignment submissions for random students. My tasks to complete this are to write the API handlers that connect the front-end code to the back-end, and to write the actual randomization algorithm. As well as this everyone will be working together to merge everything into 1 branch for the demo. Finally, I am still working on writing all the tests for the application so far.
 
 ### Current Tasks
-  * 1: -
+  * 1: Create API handlers for peer-review randomization
+  * 2: Write the randomization algorithms
+  * 3: Merge all current features into demo branch
+  * 4: Write jest/playwright tests
 
 ### Progress Update: Wed-Fri
 <table>
@@ -72,10 +75,34 @@ For the first half of this cycle I was still in Calgary, so I made sure to do as
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> -
+        <td> Create API handlers for peer-review randomization
         </td>
         <!-- Status -->
-        <td> -
+        <td> Done
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Write the randomization algorithms
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Merge all current features into demo branch
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Write jest/playwright tests
+        </td>
+        <!-- Status -->
+        <td> In Progress
         </td>
     </tr>
 </table>
