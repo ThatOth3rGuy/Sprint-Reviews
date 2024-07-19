@@ -48,7 +48,7 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
                 .catch((error) => console.error('Error fetching assignment data:', error));
 
             // Fetch course data
-            fetch(`/api/studentCourses/${courseId}`) // Replace `courseID` with the actual course ID
+            fetch(`/api/courses/${courseId}`) // Replace `courseID` with the actual course ID
                 .then((response) => response.json())
                 .then((data: CourseData) => {
                     console.log("Fetched course data:", data);
@@ -70,8 +70,7 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
     }
 
     // Dummy data for submittedStudents and remainingStudents
-    const submittedStudents = ["Student A", "Student B", "Student C"];
-    const remainingStudents = ["Student D", "Student E", "Student F"];
+
     const handleBackClick = async () => {
         // Redirect to the landing page
         router.back();
