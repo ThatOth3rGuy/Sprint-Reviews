@@ -140,7 +140,7 @@ export default function Page() {
                     <StudentAssignmentCard
                       courseID={45}
                       courseName="Peer review Assignment"
-                      color="#9ac1af" dueDate={assignment.deadline}                    />
+                      color="#b3d0c3" dueDate={assignment.deadline}                    />
                   </div>
                 ))
               ) : (
