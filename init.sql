@@ -201,3 +201,65 @@ VALUES (@assignmentID, 'Design', 20);
 -- Insert a sample selected student for a group assignment
 INSERT INTO selected_students (assignmentID, studentID, uniqueDeadline)
 VALUES (@assignmentID, 123456, '2024-12-05 23:59:59');
+
+-- Insert 10 more students
+INSERT INTO user (firstName, lastName, email, pwd, userRole) VALUES 
+('Jane', 'Smith', 'jane.smith@example.com', 'password123', 'student'),
+('Alice', 'Brown', 'alice.brown@example.com', 'password123', 'student'),
+('Bob', 'Jones', 'bob.jones@example.com', 'password123', 'student'),
+('Charlie', 'Davis', 'charlie.davis@example.com', 'password123', 'student'),
+('David', 'Wilson', 'david.wilson@example.com', 'password123', 'student'),
+('Eve', 'Clark', 'eve.clark@example.com', 'password123', 'student'),
+('Frank', 'White', 'frank.white@example.com', 'password123', 'student'),
+('Grace', 'Lewis', 'grace.lewis@example.com', 'password123', 'student'),
+('Hank', 'Walker', 'hank.walker@example.com', 'password123', 'student'),
+('Ivy', 'Hall', 'ivy.hall@example.com', 'password123', 'student');
+
+-- Get the userIDs of the newly inserted students
+SET @userID1 = LAST_INSERT_ID();
+SET @userID2 = @userID1 + 1;
+SET @userID3 = @userID1 + 2;
+SET @userID4 = @userID1 + 3;
+SET @userID5 = @userID1 + 4;
+SET @userID6 = @userID1 + 5;
+SET @userID7 = @userID1 + 6;
+SET @userID8 = @userID1 + 7;
+SET @userID9 = @userID1 + 8;
+SET @userID10 = @userID1 + 9;
+
+-- Insert the students into the student table
+INSERT INTO student (studentID, userID, phoneNumber, homeAddress, dateOfBirth) VALUES
+(123457, @userID1, '1234567891', '124 Main St', '2001-01-01'),
+(123458, @userID2, '1234567892', '125 Main St', '2002-01-01'),
+(123459, @userID3, '1234567893', '126 Main St', '2003-01-01'),
+(123460, @userID4, '1234567894', '127 Main St', '2004-01-01'),
+(123461, @userID5, '1234567895', '128 Main St', '2005-01-01'),
+(123462, @userID6, '1234567896', '129 Main St', '2006-01-01'),
+(123463, @userID7, '1234567897', '130 Main St', '2007-01-01'),
+(123464, @userID8, '1234567898', '131 Main St', '2008-01-01'),
+(123465, @userID9, '1234567899', '132 Main St', '2009-01-01'),
+(123466, @userID10, '1234567800', '133 Main St', '2010-01-01');
+
+-- Insert a new course connected to the admin account
+INSERT INTO course (courseName, isArchived, instructorID)
+VALUES ('Introduction to Databases', false, 987654);
+
+-- Get the courseID of the newly inserted course
+SET @newCourseID = LAST_INSERT_ID();
+
+-- Insert a new assignment connected to the new course
+INSERT INTO assignment (title, descr, rubric, deadline, groupAssignment, courseID, allowedFileTypes)
+VALUES ('Database Project', 'Create a relational database', 'Schema, Queries, Report', '2024-11-01 23:59:59', true, @newCourseID, 'sql,docx');
+
+-- Enroll the 10 additional students into the new course
+INSERT INTO enrollment (studentID, courseID) VALUES
+(123457, @newCourseID),
+(123458, @newCourseID),
+(123459, @newCourseID),
+(123460, @newCourseID),
+(123461, @newCourseID),
+(123462, @newCourseID),
+(123463, @newCourseID),
+(123464, @newCourseID),
+(123465, @newCourseID),
+(123466, @newCourseID);
