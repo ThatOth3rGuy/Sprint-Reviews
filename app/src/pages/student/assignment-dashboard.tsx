@@ -86,7 +86,7 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
             formData.append('studentID', session.user.userID);
 
             try {
-                const response = await fetch('/api/submitAssignment', {
+                const response = await fetch('/api/assignments/submitAssignment', {
                     method: 'POST',
                     body: formData,
                 });

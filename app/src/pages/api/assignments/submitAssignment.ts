@@ -51,6 +51,9 @@ export const config = {
 const upload = multer({ dest: '/tmp' });
 
 async function submitAssignment(assignmentID: number, studentID: number, file: Express.Multer.File) {
+  
+  const studentIdSQL = `SELECT studentID FROM student WHERE userID = ?`;
+
   const sql = `
     INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate)
     VALUES (?, ?, ?, ?, ?, NOW())
@@ -61,7 +64,11 @@ async function submitAssignment(assignmentID: number, studentID: number, file: E
     const fileName = file.originalname;
     const fileType = file.mimetype;
 
-    await query(sql, [assignmentID, studentID, fileName, fileContent, fileType]);
+    //Convert userID to studentID
+    const studentIDResult = await query(studentIdSQL, [studentID]);
+    const userID = parseInt(studentIDResult[0].studentID);
+
+    await query(sql, [assignmentID, userID, fileName, fileContent, fileType]);
 
     // Delete the temporary file after it's been saved to the database
     await fs.unlink(file.path);
