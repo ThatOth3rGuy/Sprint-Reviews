@@ -191,7 +191,7 @@ export default function Page() {
                     <InstructorAssignmentCard 
                       courseID={assignment.assignmentID}
                       courseName={assignment.title}
-                      color="#72a98f"
+                      color="#9fc3cf"
                     />
                   </div>
                 ))
@@ -214,7 +214,7 @@ export default function Page() {
                     
                       reviewID={assignment.assignmentID}
                       linkedAssignmentID={assignment.linkedAssignmentID}
-                      color="#72a98f"
+                      color="#9fc3cf"
                     />
                   </div>
                 ))
