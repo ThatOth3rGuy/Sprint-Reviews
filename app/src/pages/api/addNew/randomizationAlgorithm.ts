@@ -72,31 +72,45 @@
     const allSubmissions = students.map(student => student.submissionID);
   
     for (const submissionID of allSubmissions) {
-      while (submissionReviews[submissionID].length < reviewsPerAssignment) {
-        const potentialReviewers = students.filter(student =>
-          student.submissionID !== submissionID &&
-          !submissionReviews[submissionID].includes(student.studentID) &&
-          studentReviewsCount[student.studentID] < reviewsPerAssignment
-        );
-  
-        if (potentialReviewers.length === 0) {
-          const excessReviewers = students.filter(student =>
+        // Ensure every submission gets exactly reviewsPerAssignment reviews
+        while (submissionReviews[submissionID].length < reviewsPerAssignment) {
+          // Filter out potential reviewers who:
+          // - Have not reached their review limit (reviewsPerAssignment)
+          // - Are not reviewing their own submission
+          // - Are not already assigned to review this submission
+          const potentialReviewers = students.filter(student =>
             student.submissionID !== submissionID &&
-            !submissionReviews[submissionID].includes(student.studentID)
+            !submissionReviews[submissionID].includes(student.studentID) &&
+            studentReviewsCount[student.studentID] < reviewsPerAssignment
           );
-  
-          shuffleArray(excessReviewers);
-          const reviewer = excessReviewers[0];
-          submissionReviews[submissionID].push(reviewer.studentID);
-          studentReviewsCount[reviewer.studentID]++;
-        } else {
-          shuffleArray(potentialReviewers);
-          const reviewer = potentialReviewers[0];
-          submissionReviews[submissionID].push(reviewer.studentID);
-          studentReviewsCount[reviewer.studentID]++;
+      
+          if (potentialReviewers.length === 0) {
+            // If no valid reviewers are found, look for any reviewers who:
+            // - Are not reviewing their own submission
+            // - Are not already assigned to review this submission
+            const excessReviewers = students.filter(student =>
+              student.submissionID !== submissionID &&
+              !submissionReviews[submissionID].includes(student.studentID)
+            );
+      
+            // Shuffle the excess reviewers to ensure randomness
+            shuffleArray(excessReviewers);
+      
+            // Assign the first reviewer from the shuffled list
+            const reviewer = excessReviewers[0];
+            submissionReviews[submissionID].push(reviewer.studentID);
+            studentReviewsCount[reviewer.studentID]++;
+          } else {
+            // Shuffle the potential reviewers to ensure randomness
+            shuffleArray(potentialReviewers);
+      
+            // Assign the first reviewer from the shuffled list
+            const reviewer = potentialReviewers[0];
+            submissionReviews[submissionID].push(reviewer.studentID);
+            studentReviewsCount[reviewer.studentID]++;
+          }
         }
-      }
-    }
+      }      
   
     // Final pass: Balance the number of reviews for each student
     const studentsToAdjust = students.filter(student => studentReviewsCount[student.studentID] !== reviewsPerAssignment);
