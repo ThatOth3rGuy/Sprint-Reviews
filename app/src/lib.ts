@@ -47,6 +47,7 @@ export async function login({ email, password, role }: { email: string; password
     throw new Error('Invalid role');
   }
 
+  // Get studentID or instructorID based on the role
   const userResult = await query(`SELECT ${role}ID FROM ${table} WHERE userID = ?`, [userID]);
 
   if (!userResult || userResult.length === 0) {
