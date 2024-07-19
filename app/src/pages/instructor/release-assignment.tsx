@@ -41,6 +41,7 @@ const ReleaseAssignment: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const dummyassignments = ['Assignment 1', 'Assignment 2', 'Assignment 3'];
+  const [studentSubmissions, setStudentSubmissions] = useState<any[]>([]);
 
   // Dummy rubric
   const dummyrubric = [
@@ -101,6 +102,25 @@ const ReleaseAssignment: React.FC = () => {
     }
   };
 
+  const fetchStudentSubmissions = async (assignmentID: number) => {
+    try {
+    const response = await fetch("/api/assignments/getSubmissionList",{
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        assignmentID: selectedAssignment,
+      }),
+    });
+    if (response.ok) {
+      const studentSubmissions = await response.json();
+      setStudentSubmissions(studentSubmissions);
+    } else {  
+      console.error("Failed to fetch student submissions");
+    }
+  } catch (error) {
+    console.error("Failed to fetch student submissions");
+  }
+};    
   // Handle student selection
   const handleStudentSelection = (studentId: number) => {
     setSelectedStudents((prev) =>
@@ -189,20 +209,12 @@ const handleSubmit = async (e: React.FormEvent) => {
     }
   
     // Second API call to release randomized peer reviews
-    const studentSubmissions = await fetch("/api/assignments/getSubmissionList",{
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        assignmentID: selectedAssignment,
-      }),
-    });
-    
     const responseReleasePeerReviews = await fetch("/api/addNew/releaseRandomizedPeerReviews", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
       reviewsPerAssignment: 4,
-      studentSubmissions,
+      studentSubmissions: fetchStudentSubmissions(Number(selectedAssignment)),
       assignmentID: selectedAssignment,
       courseID: session.user.courseID,
       }),
