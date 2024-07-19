@@ -8,12 +8,15 @@ import AssignmentDetailCard from '../components/instructor-components/instructor
 import styles from "../../styles/AssignmentDetailCard.module.css";
 import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner, Link } from "@nextui-org/react";
 import StudentNavbar from "../components/student-components/student-navbar";
+import StudentAssignmentView from "../components/student-components/student-assignment-details";
+import SubmitAssignment from "../components/student-components/student-submit-assignment";
 
 interface Assignment {
     assignmentID: number;
     title: string;
-    description: string;
+    descr: string;
     deadline: string;
+    allowedFileTypes: string;
 }
 
 interface CourseData {
@@ -91,17 +94,15 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
                 </div>
                 <div className={styles.assignmentsSection}>
                     {assignment && (
-                        <AssignmentDetailCard
-                            title={assignment.title}
-                            description={assignment.description || "No description available"}
+                        <StudentAssignmentView
+                            description={assignment.descr || "No description available"}
                             deadline={assignment.deadline || "No deadline set"}
-                            submittedStudents={submittedStudents}
-                            remainingStudents={remainingStudents}
-                        />
+                            allowedFileTypes={assignment.allowedFileTypes} />
                     )}
-                    <Link href={`/assignment/submit-assignment/${assignment.assignmentID}`}>
-                <a>Submit Assignment</a>
-              </Link>
+                    <SubmitAssignment
+                assignmentID={assignment.assignmentID}
+                userID={session.user.userID}
+              />
                 </div>
             </div>
 

@@ -119,7 +119,7 @@ if (loading) {
                   </div>
                 ))
               ) : (
-                <p>No assignments found for this course.</p>
+                <p>No assignments available.</p>
               )}
             </div><h3 className={styles.innerTitle}>Peer Reviews Created</h3>
             <br /><Divider className="instructor bg-secondary" /><br />
@@ -135,7 +135,7 @@ if (loading) {
                   </div>
                 ))
               ) : (
-                <p>No assignments found for this course.</p>
+                <p>No peer reviews available.</p>
               )}
             </div>
           </div>

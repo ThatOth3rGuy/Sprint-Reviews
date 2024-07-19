@@ -474,21 +474,59 @@ export async function getSubmissionFile(submissionID: number) {
 
 // Added these new functions for the peer review form for instrcutor
 
-export async function addReviewCriteria(assignmentID: number, criteria: { criterion: string; maxMarks: number }[]) {
-  const sql = `
-    INSERT INTO review_criteria (assignmentID, criterion, maxMarks)
-    VALUES (?, ?, ?)
-  `;
+// export async function addReviewCriteria(assignmentID: number, criteria: { criterion: string; maxMarks: number }[]) {
+//   const sql = `
+//     INSERT INTO review_criteria (assignmentID, criterion, maxMarks)
+//     VALUES (?, ?, ?)
+//   `;
 
-  try {
-    for (const item of criteria) {
-      await query(sql, [assignmentID, item.criterion, item.maxMarks]);
-    }
-  } catch (error) {
-    console.error('Error adding review criteria:', error);
-    throw error;
+//   try {
+//     for (const item of criteria) {
+//       await query(sql, [assignmentID, item.criterion, item.maxMarks]);
+//     }
+//   } catch (error) {
+//     console.error('Error adding review criteria:', error);
+//     throw error;
+//   }
+// }
+export async function createReview(
+  assignmentID: number, 
+  isGroupAssignment: boolean, 
+  allowedFileTypes: string, 
+  deadline: Date
+): Promise<void> {
+  const result = await query(
+    'INSERT INTO review (assignmentID, isGroupAssignment, allowedFileTypes, deadline) VALUES (?, ?, ?, ?)',
+    [assignmentID, isGroupAssignment, allowedFileTypes, deadline]
+  );
+  
+  if (result.affectedRows === 0) {
+    throw new Error('Failed to create review');
   }
 }
+
+export async function addReviewCriteria(assignmentID: number, rubric: { criterion: string; maxMarks: number }[]): Promise<void> {
+  const connection = await pool.getConnection();
+  
+  try {
+    await connection.beginTransaction();
+
+    for (const item of rubric) {
+      await query(
+        'INSERT INTO review_criteria (assignmentID, criterion, maxMarks) VALUES (?, ?, ?)',
+        [assignmentID, item.criterion, item.maxMarks]
+      );
+    }
+
+    await connection.commit();
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+}
+
 
 export async function getReviewCriteria(assignmentID: number) {
   const sql = `
@@ -590,12 +628,12 @@ export async function getCourse(courseID: number): Promise<any> {
     }
   }
     // grab all students from the database matching their student ID's
-    export async function getStudentsById(studentID: number, customPool: mysql.Pool = pool) {
+    export async function getStudentsById(userID: number, customPool: mysql.Pool = pool) {
       const sql = `
-        SELECT student.*, user.* FROM student JOIN user ON student.userID = user.userID WHERE studentID = ?
+        SELECT studentID, u.userID FROM student s JOIN user u ON s.userID = u.userID WHERE u.userID = ?
       `;
       try {
-        const rows = await query(sql, [studentID], customPool);
+        const rows = await query(sql, [userID], customPool);
         if (rows.length > 0) {
           return rows[0];
         } else {

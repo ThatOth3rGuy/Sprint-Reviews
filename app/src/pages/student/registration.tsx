@@ -51,7 +51,7 @@ const SignUp: NextPage = () => {
   }
 
   return (
-    <div className="student flex justify-center items-center bg-gradient-to-r from-[#459992] to-[#bbb9b9] text-black">
+    <div className="student flex justify-center w-[100vw] h-[100vh] items-center bg-gradient-to-r from-[#459992] to-[#bbb9b9] text-black">
       <img src="/images/Student/Back-Student.png" alt="Back" className="absolute top-0 left-0 mt-[2vh] ml-[1vh] object-cover cursor-pointer w-[3vw] h-[3vw]" onClick={handleLoginClick} />
       <div className="flex-col justify-evenly text-center bg-white min-w-fit p-[2vw] flex border-solid border-2 border-primary">
         <h2 className="justify-self-center text-xl p-4 bg-[#c0dfdc] text-primary" >Create Account</h2>
