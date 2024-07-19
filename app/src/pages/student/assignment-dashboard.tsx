@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import AssignmentDetailCard from '../components/instructor-components/instructor-assignment-details';
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner, Link } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner, Link, Modal, useDisclosure, ModalContent, ModalBody, ModalFooter, ModalHeader } from "@nextui-org/react";
 import StudentNavbar from "../components/student-components/student-navbar";
 import StudentAssignmentView from "../components/student-components/student-assignment-details";
 import SubmitAssignment from "../components/student-components/student-submit-assignment";
@@ -30,11 +30,15 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
     const [loading, setLoading] = useState(true);
     const [session, setSession] = useState<any>(null);
     const router = useRouter();
-    const { assignmentID } = router.query;
+    const { assignmentID, courseID } = router.query;
 
     const [assignment, setAssignment] = useState<Assignment | null>(null);
     const [courseData, setCourseData] = useState<CourseData | null>(null);
     useSessionValidation('student', setLoading, setSession);
+
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+    const [fileError, setFileError] = useState<string | null>(null);
 
     useEffect(() => {
         if (assignmentID) {
@@ -48,7 +52,7 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
                 .catch((error) => console.error('Error fetching assignment data:', error));
 
             // Fetch course data
-            fetch(`/api/courses/${courseId}`) // Replace `courseID` with the actual course ID
+            fetch(`/api/courses/${courseID}`) // Replace `courseID` with the actual course ID
                 .then((response) => response.json())
                 .then((data: CourseData) => {
                     console.log("Fetched course data:", data);
@@ -56,7 +60,49 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
                 })
                 .catch((error) => console.error('Error fetching course data:', error));
         }
-    }, [assignmentID]);
+    }, [assignmentID, courseID]);
+
+    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            setUploadedFile(event.target.files[0]);
+        }
+    };
+
+    const isFileTypeAllowed = (file: File | null) => {
+        if (!file || !assignment?.allowedFileTypes) return false;
+        const fileExtension = file.name.split('.').pop()?.toLowerCase();
+        const allowedFileTypes = assignment.allowedFileTypes.split(','); // Split the string into an array
+        return allowedFileTypes.some((type: string) =>
+            type.toLowerCase().trim() === `.${fileExtension}` || type.toLowerCase().trim() === fileExtension
+        );
+    };
+
+
+    const handleSubmit = async () => {
+        if (uploadedFile && isFileTypeAllowed(uploadedFile)) {
+            const formData = new FormData();
+            formData.append('file', uploadedFile);
+            formData.append('assignmentID', assignment.assignmentID.toString());
+            formData.append('studentID', session.user.userID);
+
+            try {
+                const response = await fetch('/api/assignments/submitAssignment', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    console.log('File uploaded successfully');
+                    alert('Assignment submitted successfully!')
+                } else {
+                    throw new Error('File upload failed');
+                }
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                setFileError('Failed to upload file. Please try again.');
+            }
+        }
+    };
 
     if (!assignment || loading) {
         return <div className='w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto'>
@@ -98,10 +144,37 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
                             deadline={assignment.deadline || "No deadline set"}
                             allowedFileTypes={assignment.allowedFileTypes} />
                     )}
-                    <SubmitAssignment
-                assignmentID={assignment.assignmentID}
-                userID={session.user.userID}
-              />
+                    <Button onClick={onOpen}>Submit Assignment</Button>
+                    <Modal className="student" isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true}>
+                        <ModalContent>
+                            {(onClose) => (
+                                <>
+                                    <ModalHeader className="flex flex-col gap-1">Submit Assignment</ModalHeader>
+                                    <ModalBody>
+                                        <input type="file" onChange={handleFileUpload} />
+                                        {fileError && <p style={{ color: 'red' }}>{fileError}</p>}
+                                        {uploadedFile && (
+                                            <div>
+                                                <p>Selected file: {uploadedFile.name}</p>
+                                            </div>
+                                        )}
+                                    </ModalBody>
+                                    <ModalFooter>
+                                        <Button color="danger" variant="light" onPress={() => {
+                                            setUploadedFile(null); // Clear the selected file
+                                            setFileError(null); // Clear any file errors
+                                            onClose(); // Close the modal
+                                        }}>
+                                            Cancel
+                                        </Button>
+                                        <Button color="primary" onPress={handleSubmit}>
+                                            Submit
+                                        </Button>
+                                    </ModalFooter>
+                                </>
+                            )}
+                        </ModalContent>
+                    </Modal>
                 </div>
             </div>
 
