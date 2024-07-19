@@ -8,21 +8,21 @@
 // /pages/api/createNew/releaseRandomizedPeerReview.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { selectStudentForSubmission } from '../../../db';
+import { randomizePeerReviewGroups } from './randomizationAlgorithm';
 
-const randomizePeerReviewGroups = (students: { studentID: number, submissionID: number }[], reviewsPerAssignment: number) => {
-  // This function will randomize the students and assign them to peer review groups
+type ReviewGroup = {
+  submissionID: number;
+  reviewers: number[];
+};
 
-    /*
-    - Loops through each student in course and randomly assigns them to X submission for review
-    - Each student must have minimum submissions to review as directed by instructor and no more than provided maximum
-    - No student can review their own submission or have more than 1 instance of any submission
-    - If any students are manually selected for review of a particular submission they are not considered for that iteration
-    */
-
-    // It returns an array of objects, where each object contains the submission ID 
-    // and the list of student IDs that are assigned to review that specific submission.
-    // (Or a 2d array, or any other data type that can represent this information)
-    return [];
+// This function will insert the rows of students to review the single submission, 
+// for each submission in the peerReviewGroups array, connected to the courseID and assignmentID.
+const processPeerReviewGroups = async (peerReviewGroups: ReviewGroup[], assignmentID: Number, courseID: Number) => {
+  for (const group of peerReviewGroups) {
+    for (const student of group.reviewers) {
+      await selectStudentForSubmission(student, assignmentID, courseID, group.submissionID);
+    }
+  }
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -37,15 +37,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
+    // Call the randomizePeerReviewGroups function to create the peer review groups
     const peerReviewGroups = randomizePeerReviewGroups(studentSubmissions, reviewsPerAssignment);
 
-    // This function will insert the rows of students to review the single submission, 
-    // for each submission in the peerReviewGroups array, connected to the courseID and assignmentID.
-    for (const group of peerReviewGroups) {
-      for (const student of group) {
-        await selectStudentForSubmission(student, assignmentID, courseID, group); //group is the submissionID
-      }
-    }
+    // Call the randomizePeerReviewGroups function to create the peer review groups
+    processPeerReviewGroups(peerReviewGroups, assignmentID, courseID);
 
     res.status(201).json({ message: 'Peer review groups created successfully', peerReviewGroups });
   } catch (error) {
