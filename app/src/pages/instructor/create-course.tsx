@@ -63,6 +63,7 @@ const Courses: NextPage = () => {
 
     const instructorID = session.user.userID;
 
+
     try {
       // Call the create course API with courseName and instructorID
       const createCourseResponse = await fetch('/api/addNew/createCourse', {
@@ -85,7 +86,7 @@ const Courses: NextPage = () => {
       const courseData = await createCourseResponse.json();
       const courseId = courseData.courseId;
 
-      const studentIDs = students.map(student => student.userID);
+      //const studentIDs = students.map(student => student.userID);
 
       // Call the enroll students API with studentIDs and courseID
       const enrollStudentsResponse = await fetch(`/api/addNew/enrollStudents`, {
@@ -94,7 +95,7 @@ const Courses: NextPage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          studentIDs: studentIDs,
+          studentIDs: students,
           courseID: courseId,
           missingData: missingData, // Include missingData here
         }),

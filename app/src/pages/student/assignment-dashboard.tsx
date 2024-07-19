@@ -1,3 +1,4 @@
+//assignment-dashboard.tsx
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
@@ -5,15 +6,17 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import AssignmentDetailCard from '../components/instructor-components/instructor-assignment-details';
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner, Link } from "@nextui-org/react";
 import StudentNavbar from "../components/student-components/student-navbar";
+import StudentAssignmentView from "../components/student-components/student-assignment-details";
+import SubmitAssignment from "../components/student-components/student-submit-assignment";
 
 interface Assignment {
     assignmentID: number;
     title: string;
-    description: string;
+    descr: string;
     deadline: string;
-    
+    allowedFileTypes: string;
 }
 
 interface CourseData {
@@ -66,11 +69,8 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
         return null;
     }
 
-    const isAdmin = session.user.role === 'admin';
-
     // Dummy data for submittedStudents and remainingStudents
-    const submittedStudents = ["Student A", "Student B", "Student C"];
-    const remainingStudents = ["Student D", "Student E", "Student F"];
+
     const handleBackClick = async () => {
         // Redirect to the landing page
         router.back();
@@ -87,20 +87,21 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
                     <br />
                     <Breadcrumbs>
                         <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-                        <BreadcrumbItem onClick={handleBackClick}>{courseData ? courseData.courseName : "Course Dashboard"}</BreadcrumbItem>
+                        {/* <BreadcrumbItem onClick={handleBackClick}>{courseData ? courseData.courseName : "Course Dashboard"}</BreadcrumbItem> */}
                         <BreadcrumbItem>{assignment.title ? assignment.title : "Assignment Name"} </BreadcrumbItem>
                     </Breadcrumbs>
                 </div>
                 <div className={styles.assignmentsSection}>
                     {assignment && (
-                        <AssignmentDetailCard
-                            title={assignment.title}
-                            description={assignment.description || "No description available"}
+                        <StudentAssignmentView
+                            description={assignment.descr || "No description available"}
                             deadline={assignment.deadline || "No deadline set"}
-                            submittedStudents={submittedStudents}
-                            remainingStudents={remainingStudents}
-                        />
+                            allowedFileTypes={assignment.allowedFileTypes} />
                     )}
+                    <SubmitAssignment
+                assignmentID={assignment.assignmentID}
+                userID={session.user.userID}
+              />
                 </div>
             </div>
 

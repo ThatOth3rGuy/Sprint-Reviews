@@ -73,9 +73,9 @@
 //               <p>Due date: {formatDate(assignment.deadline)}</p>
 //               {assignment.rubric && <p>Rubric: {assignment.rubric}</p>}
 //               {assignment.file && <p>Instructor file: <a href={assignment.file} download>Download</a></p>}
-//               <Link href={`/student/submit-assignment/${assignment.assignmentID}`}>
-//                 <a>Submit Assignment</a>
-//               </Link>
+            //   <Link href={`/student/submit-assignment/${assignment.assignmentID}`}>
+            //     <a>Submit Assignment</a>
+            //   </Link>
 //             </li>
 //           ))}
 //         </ul>

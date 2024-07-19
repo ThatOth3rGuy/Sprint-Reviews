@@ -40,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           for (const studentDetail of studentsDetails) {
             const studentData = await getStudentsById(studentDetail.studentID);
             if (studentData) {
-              students.push(studentData);
+              students.push(studentDetail.studentID);
             } else {
               missingData.push(studentDetail.studentID);
             }

@@ -1,19 +1,37 @@
-// course-dashboard.tsx
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import { useEffect, useState } from "react";
-import { useSessionValidation } from '../api/auth/checkSession';
-import styles from '../../styles/instructor-course-dashboard.module.css';
+import { useSessionValidation } from "../api/auth/checkSession";
+import styles from "../../styles/instructor-course-dashboard.module.css";
 import InstructorAssignmentCard from "../components/instructor-components/instructor-assignment-card";
-import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
+import {
+  Button,
+  Breadcrumbs,
+  BreadcrumbItem,
+  Listbox,
+  ListboxItem,
+  Divider,
+  Checkbox,
+  CheckboxGroup,
+  Progress,
+  Spinner,
+} from "@nextui-org/react";
+import InstructorReviewCard from "../components/instructor-components/instructor-PR-card";
+
 interface CourseData {
   courseID: string;
   courseName: string;
 }
+interface Review {
+  assignmentID: number;
+  linkedAssignmentID: number;
+  deadline: string;
+}
 
 interface Assignment {
   assignmentID: number;
+  linkedAssignmentID: number; // Add this line
   title: string;
   description: string;
   deadline: string;
@@ -29,72 +47,92 @@ export default function Page() {
 
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [peerReviewAssignments, setPeerReviewAssignments] = useState<
+    Assignment[]
+  >([]);
 
-  useSessionValidation('instructor', setLoading, setSession);
+  useSessionValidation("instructor", setLoading, setSession);
 
   useEffect(() => {
-    if (session && session.user && session.user.userID) {
-      fetchAssignments(session.user.userID);
-    }
     if (courseId) {
       fetchAssignments(courseId);
+      fetchPeerReviewAssignments(courseId);
       fetch(`/api/courses/${courseId}`)
         .then((response) => response.json())
         .then((data: CourseData) => {
           console.log("Fetched course data:", data);
           setCourseData(data);
         })
-        .catch((error) => console.error('Error fetching course data:', error));
-
-
+        .catch((error) => console.error("Error fetching course data:", error));
     }
   }, [courseId]);
+
+  useEffect(() => {
+    console.log("Assignments state:", assignments);
+    console.log("Peer review assignments state:", peerReviewAssignments);
+  }, [assignments, peerReviewAssignments]);
+
   const handleHomeClick = async () => {
-    router.push("/instructor/dashboard")
-  }
-  /**
-   * Fetches assignments based on the provided course ID.
-   * @param {string | string[]} courseID - The ID of the course to fetch assignments for.
-   */
+    router.push("/instructor/dashboard");
+  };
+
   const fetchAssignments = async (courseID: string | string[]) => {
     try {
-      const response = await fetch(`/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`);
+      const response = await fetch(
+        `/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`
+      );
       if (response.ok) {
         const data = await response.json();
         setAssignments(data.courses);
       } else {
-        console.error('Failed to fetch courses');
+        console.error("Failed to fetch courses");
       }
     } catch (error) {
-      console.error('Error fetching courses:', error);
+      console.error("Error fetching courses:", error);
+    }
+  };
+
+  const fetchPeerReviewAssignments = async (courseID: string | string[]) => {
+    try {
+      const timestamp = new Date().getTime();
+      const response = await fetch(
+        `/api/reviews/getReviewsByCourseId?courseID=${courseID}&t=${timestamp}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Fetched peer review assignments:", data);
+        setPeerReviewAssignments(data.reviews || []);
+      } else {
+        console.error("Failed to fetch peer review assignments");
+      }
+    } catch (error) {
+      console.error("Error fetching peer review assignments:", error);
     }
   };
 
   if (!courseData || loading) {
-    return <Spinner color='primary' size="lg" className='instructor'/>
+    return <Spinner color="primary" size="lg" className="instructor" />;
   }
 
   if (!session || !session.user || !session.user.userID) {
-    console.error('No user found in session');
+    console.error("No user found in session");
     return null;
   }
-  const isAdmin = session.user.role === 'admin';
 
-  
+  const isAdmin = session.user.role === "admin";
 
   const handleCreateAssignmentClick = () => {
-    router.push('/instructor/create-assignment');
+    router.push("/instructor/create-assignment");
   };
+
   const handleCreatePeerReviewAssignmentClick = () => {
-    router.push('/instructor/release-assignment');
+    router.push("/instructor/release-assignment");
   };
+
   const handleCreateGroupPeerReviewAssignmentClick = () => {
-    router.push('/instructor/create-groups');
+    router.push("/instructor/create-groups");
   };
-  /**
-   * Handles the action based on the key provided.
-   * @param {any} key - The key representing the action to be performed.
-   */
+
   const handleAction = (key: any) => {
     switch (key) {
       case "create":
@@ -107,17 +145,13 @@ export default function Page() {
         handleCreateGroupPeerReviewAssignmentClick();
         break;
       case "delete":
-        // Implement delete course functionality
         console.log("Delete course");
         break;
       default:
         console.log("Unknown action:", key);
     }
   };
-  /**
-   * Renders the instructor course dashboard page.
-   * @returns {JSX.Element} The instructor course dashboard page.
-   */
+
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -129,7 +163,6 @@ export default function Page() {
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
             <BreadcrumbItem>{courseData.courseName}</BreadcrumbItem>
           </Breadcrumbs>
-          
         </div>
         <div className={styles.mainContent}>
           <div className={styles.assignmentsSection}>
@@ -149,8 +182,11 @@ export default function Page() {
             <div className={styles.courseCard}>
               {assignments.length > 0 ? (
                 assignments.map((assignment) => (
-                  <div key={assignment.assignmentID} className={styles.courseCard}>
-                    <InstructorAssignmentCard
+                  <div
+                    key={assignment.assignmentID}
+                    className={styles.courseCard}
+                  >
+                    <InstructorAssignmentCard 
                       courseID={assignment.assignmentID}
                       courseName={assignment.title}
                       color="#72a98f"
@@ -160,32 +196,44 @@ export default function Page() {
               ) : (
                 <p>No assignments found for this course.</p>
               )}
-            </div><h3 className={styles.innerTitle}>Peer Reviews Created</h3>
-            <br /><Divider className="instructor bg-secondary" /><br />
-            <div className={styles.courseCard}>
-              {assignments.length > 0 ? (
-                assignments.map((assignment) => (
-                  <div key={assignment.assignmentID} className={styles.courseCard}>
-                    <InstructorAssignmentCard
-                      courseID={45}
-                      courseName="Peer review Assignment"
+            </div>
+            <h3 className={styles.innerTitle}>Peer Reviews Created</h3>
+            <br />
+            <Divider className="instructor bg-secondary" />
+            <br />
+            <div className={`w-100% ${styles.courseCard}`}>
+              {peerReviewAssignments && peerReviewAssignments.length > 0 ? (
+                peerReviewAssignments.map((assignment) => (
+                  <div
+                    key={assignment.assignmentID}
+                    className={`w-100% ${styles.courseCard}`}
+                  >
+                    <InstructorReviewCard
+                    
+                      reviewID={assignment.assignmentID}
+                      linkedAssignmentID={assignment.linkedAssignmentID}
                       color="#72a98f"
                     />
                   </div>
                 ))
               ) : (
-                <p>No assignments found for this course.</p>
+                <p>No peer review assignments found for this course.</p>
               )}
             </div>
           </div>
-
           <div className={styles.notificationsSection}>
             <div className={styles.actionButtons}>
               <Listbox aria-label="Actions" onAction={handleAction}>
                 <ListboxItem key="create">Create Assignment</ListboxItem>
                 <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
-                <ListboxItem key="group-review">Create Student Groups</ListboxItem>
-                <ListboxItem key="delete" className="text-danger" color="danger">
+                <ListboxItem key="group-review">
+                  Create Student Groups
+                </ListboxItem>
+                <ListboxItem
+                  key="delete"
+                  className="text-danger"
+                  color="danger"
+                >
                   Archive Course
                 </ListboxItem>
               </Listbox>
@@ -198,9 +246,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-
-      
-
     </>
   );
 }
