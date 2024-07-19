@@ -1,6 +1,83 @@
  # Weekly Logs 
 ------------------------------------
 # Week 9 Summary 
+
+## Friday (07/19/2024)
+### Timesheet Week 9 (07/10/2024- 07/13/2024)
+![alt text](images//week10_2logs.png)
+### Current Tasks (Complete by the end of the day)
+- Fix randomizer algorithm 
+- front end fixes from feedback 
+
+### Progress Update 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+       <tr>
+        <!-- Task/Issue # -->
+        <td> Randomizer Algorithm   
+        </td>
+        <!-- Status -->
+        <td> In progress 
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Course Dashboard View Instructor and Students    
+        </td>
+        <!-- Status -->
+        <td> Done 
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Front end fixes and ready for demo    
+        </td>
+        <!-- Status -->
+        <td> Done 
+        </td>
+    </tr>
+  <tr>
+        <!-- Task/Issue # -->
+        <td> Manual Testing and Jest tests     
+        </td>
+        <!-- Status -->
+        <td> Done 
+        </td>
+    </tr>
+ <tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> Email Notifications   
+        </td>
+        <!-- Status -->
+        <td> ToDo
+        </td>
+    </tr> <tr>
+        <!-- Task/Issue # -->
+        <td> In-App notifications   
+        </td>
+        <!-- Status -->
+        <td> ToDo
+        </td>
+    </tr>
+
+     
+    
+</table>
+
+### Weekly Goal Review :
+This cycle felt both short and long! We've finally managed to get the entire assignment submission process working, and the instructor's receipt is the only part left, as the randomizer is still under development. I'm hopeful that we'll reach the 90% completion mark by next Wednesday or Friday and have the app ready for testing!   
+
+### Next Cycle Goals:  
+* Randomizer algorithm and functionality 
+* Adding update features to all pages
+* Group Peer reviews and manual group creation
+
 ## Wednesday  (07/17/2024)
 ### Timesheet Week 9 (07/10/2024- 07/13/2024)
 ![alt text](images//week10_logs.png)
