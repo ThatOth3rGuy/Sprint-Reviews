@@ -13,12 +13,33 @@ Over the weekend, I spent a lot of my time working with Yatharth to create funct
 
 | Task | Due By | Status |
 | ------- | ------- | ------- |
-| Fix api calls for student assignment view | 07/18/2024 | WIP |
-| Implement a file/data storage using Firebase or some kind of cloud hosting service | 07/19/2024 | WIP |
+| Fix api calls for student assignment view | 07/18/2024 | Complete |
+| Implement a file/data storage using Firebase or some kind of cloud hosting service | 07/21/2024 | WIP |
 | Add a file viewing api similar to the file view on canvas | 07/21/2024 | WIP |
-| Set up email api for account confirmation and email notifications | 07/13/2024 | WIP |
+| Set up email api for account confirmation and email notifications | 07/21/2024 | WIP |
 
 ![week 10 time tracking](img/week10.png)
+
+### 07/19/2024
+
+Topics Covered:
+*fixing student view assignment api calls and submit assignment
+
+My contributions since Wednesday's log:
+
+I have been working on getting the student view of the assignment to work. The issue here was that it was routing the student to the instructor login instead of the student assignment dashboard. I was able to fix the routing and generalized a database call to get to the assignment dashboard. I also reconfigured the submit assignment function that I had worked on for the MVP to work with the updated database. I also was able to get the file stored into the database with some help from Eric.
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Fix assignment submission to have edge cases | 07/21/2024 | WIP |
+| Set up student view for peer review assignments | 07/21/2024 | WIP |
+| Set up student submission for peer review assignments | 07/21/2024 | WIP |
+
+#### Cycle Review and Goals
+
+This cycle was a very work heavy cycle. We were able to rebuild the entier UI design based on Parsa's inputs. We spent a lot of time creating a consistent look for all of the student and instructor pages. I spent some time making sure the refactored database and api calls were being implemented correctly. After the entire rebuild., I worked on getting the student assignment view set up and submit assignment function for student. For the upcoming cycle, we are going to work towards having our randomization algorithm successfully implemented and working on getting the grades functionality implemented.
+
+![week 10 time tracking](img/week10.2.png)
 
 ## Personal Log For Week 9
 
@@ -49,11 +70,9 @@ So far, I have worked on getting the theme configuration working, setting a simp
 
 | Task | Due By | Status |
 | ------- | ------- | ------- |
-| Create templates for the rest of the student pages using the NextUI framework | 07/12/2024 | WIP |
-| Add FAQ or tooltips throughout the website for accessibility | 07/13/2024 | WIP |
-| Frontend restrictions | 07/13/2024 | WIP |
-
-![week 9 time tracking](img/week9.png)
+| Create templates for the rest of the student pages using the NextUI framework | 07/12/2024 | Complete |
+| Add FAQ or tooltips throughout the website for accessibility | 07/13/2024 | Complete |
+| Frontend restrictions | 07/13/2024 | Complete |
 
 ![week 9 time tracking](img/week9.png)
 
