@@ -13,7 +13,7 @@ const SignUp: NextPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [institution, setInstitution] = useState('');
+  const [studentID, setStudentID] = useState('');
   const router = useRouter();
 
   const handleSignUpClick = async () => {
@@ -31,7 +31,7 @@ const SignUp: NextPage = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ firstName, lastName, email, password, role: 'student'})
+                body: JSON.stringify({ firstName, lastName, email, password, role: 'student', studentID})
             });
 
       if (response.ok) {
@@ -51,25 +51,33 @@ const SignUp: NextPage = () => {
   }
 
   return (
-    <body className="student flex justify-center items-center bg-gradient-to-r from-[#459992] to-[#bbb9b9] text-black">
+    <div className="student flex justify-center w-[100vw] h-[100vh] items-center bg-gradient-to-r from-[#459992] to-[#bbb9b9] text-black">
       <img src="/images/Student/Back-Student.png" alt="Back" className="absolute top-0 left-0 mt-[2vh] ml-[1vh] object-cover cursor-pointer w-[3vw] h-[3vw]" onClick={handleLoginClick} />
       <div className="flex-col justify-evenly text-center bg-white min-w-fit p-[2vw] flex border-solid border-2 border-primary">
-        <h2 className="justify-self-center text-xl p-4 bg-[#c0dfdc] text-primary" >Create an account</h2>
+        <h2 className="justify-self-center text-xl p-4 bg-[#c0dfdc] text-primary" >Create Account</h2>
         <br />
+        <hr />
         <div className='max-h-[45vh] p-2 overflow-y-auto'>
           <p className='my-2 text-small'>Enter the following information to create your account:</p>
           <div className='flex'>
-            <Input size='sm' className="my-1 p-2 w-1/2" type="text" labelPlacement="inside" label="First Name" value={firstName}
+            <Input size='sm' className="my-1 p-2 w-1/2 border-primary-900" type="text" labelPlacement="inside" label="First Name" value={firstName} 
               onChange={(e) => setFirstName(e.target.value)} />
             <Input  size='sm' className="my-1 p-2 w-1/2" type="text" labelPlacement="inside" label="Last Name" value={lastName}
               onChange={(e) => setLastName(e.target.value)} />
           </div>
-          <Input  size='sm' className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email}
+          <div className='flex'>
+            <Input  size='sm' className="my-1 p-2" type="text" labelPlacement="inside" label="Student ID" value={studentID}
+            onChange={(e) => setStudentID(e.target.value)} />
+            <Input  size='sm' className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email}
             onChange={(e) => setEmail(e.target.value)} />
-          <Input  size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
+          </div>
+          <div className='flex'>
+            <Input  size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
             onChange={(e) => setPassword(e.target.value)} />
           <Input  size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Confirm Password" value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)} />
+          </div>
+          
           
           <Button color='primary' className='w-full mt-2' variant="solid" onClick={handleSignUpClick}>
             Sign Up
@@ -85,7 +93,7 @@ const SignUp: NextPage = () => {
           </Button></p>
         </div>
       </div>
-    </body>
+    </div>
 
   );
 };

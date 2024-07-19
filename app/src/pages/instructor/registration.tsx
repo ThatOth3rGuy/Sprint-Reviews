@@ -13,6 +13,7 @@ const SignUp: NextPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [instructorID, setinstructorID] = useState('');
   const router = useRouter();
 
   const handleSignUpClick = async () => {
@@ -30,7 +31,7 @@ const SignUp: NextPage = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ firstName, lastName, email, password, role: 'instructor' })
+        body: JSON.stringify({ firstName, lastName, email, password, role: 'instructor', instructorID })
       });
 
       if (response.ok) {
@@ -68,12 +69,21 @@ const SignUp: NextPage = () => {
               <Input  size='sm' className="my-1 p-2 w-1/2" type="text" labelPlacement="inside" label="Last Name" value={lastName}
                 onChange={(e) => setLastName(e.target.value)} />
             </div>
-            <Input size='sm' className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email}
+            <div className='flex'>
+<Input size='sm' className="my-1 p-2" type="text" labelPlacement="inside" label="Instructor ID" value={instructorID}
+              onChange={(e) => setinstructorID(e.target.value)} />
+              <Input size='sm' className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email}
               onChange={(e) => setEmail(e.target.value)} />
-            <Input  size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
+            </div>
+            <div className='flex'>
+              <Input  size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
               onChange={(e) => setPassword(e.target.value)} />
             <Input  size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Confirm Password" value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)} />
+            </div>
+
+            
+            
             <Button color='primary' className='w-full mt-2' variant="solid" onClick={handleSignUpClick}>
               Sign Up
             </Button>

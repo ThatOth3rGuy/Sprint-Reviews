@@ -19,9 +19,9 @@ if (process.env.NODE_ENV === 'production') {
 const pool = mysql.createPool(dbConfig);
 
 // main function to query the database with the given SQL query and values from pool
-export async function query(sql: string, values: any[] = []): Promise<any> {
+export async function query(sql: string, values: any[] = [], customPool: mysql.Pool = pool): Promise<any> {
   try {
-    const [result] = await pool.execute(sql, values);
+    const [result] = await customPool.execute(sql, values);
     return result;
   } catch (error) {
     console.error('Database query error:', error);
@@ -39,6 +39,24 @@ export async function createUser(firstName: string, lastName: string, email: str
     return result.insertId; // Return the inserted user ID for adding to the instructor or student table
   } catch (error) {
     console.error('Error in addUser:', error); // Log the error
+    throw error;
+  }
+}
+export async function getInstructorIDFromUserID(userID: number): Promise<number> {
+  const sql = `
+    SELECT instructorID
+    FROM instructor
+    WHERE userID = ?
+  `;
+  try {
+    const result = await query(sql, [userID]);
+    if (result.length > 0) {
+      return result[0].instructorID;
+    } else {
+      throw new Error('No instructor found with the provided userID');
+    }
+  } catch (error) {
+    console.error('Error in getInstructorIDFromUserID:', error);
     throw error;
   }
 }
@@ -107,6 +125,22 @@ export async function authenticateStudent(email: string, password: string): Prom
     return rows.length > 0;
   } catch (error) {
     console.error('Error in authenticateStudent:', error); // Log the error
+    throw error;
+  }
+}
+export async function getInstructorID(userID: number): Promise<number | null> {
+  if (typeof userID !== 'number' || isNaN(userID)) {
+    throw new Error(`Invalid userID: ${userID}`);
+  }
+  const sql = 'SELECT instructorID FROM instructor WHERE userID = ?';
+  try {
+    const rows = await query(sql, [userID]);
+    if (rows.length === 0) {
+      return null; // No instructor found for this userID
+    }
+    return rows[0].instructorID;
+  } catch (error) {
+    console.error('Database query error:', error);
     throw error;
   }
 }
@@ -183,8 +217,43 @@ export async function addAssignmentToCourse(
     throw error;
   }
 }
+export async function getAllAssignmentsStudent(userID: number) {
+  const sql = `
+    SELECT a.*
+FROM assignment a
+JOIN course c ON a.courseID = c.courseID
+JOIN enrollment e ON c.courseID = e.courseID
+JOIN student s ON e.studentID = s.studentID
+JOIN user u ON s.userID = u.userID
+WHERE u.userID = ?;
+  `;
+  try {
+    const results = await query(sql, [userID]);
+    return results;
+  } catch (error) {
+    console.error('Error in getAllAssignments:', error);
+    throw error;
+  }
+}
+export async function getAllAssignmentsInstructor(userID: number) {
+  const sql = `
+    SELECT a.*
+FROM assignment a
+JOIN course c ON a.courseID = c.courseID
+JOIN instructor i ON c.instructorID = i.instructorID
+JOIN user u ON i.userID = u.userID
+WHERE u.userID = ?
 
-
+  
+  `;
+  try {
+    const results = await query(sql, [userID]);
+    return results;
+  } catch (error) {
+    console.error('Error in getAllAssignments:', error);
+    throw error;
+  }
+}
 export async function getAssignments(): Promise<any[]> {
   const sql = 'SELECT assignmentID, title, descr, DATE_FORMAT(deadline, "%Y-%m-%dT%H:%i:%s.000Z") as deadline FROM assignment';
   try {
@@ -405,21 +474,59 @@ export async function getSubmissionFile(submissionID: number) {
 
 // Added these new functions for the peer review form for instrcutor
 
-export async function addReviewCriteria(assignmentID: number, criteria: { criterion: string; maxMarks: number }[]) {
-  const sql = `
-    INSERT INTO review_criteria (assignmentID, criterion, maxMarks)
-    VALUES (?, ?, ?)
-  `;
+// export async function addReviewCriteria(assignmentID: number, criteria: { criterion: string; maxMarks: number }[]) {
+//   const sql = `
+//     INSERT INTO review_criteria (assignmentID, criterion, maxMarks)
+//     VALUES (?, ?, ?)
+//   `;
 
-  try {
-    for (const item of criteria) {
-      await query(sql, [assignmentID, item.criterion, item.maxMarks]);
-    }
-  } catch (error) {
-    console.error('Error adding review criteria:', error);
-    throw error;
+//   try {
+//     for (const item of criteria) {
+//       await query(sql, [assignmentID, item.criterion, item.maxMarks]);
+//     }
+//   } catch (error) {
+//     console.error('Error adding review criteria:', error);
+//     throw error;
+//   }
+// }
+export async function createReview(
+  assignmentID: number, 
+  isGroupAssignment: boolean, 
+  allowedFileTypes: string, 
+  deadline: Date
+): Promise<void> {
+  const result = await query(
+    'INSERT INTO review (assignmentID, isGroupAssignment, allowedFileTypes, deadline) VALUES (?, ?, ?, ?)',
+    [assignmentID, isGroupAssignment, allowedFileTypes, deadline]
+  );
+  
+  if (result.affectedRows === 0) {
+    throw new Error('Failed to create review');
   }
 }
+
+export async function addReviewCriteria(assignmentID: number, rubric: { criterion: string; maxMarks: number }[]): Promise<void> {
+  const connection = await pool.getConnection();
+  
+  try {
+    await connection.beginTransaction();
+
+    for (const item of rubric) {
+      await query(
+        'INSERT INTO review_criteria (assignmentID, criterion, maxMarks) VALUES (?, ?, ?)',
+        [assignmentID, item.criterion, item.maxMarks]
+      );
+    }
+
+    await connection.commit();
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+}
+
 
 export async function getReviewCriteria(assignmentID: number) {
   const sql = `
@@ -504,45 +611,47 @@ export async function getCourse(courseID: number): Promise<any> {
   }
 }
   // grab all students from the database matching the first and last name
-export async function getStudentsByName(firstName:string, lastName:string) {
-  const sql = `
-    SELECT user.*, student.studentID FROM user JOIN student ON user.userID = student.userID WHERE user.firstName = ? AND user.lastName = ? AND user.userRole = 'student'
-  `;
-  try {
-    const rows = await query(sql, [firstName, lastName]);
-    if (rows.length > 0) {
-      return rows[0];
-    }
-  } catch (error) {
-    console.error('Error in getStudents:', error);
-    throw error;
-  }
-}
-  // grab all students from the database matching the first and last name
-  export async function getStudentsById(studentID: number) {
+  export async function getStudentsByName(firstName:string, lastName:string) {
     const sql = `
-      SELECT student.*, user.* FROM student JOIN user ON student.userID = user.userID WHERE studentID = ?
+      SELECT user.*, student.studentID FROM user JOIN student ON user.userID = student.userID WHERE user.firstName = ? AND user.lastName = ? AND user.userRole = 'student'
     `;
     try {
-      const rows = await query(sql, [studentID]);
+      const rows = await query(sql, [firstName, lastName]);
       if (rows.length > 0) {
         return rows[0];
+      } else {
+        return null; // Return null if no student is found
       }
     } catch (error) {
       console.error('Error in getStudents:', error);
       throw error;
     }
   }
+    // grab all students from the database matching their student ID's
+    export async function getStudentsById(userID: number, customPool: mysql.Pool = pool) {
+      const sql = `
+        SELECT studentID, u.userID FROM student s JOIN user u ON s.userID = u.userID WHERE u.userID = ?
+      `;
+      try {
+        const rows = await query(sql, [userID], customPool);
+        if (rows.length > 0) {
+          return rows[0];
+        } else {
+          return null; // Return null if no student is found
+        }
+      } catch (error) {
+        console.error('Error in getStudents:', error);
+        throw error;
+      }
+    }
 //  enroll student in a course
-export async function enrollStudent(userID: number, courseID: number): Promise<void> {
+export async function enrollStudent(userID: string, courseID: string, customPool: mysql.Pool = pool): Promise<void> {
   const sql = `
     INSERT INTO enrollment (studentID, courseID)
     VALUES (?, ?)
   `;
   try {
-    //const result = 
-    await query(sql, [userID, courseID]);
-    //return result;
+    const result = await query(sql, [userID, courseID], customPool);
   } catch (error) {
     const err = error as Error;
     console.error(`Error enrolling student ${userID} in course ${courseID}:`, err.message);

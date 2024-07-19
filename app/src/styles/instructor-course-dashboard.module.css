@@ -7,6 +7,7 @@
     box-sizing: border-box;
     overflow-x: hidden;
   }
+  
   .header{
     display: flex;
     flex-direction: column;
@@ -52,6 +53,35 @@
   }
 
 
+
+  .actionButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .courseCards {
+    margin-top: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    /* min-width: 50vw; */
+    max-width: 75vw;
+    gap: 2%;
+    text-align: left;
+    justify-content: center;
+  }
+  
+  .courseCard {
+    width: 95%;
+    padding: 5px;
+    margin: 5px;
+    box-sizing: border-box;
+  }
+
   .notificationsSection {
     width: 25%;
     background-color: #ffffff;
@@ -62,25 +92,6 @@
     height: 100%;
   }
   
-  .actionButtons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  
-  .courseCards {
-    display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  
-  }
-  
-  .courseCard {
-    width: 95%;
-    padding: 5px;
-    margin: 5px;
-    box-sizing: border-box;
-  }
   
   .notificationsContainer {
     display: flex;
@@ -135,4 +146,18 @@
     }
   }
   
+  .outerCard {
+    width: 100%;
+    background-color: #fcf9f7;
+    border: 1px solid #04124b;
+    /* border-radius: 10px; */
+    overflow: hidden;
+    transition: transform 0.2s;
+    align-items: center;
+    padding: 1%;
+    position: relative;
+  }
+  .w-100 {
+    width: 100%;
+  }
   

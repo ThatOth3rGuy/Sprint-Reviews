@@ -1,32 +1,42 @@
-// pages/api/getAssignment.ts
-import { NextApiRequest, NextApiResponse } from 'next';
-import { getAssignmentForStudentView } from '../../../db';
-
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { query } from '../../../db';
+/**
+ * Handles the API request for retrieving user assignments based on the provided course ID.
+ *
+ * @param {NextApiRequest} req - The request object containing the HTTP method and query parameters.
+ * @param {NextApiResponse} res - The response object used to send the HTTP response.
+ * @return {Promise<void>} A promise that resolves when the response is sent.
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
-    const { id } = req.query;
-
-    if (!id || Array.isArray(id)) {
-      return res.status(400).json({ message: 'Invalid assignment ID' });
-    }
-
+    const { courseID } = req.query;
     try {
-      const assignmentId = parseInt(id, 10);
-      const assignment = await getAssignmentForStudentView(assignmentId);
-
-      if (!assignment) {
-        return res.status(404).json({ message: 'Assignment not found' });
-      }
-
-      res.status(200).json(assignment);
-    } catch (error: any) {
-      console.error('Error in getAssignment:', error);
-      res.status(500).json({ 
-        message: 'An error occurred while fetching the assignment', 
-        error: error.message 
-      });
+      const courses = await getUserAssignments(Number(courseID));
+      res.status(200).json({ courses });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch courses' });
     }
   } else {
-    res.status(405).json({ message: 'Method not allowed' });
+    res.status(405).end(); // Method Not Allowed
+  }
+}
+/**
+ * Retrieves user assignments based on the provided course ID.
+ *
+ * @param {number} courseID - The ID of the course for which assignments are to be retrieved.
+ * @return {Promise<any>} A promise that resolves to the assignments for the specified course.
+ */
+async function getUserAssignments(courseID: number) {
+  const sql = `
+    SELECT assignmentID, title, deadline, descr
+    FROM assignment
+    WHERE courseID = ? 
+  `;
+  try {
+    const results = await query(sql, [courseID]);
+    return results;
+  } catch (error) {
+    console.error('Error in getUserAssignments:', error);
+    throw error;
   }
 }
