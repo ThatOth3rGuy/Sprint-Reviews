@@ -2,6 +2,90 @@
 # Weekly Logs
 ------------------------------------
 # Week 10
+## Friday - July 19, 2024
+**Timesheet Tracking (NOT ACCURATE)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_07_12_2024-07_16_2024.pdf)
+### Cycle Review
+
+This cycle i was only able to deal with the randomizer function backend, as I was moving and working. 
+helped with getting the demo ready and intergration. not much to talk about for today. 
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Create Feature Definition and Sub-divisions on Project Board For Team Division
+  * #3: Run and Configure Tests For Database/API Changes
+  * #4: Review Branch Pull Requests and Complete Necessary Fixes
+  * #5: Refactor Database Schema to Handle Appropriate Input & Update API/UI Code to handle new DB Tables/Queries
+  * #6: Add Final Component to the Peer-Review Assignment Creation by implementing the Randomizer Query/Algorithm
+  * #7: Setup Demo for Friday Presentation
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Ongoing
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Feature breakdown/sub-division for parallel task work
+        </td>
+        <!-- Status -->
+        <td>Partly Complete (Recurring)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create and Run Integration Tests on Database/API Updates
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Fix Database for API Handler Queries (Refactoring)
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Review Pull Requests and Make Fixes to Main Branches
+        </td>
+        <!-- Status -->
+        <td>Complete-ish
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Make Changes to UI and Query Functions According To DB Updates
+        </td>
+        <!-- Status -->
+        <td>Complete*
+        </td>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Complete Peer-Review Assignment Creation - Add Student Randomizer
+        </td>
+        <!-- Status -->
+        <td>complete on backend
+        </td>
+    </tr>
+</table>
+
+#
 ## Wednesday - July 17, 2024
 **Timesheet Tracking (Friday-Tuesday)**
 * ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_07_12_2024-07_16_2024.pdf)
