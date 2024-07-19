@@ -14,6 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const missingStudents: number[] = missingData ? missingData.map(Number) : [];
 
   try {
+    console.log("Enrolling students:", studentIDs);
     for (const userID of studentIDs) {
       try {
         await enrollStudent(userID.toString(), courseID.toString());

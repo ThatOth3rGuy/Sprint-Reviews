@@ -10,7 +10,7 @@ import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Che
 interface Assignment {
   assignmentID: number;
   title: string;
-  description: string;
+  descr: string;
   deadline: string;
   submittedStudents: string[];
   remainingStudents: string[];
@@ -45,7 +45,7 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
         .catch((error) => console.error('Error fetching assignment data:', error));
   
       // Fetch course data
-      fetch(`/api/courses/${courseId}`) // Replace `courseID` with the actual course ID
+      fetch(`/api/courses/${courseId}`)
         .then((response) => response.json())
         .then((data: CourseData) => {
           console.log("Fetched course data:", data);
@@ -93,7 +93,7 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
           {assignment && (
             <AssignmentDetailCard
               title={assignment.title}
-              description={assignment.description || "No description available"}
+              description={assignment.descr || "No description available"}
               deadline={assignment.deadline || "No deadline set"}
               submittedStudents={submittedStudents}
               remainingStudents={remainingStudents}
