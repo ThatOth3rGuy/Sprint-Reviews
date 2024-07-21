@@ -1,5 +1,3 @@
-// release-assignment.tsx
-// Import necessary libraries
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSessionValidation } from '../api/auth/checkSession';
@@ -8,7 +6,11 @@ import InstructorNavbar from "../components/instructor-components/instructor-nav
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import styles from "../../styles/instructor-assignments-creation.module.css";
-import { Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
+import {
+  Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs,
+  BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader,
+  ModalBody, ModalFooter, useDisclosure
+} from "@nextui-org/react";
 
 // Define the structure for assignment and Rubric items
 interface Assignment {
@@ -41,7 +43,7 @@ const ReleaseAssignment: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const dummyassignments = ['Assignment 1', 'Assignment 2', 'Assignment 3'];
-  const [studentSubmissions, setStudentSubmissions] = useState<any[]>([]);
+  const [studentSubmissions, setStudentSubmissions] = useState<{ studentID: number; submissionID: number; }[]>([]);
 
   // Dummy rubric
   const dummyrubric = [
@@ -52,17 +54,10 @@ const ReleaseAssignment: React.FC = () => {
 
   // Dummy questions
   const questions = ['Was the work clear and easy to understand?', 'Was the content relevant and meaningful?', 'Was the work well-organized and logically structured?', 'Did the author provide sufficient evidence or examples to support their arguments or points?', 'Improvements: What suggestions do you have for improving the work?'];
+
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  // Handle open and close for modal
-  // const openModal = () => {
-  //   setIsModalOpen(true);
-  // };
-
-  // const closeModal = () => {
-  //   setIsModalOpen(false);
-  // };
 
   // Fetch assignments and students in the course when the component mounts
   useEffect(() => {
@@ -71,6 +66,13 @@ const ReleaseAssignment: React.FC = () => {
       fetchStudents(session.user.courseID);
     }
   }, [session]);
+
+  // Debug selectedAssignment state changes
+  useEffect(() => {
+    if (selectedAssignment !== "") {
+      fetchStudentSubmissions(Number(selectedAssignment));
+    }
+  }, [selectedAssignment]);
 
   // Function to fetch assignments
   const fetchAssignments = async (userID: string) => {
@@ -104,23 +106,22 @@ const ReleaseAssignment: React.FC = () => {
 
   const fetchStudentSubmissions = async (assignmentID: number) => {
     try {
-    const response = await fetch("/api/assignments/getSubmissionList",{
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        assignmentID: selectedAssignment,
-      }),
-    });
-    if (response.ok) {
-      const studentSubmissions = await response.json();
-      setStudentSubmissions(studentSubmissions);
-    } else {  
+      const response = await fetch("/api/assignments/getSubmissionList", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ assignmentID }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setStudentSubmissions(data.formattedSubmissions); // Use the formatted submissions
+      } else {
+        console.error("Failed to fetch student submissions");
+      }
+    } catch (error) {
       console.error("Failed to fetch student submissions");
     }
-  } catch (error) {
-    console.error("Failed to fetch student submissions");
-  }
-};    
+  };
+
   // Handle student selection
   const handleStudentSelection = (studentId: number) => {
     setSelectedStudents((prev) =>
@@ -187,57 +188,58 @@ const ReleaseAssignment: React.FC = () => {
     setRubric(updatedRubric);
   };
 
-// In the handleSubmit function of ReleaseAssignment.tsx
-
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  try {
-    const responseReleaseAssignment = await fetch("/api/assignments/releaseAssignment", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        assignmentID: selectedAssignment,
-        rubric,
-        isGroupAssignment,
-        allowedFileTypes,
-        deadline,
-      }),
-    });
-  
-    if (!responseReleaseAssignment.ok) {
-      throw new Error("Failed to release assignment for review");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      // Ensure submissions are fetched correctly
+      const assignmentID = Number(selectedAssignment);
+      await fetchStudentSubmissions(assignmentID);
+      
+      const responseReleaseAssignment = await fetch("/api/assignments/releaseAssignment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          assignmentID,
+          rubric,
+          isGroupAssignment,
+          allowedFileTypes,
+          deadline,
+        }),
+      });
+    
+      if (!responseReleaseAssignment.ok) {
+        throw new Error("Failed to release assignment for review");
+      }
+    
+      // Second API call to release randomized peer reviews
+      const responseReleasePeerReviews = await fetch("/api/addNew/releaseRandomizedPeerReview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reviewsPerAssignment: 4,
+          studentSubmissions,
+          assignmentID,
+          courseID: session.user.courseID,
+        }),
+      });
+    
+      if (!responseReleasePeerReviews.ok) {
+        throw new Error("Failed to release randomized peer reviews");
+      }
+    
+      // If both requests are successful
+      alert("Assignment and peer reviews released for review successfully");
+      router.push("/instructor/dashboard");
+    } catch (error) {
+      console.error("Error releasing assignment or peer reviews for review:", error);
     }
-  
-    // Second API call to release randomized peer reviews
-    const responseReleasePeerReviews = await fetch("/api/addNew/releaseRandomizedPeerReview", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-      reviewsPerAssignment: 4,
-      studentSubmissions: fetchStudentSubmissions(Number(selectedAssignment)),
-      assignmentID: selectedAssignment,
-      courseID: session.user.courseID,
-      }),
-    });
-  
-    if (!responseReleasePeerReviews.ok) {
-      throw new Error("Failed to release randomized peer reviews");
-    }
-  
-    // If both requests are successful
-    alert("Assignment and peer reviews released for review successfully");
-    router.push("/instructor/dashboard");
-  } catch (error) {
-    console.error("Error releasing assignment or peer reviews for review:", error);
-  }
-};
+  };
 
   const options = students.map((student) => ({
     value: student.id,
     label: student.name,
   }));
 
-  // If the session exists, check if the user is an admin
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
     return <p>No user found in session</p>;
@@ -248,11 +250,12 @@ const handleSubmit = async (e: React.FormEvent) => {
   if (loading) {
     return <p>Loading...</p>;
   }
+  
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");
   }
+  
   return (
-
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
       <div className={`overflow-y-auto instructor text-primary-900 ${styles.container}`}>
@@ -263,7 +266,6 @@ const handleSubmit = async (e: React.FormEvent) => {
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
             <BreadcrumbItem>Release Peer Review</BreadcrumbItem>
           </Breadcrumbs>
-
         </div>
         <div className={styles.mainContent}>
           <div className={styles.rectangle}>
@@ -302,12 +304,9 @@ const handleSubmit = async (e: React.FormEvent) => {
                         onChange={(e) =>
                           handleRubricChange(index, "criterion", e.target.value)
                         }
-                        // placeholder="Review criterion"
-                        // className={styles.textbox}
                         required
                       />
                       <br />
-                      {/* <label>Enter the maximum number of marks allowed:</label> */}
                       <Input
                         label="Maximum Marks for Criterion"
                         variant="bordered"
@@ -336,7 +335,6 @@ const handleSubmit = async (e: React.FormEvent) => {
                     variant="ghost"
                     color="success"
                     onClick={addRubricItem}
-                  // className={styles.criterion}
                   >Add Criterion
                   </Button>
                 </div>
@@ -349,20 +347,15 @@ const handleSubmit = async (e: React.FormEvent) => {
                 type="datetime-local"
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
-                // className={styles.textbox}
                 color="primary"
                 required
-
               />
               <Button onClick={handleSubmit} color="primary" variant="solid" className="float-right m-4" size="sm">
                 <b>Release</b>
               </Button>
-              {/* TODO: fix select students in advanced options */}
               <Button variant="bordered" onPress={onOpen} color="primary" className="float-left m-4 ml-0" size="sm">
                 Advanced Options</Button>
-              <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="instructor"
-              // className={styles.advancedOptions}
-              >
+              <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="instructor">
                 <ModalContent>
                   {(onClose) => (
                     <>
@@ -375,7 +368,6 @@ const handleSubmit = async (e: React.FormEvent) => {
                             size="sm"
                               label="Select Students"
                               selectionMode="multiple"
-                              // placeholder="Select students"
                               onChange={(selectedValues) => {
                                 setSelectedStudents(selectedValues.map(Number));
                               }}
@@ -409,7 +401,6 @@ const handleSubmit = async (e: React.FormEvent) => {
                               type="datetime-local"
                               value={uniqueDueDate}
                               onChange={(e) => setUniqueDueDate(e.target.value)}
-                              // className={styles.textbox}
                               required
                             />
                             <br />
@@ -417,22 +408,15 @@ const handleSubmit = async (e: React.FormEvent) => {
                               Set Unique Due Date
                             </Button>
                           </form>
-                          {/* <button onClick={closeModal} className={styles.closeModal}>Close</button> */}
                         </div>
                       </ModalBody>
                     </>
                   )}
                 </ModalContent>
-                {/* <h2>Advanced Options</h2> */}
-
-
               </Modal>
               <br />
-              
             </form>
           </div>
-
-          
         </div>
       </div>
     </>
