@@ -28,6 +28,7 @@ interface Student {
   name: string;
 }
 
+// Main component for releasing an assignment for peer review
 const ReleaseAssignment: React.FC = () => {
   const router = useRouter();
   const [assignments, setAssignments] = useState<Assignment[]>([]);
@@ -219,7 +220,6 @@ const ReleaseAssignment: React.FC = () => {
           reviewsPerAssignment: 4,
           studentSubmissions,
           assignmentID,
-          courseID: session.user.courseID,
         }),
       });
     
