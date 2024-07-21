@@ -5,7 +5,7 @@ import AdminHeader from "../components/admin-components/admin-header";
 import { JSX, SVGProps, useState } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/instructor-course-dashboard.module.css';
-import { CardBody, User, Avatar, AvatarIcon, SelectItem, Select, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Link, CardHeader, Card } from "@nextui-org/react";
+import { CardBody, User, Avatar, AvatarIcon, SelectItem, Select, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Link, CardHeader, Card, Spinner } from "@nextui-org/react";
 import router from "next/router";
 
 export default function Page() {

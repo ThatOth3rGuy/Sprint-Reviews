@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import styles from "../../styles/instructor-assignments-creation.module.css";
 import { useRouter } from 'next/router';
-import { Card,SelectItem, Select,Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input } from "@nextui-org/react";
+import { Card,SelectItem, Select,Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Spinner } from "@nextui-org/react";
 import React, { ChangeEvent, useCallback, useState } from 'react';
 import InstructorHeader from '../components/instructor-components/instructor-header';
 import InstructorNavbar from '../components/instructor-components/instructor-navbar';
@@ -80,7 +80,7 @@ const Courses: NextPage = () => {
 
       // If it fails, throw an error
       if (!createCourseResponse.ok) {
-        throw new Error('Failed to create course');
+        throw new Error('Failed to create course, make sure to enter a course name');
       }
 
       const courseData = await createCourseResponse.json();
