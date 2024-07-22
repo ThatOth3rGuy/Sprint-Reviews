@@ -59,7 +59,7 @@ const StudentLogin: NextPage = () => {
 
   return (
     
-      <div className="student flex justify-center items-center align-center min-w-[100vw] min-h-[100vh] bg-gradient-to-r from-[#459992] to-[#bbb9b9]">
+      <div className="student flex justify-center items-center align-center min-w-[100vw] min-h-[100vh] bg-gradient-to-r from-[#a2cbc7] to-[#265652]">
         <div className="student justify-center text-center bg-white mx-auto my-auto min-w-fit p-[2vw] max-w-max flex border-solid border-2 border-[#39776f] ">
           <div >
             <h2 className="justify-self-center text-xl p-4 mb-3 text-primary bg-[#c0dfdc]">Student Login Portal</h2>
