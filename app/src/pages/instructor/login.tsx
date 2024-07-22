@@ -62,8 +62,10 @@ const InstructorLogin: NextPage = () => {
       <div className="instructor flex justify-center items-center min-h-[100vh] min-w-[100vw] bg-gradient-to-r from-[#404982] to-[#9094af]">
         <div className="instructor justify-center text-center bg-white mx-auto my-auto min-w-fit p-[2vw] max-w-max flex border-solid border-2 border-primary ">
           <div >
-            <h2 className="justify-self-center text-xl p-4 mb-3 text-primary bg-[#c7d3f7]">Instructor Login Portal</h2>
-            
+            <div className="justify-self-center w-[100%] p-4 pl-2 bg-[#c7d3f7] text-primary flex text-center items-center">
+            <img className="m-0 mr-2 object-cover cursor-pointer w-[2vw] h-[2vw]" alt="Back" src="/Images/Instructor/Back.png" onClick={handleBackClick} aria-label='Back to Landing Page' />
+              <h2 className='text-center mx-auto'>Instructor Login Portal</h2>
+            </div>
             <Input  className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
             <Input  className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
               onChange={(e) => setPassword(e.target.value)} />
@@ -80,12 +82,7 @@ const InstructorLogin: NextPage = () => {
               </Button>
             </div>
           </div>
-          <img
-            className="absolute top-0 left-0 mt-[2vh] ml-[1vh] object-cover cursor-pointer w-[3vw] h-[3vw]"
-            alt="Back"
-            src="/Images/Instructor/Back.png"
-            onClick={handleBackClick}
-          />
+          
         </div>
       </div>
    

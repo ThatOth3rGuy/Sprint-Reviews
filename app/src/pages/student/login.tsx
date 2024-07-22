@@ -62,7 +62,11 @@ const StudentLogin: NextPage = () => {
       <div className="student flex justify-center items-center align-center min-w-[100vw] min-h-[100vh] bg-gradient-to-r from-[#a2cbc7] to-[#265652]">
         <div className="student justify-center text-center bg-white mx-auto my-auto min-w-fit p-[2vw] max-w-max flex border-solid border-2 border-[#39776f] ">
           <div >
-            <h2 className="justify-self-center text-xl p-4 mb-3 text-primary bg-[#c0dfdc]">Student Login Portal</h2>
+            <div className="justify-self-center p-4 pl-2 bg-[#c0dfdc] text-primary flex text-center items-center">
+            <img className="m-0 mr-2 object-cover cursor-pointer w-[2vw] h-[2vw]" alt="Back" src="/images/student/Back-Student.png" onClick={handleBackClick} aria-label='Back to Landing Page'/>
+              <h2 className="text-center mx-auto'">Student Login Portal</h2>
+            </div>
+            
             
             <Input className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
             <Input  className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
@@ -75,17 +79,11 @@ const StudentLogin: NextPage = () => {
                 Forgot Your Password?
               </Button><Divider orientation="horizontal" className="bg-primary" />
               <p className="mt-3 p-1 text-small">Don't have an account?</p>
-              <Button className="w-fit h-5 bg-secondary-50" variant="flat" onClick={handleSignUpClick}>
+              <Button className="w-fit h-5" color="primary" variant="flat" onClick={handleSignUpClick}>
                 Sign Up
               </Button>
             </div>
           </div>
-          <img
-            className="absolute top-0 left-0 mt-[2vh] ml-[1vh] object-cover cursor-pointer w-[3vw] h-[3vw]"
-            alt="Back"
-            src="/images/student/Back-Student.png"
-            onClick={handleBackClick}
-          />
         </div>
       </div>
 
