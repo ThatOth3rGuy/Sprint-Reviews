@@ -6,7 +6,7 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import { useSessionValidation } from '../api/auth/checkSession';
 import { useRouter } from 'next/router';
-import { Button } from '@nextui-org/react';
+import { Button, Spinner } from '@nextui-org/react';
 import styles from '../../styles/instructor-dashboard.module.css';
 import { Modal,Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 
@@ -49,7 +49,9 @@ export default function Page() {
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+    <Spinner color='primary' size="lg" />
+</div>;
   }
 
   if (!session || !session.user || !session.user.userID) {

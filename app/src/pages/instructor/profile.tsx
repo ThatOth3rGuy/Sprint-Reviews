@@ -5,7 +5,7 @@ import AdminHeader from "../components/admin-components/admin-header";
 import { JSX, SVGProps, useState } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/instructor-course-dashboard.module.css';
-import { CardBody, User, Avatar, AvatarIcon, SelectItem, Select, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Link, CardHeader, Card } from "@nextui-org/react";
+import { CardBody, User, Avatar, AvatarIcon, SelectItem, Select, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Link, CardHeader, Card, Spinner } from "@nextui-org/react";
 import router from "next/router";
 
 export default function Page() {
@@ -16,7 +16,9 @@ export default function Page() {
   useSessionValidation('instructor', setLoading, setSession);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+    <Spinner color='primary' size="lg" />
+</div>;
   }
 
   // If the session exists, check if the user is an admin

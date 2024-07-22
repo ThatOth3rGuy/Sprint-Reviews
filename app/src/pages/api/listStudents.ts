@@ -2,7 +2,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import fs from 'fs';
 import { parse } from 'csv-parse';
-import { getStudentsById } from '../../db';
+import { query } from '../../db';
 import formidable, { IncomingForm } from 'formidable';
 
 export const config = {
@@ -38,9 +38,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           const students = [];
           const missingData = [];
           for (const studentDetail of studentsDetails) {
-            const studentData = await getStudentsById(studentDetail.studentID);
-            if (studentData) {
-              students.push(studentData);
+            const sql = `SELECT * FROM student WHERE studentID = ?`;
+            const studentData = await query(sql, [studentDetail.studentID]);
+            if (studentData.length > 0) {
+              students.push(studentDetail.studentID);
             } else {
               missingData.push(studentDetail.studentID);
             }

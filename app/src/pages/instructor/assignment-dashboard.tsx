@@ -10,7 +10,7 @@ import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Che
 interface Assignment {
   assignmentID: number;
   title: string;
-  description: string;
+  descr: string;
   deadline: string;
   submittedStudents: string[];
   remainingStudents: string[];
@@ -45,7 +45,7 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
         .catch((error) => console.error('Error fetching assignment data:', error));
   
       // Fetch course data
-      fetch(`/api/courses/${courseId}`) // Replace `courseID` with the actual course ID
+      fetch(`/api/courses/${courseId}`)
         .then((response) => response.json())
         .then((data: CourseData) => {
           console.log("Fetched course data:", data);
@@ -56,7 +56,9 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
   }, [assignmentID]);
 
   if (!assignment || loading) {
-    return  <Spinner color='primary' size="lg" className='instructor'/>
+    return  <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+    <Spinner color='primary' size="lg" />
+</div>;
   }
 
   if (!session || !session.user || !session.user.userID) {
@@ -93,7 +95,7 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
           {assignment && (
             <AssignmentDetailCard
               title={assignment.title}
-              description={assignment.description || "No description available"}
+              description={assignment.descr || "No description available"}
               deadline={assignment.deadline || "No deadline set"}
               submittedStudents={submittedStudents}
               remainingStudents={remainingStudents}

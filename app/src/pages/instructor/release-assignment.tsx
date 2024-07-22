@@ -8,7 +8,7 @@ import InstructorNavbar from "../components/instructor-components/instructor-nav
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import styles from "../../styles/instructor-assignments-creation.module.css";
-import { Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
+import { Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spinner } from "@nextui-org/react";
 
 // Define the structure for assignment and Rubric items
 interface Assignment {
@@ -167,31 +167,33 @@ const ReleaseAssignment: React.FC = () => {
     setRubric(updatedRubric);
   };
 
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("/api/assignments/releaseAssignment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          assignmentID: selectedAssignment,
-          rubric,
-          isGroupAssignment,
-          allowedFileTypes,
-          deadline,
-        }),
-      });
+// In the handleSubmit function of ReleaseAssignment.tsx
 
-      if (response.ok) {
-        router.push("/instructor/dashboard");
-      } else {
-        console.error("Failed to release assignment");
-      }
-    } catch (error) {
-      console.error("Error releasing assignment:", error);
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    const response = await fetch("/api/assignments/releaseAssignment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        assignmentID: selectedAssignment,
+        rubric,
+        isGroupAssignment,
+        allowedFileTypes,
+        deadline,
+      }),
+    });
+
+    if (response.ok) {
+      alert("Assignment released for review successfully");
+      router.push("/instructor/dashboard");
+    } else {
+      console.error("Failed to release assignment for review");
     }
-  };
+  } catch (error) {
+    console.error("Error releasing assignment for review:", error);
+  }
+};
 
   const options = students.map((student) => ({
     value: student.id,
@@ -207,7 +209,9 @@ const ReleaseAssignment: React.FC = () => {
   const isAdmin = session?.user?.role === 'admin';
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+    <Spinner color='primary' size="lg" />
+</div>;
   }
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");
@@ -315,7 +319,7 @@ const ReleaseAssignment: React.FC = () => {
                 required
 
               />
-              <Button color="primary" variant="solid" className="float-right m-4" size="sm">
+              <Button onClick={handleSubmit} color="primary" variant="solid" className="float-right m-4" size="sm">
                 <b>Release</b>
               </Button>
               {/* TODO: fix select students in advanced options */}
@@ -393,16 +397,7 @@ const ReleaseAssignment: React.FC = () => {
             </form>
           </div>
 
-          <div className={`h-50% overflow-y-auto ${styles.groupReview}`}>
-            <h2> Student Groups</h2>
-            {/* <div className={styles.questionCard}>
-      {questions.map((question, index) => (
-        <Card key={index} style={{ width: '100%' }}>
-          {question}
-        </Card>
-      ))}
-    </div> */}
-          </div>
+          
         </div>
       </div>
     </>

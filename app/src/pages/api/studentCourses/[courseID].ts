@@ -25,8 +25,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 async function getCourse(courseID: string) {
   const sql = `
-    SELECT courseID, courseName
-    FROM course
+    SELECT c.courseID, courseName
+    FROM course c JOIN enrollment e on c.courseID=e.courseID
     WHERE courseID = ? AND isArchived = 0
   `;
   try {

@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import styles from "../../styles/instructor-assignments-creation.module.css";
 import { useRouter } from 'next/router';
-import { Card,SelectItem, Select,Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input } from "@nextui-org/react";
+import { Card,SelectItem, Select,Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Spinner } from "@nextui-org/react";
 import React, { ChangeEvent, useCallback, useState } from 'react';
 import InstructorHeader from '../components/instructor-components/instructor-header';
 import InstructorNavbar from '../components/instructor-components/instructor-navbar';
@@ -63,6 +63,7 @@ const Courses: NextPage = () => {
 
     const instructorID = session.user.userID;
 
+
     try {
       // Call the create course API with courseName and instructorID
       const createCourseResponse = await fetch('/api/addNew/createCourse', {
@@ -79,13 +80,13 @@ const Courses: NextPage = () => {
 
       // If it fails, throw an error
       if (!createCourseResponse.ok) {
-        throw new Error('Failed to create course');
+        throw new Error('Failed to create course, make sure to enter a course name');
       }
 
       const courseData = await createCourseResponse.json();
       const courseId = courseData.courseId;
 
-      const studentIDs = students.map(student => student.userID);
+      //const studentIDs = students.map(student => student.userID);
 
       // Call the enroll students API with studentIDs and courseID
       const enrollStudentsResponse = await fetch(`/api/addNew/enrollStudents`, {
@@ -94,7 +95,7 @@ const Courses: NextPage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          studentIDs: studentIDs,
+          studentIDs: students,
           courseID: courseId,
           missingData: missingData, // Include missingData here
         }),
@@ -121,7 +122,9 @@ const Courses: NextPage = () => {
   }, [courseName, students, missingData, router, session]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+    <Spinner color='primary' size="lg" />
+</div>;
   }
 
   // If the session exists, check if the user is an admin
