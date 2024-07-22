@@ -124,7 +124,7 @@ export default function Page() {
   const isAdmin = session.user.role === "admin";
 
   const handleCreateAssignmentClick = () => {
-    router.push("/instructor/create-assignment");
+    router.push(`/instructor/create-assignment?courseId=${courseId}`);
   };
 
   const handleCreatePeerReviewAssignmentClick = () => {

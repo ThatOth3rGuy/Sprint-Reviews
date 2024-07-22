@@ -59,19 +59,7 @@ export default function AssignmentsPage() {
     router.push('/instructor/release-assignment');
   };
 
-  const handleAction = (key: any) => {
-    switch (key) {
-      case "create":
-        handleCreateAssignmentClick();
-        break;
-      case "peer-review":
-        handleCreatePeerReviewAssignmentClick();
-        break;
-      default:
-        console.log("Unknown action:", key);
-    }
-  };
-  
+
 
   return (
     <>
@@ -110,12 +98,12 @@ export default function AssignmentsPage() {
               ))}
             </div>
           </div>
-          <div className={styles.notificationsSection}>
+          {/* <div className={styles.notificationsSection}>
             <Listbox aria-label="Actions" onAction={handleAction}>
               <ListboxItem key="create">Create Assignment</ListboxItem>
               <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
             </Listbox>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
