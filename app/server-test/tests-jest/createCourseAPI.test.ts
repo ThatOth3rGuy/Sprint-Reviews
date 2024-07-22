@@ -11,6 +11,7 @@ jest.mock('../../src/db', () => ({
 describe('API endpoint handler tests', () => {
   afterEach(() => {
     jest.clearAllMocks();
+    jest.resetModules(); // Reset modules to ensure no state is carried over
   });
 
   test('should create a course successfully', async () => {

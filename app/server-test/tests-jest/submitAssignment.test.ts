@@ -19,37 +19,42 @@ describe('submitAssignment Tests', () => {
     // Ensure the user exists
     await connection.query(
       `INSERT INTO user (userID, firstName, lastName, email, pwd, userRole) VALUES 
-      (${uniqueID + 1}, 'Test', 'Instructor', 'test.instructor.${uniqueID}@example.com', 'password123', 'instructor'),
-      (${uniqueID + 2}, 'Test', 'Student', 'test.student.${uniqueID}@example.com', 'password123', 'student')
-      ON DUPLICATE KEY UPDATE email = VALUES(email)`
+      (?, 'Test', 'Instructor', 'test.instructor.${uniqueID}@example.com', 'password123', 'instructor'),
+      (?, 'Test', 'Student', 'test.student.${uniqueID}@example.com', 'password123', 'student')
+      ON DUPLICATE KEY UPDATE email = VALUES(email)`,
+      [uniqueID + 1, uniqueID + 2]
     );
 
     // Ensure the instructor exists
     await connection.query(
       `INSERT INTO instructor (instructorID, userID, isAdmin, departments) VALUES 
-      (${uniqueID + 1}, ${uniqueID + 1}, TRUE, 'Test Department')
-      ON DUPLICATE KEY UPDATE departments = 'Test Department'`
+      (?, ?, TRUE, 'Test Department')
+      ON DUPLICATE KEY UPDATE departments = 'Test Department'`,
+      [uniqueID + 1, uniqueID + 1]
     );
 
     // Ensure the student exists
     await connection.query(
-      `INSERT INTO student (studentID, userID, phoneNumber, homeAddress, dateOfBirth) VALUES 
-      (${uniqueID + 2}, ${uniqueID + 2}, '555-1234', '123 Test St', '2000-01-01')
-      ON DUPLICATE KEY UPDATE phoneNumber = VALUES(phoneNumber)`
+      `INSERT INTO student (userID, studentID, phoneNumber, homeAddress, dateOfBirth) VALUES 
+      (?, ?, '555-1234', '123 Test St', '2000-01-01')
+      ON DUPLICATE KEY UPDATE phoneNumber = VALUES(phoneNumber)`,
+      [uniqueID + 1, uniqueID + 2]
     );
 
     // Ensure the course exists
     await connection.query(
       `INSERT INTO course (courseID, courseName, isArchived, instructorID) VALUES 
-      (${uniqueID + 3}, 'Test Course', FALSE, ${uniqueID + 1})
-      ON DUPLICATE KEY UPDATE courseName = VALUES(courseName)`
+      (?, 'Test Course', FALSE, ?)
+      ON DUPLICATE KEY UPDATE courseName = VALUES(courseName)`,
+      [uniqueID + 3, uniqueID + 1]
     );
 
     // Ensure the assignment exists
     await connection.query(
       `INSERT INTO assignment (assignmentID, title, descr, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES 
-      (${uniqueID + 4}, 'Test Assignment', 'Test Description', 'Test Rubric', '2024-12-31 23:59:59', FALSE, ${uniqueID + 3}, 'pdf')
-      ON DUPLICATE KEY UPDATE title = VALUES(title)`
+      (?, 'Test Assignment', 'Test Description', 'Test Rubric', '2024-12-31 23:59:59', FALSE, ?, 'pdf')
+      ON DUPLICATE KEY UPDATE title = VALUES(title)`,
+      [uniqueID + 4, uniqueID + 3]
     );
 
     await fs.writeFile(filePath, 'file content');
@@ -58,12 +63,13 @@ describe('submitAssignment Tests', () => {
   });
 
   afterEach(async () => {
-    await connection.query(`DELETE FROM submission WHERE assignmentID = ${uniqueID + 4}`);
-    await connection.query(`DELETE FROM assignment WHERE assignmentID = ${uniqueID + 4}`);
-    await connection.query(`DELETE FROM course WHERE courseID = ${uniqueID + 3}`);
-    await connection.query(`DELETE FROM student WHERE userID = ${uniqueID + 2}`);
-    await connection.query(`DELETE FROM instructor WHERE userID = ${uniqueID + 1}`);
-    await connection.query(`DELETE FROM user WHERE userID IN (${uniqueID + 1}, ${uniqueID + 2})`);
+    await connection.query(`DELETE FROM submission WHERE assignmentID = ?`, [uniqueID + 4]);
+    await connection.query(`DELETE FROM assignment WHERE assignmentID = ?`, [uniqueID + 4]);
+    await connection.query(`DELETE FROM course WHERE courseID = ?`, [uniqueID + 3]);
+    await connection.query(`DELETE FROM student WHERE userID = ?`, [uniqueID + 2]);
+    await connection.query(`DELETE FROM instructor WHERE userID = ?`, [uniqueID + 1]);
+    await connection.query(`DELETE FROM user WHERE userID IN (?, ?)`, [uniqueID + 1, uniqueID + 2]);
+    await fs.unlink(filePath); // Ensure file cleanup
     jest.clearAllMocks();
   });
 
@@ -86,7 +92,7 @@ describe('submitAssignment Tests', () => {
 
     // Verify the submission was inserted into the database
     const [rows]: [mysql.RowDataPacket[], mysql.FieldPacket[]] = await connection.query(
-      `SELECT * FROM submission WHERE assignmentID = ${uniqueID + 4} AND studentID = ${uniqueID + 2}`
+      `SELECT * FROM submission WHERE assignmentID = ? AND studentID = ?`, [uniqueID + 4, uniqueID + 2]
     );
     expect(rows.length).toBe(1);
     expect(rows[0].fileName).toBe('testFile.pdf');
@@ -113,9 +119,7 @@ describe('submitAssignment Tests', () => {
     } as Express.Multer.File;
 
     const mockPool = {
-      execute: jest.fn().mockImplementation(() => {
-        throw new Error('Simulated database error');
-      }),
+      execute: jest.fn().mockRejectedValue(new Error('Simulated database error')),
     };
 
     await expect(submitAssignment(uniqueID + 4, uniqueID + 2, file, mockPool as unknown as mysql.Pool)).rejects.toThrow('Simulated database error');

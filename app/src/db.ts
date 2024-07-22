@@ -426,7 +426,12 @@ export async function getAssignmentForStudentView(assignmentId: number, customPo
 //   }
 // }
 
-export async function submitAssignment(assignmentID: number, studentID: number, file: Express.Multer.File, customPool?: mysql.Pool) {
+export async function submitAssignment(
+  assignmentID: number,
+  studentID: number,
+  file: Express.Multer.File,
+  customPool: mysql.Pool = pool
+): Promise<{ success: boolean; message: string }> {
   const sql = `
     INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate)
     VALUES (?, ?, ?, ?, ?, NOW())
@@ -628,17 +633,18 @@ export async function getCourse(courseID: number): Promise<any> {
     // grab all students from the database matching their student ID's
     export async function getStudentsById(userID: number, customPool: mysql.Pool = pool) {
       const sql = `
-        SELECT studentID, u.userID FROM student s JOIN user u ON s.userID = u.userID WHERE u.userID = ?
+        SELECT s.studentID, u.userID FROM student s JOIN user u ON s.userID = u.userID WHERE s.studentID = ?
       `;
       try {
         const rows = await query(sql, [userID], customPool);
+        console.log('Query Result:', rows); // Add logging here
         if (rows.length > 0) {
           return rows[0];
         } else {
           return null; // Return null if no student is found
         }
       } catch (error) {
-        console.error('Error in getStudents:', error);
+        console.error('Error in getStudentsById:', error);
         throw error;
       }
     }

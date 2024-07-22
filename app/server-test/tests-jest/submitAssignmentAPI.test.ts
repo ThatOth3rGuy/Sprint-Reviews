@@ -3,21 +3,22 @@ import { submitAssignment } from '../../src/db';
 import { createMocks } from 'node-mocks-http';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import multer from 'multer';
-import fs from 'fs';
+import fs from 'fs/promises';
+import path from 'path';
 
 jest.mock('../../src/db', () => ({
   submitAssignment: jest.fn(),
 }));
 
 jest.mock('multer', () => {
-  const multer = jest.fn(() => {
+  return jest.fn(() => {
     const instance = {
       single: jest.fn((fieldName: string) => (req: any, res: any, next: any) => {
         if (req.testError) {
           next(new Error('Upload error'));
         } else {
           req.file = {
-            path: '/tmp/testfile',
+            path: path.join(__dirname, '../test-files/testfile.txt'),
             originalname: 'testfile.txt',
           };
           next();
@@ -30,14 +31,15 @@ jest.mock('multer', () => {
     };
     return instance;
   });
-  return multer;
 });
 
 describe('API endpoint handler tests', () => {
-  afterEach(() => {
+  afterEach(async () => {
     jest.clearAllMocks();
-    if (fs.existsSync('/tmp/testfile')) {
-      fs.unlinkSync('/tmp/testfile');
+    try {
+      await fs.unlink(path.join(__dirname, '../test-files/testfile.txt'));
+    } catch (err) {
+      // Ignore if the file doesn't exist
     }
   });
 
@@ -54,9 +56,12 @@ describe('API endpoint handler tests', () => {
       },
     });
 
+    // Ensure the file exists
+    await fs.writeFile(path.join(__dirname, '../test-files/testfile.txt'), 'file content');
+
     // Manually setting the file object as multer would do
     (req as any).file = {
-      path: '/tmp/testfile',
+      path: path.join(__dirname, '../test-files/testfile.txt'),
       originalname: 'testfile.txt',
     };
 
@@ -64,8 +69,8 @@ describe('API endpoint handler tests', () => {
 
     expect(res._getStatusCode()).toBe(200);
     expect(res._getJSONData()).toEqual(result);
-    expect(submitAssignment).toHaveBeenCalledWith(1, 1, {
-      path: '/tmp/testfile',
+    expect(submitAssignment).toHaveBeenCalledWith('1', '1', {
+      path: path.join(__dirname, '../test-files/testfile.txt'),
       originalname: 'testfile.txt',
     });
   });
@@ -96,9 +101,12 @@ describe('API endpoint handler tests', () => {
       },
     });
 
+    // Ensure the file exists
+    await fs.writeFile(path.join(__dirname, '../test-files/testfile.txt'), 'file content');
+
     // Manually setting the file object as multer would do
     (req as any).file = {
-      path: '/tmp/testfile',
+      path: path.join(__dirname, '../test-files/testfile.txt'),
       originalname: 'testfile.txt',
     };
 

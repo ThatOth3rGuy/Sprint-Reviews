@@ -14,35 +14,39 @@ describe('getAssignmentForStudentView Tests', () => {
     // Ensure the user, instructor, student, course, and assignments exist
     await connection.query(
       `INSERT INTO user (userID, firstName, lastName, email, pwd, userRole) VALUES 
-      (${uniqueID + 1}, 'Test', 'Instructor', 'test.instructor@example.com', 'password123', 'instructor')
-      ON DUPLICATE KEY UPDATE email = VALUES(email)`
+      (?, 'Test', 'Instructor', 'test.instructor@example.com', 'password123', 'instructor')
+      ON DUPLICATE KEY UPDATE email = VALUES(email)`,
+      [uniqueID + 1]
     );
 
     await connection.query(
       `INSERT INTO instructor (instructorID, userID, isAdmin, departments) VALUES 
-      (${uniqueID + 1}, ${uniqueID + 1}, TRUE, 'Test Department')
-      ON DUPLICATE KEY UPDATE departments = 'Test Department'`
+      (?, ?, TRUE, 'Test Department')
+      ON DUPLICATE KEY UPDATE departments = 'Test Department'`,
+      [uniqueID + 1, uniqueID + 1]
     );
 
     await connection.query(
       `INSERT INTO course (courseID, courseName, isArchived, instructorID) VALUES 
-      (${uniqueID + 2}, 'Test Course', FALSE, ${uniqueID + 1})
-      ON DUPLICATE KEY UPDATE courseName = VALUES(courseName)`
+      (?, 'Test Course', FALSE, ?)
+      ON DUPLICATE KEY UPDATE courseName = VALUES(courseName)`,
+      [uniqueID + 2, uniqueID + 1]
     );
 
     await connection.query(
       `INSERT INTO assignment (assignmentID, title, descr, rubric, deadline, groupAssignment, courseID, allowedFileTypes) VALUES 
-      (${uniqueID + 3}, 'Assignment 1', 'Description 1', 'Rubric 1', '2024-12-31 23:59:59', FALSE, ${uniqueID + 2}, 'pdf,docx')
-      ON DUPLICATE KEY UPDATE title = VALUES(title)`
+      (?, 'Assignment 1', 'Description 1', 'Rubric 1', '2024-12-31 23:59:59', FALSE, ?, 'pdf,docx')
+      ON DUPLICATE KEY UPDATE title = VALUES(title)`,
+      [uniqueID + 3, uniqueID + 2]
     );
   });
 
   afterAll(async () => {
     if (connection) {
-      await connection.query(`DELETE FROM assignment WHERE assignmentID = ${uniqueID + 3}`);
-      await connection.query(`DELETE FROM course WHERE courseID = ${uniqueID + 2}`);
-      await connection.query(`DELETE FROM instructor WHERE userID = ${uniqueID + 1}`);
-      await connection.query(`DELETE FROM user WHERE userID = ${uniqueID + 1}`);
+      await connection.query(`DELETE FROM assignment WHERE assignmentID = ?`, [uniqueID + 3]);
+      await connection.query(`DELETE FROM course WHERE courseID = ?`, [uniqueID + 2]);
+      await connection.query(`DELETE FROM instructor WHERE userID = ?`, [uniqueID + 1]);
+      await connection.query(`DELETE FROM user WHERE userID = ?`, [uniqueID + 1]);
       connection.release();
     }
   });
