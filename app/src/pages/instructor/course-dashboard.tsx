@@ -231,13 +231,14 @@ export default function Page() {
                 <ListboxItem key="group-review">
                   Create Student Groups
                 </ListboxItem>
-                <ListboxItem
+                {isAdmin? <ListboxItem
                   key="delete"
                   className="text-danger"
                   color="danger"
                 >
                   Archive Course
                 </ListboxItem>
+                : null }
               </Listbox>
             </div>
             <hr />
