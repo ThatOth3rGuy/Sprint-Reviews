@@ -79,7 +79,7 @@ export default function Page() {
                 <StudentCourseCard
                 courseID={course.courseID}
                 courseName={course.courseName}
-                color="#9fc3cf"
+                color="#b3d0c3"
                 img="/logo-transparent-png.png"
                 instructorName={`${course.instructorFirstName} ${course.instructorLastName}`}
               />

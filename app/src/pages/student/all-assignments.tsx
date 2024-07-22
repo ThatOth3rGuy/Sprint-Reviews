@@ -114,12 +114,12 @@ if (loading) {
                       courseID={assignment.assignmentID}
                       courseName={assignment.title}
                       dueDate={assignment.deadline}
-                      color="#72a98f"
+                      color="#b3d0c3"
                     />
                   </div>
                 ))
               ) : (
-                <p>No assignments found for this course.</p>
+                <p>No assignments available.</p>
               )}
             </div><h3 className={styles.innerTitle}>Peer Reviews Created</h3>
             <br /><Divider className="instructor bg-secondary" /><br />
@@ -135,7 +135,7 @@ if (loading) {
                   </div>
                 ))
               ) : (
-                <p>No assignments found for this course.</p>
+                <p>No peer reviews available.</p>
               )}
             </div>
           </div>

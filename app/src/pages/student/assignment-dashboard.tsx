@@ -1,3 +1,4 @@
+//assignment-dashboard.tsx
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
@@ -5,15 +6,17 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import AssignmentDetailCard from '../components/instructor-components/instructor-assignment-details';
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner, Link, Modal, useDisclosure, ModalContent, ModalBody, ModalFooter, ModalHeader } from "@nextui-org/react";
 import StudentNavbar from "../components/student-components/student-navbar";
+import StudentAssignmentView from "../components/student-components/student-assignment-details";
+import SubmitAssignment from "../components/student-components/student-submit-assignment";
 
 interface Assignment {
     assignmentID: number;
     title: string;
-    description: string;
+    descr: string;
     deadline: string;
-    
+    allowedFileTypes: string;
 }
 
 interface CourseData {
@@ -27,11 +30,15 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
     const [loading, setLoading] = useState(true);
     const [session, setSession] = useState<any>(null);
     const router = useRouter();
-    const { assignmentID } = router.query;
+    const { assignmentID, courseID } = router.query;
 
     const [assignment, setAssignment] = useState<Assignment | null>(null);
     const [courseData, setCourseData] = useState<CourseData | null>(null);
     useSessionValidation('student', setLoading, setSession);
+
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+    const [fileError, setFileError] = useState<string | null>(null);
 
     useEffect(() => {
         if (assignmentID) {
@@ -45,7 +52,7 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
                 .catch((error) => console.error('Error fetching assignment data:', error));
 
             // Fetch course data
-            fetch(`/api/courses/${courseId}`) // Replace `courseID` with the actual course ID
+            fetch(`/api/courses/${courseID}`) // Replace `courseID` with the actual course ID
                 .then((response) => response.json())
                 .then((data: CourseData) => {
                     console.log("Fetched course data:", data);
@@ -53,7 +60,49 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
                 })
                 .catch((error) => console.error('Error fetching course data:', error));
         }
-    }, [assignmentID]);
+    }, [assignmentID, courseID]);
+
+    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+            setUploadedFile(event.target.files[0]);
+        }
+    };
+
+    const isFileTypeAllowed = (file: File | null) => {
+        if (!file || !assignment?.allowedFileTypes) return false;
+        const fileExtension = file.name.split('.').pop()?.toLowerCase();
+        const allowedFileTypes = assignment.allowedFileTypes.split(','); // Split the string into an array
+        return allowedFileTypes.some((type: string) =>
+            type.toLowerCase().trim() === `.${fileExtension}` || type.toLowerCase().trim() === fileExtension
+        );
+    };
+
+
+    const handleSubmit = async () => {
+        if (uploadedFile && isFileTypeAllowed(uploadedFile)) {
+            const formData = new FormData();
+            formData.append('file', uploadedFile);
+            formData.append('assignmentID', assignment.assignmentID.toString());
+            formData.append('studentID', session.user.userID);
+
+            try {
+                const response = await fetch('/api/assignments/submitAssignment', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    console.log('File uploaded successfully');
+                    alert('Assignment submitted successfully!')
+                } else {
+                    throw new Error('File upload failed');
+                }
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                setFileError('Failed to upload file. Please try again.');
+            }
+        }
+    };
 
     if (!assignment || loading) {
         return <div className='w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto'>
@@ -66,11 +115,8 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
         return null;
     }
 
-    const isAdmin = session.user.role === 'admin';
-
     // Dummy data for submittedStudents and remainingStudents
-    const submittedStudents = ["Student A", "Student B", "Student C"];
-    const remainingStudents = ["Student D", "Student E", "Student F"];
+
     const handleBackClick = async () => {
         // Redirect to the landing page
         router.back();
@@ -87,20 +133,48 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
                     <br />
                     <Breadcrumbs>
                         <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-                        <BreadcrumbItem onClick={handleBackClick}>{courseData ? courseData.courseName : "Course Dashboard"}</BreadcrumbItem>
+                        {/* <BreadcrumbItem onClick={handleBackClick}>{courseData ? courseData.courseName : "Course Dashboard"}</BreadcrumbItem> */}
                         <BreadcrumbItem>{assignment.title ? assignment.title : "Assignment Name"} </BreadcrumbItem>
                     </Breadcrumbs>
                 </div>
                 <div className={styles.assignmentsSection}>
                     {assignment && (
-                        <AssignmentDetailCard
-                            title={assignment.title}
-                            description={assignment.description || "No description available"}
+                        <StudentAssignmentView
+                            description={assignment.descr || "No description available"}
                             deadline={assignment.deadline || "No deadline set"}
-                            submittedStudents={submittedStudents}
-                            remainingStudents={remainingStudents}
-                        />
+                            allowedFileTypes={assignment.allowedFileTypes} />
                     )}
+                    <Button onClick={onOpen}>Submit Assignment</Button>
+                    <Modal className="student" isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true}>
+                        <ModalContent>
+                            {(onClose) => (
+                                <>
+                                    <ModalHeader className="flex flex-col gap-1">Submit Assignment</ModalHeader>
+                                    <ModalBody>
+                                        <input type="file" onChange={handleFileUpload} />
+                                        {fileError && <p style={{ color: 'red' }}>{fileError}</p>}
+                                        {uploadedFile && (
+                                            <div>
+                                                <p>Selected file: {uploadedFile.name}</p>
+                                            </div>
+                                        )}
+                                    </ModalBody>
+                                    <ModalFooter>
+                                        <Button color="danger" variant="light" onPress={() => {
+                                            setUploadedFile(null); // Clear the selected file
+                                            setFileError(null); // Clear any file errors
+                                            onClose(); // Close the modal
+                                        }}>
+                                            Cancel
+                                        </Button>
+                                        <Button color="primary" onPress={handleSubmit}>
+                                            Submit
+                                        </Button>
+                                    </ModalFooter>
+                                </>
+                            )}
+                        </ModalContent>
+                    </Modal>
                 </div>
             </div>
 

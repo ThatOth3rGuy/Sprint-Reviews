@@ -12,9 +12,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { studentIDs, courseID, missingData } = req.body;
   const missingStudents: number[] = missingData ? missingData.map(Number) : [];
-  let courseName: string = '';
 
   try {
+    console.log("Enrolling students:", studentIDs);
     for (const userID of studentIDs) {
       try {
         await enrollStudent(userID.toString(), courseID.toString());
@@ -26,16 +26,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (missingStudents.length > 0) {
-      courseName = (await getCourse(courseID))?.courseName;
       const missingStudentsCSV = ['studentID', ...missingStudents].join('\n');
-      const missingDataFilePath = path.join(process.cwd(), 'public', `${courseName}_missingStudents.csv`);
+      const missingDataFilePath = path.join(process.cwd(), 'public', `course${courseID}_missingStudents.csv`);
       fs.writeFileSync(missingDataFilePath, missingStudentsCSV);
     }
 
     res.status(201).json({ 
       courseID, 
       studentIDs, 
-      missingStudentsFilePath: missingStudents.length > 0 ? `/public/${courseName}_missingStudents.csv` : null 
+      missingStudentsFilePath: missingStudents.length > 0 ? `/public/course${courseID}_missingStudents.csv` : null 
     });
   } catch (error) {
     console.error(`Critical error: Failed to enroll students in course: ${courseID}. Error:`, (error as Error).message);

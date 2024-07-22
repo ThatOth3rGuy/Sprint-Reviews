@@ -30,7 +30,6 @@ const StudentLogin: NextPage = () => {
     router.push("/student/registration");
   };
 
-
   const handleSignInClick = async () => {
     setError("");
 
