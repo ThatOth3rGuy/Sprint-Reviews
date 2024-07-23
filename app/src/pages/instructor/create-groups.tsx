@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import styles from '../../styles/instructor-course-dashboard.module.css';
-import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Card, Accordion, AccordionItem, SelectItem, Select } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Card, Accordion, AccordionItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from "@nextui-org/react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import React, { useState, useEffect } from 'react';
 
@@ -30,6 +30,8 @@ export default function CreateGroup() {
   const [session, setSession] = useState<any>(null);
   const [students, setStudents] = useState<Student[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
+  const [isRandomizeModalOpen, setIsRandomizeModalOpen] = useState(false);
+  const [groupSize, setGroupSize] = useState<number>(3); // Default group size
   const { courseId } = router.query;
   
   useSessionValidation('instructor', setLoading, setSession);
@@ -75,6 +77,7 @@ export default function CreateGroup() {
           }),
         }));
         setGroups(newGroups);
+        setIsRandomizeModalOpen(false); // Close the modal after successful group randomization
       } else {
         console.error('Failed to fetch randomized groups');
       }
@@ -88,7 +91,7 @@ export default function CreateGroup() {
   };
 
   const handleGroupRandomizer = () => {
-    fetchRandomizedGroups(3); // Adjust group size as needed
+    setIsRandomizeModalOpen(true); // Open the modal to input group size
   };
 
   if (loading) {
@@ -116,8 +119,12 @@ export default function CreateGroup() {
   };
 
   const handleHomeClick = async () => {
-    router.push("/instructor/dashboard")
+    router.push("/instructor/dashboard");
   }
+
+  const handleRandomizeGroupsSubmit = () => {
+    fetchRandomizedGroups(groupSize);
+  };
 
   return (
     <>
@@ -165,6 +172,35 @@ export default function CreateGroup() {
             <Button color="danger" variant="ghost">Remove groups </Button>
           </div>
         </div>
+
+        {/* Randomize Groups Modal */}
+        <Modal
+          className='z-20'
+          backdrop="blur"
+          isOpen={isRandomizeModalOpen}
+          onOpenChange={(open) => setIsRandomizeModalOpen(open)}
+        >
+          <ModalContent>
+            <ModalHeader>Randomize Groups</ModalHeader>
+            <ModalBody>
+              <Input
+                type="number"
+                label="Group Size"
+                value={groupSize}
+                onChange={(e) => setGroupSize(Number(e.target.value))}
+                min={1}
+              />
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" variant="light" onPress={() => setIsRandomizeModalOpen(false)}>
+                Close
+              </Button>
+              <Button color="primary" onPress={handleRandomizeGroupsSubmit}>
+                Randomize
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </div>
     </>
   );
