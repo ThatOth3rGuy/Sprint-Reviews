@@ -76,7 +76,7 @@ export default function Page() {
     router.push('/admin/view-users');
   };
   const handleJoinRequestClick = () => {
-    router.push('/admin/join-requests');
+    router.push('/admin/role-requests');
   };
   const handleArchivedCoursesClick = () => {
     router.push('/admin/archived-courses');
