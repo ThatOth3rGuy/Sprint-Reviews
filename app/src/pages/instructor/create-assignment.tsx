@@ -121,9 +121,7 @@ const Assignments: NextPage = () => {
     });
 
     if (response.ok) {
-      router.push({
-        pathname: '/instructor/dashboard',
-      });
+      router.push(`/instructor/course-dashboard?courseId=${courseID}`);
     } else {
       const errorData = await response.json();
       setError(errorData.message || "An error occurred while creating the assignment");

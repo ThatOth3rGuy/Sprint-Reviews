@@ -15,16 +15,41 @@ const SignUp: NextPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [instructorID, setinstructorID] = useState('');
   const router = useRouter();
+  const [errors, setErrors] = useState({ email: '', password: '' });
+
+  const validateEmail = (email: string) => {
+    // Regex for validating email
+    const regex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+    return regex.test(email);
+  };
+  const validatePassword = (password: string) => {
+    // Regex for validating password: minimum 8 characters, one capital, one lowercase, and one special character
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(password);
+  };
 
   const handleSignUpClick = async () => {
-    // Reference any additional necessary authentification logic here
+    let emailError = '';
+  let passwordError = '';
 
+  if (!validateEmail(email)) {
+    emailError = 'Invalid email';
+  }
 
-    if (password !== confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
+  if (!validatePassword(password)) {
+    passwordError = 'Password must be minimum 8 characters, include one capital, one lowercase, and one special character';
+  }
 
+  // Check if password and confirm password match
+  if (password !== confirmPassword) {
+    passwordError = 'Password and confirm password do not match';
+  }
+
+  setErrors({ email: emailError, password: passwordError });
+
+  if (emailError || passwordError) {
+    alert('There was an error with sign up. Please try again.')
+  } else {
     try {
       const response = await fetch('/api/addNew/addInstructor', {
         method: 'POST',
@@ -44,6 +69,7 @@ const SignUp: NextPage = () => {
       alert('Failed to sign up');
     }
   };
+}
 
   const handleBackClick = () => {
     // Redirect user to login page
@@ -75,13 +101,14 @@ const SignUp: NextPage = () => {
               <Input size='sm' className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email}
               onChange={(e) => setEmail(e.target.value)} />
             </div>
+          <p className='text-danger-700 bg-warning-500'>{errors.email}</p>
             <div className='flex'>
               <Input  size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
               onChange={(e) => setPassword(e.target.value)} />
             <Input  size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Confirm Password" value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)} />
             </div>
-
+            <p className='text-danger-700 bg-warning-500'>{errors.password}</p>
             
             
             <Button color='primary' className='w-full mt-2' variant="solid" onClick={handleSignUpClick}>
@@ -103,5 +130,6 @@ const SignUp: NextPage = () => {
 
   );
 };
+
 
 export default SignUp;

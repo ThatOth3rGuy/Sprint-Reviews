@@ -74,7 +74,9 @@ export default function Page() {
   };
 
   if (!courseData || loading) {
-    return <Spinner color='primary' size="lg" className='student'/>
+    return <div className='w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto'>
+    <Spinner color='primary' size="lg" />
+</div>;
   }
 
   if (!session || !session.user || !session.user.userID) {

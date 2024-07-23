@@ -6,12 +6,14 @@ import InstructorNavbar from "../components/instructor-components/instructor-nav
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import styles from "../../styles/instructor-assignments-creation.module.css";
+
 import {
   Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs,
   BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader,
   ModalBody, ModalFooter, useDisclosure
 } from "@nextui-org/react";
 import { getSession, updateSession } from "@/lib";
+
 
 // Define the structure for assignment and Rubric items
 interface Assignment {
@@ -263,7 +265,9 @@ const ReleaseAssignment: React.FC = () => {
   const isAdmin = session?.user?.role === 'admin';
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+    <Spinner color='primary' size="lg" />
+</div>;
   }
   
   function handleHomeClick(): void {
