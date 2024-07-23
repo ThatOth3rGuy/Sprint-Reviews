@@ -130,7 +130,7 @@ export default function Page() {
   };
 
   const handleCreateGroupPeerReviewAssignmentClick = () => {
-    router.push("/instructor/create-groups");
+    router.push(`/instructor/create-groups?courseId=${courseId}`);
   };
 
   const handleAction = (key: any) => {
