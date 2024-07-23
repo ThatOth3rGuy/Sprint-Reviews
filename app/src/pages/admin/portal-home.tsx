@@ -9,7 +9,7 @@ import styles from '../../styles/admin-portal-home.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import { Button, Divider, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
+import { Button, Divider, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger, Spinner } from "@nextui-org/react";
 
 interface Course {
   courseID: number;
@@ -57,7 +57,9 @@ export default function Page() {
   }, [loading]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+    <Spinner color='primary' size="lg" />
+</div>;
   }
 
   if (error) {
@@ -73,8 +75,8 @@ export default function Page() {
   const handleViewUsersClick = () => {
     router.push('/admin/view-users');
   };
-  const handleJoinRequestClick = () => {
-    router.push('/admin/join-requests');
+  const handleRoleRequestClick = () => {
+    router.push('/admin/role-requests');
   };
   const handleArchivedCoursesClick = () => {
     router.push('/admin/archived-courses');
@@ -84,8 +86,8 @@ export default function Page() {
       case "view":
         handleViewUsersClick();
         break;
-      case "join":
-        handleJoinRequestClick();
+      case "role":
+        handleRoleRequestClick();
         break;
       case "archives":
         handleArchivedCoursesClick();
@@ -112,6 +114,7 @@ export default function Page() {
             {/* TODO: add functionality to search bar to search from all active courses */}
             <Input className="m-1 mx-4 pr-7" placeholder="Search for course" size="sm" type="search" />
 
+            {/* TODO: turn the course list into pagination */}
             <div className={styles.courseCards}>
               {courses.map((course, index) => (
                 <div className={styles.courseCard}>
@@ -132,9 +135,9 @@ export default function Page() {
           <div className={styles.notificationsSection}>
             <div className={styles.actionButtons}>
               <Listbox aria-label="Actions" onAction={handleAction}>
-                <ListboxItem key="join">Join Requests</ListboxItem>
+              <ListboxItem key="archives">Archived Courses</ListboxItem>
+                <ListboxItem key="role">Role Requests</ListboxItem>
                 <ListboxItem key="view">View Users</ListboxItem>
-                <ListboxItem key="archives">Archived Courses</ListboxItem>
               </Listbox>
             </div>
             <hr />
@@ -147,7 +150,7 @@ export default function Page() {
         title="Admin Portal"
         addLink={[
           { href: "./view-users", title: "View Users" },
-          { href: "./join-requests", title: "Join Requests" },
+          { href: "./Role-requests", title: "Role Requests" },
           { href: "./archived-courses", title: "Archived Courses" },
         ]}
       /> */}
