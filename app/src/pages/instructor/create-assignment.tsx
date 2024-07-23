@@ -143,7 +143,7 @@ const Assignments: NextPage = () => {
           </Breadcrumbs>
         </div>
         <div className={styles.mainContent}>
-          <div className={styles.rectangle}>
+          <div className="flex-col bg-white p-[1.5%] w-[86%] m-[.8%] ml-auto mt-auto h-fit">
             <h2>Create Assignment For Student Submission</h2>
             {error && <p style={{ color: "red" }}>{error}</p>}
             <Input
@@ -172,7 +172,7 @@ const Assignments: NextPage = () => {
             />
             <br />
             <h3 className={styles.innerTitle}>Group Assignment:</h3>
-            <br/>
+  
             <Checkbox
               className={styles.innerTitle}
               isSelected={groupAssignment}
@@ -180,7 +180,7 @@ const Assignments: NextPage = () => {
             >
               Group Assignment
             </Checkbox>
-            <div>
+            <br/><div>
               <CheckboxGroup
                 size="sm"
                 color="primary"
@@ -194,7 +194,7 @@ const Assignments: NextPage = () => {
                 <Checkbox value="zip">ZIP (.zip)</Checkbox>
               </CheckboxGroup>
             </div>
-            <Button color="success" variant="solid" className="cursor-pointer m-3 p-4 text-white" onClick={onCreateAssignmentButtonClick}>Create Assignment</Button>
+            <Button color="success" variant="solid" className="cursor-pointer m-2 mx-auto p-4 text-white w-[100%]" onClick={onCreateAssignmentButtonClick}>Create Assignment</Button>
           </div>
         </div>
       </div>
