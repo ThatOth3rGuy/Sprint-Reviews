@@ -694,7 +694,7 @@ export async function getStudentsInCourse(courseID: number): Promise<any[]> {
 // Inserts a student into the selected_students table for the defined submission in a course.
 export async function selectStudentForSubmission(studentID: number, assignmentID: number, courseID: number, submissionID: number): Promise<void> {
   const createTableSql = `
-    CREATE TABLE IF NOT EXISTS student_groups (
+    CREATE TABLE IF NOT EXISTS student_reviews (
       studentID INT,
       assignmentID INT,
       courseID INT,
@@ -708,7 +708,7 @@ export async function selectStudentForSubmission(studentID: number, assignmentID
   `;
 
   const insertSql = `
-    INSERT INTO student_groups (studentID, assignmentID, courseID, submissionID)
+    INSERT INTO student_reviews (studentID, assignmentID, courseID, submissionID)
     VALUES (?, ?, ?, ?)
   `;
 
@@ -770,6 +770,30 @@ export async function getReviewGroups(studentID?: number, assignmentID?: number,
     console.error('Error fetching review groups:', error);
     throw error;
   }
+}
+export async function createGroups(groups?: number[][], courseID?: number) {
+  const sql = `
+    INSERT INTO course_groups (groupID, studentID, courseID)
+    VALUES (?, ?, ?)
+  `;
+
+  if(groups === undefined || courseID === undefined) {
+    throw new Error('Invalid input');
+  }
+
+  try {
+    for (let i = 0; i < groups.length; i++) {
+      const groupNumber = i + 1;
+      const group = groups[i];
+      for (const studentID of group) {
+      await query(sql, [groupNumber, studentID, courseID]);
+      }
+    }
+  } catch (error) {
+    console.error('Error creating groups:', error);
+    throw error;
+  }
+
 }
 //Get students for setting unique due date
 // export async function getStudents(): Promise<any[]> {
