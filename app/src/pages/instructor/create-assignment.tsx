@@ -33,6 +33,8 @@ const Assignments: NextPage = () => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const [allowedFileTypes, setAllowedFileTypes] = useState<string[]>([]);
+  const [courseName, setCourseName] = useState<string>("");
+
 
   // Declare the groups and students variables here
   const groups = ["Group A", "Group B", "Group C"];
@@ -58,6 +60,30 @@ const Assignments: NextPage = () => {
       console.error('Error fetching courses:', error);
     }
   };
+
+
+  //get course name or assignment page for breadcrumbs
+  useEffect(() => {
+    const { source, courseId } = router.query;
+
+    if (source === 'course' && courseId) {
+      // Fetch course name
+      fetchCourseName(courseId as string);
+    }
+  }, [router.query]);
+
+  const fetchCourseName = async (courseId: string) => {
+    try {
+      const response = await fetch(`/api/courses/${courseId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setCourseName(data.courseName);
+      }
+    } catch (error) {
+      console.error('Error fetching course name:', error);
+    }
+  };
+
   async function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
     if (!event.target.files || event.target.files.length === 0) {
       return;
@@ -179,6 +205,16 @@ const Assignments: NextPage = () => {
         console.log("Unknown action:", key);
     }
   };
+
+  const handleBackClick = () => { //redirect to course dashboard or all assignments
+    const { source } = router.query;
+    if (source === 'course') {
+      router.push(`/instructor/course-dashboard?courseId=${router.query.courseId}`);
+    } else {
+      router.push('/instructor/assignments');
+    }
+  };
+
   /**
      * Renders the instructor course dashboard page.
      * @returns {JSX.Element} The instructor course dashboard page.
@@ -192,7 +228,7 @@ const Assignments: NextPage = () => {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-            <BreadcrumbItem onClick={handleAssignmentClick}>Assignments</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleBackClick}>{router.query.source === 'course' ? (courseName || 'Course Dashboard') : 'Assignments'}</BreadcrumbItem>
             <BreadcrumbItem>Create Assignment</BreadcrumbItem>
           </Breadcrumbs>
         </div>

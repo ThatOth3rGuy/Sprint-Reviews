@@ -124,15 +124,24 @@ export default function Page() {
   const isAdmin = session.user.role === "admin";
 
   const handleCreateAssignmentClick = () => {
-    router.push("/instructor/create-assignment");
+    router.push({
+      pathname: '/instructor/create-assignment',
+      query: { source: 'course', courseId: courseId } //sends courseID to create assignment page if clicked from course dashboard
+    });
   };
 
   const handleCreatePeerReviewAssignmentClick = () => {
-    router.push("/instructor/release-assignment");
+    router.push({
+      pathname: '/instructor/release-assignment',
+      query: { source: 'course', courseId: courseId } //sends courseID to release assignment page if clicked from course dashboard
+    });
   };
 
   const handleCreateGroupPeerReviewAssignmentClick = () => {
-    router.push("/instructor/create-groups");
+    router.push({
+      pathname: '/instructor/create-groups',
+      query: { source: 'course', courseId: courseId } //sends courseID to create group page if clicked from course dashboard
+    });
   };
 
   const handleAction = (key: any) => {

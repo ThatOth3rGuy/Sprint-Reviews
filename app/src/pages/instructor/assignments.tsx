@@ -52,11 +52,17 @@ export default function AssignmentsPage() {
   };
 
   const handleCreateAssignmentClick = () => {
-    router.push('/instructor/create-assignment');
+    router.push({
+      pathname: '/instructor/create-assignment',
+      query: { source: 'assignments' } //sends courseID to create assignment if clicked from assignment dashboard
+    });
   };
 
   const handleCreatePeerReviewAssignmentClick = () => {
-    router.push('/instructor/release-assignment');
+    router.push({
+      pathname: '/instructor/release-assignment',
+      query: { source: 'assignments' } //sends courseID to release assignment if clicked from assignment dashboard
+    });
   };
 
   const handleAction = (key: any) => {
