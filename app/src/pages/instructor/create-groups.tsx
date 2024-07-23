@@ -29,6 +29,7 @@ export default function CreateGroup() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [students, setStudents] = useState<Student[]>([]);
+  const [groups, setGroups] = useState<Group[]>([]);
   const { courseId } = router.query;
   
   useSessionValidation('instructor', setLoading, setSession);
@@ -45,7 +46,6 @@ export default function CreateGroup() {
       if (response.ok) {
         const data = await response.json();
         setStudents(data.student || []);
-        console.log(data.student);
       } else {
         console.error('Failed to fetch students');
       }
@@ -54,17 +54,41 @@ export default function CreateGroup() {
     }
   };
 
-  const groups: Group[] = [
-    { groupName: 'Group 1', members: ['Student 1', 'Student 2'] },
-    { groupName: 'Group 2', members: ['Student 3', 'Student 4'] },
-  ];
+  const fetchRandomizedGroups = async (groupSize: number) => {
+    try {
+      const studentIds = students.map(student => student.studentID);
+      const response = await fetch(`/api/groups/randomizeGroups`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ groupSize, studentIds }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const newGroups = data.groups.map((group: number[], index: number) => ({
+          groupName: `Group ${index + 1}`,
+          members: group.map(id => {
+            const student = students.find(student => student.studentID === id);
+            return `${student?.firstName} ${student?.lastName}`;
+          }),
+        }));
+        setGroups(newGroups);
+      } else {
+        console.error('Failed to fetch randomized groups');
+      }
+    } catch (error) {
+      console.error('Error fetching randomized groups:', error);
+    }
+  };
 
   const handleCreateGroups = () => {
     router.push('/instructor/create-groups');
   };
 
   const handleGroupRandomizer = () => {
-    router.push('/instructor/create-groups');
+    fetchRandomizedGroups(3); // Adjust group size as needed
   };
 
   if (loading) {
