@@ -12,21 +12,23 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 /* e.g.
 * randomizeGroups([1, 2, 3, 4, 5], 2) => [[1, 2], [3, 4], [5]]
 */
-const randomizeGroups = (students: number[], groupSize: number) => {
+const randomizeGroups = (students: number[], groupSize: number): number[][] => {
+  // Shuffle the student array
   const shuffledStudents = students.sort(() => Math.random() - 0.5);
-  const groups = [];
-  for (let i = 0; i < shuffledStudents.length; i += groupSize) {
-    groups.push(shuffledStudents.slice(i, i + groupSize));
-  }
+
+  // Calculate the number of groups needed
+  const numberOfGroups = Math.ceil(shuffledStudents.length / groupSize);
+
+  // Create an array to hold the groups
+  const groups: number[][] = Array.from({ length: numberOfGroups }, () => []);
+
+  // Distribute students to groups as evenly as possible
+  shuffledStudents.forEach((student, index) => {
+    groups[index % numberOfGroups].push(student);
+  });
+
   return groups;
 };
-/* 
-* Currently this function sets the remainder of students that don't fit into a group as their own group.
-* This should be modified to allow for a more even distribution of students. As an example,
-* if there are 10 students and 3 students per group, the function will result in 3 groups of 3 students 
-* and 1 group of 1 student.
-* It could also be left as is, as long as there's a way to manually adjust groups later.
-*/
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {
@@ -38,8 +40,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Error handling
   if (!groupSize || !Array.isArray(studentIds) || studentIds.length === 0) {
     return res.status(400).json({ error: 'Invalid request. Ensure there are students enrolled in this course.' });
-    }
-  if((groupSize > studentIds.length)) {
+  }
+  if (groupSize > studentIds.length) {
     return res.status(400).json({ error: 'Group size is larger than the number of students' });
   }
 
