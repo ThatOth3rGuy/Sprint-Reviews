@@ -17,16 +17,15 @@ interface Assignment {
     descr: string;
     deadline: string;
     allowedFileTypes: string;
+    courseID: number;
 }
 
 interface CourseData {
     courseID: string;
     courseName: string;
 }
-interface AssignmentDashboardProps {
-    courseId: string;
-}
-export default function AssignmentDashboard({ courseId }: AssignmentDashboardProps) {
+
+export default function AssignmentDashboard() {
     const [loading, setLoading] = useState(true);
     const [session, setSession] = useState<any>(null);
     const router = useRouter();
@@ -41,26 +40,42 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
     const [fileError, setFileError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (assignmentID) {
-            // Fetch assignment data
-            fetch(`/api/assignments/${assignmentID}`)
-                .then((response) => response.json())
-                .then((data: Assignment) => {
-                    console.log("Fetched assignment data:", data);
-                    setAssignment(data);
-                })
-                .catch((error) => console.error('Error fetching assignment data:', error));
-
-            // Fetch course data
-            fetch(`/api/courses/${courseID}`) // Replace `courseID` with the actual course ID
-                .then((response) => response.json())
-                .then((data: CourseData) => {
-                    console.log("Fetched course data:", data);
-                    setCourseData(data);
-                })
-                .catch((error) => console.error('Error fetching course data:', error));
-        }
-    }, [assignmentID, courseID]);
+        if (!router.isReady) return;
+    
+        const { assignmentID } = router.query;
+    
+        const fetchData = async () => {
+          if (assignmentID) {
+            try {
+              const assignmentResponse = await fetch(`/api/assignments/${assignmentID}`);
+    
+              if (assignmentResponse.ok) {
+                const assignmentData: Assignment = await assignmentResponse.json();
+                setAssignment(assignmentData);
+    
+                // Assuming the assignment data includes a courseID
+                if (assignmentData.courseID) {
+                  const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
+                  if (courseResponse.ok) {
+                    const courseData: CourseData = await courseResponse.json();
+                    setCourseData(courseData);
+                  }
+                }
+              } else {
+                console.error('Error fetching assignment data');
+              }
+            } catch (error) {
+              console.error('Error:', error);
+            } finally {
+              setLoading(false);
+            }
+          } else {
+            setLoading(false);
+          }
+        };
+    
+        fetchData();
+      }, [router.isReady, router.query]);
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -133,7 +148,7 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
                     <br />
                     <Breadcrumbs>
                         <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-                        {/* <BreadcrumbItem onClick={handleBackClick}>{courseData ? courseData.courseName : "Course Dashboard"}</BreadcrumbItem> */}
+                        <BreadcrumbItem onClick={handleBackClick}>{courseData ? courseData.courseName : "Course Dashboard"}</BreadcrumbItem>
                         <BreadcrumbItem>{assignment.title ? assignment.title : "Assignment Name"} </BreadcrumbItem>
                     </Breadcrumbs>
                 </div>
