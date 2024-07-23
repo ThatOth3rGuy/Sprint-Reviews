@@ -4,7 +4,7 @@ const baseURL = 'http://localhost:3001';
 
 async function login(page: any) {
   await page.goto(`${baseURL}/instructor/login`);
-  await page.fill('input[type="email"]', 'instructor@example.com');
+  await page.fill('input[type="email"]', 'admin@example.com');
   await page.fill('input[type="password"]', 'password123');
   await page.click('text=Sign In');
   await page.waitForNavigation();
