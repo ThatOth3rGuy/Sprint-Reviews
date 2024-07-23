@@ -220,7 +220,7 @@ export default function CreateGroup() {
               <Input
                 type="number"
                 label="Group Size"
-                value={groupSize}
+                value={groupSize.toString()}
                 onChange={(e) => setGroupSize(Number(e.target.value))}
                 min={1}
               />
