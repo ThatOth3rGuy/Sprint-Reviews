@@ -174,7 +174,7 @@ export default function CreateGroup() {
         </div>
         <div className={styles.mainContent}>
           <div className={`flex flex-row items-center justify-center ${styles.assignmentsSection}`}>
-            <Card shadow="sm" className={`${styles.outerCard}`}>
+            <Card shadow="sm" className={`${styles.outerCard}`} style={{ overflow: 'auto' }}>
               <h2>All Students</h2>
               <Listbox>
                 {students.length > 0 ? (
@@ -186,7 +186,7 @@ export default function CreateGroup() {
                 )}
               </Listbox>
             </Card>
-            <Card shadow="sm" className={`${styles.outerCard}`}>
+            <Card shadow="sm" className={`${styles.outerCard}`} style={{ maxHeight: '80%', overflow: 'auto', minHeight: groups.length > 0 ? '60%' : '10%' }}>
               <h2>Groups</h2>
               <Accordion variant="bordered">
                 {groups.map((group, index) => (
