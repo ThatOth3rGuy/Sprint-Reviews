@@ -12,8 +12,6 @@ interface Assignment {
   title: string;
   descr: string;
   deadline: string;
-  submittedStudents: string[];
-  remainingStudents: string[];
 }
 
 interface CourseData {
@@ -35,6 +33,15 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
 
   useEffect(() => {
     if (assignmentID) {
+// Fetch course data
+fetch(`/api/courses/${courseId}`)
+.then((response) => response.json())
+.then((data: CourseData) => {
+  console.log("Fetched course data:", data);
+  setCourseData(data);
+})
+.catch((error) => console.error('Error fetching course data:', error));
+
       // Fetch assignment data
       fetch(`/api/assignments/${assignmentID}`)
         .then((response) => response.json())
@@ -44,14 +51,7 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
         })
         .catch((error) => console.error('Error fetching assignment data:', error));
   
-      // Fetch course data
-      fetch(`/api/courses/${courseId}`)
-        .then((response) => response.json())
-        .then((data: CourseData) => {
-          console.log("Fetched course data:", data);
-          setCourseData(data);
-        })
-        .catch((error) => console.error('Error fetching course data:', error));
+      
     }
   }, [assignmentID]);
 
