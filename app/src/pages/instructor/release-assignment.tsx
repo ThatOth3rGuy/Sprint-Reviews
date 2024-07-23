@@ -10,9 +10,11 @@ import styles from "../../styles/instructor-assignments-creation.module.css";
 import {
   Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs,
   BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader,
-  ModalBody, ModalFooter, useDisclosure
+  ModalBody, ModalFooter, useDisclosure,
+  Spinner
 } from "@nextui-org/react";
 import { getSession, updateSession } from "@/lib";
+import { randomizePeerReviewGroups } from "../api/addNew/randomizationAlgorithm";
 
 
 // Define the structure for assignment and Rubric items
@@ -228,13 +230,14 @@ const ReleaseAssignment: React.FC = () => {
       if (!responseReleaseAssignment.ok) {
         throw new Error("Failed to release assignment for review");
       }
-    
+      const reviewGroups = randomizePeerReviewGroups(studentSubmissions, 4); // 4 reviews per assignment
       // Second API call to release randomized peer reviews
       const responseReleasePeerReviews = await fetch("/api/addNew/releaseRandomizedPeerReview", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          reviewsPerAssignment: 4,
+          //reviewsPerAssignment: 4,
+          reviewGroups,
           studentSubmissions,
           assignmentID,
         }),

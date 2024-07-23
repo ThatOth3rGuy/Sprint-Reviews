@@ -1,12 +1,11 @@
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
-import ReviewDetailCard from '../components/instructor-components/instructor-review-details'; // Import the new component
+import ReviewDetailCard from '../components/instructor-components/instructor-review-details';
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import { Listbox,ListboxItem,Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody } from "@nextui-org/react";
-import { group } from "console";
+import { Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody } from "@nextui-org/react";
 
 interface Review {
   reviewID: number;
@@ -26,8 +25,12 @@ interface CourseData {
 interface ReviewDashboardProps {
   courseId: string;
 }
-interface SubmissionGroups{
-  submissions: {submissionID: string, studentID: string}[];
+
+interface ReviewGroup {
+  studentID: number;
+  submissionID: number;
+  assignedSubmissionId: number;
+  groupData: any; // You may want to define a more specific type based on the actual data structure
 }
 
 export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
@@ -38,7 +41,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
 
   const [review, setReview] = useState<Review | null>(null);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
-  const [submissionGroups , setsubmissionGroups ] = useState<SubmissionGroups | null>(null);
+  const [reviewGroups, setReviewGroups] = useState<ReviewGroup[][]>([]);
 
   useSessionValidation('instructor', setLoading, setSession);
 
@@ -54,31 +57,38 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
         .catch((error) => console.error('Error fetching review data:', error));
 
       // Fetch course data
-      fetch(`/api/courses/${3}`)
+      fetch(`/api/courses/3`)
         .then((response) => response.json())
         .then((data: CourseData) => {
           console.log("Fetched course data:", data);
           setCourseData(data);
         })
         .catch((error) => console.error('Error fetching course data:', error));
-      }
-      }, [reviewID]);
-    useEffect(() => {
-     if (review) { 
-      fetch(`/api/groups/${review.assignmentID}`)
-      .then((response) => response.json())
-      .then((data: SubmissionGroups) => {
-        console.log("Fetched group data:", data);
-        setsubmissionGroups(data);
-      })
-      .catch((error) => console.error('Error fetching group data:', error));  
     }
-  } , [review]);
+  }, [reviewID]);
+
+  useEffect(() => {
+    if (review) {
+      fetch(`/api/groups/${review.assignmentID}`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Fetched group data:", data);
+          if (data.groups && Array.isArray(data.groups)) {
+            setReviewGroups(data.groups);
+          } else {
+            console.error('Unexpected data structure:', data);
+          }
+        })
+        .catch((error) => console.error('Error fetching group data:', error));
+    }
+  }, [review]);
 
   if (!review || loading) {
-    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
-    <Spinner color='primary' size="lg" />
-</div>;
+    return (
+      <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+        <Spinner color='primary' size="lg" />
+      </div>
+    );
   }
 
   if (!session || !session.user || !session.user.userID) {
@@ -88,14 +98,14 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
 
   const isAdmin = session.user.role === 'admin';
 
-  const handleBackClick = async () => {
+  const handleBackClick = () => {
     router.back();
   };
 
-  const handleHomeClick = async () => {
+  const handleHomeClick = () => {
     router.push("/instructor/dashboard");
   };
-  console.log(submissionGroups?.submissions[0].studentID);
+
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -110,33 +120,36 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
           </Breadcrumbs>
         </div>
         <div className={styles.assignmentsSection}>
-        {review && (
-          <ReviewDetailCard
-            title={`Review ${review.reviewID}`}
-            description={`Assignment: ${review.assignmentName}`}
-            deadline={review.deadline}
-          />
-        )}
-        <div className={styles.assignmentsSection}>
-          {submissionGroups?.submissions.map((group, groupIndex) => (
-            <div key={groupIndex} className={styles.courseCards}>
-              <Card className={styles.assignmentCard}>
-                <CardBody>
-                  <h2 className={styles.assignmentTitle}>{`Submission Group: ${group.submissionID}`}</h2>
-                  <div className={styles.assignmentDescription}>
-                    <p>Student IDs:</p>
-                    <ul>
-                      {submissionGroups?.submissions.map((submission: { submissionID: string; studentID: string }) => (
-                        <li key={submission.studentID}>{submission.studentID}</li>
+          {review && (
+            <ReviewDetailCard
+              title={`Review ${review.reviewID}`}
+              description={`Assignment: ${review.assignmentName}`}
+              deadline={review.deadline}
+            />
+          )}
+          <div className={styles.assignmentsSection}>
+            <h2>Total Review Groups: {reviewGroups.length}</h2>
+            {reviewGroups.map((group, groupIndex) => (
+              <div key={groupIndex} className={styles.courseCards}>
+                <Card className={styles.assignmentCard}>
+                  <CardBody>
+                    <h3 className={styles.assignmentTitle}>{`Review Group ${groupIndex + 1}`}</h3>
+                    <div className={styles.assignmentDescription}>
+                      {group.map((student, studentIndex) => (
+                        <p key={studentIndex}>
+                          Student ID: {student.studentID},
+                          Original Submission ID: {student.submissionID},
+                          
+                        </p>
                       ))}
-                    </ul>
-                  </div>
-                </CardBody>
-              </Card>
-            </div>
-          ))}
+                    </div>
+                    <p>Total students in this group: {group.length}</p>
+                  </CardBody>
+                </Card>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
       </div>
     </>
   );
