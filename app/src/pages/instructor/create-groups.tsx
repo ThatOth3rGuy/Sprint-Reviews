@@ -88,8 +88,40 @@ export default function CreateGroup() {
     }
   };
 
-  const handleCreateGroups = () => {
-    router.push('/instructor/create-groups');
+  const handleCreateGroups = async () => {
+    const groupsData = groups.map((group, index) => {
+      return {
+        groupNumber: index + 1,
+        studentIDs: group.members.map(member => {
+          const student = students.find(student => `${student.firstName} ${student.lastName}` === member);
+          return student ? student.studentID : null;
+        }).filter(studentID => studentID !== null)
+      };
+    });
+  
+    console.log('Creating groups:', groupsData);
+    console.log('Course ID:', courseId);
+  
+    try {
+      const response = await fetch(`/api/groups/createGroups`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ groups: groupsData, courseID: courseId }),
+      });
+  
+      if (response.ok) {
+        alert('Groups created successfully');
+        router.push(`/instructor/course-dashboard?courseId=${courseId}`);
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to create groups', errorData);
+        alert(errorData.error);
+      }
+    } catch (error) {
+      console.error('Error creating groups:', error);
+    }
   };
 
   const handleGroupRandomizer = () => {

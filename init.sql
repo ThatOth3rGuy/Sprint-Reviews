@@ -141,10 +141,10 @@ CREATE TABLE IF NOT EXISTS course_groups (
     groupID INT,
     studentID INT,
     courseID INT,
-    PRIMARY KEY (groupID),
+    PRIMARY KEY (groupID, studentID),
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID)
-)
+);
 -- Insert a sample user (student) into the user table
 INSERT INTO user (firstName, lastName, email, pwd, userRole)
 VALUES ('John', 'Doe', 'john.doe@example.com', 'password123', 'student');
