@@ -155,7 +155,7 @@ const Courses: NextPage = () => {
         
         <br/><br/><br/><br/><br/><br/>
         <Image
-          src= "/texture-png.png"
+          src= "/logo-transparent-png.png"
           alt="Theme 1"
           width={90}
           height={90}
