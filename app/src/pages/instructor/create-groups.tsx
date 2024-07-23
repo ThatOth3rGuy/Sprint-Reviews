@@ -79,7 +79,9 @@ export default function CreateGroup() {
         setGroups(newGroups);
         setIsRandomizeModalOpen(false); // Close the modal after successful group randomization
       } else {
-        console.error('Failed to fetch randomized groups');
+        const errorData = await response.json();
+        console.error('Failed to fetch randomized groups', errorData);
+        alert(errorData.error);
       }
     } catch (error) {
       console.error('Error fetching randomized groups:', error);

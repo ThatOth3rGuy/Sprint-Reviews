@@ -35,8 +35,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { groupSize, studentIds } = req.body;
 
+  // Error handling
   if (!groupSize || !Array.isArray(studentIds) || studentIds.length === 0) {
-    return res.status(400).json({ error: 'Invalid input' });
+    return res.status(400).json({ error: 'Invalid request. Ensure there are students enrolled in this course.' });
+    }
+  if((groupSize > studentIds.length)) {
+    return res.status(400).json({ error: 'Group size is larger than the number of students' });
   }
 
   try {
