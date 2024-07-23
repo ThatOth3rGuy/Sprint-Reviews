@@ -352,6 +352,7 @@ export async function getStudentSubmissions(assignmentId: number): Promise<Array
   `;
   try {
     const results = await query(sql, [assignmentId]);
+    console.log('Fetched student submissions:', results);
     return results;
   } catch (error) {
     console.error('Error in getSubmissionsByAssignmentId:', error);
@@ -755,16 +756,39 @@ export async function updateReviewer(studentID: number, assignmentID: number, su
 }
 // Get review groups for a student based on the provided parameters
 export async function getReviewGroups(studentID?: number, assignmentID?: number, submissionID?: number, groupBy?: string) {
+  const conditions = [];
+  const params = [];
+
+  if (studentID !== undefined) {
+    conditions.push('studentID = ?');
+    params.push(studentID);
+  }
+
+  if (assignmentID !== undefined) {
+    conditions.push('assignmentID = ?');
+    params.push(assignmentID);
+  }
+
+  if (submissionID !== undefined) {
+    conditions.push('submissionID = ?');
+    params.push(submissionID);
+  }
+
+  const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+  const groupByClause = groupBy ? `GROUP BY ${groupBy}` : '';
+
   const sql = `
     SELECT *
     FROM student_groups
-    WHERE ${studentID ? 'studentID = ?' : ''}${studentID && (assignmentID || submissionID) ? ' AND ' : ''}${assignmentID ? 'assignmentID = ?' : ''}${assignmentID && submissionID ? ' AND ' : ''}${submissionID ? 'submissionID = ?' : ''}
-    ${groupBy ? `GROUP BY ${groupBy}` : ''}
+    ${whereClause}
+    ${groupByClause}
   `;
 
   try {
-    const params = [studentID, assignmentID, submissionID].filter(value => value !== undefined);
+    console.log('Fetching review groups:', sql, params);
     const rows = await query(sql, params);
+    console.log('Fetched review groups:', rows);
     return rows;
   } catch (error) {
     console.error('Error fetching review groups:', error);

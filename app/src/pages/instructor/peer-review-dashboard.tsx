@@ -5,7 +5,7 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import { Listbox,ListboxItem,Breadcrumbs, BreadcrumbItem, Spinner } from "@nextui-org/react";
+import { Listbox,ListboxItem,Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody } from "@nextui-org/react";
 import { group } from "console";
 
 interface Review {
@@ -27,7 +27,7 @@ interface ReviewDashboardProps {
   courseId: string;
 }
 interface SubmissionGroups{
-studentID : string;
+  submissions: {submissionID: string, studentID: string}[];
 }
 
 export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
@@ -38,7 +38,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
 
   const [review, setReview] = useState<Review | null>(null);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
-  const [submissionGroups , setsubmissionGroups ] = useState<SubmissionGroups[]| null>()
+  const [submissionGroups , setsubmissionGroups ] = useState<SubmissionGroups | null>(null);
 
   useSessionValidation('instructor', setLoading, setSession);
 
@@ -54,24 +54,26 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
         .catch((error) => console.error('Error fetching review data:', error));
 
       // Fetch course data
-      fetch(`/api/courses/${courseId}`)
+      fetch(`/api/courses/${3}`)
         .then((response) => response.json())
         .then((data: CourseData) => {
           console.log("Fetched course data:", data);
           setCourseData(data);
         })
         .catch((error) => console.error('Error fetching course data:', error));
+      }
+      }, [reviewID]);
+    useEffect(() => {
+     if (review) { 
+      fetch(`/api/groups/${review.assignmentID}`)
+      .then((response) => response.json())
+      .then((data: SubmissionGroups) => {
+        console.log("Fetched group data:", data);
+        setsubmissionGroups(data);
+      })
+      .catch((error) => console.error('Error fetching group data:', error));  
     }
-    if (review) {
-      fetch(`/api/reviews/${review.assignmentID}`)
-        .then((response) => response.json())
-        .then((data: SubmissionGroups) => {
-          console.log("Fetched course data:", data);
-          setsubmissionGroups(data);
-        })
-        .catch((error) => console.error('Error fetching course data:', error));  
-    }
-  }, [reviewID]);
+  } , [review]);
 
   if (!review || loading) {
     return <Spinner color='primary' size="lg" className='instructor' />;
@@ -91,7 +93,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   const handleHomeClick = async () => {
     router.push("/instructor/dashboard");
   };
-
+  console.log(submissionGroups?.submissions[0].studentID);
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -107,22 +109,32 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
         </div>
         <div className={styles.assignmentsSection}>
         {review && (
-  <ReviewDetailCard
-    title={`Review ${review.reviewID}`}
-    description={`Assignment: ${review.assignmentName}`}
-    deadline={review.deadline}
-  />
-)}
-      <div>
-      <Listbox aria-label="Student IDs">
-        {submissionGroups.map((group, index) => (
-          <ListboxItem key={index}>{group.studentID}</ListboxItem>
-        ))}
-      </Listbox>
-      </div>
-
-
+          <ReviewDetailCard
+            title={`Review ${review.reviewID}`}
+            description={`Assignment: ${review.assignmentName}`}
+            deadline={review.deadline}
+          />
+        )}
+        <div className={styles.assignmentsSection}>
+          {submissionGroups?.submissions.map((group, groupIndex) => (
+            <div key={groupIndex} className={styles.courseCards}>
+              <Card className={styles.assignmentCard}>
+                <CardBody>
+                  <h2 className={styles.assignmentTitle}>{`Submission Group: ${group.submissionID}`}</h2>
+                  <div className={styles.assignmentDescription}>
+                    <p>Student IDs:</p>
+                    <ul>
+                      {submissionGroups?.submissions.map((submission: { submissionID: string; studentID: string }) => (
+                        <li key={submission.studentID}>{submission.studentID}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </CardBody>
+              </Card>
+            </div>
+          ))}
         </div>
+      </div>
       </div>
     </>
   );

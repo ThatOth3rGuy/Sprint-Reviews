@@ -11,6 +11,7 @@ import {
   BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader,
   ModalBody, ModalFooter, useDisclosure
 } from "@nextui-org/react";
+import { getSession, updateSession } from "@/lib";
 
 // Define the structure for assignment and Rubric items
 interface Assignment {
@@ -45,6 +46,7 @@ const ReleaseAssignment: React.FC = () => {
   const [session, setSession] = useState<any>(null);
   const dummyassignments = ['Assignment 1', 'Assignment 2', 'Assignment 3'];
   const [studentSubmissions, setStudentSubmissions] = useState<{ studentID: number; submissionID: number; }[]>([]);
+  const [course, setCourse] = useState<string>("");
 
   // Dummy rubric
   const dummyrubric = [
@@ -64,7 +66,8 @@ const ReleaseAssignment: React.FC = () => {
   useEffect(() => {
     if (session && session.user) {
       fetchAssignments(session.user.userID);
-      fetchStudents(session.user.courseID);
+      fetchCourse(session.user.userID);
+      fetchStudents(session.user.userID);
     }
   }, [session]);
 
@@ -89,18 +92,30 @@ const ReleaseAssignment: React.FC = () => {
       console.error('Error fetching assignments:', error);
     }
   };
-
+  const fetchCourse = async (userID: string) => {
+    try {
+      const res = await fetch(`/api/getCourse4Instructor?instructorID=${userID}`);
+      if (res.ok) {
+        const cid = await res.json();
+        console.log(cid.courses[0].courseID);
+        setCourse(cid.courses[0].courseID);
+      }
+    } catch (error) {
+      console.error('Error fetching course:', error);
+    }
+  }
   // Function to fetch students in the course
   const fetchStudents = async (courseID: string) => {
     try {
-      const response = await fetch(`/api/courses/getCourseList?courseID=${courseID}`);
-      if (response.ok) {
-        const students = await response.json();
-        setStudents(students);
-      } else {
-        console.error("Failed to fetch students");
-      }
-    } catch (error) {
+        courseID = '3';
+        const response = await fetch(`/api/courses/getCourseList?courseID=${courseID}`);
+        if (response.ok) {
+          const students = await response.json();
+          setStudents(students);
+        } else {
+          console.error("Failed to fetch students");
+        }
+      } catch (error) {
       console.error("Error fetching students:", error);
     }
   };
@@ -365,11 +380,11 @@ const ReleaseAssignment: React.FC = () => {
                         <p className="text-left p-0 m-0 mb-2">Assign a unique due date to select students:</p>
                           <p>
                             <Select
-                            size="sm"
+                              size="sm"
                               label="Select Students"
                               selectionMode="multiple"
                               onChange={(selectedValues) => {
-                                setSelectedStudents(selectedValues.map(Number));
+                                setSelectedStudents((selectedValues as unknown) as number[]);
                               }}
                             >
                               {students.map((student) => (
