@@ -86,7 +86,7 @@ if (loading) {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-            <BreadcrumbItem> Home</BreadcrumbItem>
+            <BreadcrumbItem> Assignments </BreadcrumbItem>
           </Breadcrumbs>
           
         </div>
