@@ -6,8 +6,7 @@ import { useState, useEffect } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/admin-portal-home.module.css';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
-import { Button, Divider, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger, Spinner } from "@nextui-org/react";
+import { Divider, Input, Listbox, ListboxItem, Spinner } from "@nextui-org/react";
 
 interface Course {
   courseID: number;
