@@ -3,7 +3,7 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import InstructorHeader from "../components/instructor-components/instructor-header";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import styles from '../../styles/instructor-course-dashboard.module.css';
-import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Card, CardBody,CardFooter,Accordion, AccordionItem, SelectItem, Select } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Card, CardBody,CardFooter,Accordion, AccordionItem, SelectItem, Select, Spinner } from "@nextui-org/react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import React, { useState, useEffect } from 'react';
 interface Assignment {
@@ -56,6 +56,12 @@ export default function CreateGroup() {
   };
   const handleHomeClick = async () => {
     router.push("/instructor/dashboard")
+  };
+
+  if(loading){
+    <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+    <Spinner color='primary' size="lg" />
+</div>;
   }
   return (
     <>

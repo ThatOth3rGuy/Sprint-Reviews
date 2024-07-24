@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import styles from "../../styles/instructor-assignments-creation.module.css";
 import { useRouter } from "next/router";
-import { Input, Textarea, Button, Breadcrumbs, BreadcrumbItem, Checkbox, CheckboxGroup } from "@nextui-org/react";
+import { Input, Textarea, Button, Breadcrumbs, BreadcrumbItem, Checkbox, CheckboxGroup, Spinner } from "@nextui-org/react";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
@@ -112,7 +112,9 @@ const Assignments: NextPage = () => {
   
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+    <Spinner color='primary' size="lg" />
+</div>;
   }
 
   if (!session || !session.user || !session.user.userID) {
