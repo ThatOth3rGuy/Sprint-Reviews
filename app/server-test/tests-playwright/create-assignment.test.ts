@@ -17,11 +17,11 @@ test.describe('Create Assignment Page', () => {
     await page.goto(`${baseURL}/instructor/create-assignment?courseId=1`);
   });
 
-  test.afterEach(async ({ page }, testInfo) => {
-    // Take a screenshot after each test
-    const screenshotPath = path.join(__dirname, 'screenshots', `${testInfo.title}.png`);
-    await page.screenshot({ path: screenshotPath });
-  });
+  // test.afterEach(async ({ page }, testInfo) => {
+  //   // Take a screenshot after each test
+  //   const screenshotPath = path.join(__dirname, 'screenshots', `${testInfo.title}.png`);
+  //   await page.screenshot({ path: screenshotPath });
+  // });
   
 
   test('should display the create assignment form', async ({ page }) => {
