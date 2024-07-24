@@ -1,6 +1,101 @@
 
 # Weekly Logs
 ------------------------------------
+# Week 11
+## Wednesday - July 24, 2024
+**Timesheet Tracking (Friday-Tuesday)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_07_19_2024-07_23_2024.pdf)
+### Cycle Review
+
+As it is now the final leg of the project, we started this cycle planning out how the rest of the term will go. Our hope is to finish 90-95% of the project by the weekend so that
+all features and pages will be implemented for the final demo. If this is the case we will just need to worry about preparing the demo server, testing and fixing bugs, in other words
+all the pages will have something that does something when interacted with. The hope is that if we are able to have most of the project done before next week, where we only
+have the testing, fixes, and deployment to worry about, then there is much less worry about producing a viable product. SO we decided to grind things out this week in order to make 
+the last couple weeks less chaotic, stressful, and time-consuming. As we now have the final report to worry about, we cant afford to finally having a deployed app in the final week,
+not to mention there are other personal things going on and less stress next week will be good. Overall, this cycle the update is quite extensive as I spent many hours working on
+having the assignment randomizer actually function and display. I am happy to say it is mostly working (after staying up all night) With that now being some level of functional,
+as well as dealing with the fixes from Friday's Demo, all we need to do is finish the final pages and the connected components AND SLAM EM ALL TOGETHER
+
+This weekend has been a lot, and I should be able to put quite a few hours in over the next couple days, however I will need to slow down on the weekend to move into my place. 
+I think we're all doing good, we all put in a lot of time and effort to get where we are and can see the finish line of it all. I am unsure how buggy the app will be when deployed
+but as of now I am happy with our progress as a team.
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Create Feature Definition and Sub-divisions on Project Board For Team Division
+  * #3: Run and Configure Tests For Database/API Changes
+  * #4: Review Feedback and Issues From Test-orama - Create Board Issues & Fix Issues
+  * #5: Refactor Database Schema to Handle Appropriate Input & Update API/UI Code to handle new DB Tables/Queries - Still *but now with UI*
+  * #6: Test Randomization Calls and Display Results to UI 
+  * #7: Collect & Document Feedback/Issues Noted from Friday Testing
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Ongoing
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Feature breakdown/sub-division for parallel task work
+        </td>
+        <!-- Status -->
+        <td>Partly Complete (Recurring)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create and Run Integration Tests on Database/API Updates
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Review Issues and Feedback From TestORAMA - Create Kanban Issue Links
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Reconfigure DB and API Calls for Peer Review Creation Randomizer - UI Handling
+        </td>
+        <!-- Status -->
+        <td>Complete-ish
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Test Changes to UI API calls and Query Functions According To DB Updates (Display to Page)
+        </td>
+        <!-- Status -->
+        <td>In-Progress/Fixing
+        </td>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Connect All Randomizer Calls, Queries, Handlers, to store proper data
+        </td>
+        <!-- Status -->
+        <td>COMPLETE
+        </td>
+    </tr>
+</table>
+
+#
 # Week 10
 ## Friday - July 19, 2024
 **Timesheet Tracking (NOT ACCURATE)**
