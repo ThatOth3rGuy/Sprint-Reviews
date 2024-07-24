@@ -1,5 +1,88 @@
  # Weekly Logs 
 ------------------------------------
+
+# Week 10 Summary 
+## Wednesday (07/19/2024)
+### Timesheet Week 10 (07/19/2024- 07/24/2024)
+![image](https://github.com/user-attachments/assets/2776e63a-f38d-44fd-b8d1-8c86c9d3935f)
+
+### Current Tasks (Complete by the end of the day)
+- Fix randomizer algorithm 
+- Front-end fixes from feedback from Staff 
+
+### Progress Update 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> Fix image on create course 
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> Create Assignment To work with Course only  
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+       <tr>
+        <!-- Task/Issue # -->
+        <td> Randomizer Algorithm   
+        </td>
+        <!-- Status -->
+        <td> In progress 
+        </td>
+    </tr>
+   
+  <tr>
+        <!-- Task/Issue # -->
+        <td> Playwright tests for all instructor pages    
+        </td>
+        <!-- Status -->
+        <td> In Progress  
+        </td>
+    </tr>
+ <tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> Email Notifications   
+        </td>
+        <!-- Status -->
+        <td> ToDo
+        </td>
+    </tr> <tr>
+        <!-- Task/Issue # -->
+        <td> In-App notifications   
+        </td>
+        <!-- Status -->
+        <td> In Progress
+        </td>
+    </tr>
+
+     
+    
+</table>
+
+### Weekly Goal Review :
+Key issues have been addressed, including the refinement of assignment creation forms and the correction of image display on the course creation screen.
+
+Furthermore, development has been undertaken on a peer-review randomizer. This feature, designed to display randomized groups on the peer dashboard view, is currently facing challenges with the algorithm’s input and output not pulling the correct data.
+
+These efforts are indicative of the active role in enhancing the project’s functionality and user experience. Despite the current challenges with the randomizer, the commitment to problem-solving and innovation is evident.   
+
+### Next Cycle Goals:  
+* Randomizer algorithm and functionality 
+* Adding update features to all pages
+* Group Peer reviews and manual group creation
 # Week 9 Summary 
 
 ## Friday (07/19/2024)
