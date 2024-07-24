@@ -136,7 +136,7 @@ export default function AssignmentDashboard() {
         } catch (error) {
             console.error('Error uploading file:', error);
             setFileError('Failed to upload file. Please try again.');
-            toast.error('Failed to submit assignment. Please try again.');
+            toast.error('Failed to upload file. Please try again.');
         }
     } else {
         console.error('Invalid submission attempt:', { 
@@ -186,7 +186,7 @@ export default function AssignmentDashboard() {
               <p className={isLateSubmission ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1" : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"}>
                 {isLateSubmission
                   ? "Assignment Submitted Late"
-                  : "Assignment submitted on time"}
+                  : "Assignment Submitted"}
               </p>
               {submittedFileName && <p className="text-left text-small">Submitted file: {submittedFileName}</p>}
             </div>
