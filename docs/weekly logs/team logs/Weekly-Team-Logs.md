@@ -47,6 +47,14 @@ Clockify Times:
 ### In Progress Tasks/ To do:
 ![week10InProgress](https://github.com/user-attachments/assets/f9bfab58-a27d-4089-a8cd-8086eb4c9f18)
 
+### Test Results 
+Playwright :
+
+![image](https://github.com/user-attachments/assets/19f8aa9b-7d4a-4a71-803a-c7c14316955a)
+Jest : 
+
+![image](https://github.com/user-attachments/assets/b43f7ede-a023-4497-98fe-cb88ad5e881f)
+
 
 ### Overview:
 Several issues have been addressed based on feedback. These include the resolution of problems with the course archive/unarchive functionality, adjustments to user function buttons, and fixes to minor routing issues. Updates have also been made to the navigation buttons, breadcrumb navigation, and assignment creation forms. The course creation screen now correctly displays images.
