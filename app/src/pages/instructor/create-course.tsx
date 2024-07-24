@@ -9,6 +9,7 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import { useSessionValidation } from '../api/auth/checkSession';
 import Image from 'next/image';
+import toast from 'react-hot-toast';
 const Courses: NextPage = () => {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
@@ -45,11 +46,11 @@ const Courses: NextPage = () => {
           setShowEnrollPopup(true);
         } else {
           console.error('Failed to upload and process students');
-          alert('Failed to upload and process students'); // Ensure alert is shown
+          toast.error('Failed to upload and process students'); // Ensure alert is shown
         }
       } catch (error) {
         console.error('Error uploading file:', error);
-        alert('Error uploading file'); // Ensure alert is shown
+        toast.error('Error uploading file'); // Ensure alert is shown
       }
     }
   }
@@ -80,7 +81,8 @@ const Courses: NextPage = () => {
 
       // If it fails, throw an error
       if (!createCourseResponse.ok) {
-        throw new Error('Failed to create course, make sure to enter a course name');
+        toast.error('Please enter a course name');
+        return;
       }
 
       const courseData = await createCourseResponse.json();
@@ -103,11 +105,14 @@ const Courses: NextPage = () => {
 
       // If it fails, throw an error
       if (!enrollStudentsResponse.ok) {
-        throw new Error('Failed to enroll students');
+       toast.error('Failed to enroll students');
+       return;
       }
 
       // If there are no errors, log success message and redirect
       console.log('Students enrolled successfully');
+      toast.success('Course created!');
+      toast.success('Students enrolled successfully');
       
       // Redirect to course page after successful creation and enrollment
       router.push({
@@ -117,7 +122,7 @@ const Courses: NextPage = () => {
     // Catch any errors and log/display them
     } catch (error) {
       console.error((error as Error).message);
-      alert((error as Error).message); // Ensure alert is shown
+      toast.error((error as Error).message); // Ensure alert is shown
     }
   }, [courseName, students, missingData, router, session]);
 
@@ -130,6 +135,7 @@ const Courses: NextPage = () => {
   // If the session exists, check if the user is an admin
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
+    toast.error('No user found in session. Please try logging in.')
     return;
   }
   const isAdmin = session.user.role === 'admin'; 

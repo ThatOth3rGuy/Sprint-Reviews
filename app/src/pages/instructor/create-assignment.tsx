@@ -2,13 +2,14 @@
 import type { NextPage } from "next";
 import styles from "../../styles/instructor-assignments-creation.module.css";
 import { useRouter } from "next/router";
-import { Card, SelectItem, Select, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input } from "@nextui-org/react";
+import { Card, SelectItem, Select, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Spinner } from "@nextui-org/react";
 import InstructorHeader from "../components/instructor-components/instructor-header";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
+import toast from "react-hot-toast";
 
 interface Course {
   courseID: number;
@@ -58,20 +59,21 @@ const Assignments: NextPage = () => {
       console.error('Error fetching courses:', error);
     }
   };
-  async function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
-    if (!event.target.files || event.target.files.length === 0) {
-      return;
-    }
-    const selectedFile = event.target.files[0];
-    setFile(selectedFile);
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      if (e.target) {
-        setFileContent(e.target.result as string);
-      }
-    };
-    reader.readAsText(selectedFile);
-  }
+// handled rubric upload for instructor
+  // async function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
+  //   if (!event.target.files || event.target.files.length === 0) {
+  //     return;
+  //   }
+  //   const selectedFile = event.target.files[0];
+  //   setFile(selectedFile);
+  //   const reader = new FileReader();
+  //   reader.onload = function (e) {
+  //     if (e.target) {
+  //       setFileContent(e.target.result as string);
+  //     }
+  //   };
+  //   reader.readAsText(selectedFile);
+  // }
 
   const handleFileTypeChange = (fileType: string, checked: boolean) => {
     setAllowedFileTypes((prev) =>
@@ -121,16 +123,20 @@ const Assignments: NextPage = () => {
     });
 
     if (response.ok) {
+      toast.success("Assignment created successfully!")
       router.push(`/instructor/course-dashboard?courseId=${courseID}`);
     } else {
       const errorData = await response.json();
       setError(errorData.message || "An error occurred while creating the assignment");
+      toast.error(errorData.message)
     }
   }, [title, description, dueDate, courseID, fileContent, groupAssignment, allowedFileTypes, router]);
 
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+    <Spinner color='primary' size="lg" />
+</div>;
   }
 
   // If the session exists, check if the user is an admin

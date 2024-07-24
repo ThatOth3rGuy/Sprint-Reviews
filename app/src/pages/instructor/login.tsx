@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 // import styles from '../../styles/instructor-login.module.css';
 import { useState, useEffect } from 'react';
 import { Button, Divider, Input,Breadcrumbs, BreadcrumbItem, } from '@nextui-org/react';
+import toast from 'react-hot-toast';
 
 const InstructorLogin: NextPage = () => {
   const [email, setEmail] = useState('');
@@ -45,15 +46,18 @@ const InstructorLogin: NextPage = () => {
       if (response.ok) {
         // Redirect to the instructor dashboard
         router.push('/instructor/dashboard');
+        toast.success("Login Successful!");
       } else {
         // Handle error response
         const errorData = await response.json();
         setError(errorData.message || 'Failed to authenticate');
-        alert(`${errorData.message}`);
+        // alert(`${errorData.message}`);
+        toast.error(errorData.message);
       }
     } catch (error) {
       // Handle network or other errors
       setError('An error occurred. Please try again.');
+      toast.error("An error occurred. Please try again.")
     }
   };
 
