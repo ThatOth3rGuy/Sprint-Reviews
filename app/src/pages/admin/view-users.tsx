@@ -3,10 +3,10 @@ import AdminHeader from "../components/admin-components/admin-header";
 import { useState } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/admin-portal-home.module.css';
-import { Divider, Listbox, ListboxItem, Input, Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
+import { Divider, Listbox, ListboxItem, Input, Breadcrumbs, BreadcrumbItem, Spinner } from "@nextui-org/react";
 import AdminCourseCard from "../components/admin-components/admin-course";
 import router from "next/router";
-import JoinRequestCard from "../components/admin-components/admin-join-card";
+import RoleRequestCard from "../components/admin-components/admin-role-card";
 import ViewUserCard from "../components/admin-components/admin-user-card";
 
 
@@ -18,7 +18,9 @@ export default function Page() {
   useSessionValidation('admin', setLoading, setSession);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+    <Spinner color='primary' size="lg" />
+</div>;
   }
 
  
@@ -32,8 +34,8 @@ export default function Page() {
   const handleViewUsersClick = () => {
     router.push('/admin/view-users');
   };
-  const handleJoinRequestClick = () => {
-    router.push('/admin/join-requests');
+  const handleRoleRequestClick = () => {
+    router.push('/admin/role-requests');
   };
   const handleArchivedCoursesClick = () => {
     router.push('/admin/archived-courses');
@@ -46,13 +48,13 @@ export default function Page() {
       case "view":
         handleViewUsersClick();
         break;
-      case "join":
-        handleJoinRequestClick();
+      case "role":
+        handleRoleRequestClick();
         break;
       case "archives":
         handleArchivedCoursesClick();
         break;
-        case "home":
+        case "admin":
         handleHomeClick();
         break;
       // case "delete":
@@ -67,7 +69,7 @@ export default function Page() {
     <>
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
-          <h1>Admin Dashboard</h1>
+          <h1>View Users</h1>
           <br />
           {/* <Button size='sm' color="secondary" variant='ghost' className=' self-end' onClick={handleCreateCourseClick}>Create Course</Button> */}
           <Breadcrumbs>
@@ -83,10 +85,10 @@ export default function Page() {
 
           <div className={styles.notificationsSection}>
             <div className={styles.actionButtons}>
-              <Listbox aria-label="Actions" onAction={handleAction}>
-                <ListboxItem key="join">Join Requests</ListboxItem>
-                <ListboxItem key="view">View Users</ListboxItem>
+            <Listbox aria-label="Actions" onAction={handleAction} color='primary' variant='flat'>
+            <ListboxItem key="admin" className='text-primary-900 border-1 border-primary bg-primary-50'>Admin Portal</ListboxItem>
                 <ListboxItem key="archives">Archived Courses</ListboxItem>
+                <ListboxItem key="role">Role Requests</ListboxItem>
               </Listbox>
             </div>
             <hr />

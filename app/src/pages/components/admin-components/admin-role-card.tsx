@@ -5,7 +5,7 @@ import { Button, Card, CardBody, CardFooter, CardHeader, Modal, ModalBody, Modal
 import React from 'react';
 
 
-const JoinRequestCard: NextPage = () =>{
+const RoleRequestCard: NextPage = () =>{
     return (
         <div className='instructor'>
           <Card className=' m-1 mx-5 max-h-[20vh]'>
@@ -26,4 +26,4 @@ const JoinRequestCard: NextPage = () =>{
       );
     };
 
-export default JoinRequestCard
+export default RoleRequestCard
