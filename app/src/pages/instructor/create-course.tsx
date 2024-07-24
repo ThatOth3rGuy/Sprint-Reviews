@@ -161,11 +161,12 @@ const Courses: NextPage = () => {
         
         <br/><br/><br/><br/><br/><br/>
         <Image
-          src= "/texture-png.png"
+          src= "/logo-transparent-png.png"
           alt="Theme 1"
-          width={90}
-          height={90}
-        />
+          width={300}
+          height={100}
+        /> 
+        <br />
         <Input type="text" placeholder="Course Name" className={styles.textbox} value={courseName} onChange={e => setTitle(e.target.value)} />
           
           <p>Upload Student List: {' '}
