@@ -6,7 +6,7 @@ import { useSessionValidation } from '../api/auth/checkSession';
 import AssignmentDetailCard from '../components/instructor-components/instructor-assignment-details';
 import styles from "../../styles/AssignmentDetailCard.module.css";
 import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
-
+import type { NextPage } from "next";
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -23,12 +23,12 @@ interface CourseData {
 interface AssignmentDashboardProps {
   courseId: string;
 }
-export default function AssignmentDashboard({ courseId }: AssignmentDashboardProps) {
+const AssignmentDashboard : NextPage = () => {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const router = useRouter();
   const { assignmentID } = router.query;
-
+  const { courseId } = router.query;
   const [assignment, setAssignment] = useState<Assignment | null>(null);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   useSessionValidation('instructor', setLoading, setSession);
@@ -43,17 +43,18 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
           setAssignment(data);
         })
         .catch((error) => console.error('Error fetching assignment data:', error));
-  
+      }
       // Fetch course data
-      fetch(`/api/courses/${courseId}`)
-        .then((response) => response.json())
-        .then((data: CourseData) => {
-          console.log("Fetched course data:", data);
-          setCourseData(data);
-        })
-        .catch((error) => console.error('Error fetching course data:', error));
-    }
-  }, [assignmentID]);
+      if (courseId) {
+        fetch(`/api/courses/${courseId}`)
+          .then((response) => response.json())
+          .then((data: CourseData) => {
+            console.log("Fetched course data:", data);
+            setCourseData(data);
+          })
+          .catch((error) => console.error("Error fetching course data:", error));
+      }
+  }, [assignmentID], [courseId]);
 
   if (!assignment || loading) {
     return  <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
@@ -107,3 +108,4 @@ export default function AssignmentDashboard({ courseId }: AssignmentDashboardPro
     </>
   );
 }
+export default AssignmentDashboard;

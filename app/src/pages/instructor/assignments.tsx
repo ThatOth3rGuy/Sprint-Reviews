@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import InstructorHeader from "../components/instructor-components/instructor-header";
+import InstructorAssignmentCard from "../components/instructor-components/instructor-assignment-card";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import styles from '../../styles/instructor-course-dashboard.module.css';
 import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress } from "@nextui-org/react";
@@ -59,19 +59,7 @@ export default function AssignmentsPage() {
     router.push('/instructor/release-assignment');
   };
 
-  const handleAction = (key: any) => {
-    switch (key) {
-      case "create":
-        handleCreateAssignmentClick();
-        break;
-      case "peer-review":
-        handleCreatePeerReviewAssignmentClick();
-        break;
-      default:
-        console.log("Unknown action:", key);
-    }
-  };
-  
+
 
   return (
     <>
@@ -99,23 +87,25 @@ export default function AssignmentsPage() {
             <h3 className={styles.innerTitle}>Assignments Created</h3>
             <Divider className="instructor bg-secondary" />
             <div className={styles.courseCard}>
-              {assignments.map((assignment) => (
-                <div key={assignment.assignmentID} className={styles.courseCard}>
-                  <div className={styles.card}>
-                    <h2>{assignment.title}</h2>
-                    <p>{assignment.description}</p>
-                    <p>Deadline: {assignment.deadline}</p>
+              {assignments.length > 0 ? (
+                assignments.map((assignment) => (
+                  <div
+                    key={assignment.assignmentID}
+                    className={styles.courseCard}
+                  >
+                    <InstructorAssignmentCard 
+                      courseID={assignment.assignmentID}
+                      courseName={assignment.title}
+                      color="#9fc3cf"
+                    />
                   </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p>No assignments found for this course.</p>
+              )}
             </div>
           </div>
-          <div className={styles.notificationsSection}>
-            <Listbox aria-label="Actions" onAction={handleAction}>
-              <ListboxItem key="create">Create Assignment</ListboxItem>
-              <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
-            </Listbox>
-          </div>
+          
         </div>
       </div>
     </>
