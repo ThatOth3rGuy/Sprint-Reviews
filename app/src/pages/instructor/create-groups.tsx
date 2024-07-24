@@ -6,21 +6,48 @@ import styles from '../../styles/instructor-course-dashboard.module.css';
 import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Card, CardBody,CardFooter,Accordion, AccordionItem, SelectItem, Select, Spinner } from "@nextui-org/react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import React, { useState, useEffect } from 'react';
+
 interface Assignment {
   assignmentID: number;
   title: string;
   description: string;
   deadline: string;
+  courseID: number;
 }
 
 export default function CreateGroup() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
-
+  const [courseName, setCourseName] = useState<string>("");
   
   useSessionValidation('instructor', setLoading, setSession);
   const students = ['Student 1', 'Student 2', 'Student 3', 'Student 4', 'Student 5'];
+
+//Get course name for breadcrumbs
+useEffect(() => {
+  const { source, courseId } = router.query;
+
+  if (source === 'course' && courseId) {
+    // Fetch course name
+    fetchCourseName(courseId as string);
+  }
+}, [router.query]);
+
+const fetchCourseName = async (courseId: string) => {
+  try {
+    const response = await fetch(`/api/courses/${courseId}`);
+    if (response.ok) {
+      const data = await response.json();
+      setCourseName(data.courseName);
+    }
+  } catch (error) {
+    console.error('Error fetching course name:', error);
+  }
+};
+
+
+
 
   // Dummy groups
   const groups = [
@@ -63,6 +90,12 @@ export default function CreateGroup() {
     <Spinner color='primary' size="lg" />
 </div>;
   }
+  const handleBackClick= async () =>{
+    const { source } = router.query;
+    if (source === 'course') {
+      router.push(`/instructor/course-dashboard?courseId=${router.query.courseId}`);
+    }
+  }
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -72,6 +105,7 @@ export default function CreateGroup() {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleBackClick}>{router.query.source === 'course' ? courseName : 'Course Dashboard'}</BreadcrumbItem> 
             <BreadcrumbItem>Create Student Groups</BreadcrumbItem>
           </Breadcrumbs>
         </div>
