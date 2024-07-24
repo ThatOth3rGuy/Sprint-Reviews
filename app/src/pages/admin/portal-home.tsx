@@ -2,11 +2,9 @@
 /* eslint-disable @next/next/no-img-element */
 import AdminCourseCard from "../components/admin-components/admin-course";
 import AdminNavbar from "../components/admin-components/admin-navbar";
-import AdminHeader from "../components/admin-components/admin-header";
 import { useState, useEffect } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/admin-portal-home.module.css';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { Button, Divider, Input, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger, Spinner } from "@nextui-org/react";
@@ -117,16 +115,15 @@ export default function Page() {
             {/* TODO: turn the course list into pagination */}
             <div className={styles.courseCards}>
               {courses.map((course, index) => (
-                <div className={styles.courseCard}>
+                <div className={styles.courseCard} key={index}>
                   <AdminCourseCard
-                    key={index}
                     courseName={course.courseName}
                     instructor={`${course.instructorFirstName} ${course.instructorLastName}`}
                     averageGrade={course.averageGrade}
                     courseID={course.courseID}
+                    isArchived={false}
                     img="/logo-transparent-png.png"
                   />
-                  
                 </div>
               ))}
             </div>

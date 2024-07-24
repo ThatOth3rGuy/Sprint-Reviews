@@ -7,6 +7,7 @@ import React from 'react';
 export type AdminCourseOptionsType = {
   courseName?: string;
   courseID: number;
+  isArchived: boolean;
 }
 
 export type ConfirmDeleteCourseType = {
@@ -14,7 +15,7 @@ export type ConfirmDeleteCourseType = {
   courseID: number;
 }
 
-const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ courseName = "", courseID }) => {
+const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ courseName = "", courseID, isArchived }) => {
   const router = useRouter();
   const [isPopoverOpen, setIsPopoverOpen] = useState(false); //to close popup when modal opens
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,7 +47,7 @@ const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ courseName = "",
 
   const onConfirmDeleteClick = useCallback(async () => {
     try {
-      const response = await fetch('/api/courses/deleteCourse', { //TODO: Fix to actually remove course from db
+      const response = await fetch('/api/courses/deleteCourse', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,10 +77,12 @@ const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ courseName = "",
         onOpenChange={(open) => setIsPopoverOpen(open)}
       >
         <PopoverTrigger>
-          <img className="ml-auto w-[5.5%]" alt="More" src="/Images/More.png" />
+          <img className="ml-auto w-[7.5%]" alt="More" src="/Images/More.png" />
         </PopoverTrigger>
         <PopoverContent className='z-10'>
-          <Button className='w-[100%]' variant='light' onClick={onArchiveContainerClick}>Archive {courseName}</Button>
+          <Button className='w-[100%]' variant='light' onClick={onArchiveContainerClick}>
+            {isArchived ? 'Unarchive' : 'Archive'} {courseName}
+          </Button>
           <Button className='w-[100%]' variant='light' onClick={openDeleteModal}>Delete Course</Button>
         </PopoverContent>
       </Popover>
