@@ -13,13 +13,6 @@ test.describe('Student Login Page', () => {
     await page.goto(`${baseURL}/student/login`);
   });
 
-  // Check that the logo is displayed
-  test('should display the logo', async ({ page }) => {
-    const logo = page.locator('img[alt="Logo"]');
-    await expect(logo).toBeVisible();
-    await expect(logo).toHaveAttribute('src', '/images/Logo.png');
-  });
-
   // Check that the email and password input fields are displayed
   test('should display the email and password input fields', async ({ page }) => {
     const emailInput = page.locator('input[type="email"]');

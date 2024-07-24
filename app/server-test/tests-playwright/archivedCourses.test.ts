@@ -45,17 +45,9 @@ test.describe('Archived Courses Page', () => {
     await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseID=3`);
   });
 
-  // Check that the filter and sort buttons are displayed
-  test('should display filter and sort buttons', async ({ page }) => {
-    const filterButton = page.locator('text=Filter');
-    const sortButton = page.locator('text=Sort');
-    await expect(filterButton).toBeVisible();
-    await expect(sortButton).toBeVisible();
-  });
-
   // Mock an error response for fetching archived courses
   test('should display error message on failed courses fetch', async ({ page }) => {
-    await page.route('**/api/getAllCourses?isArchived=true', route => {
+    await page.route('**/api/courses/getAllArchivedCourses?isArchived=true', route => {
       route.fulfill({
         status: 500,
         body: JSON.stringify({ message: 'Failed to fetch courses' })

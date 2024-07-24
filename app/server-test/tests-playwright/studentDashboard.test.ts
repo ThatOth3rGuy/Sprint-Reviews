@@ -1,21 +1,19 @@
 // studentDashboard.test.ts
-import { test, expect } from '@playwright/test';
-import playwrightConfig from '../playwright.config';
+import { test, expect, Page } from '@playwright/test';
+import path from 'path';
 
 const baseURL = 'http://localhost:3001';
-// playwrightConfig.use?.baseURL; // Base URL of your application
 
-// Login information comes from database, this should be adjusted when we implement a test db
-async function login(page: any) {
+// Login function to perform login before tests
+async function login(page: Page) {
   await page.goto(`${baseURL}/student/login`);
-  await page.fill('input[type="email"]', 'jane.smith@example.com');
+  await page.fill('input[type="email"]', 'john.doe@example.com');
   await page.fill('input[type="password"]', 'password123');
   await page.click('text=Sign In');
   await page.waitForNavigation();
 }
 
 test.describe('Student Dashboard Page', () => {
-
   test.beforeEach(async ({ page }) => {
     // Perform login before each test to obtain a valid session
     await login(page);
@@ -24,48 +22,55 @@ test.describe('Student Dashboard Page', () => {
     await page.goto(`${baseURL}/student/dashboard`);
   });
 
-  // Check that the loading text is displayed initially
-  test('should display loading text initially', async ({ page }) => {
-    const loadingText = page.locator('text=Loading...');
-    await expect(loadingText).toBeVisible();
+  // test.afterEach(async ({ page }, testInfo) => {
+  //   // Take a screenshot after each test
+  //   const screenshotPath = path.join(__dirname, 'screenshots', `${testInfo.title}.png`);
+  //   await page.screenshot({ path: screenshotPath });
+  // });
+
+  // Check that the student navbar is displayed
+  test('should display the student navbar', async ({ page }) => {
+    const navbar = page.locator('nav');
+    await expect(navbar).toBeVisible();
   });
 
-  // Check that the courses are displayed after loading
-  test('should display courses after loading', async ({ page }) => {
-    // Name of courses comes from the database, this should be adjusted when we implement a test db
-    const course1 = page.getByText('COSC 499', { exact: true });
-    const course2 = page.getByText('COSC 310', { exact: true });
-    await expect(course1).toBeVisible();
-    await expect(course2).toBeVisible();
+  // Check that the dashboard heading is displayed
+  test('should display the dashboard heading', async ({ page }) => {
+    const heading = page.locator('h1');
+    await expect(heading).toBeVisible();
+    await expect(heading).toHaveText('Dashboard');
   });
 
-  // Check that clicking a course redirects to the course dashboard
-  test('should redirect to course dashboard on course click', async ({ page }) => {
-    // Name of course comes from the database, this should be adjusted when we implement a test db
-    const course1 = page.getByText('COSC 499', { exact: true });
-    await course1.click();
-    await expect(page).toHaveURL(`${baseURL}/student/course-dashboard?courseID=1`);
+  // Check that the course cards are displayed
+  test('should display course cards', async ({ page }) => {
+    // Wait for the courses to load and be displayed
+    await page.waitForSelector('.outerCard', { state: 'attached' });
+
+    const courseCards = page.locator('.outerCard');
+    await expect(courseCards).toHaveCount(1);
+
+    const courseName = courseCards.locator('b');
+    await expect(courseName).toHaveText('COSC 499');
   });
 
-  // Check that the pending assignments section is displayed
-  // This test will need to be updated, as the assignment section is just a template right now
-  test('should display pending assignments section', async ({ page }) => {
-    const pendingAssignments = page.locator('text=Pending Assignments');
-    await expect(pendingAssignments).toBeVisible();
+  // Check that the loading spinner is displayed initially
+  test('should display loading spinner initially', async ({ page }) => {
+    await page.reload();
 
-    // Intentionally fail test to show that the feature is not yet implemented
-    expect(false).toBe(true);
+    const spinner = page.locator('.student .spinner');
+    await expect(spinner).toBeVisible();
+
+    // Wait for the spinner to disappear
+    await page.waitForSelector('.outerCard', { state: 'attached' });
+    await expect(spinner).not.toBeVisible();
   });
 
-  // Check that clicking the assignment details redirects to the assignments page
-  // This test will need to be updated, as the assignment section is just a template right now
-  test('should redirect to assignments page on assignment details click', async ({ page }) => {
-    await page.locator('text=Assignment').first().click();
-    // Replace with the actual URL for the assignments page if available
-    // await expect(page).toHaveURL(`${baseURL}/student/assignments`);
+  // Check that clicking a course card navigates to the course details page
+  test('should navigate to course details page when course card is clicked', async ({ page }) => {
+    await page.waitForSelector('.outerCard', { state: 'attached' });
 
-    // Intentionally fail test to show that the feature is not yet implemented
-    expect(false).toBe(true);
+    const courseCard = page.locator('.outerCard').first();
+    await courseCard.click();
+    await expect(page).toHaveURL(`${baseURL}/student/course-dashboard?courseId=1`);
   });
-
 });
