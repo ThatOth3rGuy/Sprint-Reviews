@@ -1,5 +1,26 @@
 # Weekly Personal Logs
 
+## Personal Log For Week 11
+
+### 07/24/2024
+
+Topics Covered:
+*resolving issues pointed out during TestOrama
+
+My contributions since Friday's log:
+
+I worked on fixing the navigation UI for the login and registration pages, updated breadcrumbs to show the entire trail for all pages for students and instructor, and fixed the assignment submission handling. I installed react-hot-toast to add notifications throughout the site for successful actions or on invalid actions or input. The login pages display an error that pops up on invalid credentials. The registration pages display error messages for any invalid input entered, or if passwords do not include requirements. The breadcrumbs now use routers to get the source page and display the course name or the assignments page as source. The submit assignment button had the following issues which are majorly fixed now: no notifications upon successful submission, no notification if invalid file is uploaded, no restrictions on multiple submissions, no display of on time versus late submissions, and no display of the file name of the file submitted. These issues have been fixed by adding toasts and error handling for submissions, and a new api checkSubmission.ts which fetches information on if an assignment has been submitted, file name, and the time of submission.
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Peer Review Dashboard for student | 07/26/2024 | WIP |
+| Frontend testing for submit assignment | 07/26/2024 | WIP |
+| File viewer for assignments and peer reviews | 07/26/2024 | WIP |
+| Set up email api for account confirmation and email notifications | 07/28/2024 | WIP |
+| Set up student submission for peer review assignments | 07/25/2024 | WIP |
+
+![week 11 time tracking](img/week11.png)
+
 ## Personal Log For Week 10
 
 ### 07/17/2024
@@ -31,7 +52,7 @@ I have been working on getting the student view of the assignment to work. The i
 
 | Task | Due By | Status |
 | ------- | ------- | ------- |
-| Fix assignment submission to have edge cases | 07/21/2024 | WIP |
+| Fix assignment submission to have edge cases | 07/21/2024 | Complete |
 | Set up student view for peer review assignments | 07/21/2024 | WIP |
 | Set up student submission for peer review assignments | 07/21/2024 | WIP |
 
