@@ -9,6 +9,7 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import styles from "../../styles/instructor-assignments-creation.module.css";
 import { Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spinner } from "@nextui-org/react";
+import toast from "react-hot-toast";
 
 // Define the structure for assignment and Rubric items
 interface Assignment {
@@ -141,13 +142,15 @@ const ReleaseAssignment: React.FC = () => {
       });
 
       if (response.ok) {
-        alert("Students selected successfully");
+        toast.success("Students selected successfully");
         setSelectedStudents([]);
         setUniqueDueDate("");
       } else {
+        toast.error("Failed to select students");
         console.error("Failed to select students");
       }
     } catch (error) {
+      toast.error("There was an error while selecting students")
       console.error("Error selecting students:", error);
     }
   };
@@ -201,12 +204,14 @@ const handleSubmit = async (e: React.FormEvent) => {
     });
 
     if (response.ok) {
-      alert("Assignment released for review successfully");
+      toast.success("Assignment released for review successfully");
       router.push("/instructor/dashboard");
     } else {
+      toast.error("Failed to release assignment for review.")
       console.error("Failed to release assignment for review");
     }
   } catch (error) {
+    toast.error("Error releasing assignment for review")
     console.error("Error releasing assignment for review:", error);
   }
 };
