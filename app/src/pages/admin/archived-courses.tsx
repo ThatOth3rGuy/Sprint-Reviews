@@ -119,16 +119,16 @@ export default function Page() {
 
             <div className={styles.courseCards}>
               {courses.map((course, index) => (
-                <div className={styles.courseCard}>
+                <div className={styles.courseCard} key={course.courseID}>
                   <AdminCourseCard
-                    key={index}
+                    key={course.courseID}
                     courseName={course.courseName}
                     instructor={`${course.instructorFirstName} ${course.instructorLastName}`}
                     averageGrade={course.averageGrade}
                     courseID={course.courseID}
+                    isArchived={true}
                     img="/logo-transparent-png.png"
                   />
-                  
                 </div>
               ))}
             </div>
