@@ -109,48 +109,42 @@ const SignUp: NextPage = () => {
             <div className='flex'>
               <Input size='sm' className="my-1 p-2 w-1/2" type="text" labelPlacement="inside" label="First Name" value={firstName}
                 onChange={(e) => setFirstName(e.target.value)} />
-
               <Input size='sm' className="my-1 p-2 w-1/2" type="text" labelPlacement="inside" label="Last Name" value={lastName}
                 onChange={(e) => setLastName(e.target.value)} />
-
             </div>
             <div className='flex justify-between mx-2'>
               <p className='text-danger-300 font-bold'>{errors.firstName}</p>
               <p className='text-danger-300 font-bold'>{errors.lastName}</p>
             </div>
-
             <div className='flex'>
               <Input size='sm' className="my-1 p-2" type="text" labelPlacement="inside" label="Instructor ID" value={instructorID}
                 onChange={(e) => setinstructorID(e.target.value)} />
-
               <Input size='sm' className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email}
                 onChange={(e) => setEmail(e.target.value)} />
-
             </div>
             <div className='flex justify-between mx-2'>
               <p className='text-danger-300 font-bold'>{errors.instructorID}</p>
               <p className='text-danger-300 font-bold'>{errors.email}</p>
             </div>
-
             <div className='flex'>
               <Input size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
                 onChange={(e) => setPassword(e.target.value)} />
               <Input size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Confirm Password" value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)} />
-
-            </div> <p className='text-danger-300 font-bold my-2'>{errors.password}</p>
+            </div>
+            <p className='text-danger-300 font-bold my-2'>{errors.password}</p>
             <div className='text-sm  text-left border-3 border-solid border-danger-50 p-1'>
               <p >
-              Password must contain the following:
-            </p>
-            <ul className='text-xs list-decimal px-6'>
-              <li>Minimum 8 characters</li>
-              <li>One uppercase</li>
-              <li>One lowercase</li>
-              <li>A special character</li>
-            </ul>
+                Password must contain the following:
+              </p>
+              <ul className='text-xs list-decimal px-6'>
+                <li>Minimum 8 characters</li>
+                <li>One uppercase</li>
+                <li>One lowercase</li>
+                <li>A special character</li>
+              </ul>
             </div>
-            
+
             <Button color='primary' className='w-full mt-2' variant="solid" onClick={handleSignUpClick}>
               Sign Up
             </Button>

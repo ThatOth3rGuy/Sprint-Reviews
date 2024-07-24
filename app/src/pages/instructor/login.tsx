@@ -17,7 +17,7 @@ const InstructorLogin: NextPage = () => {
   // Check for the session expiration reason and show an alert
   useEffect(() => {
     if (reason === 'Session has expired') {
-      alert('Session has expired. Please log in again.');
+      toast.error('Session has expired. Please log in again.');
     }
   }, [reason]);
 
@@ -51,7 +51,6 @@ const InstructorLogin: NextPage = () => {
         // Handle error response
         const errorData = await response.json();
         setError(errorData.message || 'Failed to authenticate');
-        // alert(`${errorData.message}`);
         toast.error(errorData.message);
       }
     } catch (error) {
