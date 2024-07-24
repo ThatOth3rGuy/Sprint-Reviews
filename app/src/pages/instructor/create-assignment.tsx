@@ -1,11 +1,14 @@
 import type { NextPage } from "next";
 import styles from "../../styles/instructor-assignments-creation.module.css";
 import { useRouter } from "next/router";
-import { Input, Textarea, Button, Breadcrumbs, BreadcrumbItem, Checkbox, CheckboxGroup, Spinner } from "@nextui-org/react";
+
+import { Card, SelectItem, Select, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Spinner } from "@nextui-org/react";
+import InstructorHeader from "../components/instructor-components/instructor-header";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
+import toast from "react-hot-toast";
 
 interface CourseData {
   courseID: string;
@@ -41,7 +44,33 @@ const Assignments: NextPage = () => {
         })
         .catch((error) => console.error("Error fetching course data:", error));
     }
+
+  };
+// handled rubric upload for instructor
+  // async function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
+  //   if (!event.target.files || event.target.files.length === 0) {
+  //     return;
+  //   }
+  //   const selectedFile = event.target.files[0];
+  //   setFile(selectedFile);
+  //   const reader = new FileReader();
+  //   reader.onload = function (e) {
+  //     if (e.target) {
+  //       setFileContent(e.target.result as string);
+  //     }
+  //   };
+  //   reader.readAsText(selectedFile);
+  // }
+
+  const handleFileTypeChange = (fileType: string, checked: boolean) => {
+    setAllowedFileTypes((prev) =>
+      checked ? [...prev, fileType] : prev.filter((type) => type !== fileType)
+    );
+  };
+
+
   }, [courseId]);
+
   const onCreateAssignmentButtonClick = useCallback(async () => {
     setError(null);
 
@@ -87,10 +116,13 @@ const Assignments: NextPage = () => {
     });
 
     if (response.ok) {
-      router.push(`/instructor/course-dashboard?courseId=${courseId}`);
+      toast.success("Assignment created successfully!")
+      router.push(`/instructor/course-dashboard?courseId=${courseID}`);
+
     } else {
       const errorData = await response.json();
       setError(errorData.message || "An error occurred while creating the assignment");
+      toast.error(errorData.message)
     }
   }, [title, description, dueDate, courseId, fileContent, groupAssignment, allowedFileTypes, router, session]);
 
