@@ -16,9 +16,11 @@
     <h4>Clokify for the week:</h4>
  <img src="./images/week10Clokify.jpeg" width="max" />
     <h4>Test 2 :</h4>
- <img src = "https://github.com/user-attachments/assets/67230f7a-5a82-45b8-bb1c-e5e8547c2213" />
-
+    <img src="./images/test1.png" width="max" />
+    <img src="./images/test2.png" width="max" />
 </p>
 
 </div>
+![image](https://github.com/user-attachments/assets/5dcfe2bb-07bf-45cc-a877-0ffaec1e0f36)
+![image](https://github.com/user-attachments/assets/ed73bbd1-db18-4044-968f-833622b1aa62)
 
