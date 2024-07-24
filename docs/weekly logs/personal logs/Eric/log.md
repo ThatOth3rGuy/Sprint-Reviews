@@ -1,5 +1,114 @@
 # Weekly Logs
 
+# Week 11
+
+## Friday - July 19, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%2011.1-1.png)
+![Clockify Timesheet](./images/EricClockify%2011.1-2.png)
+
+### Cycle Review
+
+After the Test-O-Rama we have a list of fixes/suggestions to help the UI. First priority is to finish that list. After that, our last major feature that needs implementation is the groups and peer review assignments, I'll be working mostly on creating the groups from the instructor side. As well as this, updating the tests seems to be a never-ending cycle that I will continue to chip away at.
+
+### Current Tasks
+  * 1: UI fixes after TestORama
+  * 2: Instructor group creation
+  * 3: Helping finish peer-review randomizaion
+  * 4: Fixing and writing new tests Jest&Playwright
+
+### Progress Update: Fri-Tue
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>UI fixes after TestORama
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Instructor group creation
+        </td>
+        <!-- Status -->
+        <td>Needs Review
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Helping finish peer-review randomizaion
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Fixing and writing new tests Jest&Playwright
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
+## Wednesday - July 24, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%2011.2.png)
+
+### Cycle Review
+
+--
+
+### Current Tasks
+  * 1: -
+  * 2: -
+  * 3: -
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> -
+        </td>
+        <!-- Status -->
+        <td> -
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> -
+        </td>
+        <!-- Status -->
+        <td> -
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> -
+        </td>
+        <!-- Status -->
+        <td> -
+        </td>
+    </tr>
+</table>
+
 # Week 10
 
 ## Friday - July 12, 2024
