@@ -41,19 +41,19 @@ const Assignments: NextPage = () => {
   const [courseData, setCourseData] = useState<CourseData | null>(null);
 
 
-  useEffect(() => {
+  // useEffect(() => {
    
-    if (courseId) {
-      fetch(`/api/courses/${courseId}`)
-        .then((response) => response.json())
-        .then((data: CourseData) => {
-          console.log("Fetched course data:", data);
-          setCourseData(data);
-        })
-        .catch((error) => console.error("Error fetching course data:", error));
-    }
+  //   if (courseId) {
+  //     fetch(`/api/courses/${courseId}`)
+  //       .then((response) => response.json())
+  //       .then((data: CourseData) => {
+  //         console.log("Fetched course data:", data);
+  //         setCourseData(data);
+  //       })
+  //       .catch((error) => console.error("Error fetching course data:", error));
+  //   }
 
-  };
+  // };
 
 
 
@@ -102,8 +102,6 @@ const Assignments: NextPage = () => {
   };
 
 
-  }, [courseId]);
-
   const onCreateAssignmentButtonClick = useCallback(async () => {
     setError(null);
 
@@ -150,7 +148,7 @@ const Assignments: NextPage = () => {
 
     if (response.ok) {
       toast.success("Assignment created successfully!")
-      router.push(`/instructor/course-dashboard?courseId=${courseID}`);
+      router.push(`/instructor/course-dashboard?courseId=${courseId}`);
 
     } else {
       const errorData = await response.json();
@@ -158,21 +156,6 @@ const Assignments: NextPage = () => {
       toast.error(errorData.message)
     }
   }, [title, description, dueDate, courseId, fileContent, groupAssignment, allowedFileTypes, router, session]);
-
-  async function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
-    if (!event.target.files || event.target.files.length === 0) {
-      return;
-    }
-    const selectedFile = event.target.files[0];
-    setFile(selectedFile);
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      if (e.target) {
-        setFileContent(e.target.result as string);
-      }
-    };
-    reader.readAsText(selectedFile);
-  }
 
   
 
