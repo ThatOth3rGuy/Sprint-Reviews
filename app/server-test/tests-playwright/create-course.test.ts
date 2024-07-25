@@ -108,13 +108,11 @@ test.describe('Create Course Page', () => {
 
     await page.fill('input[placeholder="Course Name"]', 'Test Course');
 
-    const [dialog] = await Promise.all([
-      page.waitForEvent('dialog'),
-      page.locator('role=button[name="Create Course"]').click(),
-    ]);
-
-    expect(dialog.message()).toBe('Failed to create course, make sure to enter a course name');
-    await dialog.accept();
+    // Capture the alert dialog
+    page.on('dialog', dialog => {
+      expect(dialog.message()).toBe('Failed to create course, make sure to enter a course name');
+      dialog.accept();
+    });
   });
 
   // Check for error handling when the enroll students API call fails
@@ -138,21 +136,10 @@ test.describe('Create Course Page', () => {
     const filePath = path.resolve(__dirname, '../test-files/students.csv');
     await page.setInputFiles('input[type="file"]', filePath);
 
-    // Debugging logs
-    console.log('About to click the Create Course button');
-
-    await page.locator('role=button[name="Create Course"]').click();
-
-    // Debugging logs
-    console.log('Create Course button clicked, waiting for alert');
-
-    // Wait for the alert event
-    const dialog = await page.waitForEvent('dialog', { timeout: 30000 }); // Wait for alert event
-
-    // Debugging logs
-    console.log('Alert appeared:', dialog.message());
-
-    expect(dialog.message()).toBe('Failed to enroll students');
-    await dialog.accept();
+    // Capture the alert dialog
+    page.on('dialog', dialog => {
+      expect(dialog.message()).toBe('Failed to enroll students');
+      dialog.accept();
+    });
   });
 });

@@ -22,12 +22,6 @@ test.describe('Student Dashboard Page', () => {
     await page.goto(`${baseURL}/student/dashboard`);
   });
 
-  // test.afterEach(async ({ page }, testInfo) => {
-  //   // Take a screenshot after each test
-  //   const screenshotPath = path.join(__dirname, 'screenshots', `${testInfo.title}.png`);
-  //   await page.screenshot({ path: screenshotPath });
-  // });
-
   // Check that the student navbar is displayed
   test('should display the student navbar', async ({ page }) => {
     const navbar = page.locator('nav');
@@ -44,9 +38,9 @@ test.describe('Student Dashboard Page', () => {
   // Check that the course cards are displayed
   test('should display course cards', async ({ page }) => {
     // Wait for the courses to load and be displayed
-    await page.waitForSelector('.outerCard', { state: 'attached' });
+    await page.waitForSelector('.student-dashboard_courseCard__Dx_wy', { state: 'attached' });
 
-    const courseCards = page.locator('.outerCard');
+    const courseCards = page.locator('.student-dashboard_courseCard__Dx_wy');
     await expect(courseCards).toHaveCount(1);
 
     const courseName = courseCards.locator('b');
@@ -55,9 +49,9 @@ test.describe('Student Dashboard Page', () => {
 
   // Check that clicking a course card navigates to the course details page
   test('should navigate to course details page when course card is clicked', async ({ page }) => {
-    await page.waitForSelector('.outerCard', { state: 'attached' });
+    await page.waitForSelector('.student-dashboard_courseCard__Dx_wy', { state: 'attached' });
 
-    const courseCard = page.locator('.outerCard').first();
+    const courseCard = page.locator('.student-dashboard_courseCard__Dx_wy').first();
     await courseCard.click();
     await expect(page).toHaveURL(`${baseURL}/student/course-dashboard?courseId=1`);
   });

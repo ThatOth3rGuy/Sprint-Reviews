@@ -44,10 +44,9 @@ test.describe('Student Login Page', () => {
     await page.locator('text=Sign up').click();
     await expect(page).toHaveURL('http://localhost:3001/student/registration');
   });
-
   // Check if an error message is displayed when the sign-in attempt fails
   test('should show an alert on failed sign-in attempt', async ({ page }) => {
-    await page.route('/api/auth/studentLogin', route => {
+    await page.route('/api/auth/instructorLogin', route => {
       route.fulfill({
         status: 401,
         body: JSON.stringify({ message: 'Invalid email or password' }),
@@ -56,15 +55,14 @@ test.describe('Student Login Page', () => {
 
     await page.fill('input[type="email"]', 'invalid@example.com');
     await page.fill('input[type="password"]', 'wrongpassword');
-    
-    // Capture the alert dialog
-    const [dialog] = await Promise.all([
-        page.waitForEvent('dialog'),
-        page.getByText('Sign In').click(),
-    ]);
 
-    expect(dialog.message()).toBe('Invalid email or password');
-    await dialog.accept();
+    // Capture the alert dialog
+    page.on('dialog', dialog => {
+      expect(dialog.message()).toBe('Invalid email or password');
+      dialog.accept();
+    });
+
+    await page.getByText('Sign In').click();
   });
 
   // Check if logging in redirects to the dashboard

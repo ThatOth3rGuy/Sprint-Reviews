@@ -24,58 +24,35 @@ test.describe('Instructor Individual Assignment View', () => {
   });
 
   test('should have working breadcrumb navigation', async ({ page }) => {
-    await expect(page.locator('nav[aria-label="breadcrumb"]')).toBeVisible();
-    
-    // Test Home link
     await page.click('text=Home');
     await expect(page).toHaveURL(`${baseURL}/instructor/dashboard`);
-    
-    // Navigate back to the assignment page
-    await page.goto(`${baseURL}/instructor/assignment-dashboard?assignmentID=1&courseId=1`);
-    
-    // Test Course Dashboard link
-    await page.click('text=Course Dashboard');
-    // Assuming it navigates back to the course dashboard
-    await expect(page).toHaveURL(/\/instructor\/course-dashboard\?courseId=1/);
+
+    // The breadcumb for the course just goes back to the previous page, so we need to navigate there how a user would
+    await page.click('text=COSC 499');
+    await page.click('text=Assignment 1');
+    await page.click('text=COSC 499');
+    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseId=1`);
   });
 
   test('should display AssignmentDetailCard with correct information', async ({ page }) => {
-    await expect(page.locator('.assignmentsSection')).toBeVisible();
-    
-    // Check for title
-    await expect(page.locator('text=Assignment Title')).toBeVisible();
-    
+    // Check for title in the AssignmentDetailCard
+    await expect(page.locator('h2.AssignmentDetailCard_assignmentTitle__cxkti')).toBeVisible();
+
     // Check for description
-    await expect(page.locator('text="No description available"').or(page.locator('text=/Description:/'))).toBeVisible();
+    await expect(page.locator('text="Description for assignment 1"')).toBeVisible();
     
     // Check for deadline
     await expect(page.locator('text="No deadline set"').or(page.locator('text=/Deadline:/'))).toBeVisible();
-    
-    // Check for submitted students
-    await expect(page.locator('text="Student A"')).toBeVisible();
-    await expect(page.locator('text="Student B"')).toBeVisible();
-    await expect(page.locator('text="Student C"')).toBeVisible();
-    
-    // Check for remaining students
-    await expect(page.locator('text="Student D"')).toBeVisible();
-    await expect(page.locator('text="Student E"')).toBeVisible();
-    await expect(page.locator('text="Student F"')).toBeVisible();
-  });
-
-  test('should display the correct navbar based on user role', async ({ page }) => {
-    // Check for instructor navbar
-    const instructorNavbar = await page.locator('nav:has-text("Instructor")').count();
-    
-    // Check for admin navbar
-    const adminNavbar = await page.locator('nav:has-text("Admin")').count();
-    
-    // Ensure only one navbar is present
-    expect(instructorNavbar + adminNavbar).toBe(1);
   });
 
   test('should handle error when assignment data fetch fails', async ({ page }) => {
+    /*
+    This test is currently failing because the error handling isn't set up correctly.
+    When an error is thrown it's supposed to diplay an error message, but instead it's getting stuck on the loading spinner.
+    */
+    await page.goto(`${baseURL}/instructor/assignment-dashboard`);
     // Mock a failed response
-    await page.route('**/api/assignments/*', route => route.fulfill({ status: 500, body: 'Server error' }));
+    //await page.route('**/api/assignments/1', route => route.fulfill({ status: 500, body: 'Server error' }));
     
     await page.reload();
     

@@ -61,10 +61,10 @@ test.describe('Admin Portal Home Page', () => {
   // Check that the AdminHeader links are displayed
   test('should display admin header links', async ({ page }) => {
     const viewUsersLink = page.locator('text=View Users');
-    const roleRequestsLink = page.locator('text=Role Requests'); // Corrected locator text
+    const roleRequestsLink = page.locator('text=Role Requests');
     const archivedCoursesLink = page.locator('text=Archived Courses');
     await expect(viewUsersLink).toBeVisible();
-    await expect(roleRequestsLink).toBeVisible(); // Corrected locator usage
+    await expect(roleRequestsLink).toBeVisible();
     await expect(archivedCoursesLink).toBeVisible();
   });
 });
