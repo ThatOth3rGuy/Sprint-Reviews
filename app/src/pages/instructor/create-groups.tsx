@@ -147,10 +147,20 @@ export default function CreateGroup() {
         // Same student clicked, clear the selection
         setSelectedStudents([]);
       } else {
-        // Swap the groups of the two selected students
-        if(firstSelection.groupID != groupID) {
+        // Swap the groups of the two selected students if they are in different groups
+        if (firstSelection.groupID !== groupID) {
           swapStudentGroups(firstSelection.student, student, firstSelection.groupID, groupID);
         }
+      }
+    }
+  };
+
+  const handleEmptyGroupClick = (groupID: number) => {
+    if (selectedStudents.length === 1) {
+      const [firstSelection] = selectedStudents;
+      // Move the student to the new group and remove from the old group
+      if (firstSelection.groupID !== groupID) {
+        moveStudentToGroup(firstSelection.student, firstSelection.groupID, groupID);
       }
     }
   };
@@ -171,6 +181,29 @@ export default function CreateGroup() {
             members: group.members.map(member =>
               member.studentID === student2.studentID ? student1 : member
             ),
+          };
+        } else {
+          return group;
+        }
+      });
+      return newGroups;
+    });
+
+    setSelectedStudents([]);
+  };
+
+  const moveStudentToGroup = (student: Student, fromGroupID: number, toGroupID: number) => {
+    setEditableGroups(prevGroups => {
+      const newGroups = prevGroups.map(group => {
+        if (group.groupID === fromGroupID) {
+          return {
+            ...group,
+            members: group.members.filter(member => member.studentID !== student.studentID),
+          };
+        } else if (group.groupID === toGroupID) {
+          return {
+            ...group,
+            members: [...group.members, student],
           };
         } else {
           return group;
@@ -266,7 +299,7 @@ export default function CreateGroup() {
           </div>
           <div className={styles.notificationsSection}>
             <Listbox aria-label="Actions" onAction={handleAction}>
-              <ListboxItem key="create">Create Group</ListboxItem>
+              <ListboxItem key="create">Create/Update Groups</ListboxItem>
               <ListboxItem key="peer-review">Randomize Groups</ListboxItem>
             </Listbox>
             <Button color="primary" variant="ghost" onClick={handleEditGroups}>Edit groups</Button>
@@ -310,7 +343,7 @@ export default function CreateGroup() {
           isOpen={isEditGroupsModalOpen}
           onOpenChange={(open) => setIsEditGroupsModalOpen(open)}
         >
-          <ModalContent>
+          <ModalContent style={{ maxHeight: '90%', overflow: 'auto' }}>
             <ModalHeader>Edit Groups</ModalHeader>
             <ModalBody>
               {editableGroups.map((group, index) => (
@@ -319,7 +352,6 @@ export default function CreateGroup() {
                   {group.members.map((member, i) => (
                     <Button
                       key={i}
-                      auto
                       onPress={() => handleMemberClick(member, group.groupID)}
                       style={{
                         margin: '5px',
@@ -329,6 +361,15 @@ export default function CreateGroup() {
                       {member.firstName} {member.lastName}
                     </Button>
                   ))}
+                  <Button
+                    onPress={() => handleEmptyGroupClick(group.groupID)}
+                    style={{
+                      margin: '5px',
+                      backgroundColor: 'lightgreen'
+                    }}
+                  >
+                    Move Here
+                  </Button>
                 </div>
               ))}
             </ModalBody>
