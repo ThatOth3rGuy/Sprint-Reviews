@@ -777,7 +777,7 @@ interface Group {
   studentIDs: number[];
 }
 
-export async function createGroups(groups: Group[], courseID: number) {
+export async function createGroups(groups: Group[] | null, courseID: number | null, customPool: mysql.Pool = pool) {
   const deleteSql = `
     DELETE FROM course_groups
     WHERE courseID = ?
@@ -794,12 +794,12 @@ export async function createGroups(groups: Group[], courseID: number) {
 
   try {
     // Delete all existing groups for the course
-    await query(deleteSql, [courseID]);
+    await query(deleteSql, [courseID], customPool);
 
     // Insert the new groups
     for (const group of groups) {
       for (const studentID of group.studentIDs) {
-        await query(insertSql, [group.groupNumber, studentID, courseID]);
+        await query(insertSql, [group.groupNumber, studentID, courseID], customPool);
       }
     }
   } catch (error) {
@@ -808,8 +808,11 @@ export async function createGroups(groups: Group[], courseID: number) {
   }
 }
 
+export async function getCourseGroups(courseID: number, customPool: mysql.Pool = pool): Promise<any[]> {
+  if (!courseID) {
+    throw new Error('Invalid course ID');
+  }
 
-export async function getCourseGroups(courseID: number): Promise<any[]> {
   const sql = `
     SELECT *
     FROM course_groups
@@ -818,7 +821,7 @@ export async function getCourseGroups(courseID: number): Promise<any[]> {
   `;
 
   try {
-    const rows = await query(sql, [courseID]);
+    const rows = await query(sql, [courseID], customPool);
     return rows;
   } catch (error) {
     console.error('Error fetching students:', error);

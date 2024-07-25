@@ -116,6 +116,16 @@ CREATE TABLE IF NOT EXISTS selected_students (
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
 
+-- Table for storing course specific groups --
+CREATE TABLE IF NOT EXISTS course_groups (
+    groupID INT,
+    studentID INT,
+    courseID INT,
+    PRIMARY KEY (groupID, studentID, courseID),
+    FOREIGN KEY (studentID) REFERENCES student(studentID),
+    FOREIGN KEY (courseID) REFERENCES course(courseID)
+);
+
 -- Insert users
 INSERT INTO user (firstName, lastName, email, pwd, userRole) VALUES
 ('John', 'Doe', 'john.doe@example.com', 'password123', 'student'),
