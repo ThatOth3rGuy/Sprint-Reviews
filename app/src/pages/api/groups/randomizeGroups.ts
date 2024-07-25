@@ -1,4 +1,4 @@
-// /pages/api/createNew/randomizeGroups.ts
+// /pages/api/groups/randomizeGroups.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const randomizeGroups = (students: number[], groupSize: number): number[][] => {

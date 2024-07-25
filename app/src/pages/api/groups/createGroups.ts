@@ -15,9 +15,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { groups, courseID } = req.body;
 
-  console.log("Request body:", req.body);
-  console.log("Is input valid: ", Array.isArray(groups));
-
   if (!Array.isArray(groups) || groups.length === 0) {
     return res.status(400).json({ error: 'Invalid group input' });
   }
