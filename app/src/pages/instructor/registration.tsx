@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styles from '../../styles/instructor-register.module.css';
 import { Button, Divider, Input } from '@nextui-org/react';
+import toast from 'react-hot-toast';
 
 const SignUp: NextPage = () => {
   const [firstName, setFirstName] = useState('');
@@ -15,7 +16,7 @@ const SignUp: NextPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [instructorID, setinstructorID] = useState('');
   const router = useRouter();
-  const [errors, setErrors] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState({ firstName: '', lastName: '', instructorID: '', email: '', password: '' });
 
   const validateEmail = (email: string) => {
     // Regex for validating email
@@ -29,47 +30,63 @@ const SignUp: NextPage = () => {
   };
 
   const handleSignUpClick = async () => {
+    let firstNameError = '';
+    let lastNameError = '';
+    let instructorIDError = '';
     let emailError = '';
-  let passwordError = '';
+    let passwordError = '';
 
-  if (!validateEmail(email)) {
-    emailError = 'Invalid email';
-  }
-
-  if (!validatePassword(password)) {
-    passwordError = 'Password must be minimum 8 characters, include one capital, one lowercase, and one special character';
-  }
-
-  // Check if password and confirm password match
-  if (password !== confirmPassword) {
-    passwordError = 'Password and confirm password do not match';
-  }
-
-  setErrors({ email: emailError, password: passwordError });
-
-  if (emailError || passwordError) {
-    alert('There was an error with sign up. Please try again.')
-  } else {
-    try {
-      const response = await fetch('/api/addNew/addInstructor', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ firstName, lastName, email, password, role: 'instructor', instructorID })
-      });
-
-      if (response.ok) {
-        router.push('/instructor/login');
-      } else {
-        const errorData = await response.json();
-        alert(errorData.error);
-      }
-    } catch (error) {
-      alert('Failed to sign up');
+    if (firstName === '') {
+      firstNameError = 'First name cannot be empty';
     }
-  };
-}
+
+    if (lastName === '') {
+      lastNameError = 'Last name cannot be empty';
+    }
+
+    if (instructorID === '') {
+      instructorIDError = 'Instructor ID cannot be empty';
+    }
+
+    if (!validateEmail(email)) {
+      emailError = 'Invalid email';
+    }
+
+    if (!validatePassword(password)) {
+      passwordError = 'Password must be minimum 8 characters, include one capital, one lowercase, and one special character';
+    }
+
+    // Check if password and confirm password match
+    if (password !== confirmPassword) {
+      passwordError = 'Password and confirm password do not match';
+    }
+
+    setErrors({ firstName: firstNameError, lastName: lastNameError, instructorID: instructorIDError, email: emailError, password: passwordError });
+
+    if (firstNameError || lastNameError || instructorIDError || emailError || passwordError) {
+      toast.error('There was an error with sign up. Please try again.')
+    } else {
+      try {
+        const response = await fetch('/api/addNew/addInstructor', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ firstName, lastName, email, password, role: 'instructor', instructorID })
+        });
+
+        if (response.ok) {
+          router.push('/instructor/login');
+          toast.success("Account created! Please sign in to continue.")
+        } else {
+          const errorData = await response.json();
+          toast.error(errorData.error);
+        }
+      } catch (error) {
+        toast.error('Failed to sign up');
+      }
+    };
+  }
 
   const handleBackClick = () => {
     // Redirect user to landing page
@@ -92,27 +109,44 @@ const SignUp: NextPage = () => {
           <div className='instructor max-h-[45vh] p-2 pt-0 overflow-y-auto'>
             <p className='my-2 text-small'>Enter the following information to create your account:</p>
             <div className='flex'>
-              <Input  size='sm' className="my-1 p-2 w-1/2" type="text" labelPlacement="inside" label="First Name" value={firstName}
+              <Input size='sm' className="my-1 p-2 w-1/2" type="text" labelPlacement="inside" label="First Name" value={firstName}
                 onChange={(e) => setFirstName(e.target.value)} />
-              <Input  size='sm' className="my-1 p-2 w-1/2" type="text" labelPlacement="inside" label="Last Name" value={lastName}
+              <Input size='sm' className="my-1 p-2 w-1/2" type="text" labelPlacement="inside" label="Last Name" value={lastName}
                 onChange={(e) => setLastName(e.target.value)} />
             </div>
+            <div className='flex justify-between mx-2'>
+              <p className='text-danger-300 font-bold'>{errors.firstName}</p>
+              <p className='text-danger-300 font-bold'>{errors.lastName}</p>
+            </div>
             <div className='flex'>
-<Input size='sm' className="my-1 p-2" type="text" labelPlacement="inside" label="Instructor ID" value={instructorID}
-              onChange={(e) => setinstructorID(e.target.value)} />
+              <Input size='sm' className="my-1 p-2" type="text" labelPlacement="inside" label="Instructor ID" value={instructorID}
+                onChange={(e) => setinstructorID(e.target.value)} />
               <Input size='sm' className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email}
-              onChange={(e) => setEmail(e.target.value)} />
+                onChange={(e) => setEmail(e.target.value)} />
             </div>
-          <p className='text-danger-700 bg-warning-500'>{errors.email}</p>
+            <div className='flex justify-between mx-2'>
+              <p className='text-danger-300 font-bold'>{errors.instructorID}</p>
+              <p className='text-danger-300 font-bold'>{errors.email}</p>
+            </div>
             <div className='flex'>
-              <Input  size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
-              onChange={(e) => setPassword(e.target.value)} />
-            <Input  size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Confirm Password" value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)} />
+              <Input size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
+                onChange={(e) => setPassword(e.target.value)} />
+              <Input size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Confirm Password" value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)} />
             </div>
-            <p className='text-danger-700 bg-warning-500'>{errors.password}</p>
-            
-            
+            <p className='text-danger-300 font-bold my-2'>{errors.password}</p>
+            <div className='text-sm  text-left border-3 border-solid border-danger-50 p-1'>
+              <p >
+                Password must contain the following:
+              </p>
+              <ul className='text-xs list-decimal px-6'>
+                <li>Minimum 8 characters</li>
+                <li>One uppercase</li>
+                <li>One lowercase</li>
+                <li>A special character</li>
+              </ul>
+            </div>
+
             <Button color='primary' className='w-full mt-2' variant="solid" onClick={handleSignUpClick}>
               Sign Up
             </Button>
@@ -122,9 +156,9 @@ const SignUp: NextPage = () => {
 
           <div className="instructor flex align-center justify-center text-center">
             <p className="text-center p-1">Already have an account?
-            <Button color='primary' className="w-fit h-5 m-1" variant="flat" onClick={handleLoginClick}>
-              Sign In
-            </Button></p>
+              <Button color='primary' className="w-fit h-5 m-1" variant="flat" onClick={handleLoginClick}>
+                Sign In
+              </Button></p>
           </div>
         </div>
       </div>

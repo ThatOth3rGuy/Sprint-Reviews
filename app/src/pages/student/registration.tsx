@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styles from '../../styles/student-register.module.css';
 import { Button, Divider, Input, ScrollShadow } from '@nextui-org/react';
+import toast from 'react-hot-toast';
 
 const SignUp: NextPage = () => {
   const [firstName, setFirstName] = useState('');
@@ -15,60 +16,77 @@ const SignUp: NextPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [studentID, setStudentID] = useState('');
   const router = useRouter();
-  const [errors, setErrors] = useState({ email: '', password: '' });
-  
-const validateEmail = (email: string) => {
-  // Regex for validating email
-  const regex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-  return regex.test(email);
-};
-const validatePassword = (password: string) => {
-  // Regex for validating password: minimum 8 characters, one capital, one lowercase, and one special character
-  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  return regex.test(password);
-};
-const handleSignUpClick = async () => {
-  let emailError = '';
-  let passwordError = '';
+  const [errors, setErrors] = useState({ firstName: '', lastName: '', studentID: '', email: '', password: '' });
 
-  if (!validateEmail(email)) {
-    emailError = 'Invalid email';
-  }
+  const validateEmail = (email: string) => {
+    // Regex for validating email
+    const regex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+    return regex.test(email);
+  };
+  const validatePassword = (password: string) => {
+    // Regex for validating password: minimum 8 characters, one capital, one lowercase, and one special character
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(password);
+  };
+  const handleSignUpClick = async () => {
+    let firstNameError = '';
+    let lastNameError = '';
+    let studentIDError = '';
+    let emailError = '';
+    let passwordError = '';
 
-  if (!validatePassword(password)) {
-    passwordError = 'Password must be minimum 8 characters, include one capital, one lowercase, and one special character';
-  }
-
-  // Check if password and confirm password match
-  if (password !== confirmPassword) {
-    passwordError = 'Password and confirm password do not match';
-  }
-
-  setErrors({ email: emailError, password: passwordError });
-
-  if (emailError || passwordError) {
-    alert('There was an error with sign up. Please try again.')
-  } else {
-    try {
-      const response = await fetch('/api/addNew/addStudent', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ firstName, lastName, email, password, role: 'student', studentID})
-      });
-
-      if (response.ok) {
-        router.push('/student/login');
-      } else {
-        const errorData = await response.json();
-        alert(errorData.error);
-      }
-    } catch (error) {
-      alert('Failed to sign up');
+    if (firstName === '') {
+      firstNameError = 'First name cannot be empty';
     }
-  }
-};
+
+    if (lastName === '') {
+      lastNameError = 'Last name cannot be empty';
+    }
+
+    if (studentID === '') {
+      studentIDError = 'Instructor ID cannot be empty';
+    }
+
+    if (!validateEmail(email)) {
+      emailError = 'Invalid email';
+    }
+
+    if (!validatePassword(password)) {
+      passwordError = 'Password must be minimum 8 characters, include one capital, one lowercase, and one special character';
+    }
+
+    // Check if password and confirm password match
+    if (password !== confirmPassword) {
+      passwordError = 'Password and confirm password do not match';
+    }
+
+    setErrors({ firstName: firstNameError, lastName: lastNameError, studentID: studentIDError, email: emailError, password: passwordError });
+
+
+    if (firstNameError || lastNameError || studentIDError || emailError || passwordError) {
+      toast.error('There was an error with sign up. Please try again.')
+    } else {
+      try {
+        const response = await fetch('/api/addNew/addStudent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ firstName, lastName, email, password, role: 'student', studentID })
+        });
+
+        if (response.ok) {
+          router.push('/student/login');
+          toast.success("Account created! Please sign in to continue.")
+        } else {
+          const errorData = await response.json();
+          toast.error(errorData.error);
+        }
+      } catch (error) {
+        toast.error('Failed to sign up');
+      }
+    }
+  };
 
 const handleBackClick = () => {
   // Redirect user to landing page
@@ -91,28 +109,43 @@ const handleBackClick = () => {
         <div className='max-h-[45vh] p-2 overflow-y-auto'>
           <p className='my-2 text-small'>Enter the following information to create your account:</p>
           <div className='flex'>
-            <Input size='sm' className="my-1 p-2 w-1/2 border-primary-900" type="text" labelPlacement="inside" label="First Name" value={firstName} 
+            <Input size='sm' className="my-1 p-2 w-1/2 border-primary-900" type="text" labelPlacement="inside" label="First Name" value={firstName}
               onChange={(e) => setFirstName(e.target.value)} />
-            <Input  size='sm' className="my-1 p-2 w-1/2" type="text" labelPlacement="inside" label="Last Name" value={lastName}
+            <Input size='sm' className="my-1 p-2 w-1/2" type="text" labelPlacement="inside" label="Last Name" value={lastName}
               onChange={(e) => setLastName(e.target.value)} />
           </div>
-          <div className='flex'>
-            <Input  size='sm' className="my-1 p-2" type="text" labelPlacement="inside" label="Student ID" value={studentID}
-            onChange={(e) => setStudentID(e.target.value)} />
-            <Input  size='sm' className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email}
-            onChange={(e) => setEmail(e.target.value)} />
+          <div className='flex justify-between mx-2'>
+            <p className='text-danger-300 font-bold'>{errors.firstName}</p>
+            <p className='text-danger-300 font-bold'>{errors.lastName}</p>
           </div>
-          <p className='text-danger-700 bg-warning-500'>{errors.email}</p>
           <div className='flex'>
-            <Input  size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
-            onChange={(e) => setPassword(e.target.value)} />
-            
-          <Input  size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Confirm Password" value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)} />
-            
+            <Input size='sm' className="my-1 p-2" type="text" labelPlacement="inside" label="Student ID" value={studentID}
+              onChange={(e) => setStudentID(e.target.value)} />
+            <Input size='sm' className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email}
+              onChange={(e) => setEmail(e.target.value)} />
           </div>
-          <p className='text-danger-700 bg-warning-500'>{errors.password}</p>
-          
+          <div className='flex justify-between mx-2'>
+            <p className='text-danger-300 font-bold'>{errors.studentID}</p>
+            <p className='text-danger-300 font-bold'>{errors.email}</p>
+          </div>
+          <div className='flex'>
+            <Input size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
+              onChange={(e) => setPassword(e.target.value)} />
+            <Input size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Confirm Password" value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)} />
+          </div>
+          <p className='text-danger-300 font-bold my-2'>{errors.password}</p>
+          <div className='text-sm  text-left border-3 border-solid border-danger-50 p-1'>
+            <p >
+              Password must contain the following:
+            </p>
+            <ul className='text-xs list-decimal px-6'>
+              <li>Minimum 8 characters</li>
+              <li>One uppercase</li>
+              <li>One lowercase</li>
+              <li>A special character</li>
+            </ul>
+          </div>
           <Button color='primary' className='w-full mt-2' variant="solid" onClick={handleSignUpClick}>
             Sign Up
           </Button>
@@ -122,9 +155,9 @@ const handleBackClick = () => {
 
         <div className="flex-row align-center justify-center text-center">
           <p className="text-center p-1">Already have an account?
-          <Button color='primary' className="w-fit h-5 m-1" variant="flat" onClick={handleLoginClick}>
-            Sign In
-          </Button></p>
+            <Button color='primary' className="w-fit h-5 m-1" variant="flat" onClick={handleLoginClick}>
+              Sign In
+            </Button></p>
         </div>
       </div>
     </div>

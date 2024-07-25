@@ -9,6 +9,7 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import styles from "../../styles/instructor-assignments-creation.module.css";
 import { Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spinner } from "@nextui-org/react";
+import toast from "react-hot-toast";
 
 // Define the structure for assignment and Rubric items
 interface Assignment {
@@ -41,6 +42,8 @@ const ReleaseAssignment: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const dummyassignments = ['Assignment 1', 'Assignment 2', 'Assignment 3'];
+  const [courseName, setCourseName] = useState<string>("");
+
 
   // Dummy rubric
   const dummyrubric = [
@@ -54,14 +57,28 @@ const ReleaseAssignment: React.FC = () => {
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  // Handle open and close for modal
-  // const openModal = () => {
-  //   setIsModalOpen(true);
-  // };
+ 
+  //get course name or assignment page for breadcrumbs
+  useEffect(() => {
+    const { source, courseId } = router.query;
 
-  // const closeModal = () => {
-  //   setIsModalOpen(false);
-  // };
+    if (source === 'course' && courseId) {
+      // Fetch course name
+      fetchCourseName(courseId as string);
+    }
+  }, [router.query]);
+
+  const fetchCourseName = async (courseId: string) => {
+    try {
+      const response = await fetch(`/api/courses/${courseId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setCourseName(data.courseName);
+      }
+    } catch (error) {
+      console.error('Error fetching course name:', error);
+    }
+  };
 
   // Fetch assignments and students in the course when the component mounts
   useEffect(() => {
@@ -125,13 +142,15 @@ const ReleaseAssignment: React.FC = () => {
       });
 
       if (response.ok) {
-        alert("Students selected successfully");
+        toast.success("Students selected successfully");
         setSelectedStudents([]);
         setUniqueDueDate("");
       } else {
+        toast.error("Failed to select students");
         console.error("Failed to select students");
       }
     } catch (error) {
+      toast.error("There was an error while selecting students")
       console.error("Error selecting students:", error);
     }
   };
@@ -185,12 +204,14 @@ const handleSubmit = async (e: React.FormEvent) => {
     });
 
     if (response.ok) {
-      alert("Assignment released for review successfully");
+      toast.success("Assignment released for review successfully");
       router.push("/instructor/dashboard");
     } else {
+      toast.error("Failed to release assignment for review.")
       console.error("Failed to release assignment for review");
     }
   } catch (error) {
+    toast.error("Error releasing assignment for review")
     console.error("Error releasing assignment for review:", error);
   }
 };
@@ -216,6 +237,18 @@ const handleSubmit = async (e: React.FormEvent) => {
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");
   }
+  function handleAssignmentClick(): void {
+    router.push("/instructor/assignments");
+  }
+
+  const handleBackClick = () => { //redirect to course dashboard or all assignments
+    const { source } = router.query;
+    if (source === 'course') {
+      router.push(`/instructor/course-dashboard?courseId=${router.query.courseId}`);
+    } else {
+      router.push('/instructor/assignments');
+    }
+  };
   return (
 
     <>
@@ -226,6 +259,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleBackClick}>{router.query.source === 'course' ? (courseName || 'Course Dashboard') : 'Assignments'}</BreadcrumbItem>
             <BreadcrumbItem>Release Peer Review</BreadcrumbItem>
           </Breadcrumbs>
 

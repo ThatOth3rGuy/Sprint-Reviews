@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import styles from "../../styles/student-login.module.css";
 import { useState, useEffect } from "react";
 import { Button, Chip, Input, Divider } from "@nextui-org/react";
+import toast from "react-hot-toast";
 
 const StudentLogin: NextPage = () => {
   const [email, setEmail] = useState("");
@@ -16,7 +17,7 @@ const StudentLogin: NextPage = () => {
   // Check for the session expiration reason and show an alert
   useEffect(() => {
     if (reason === "Session has expired") {
-      alert("Session has expired. Please log in again.");
+      toast.error("Session has expired. Please log in again.");
     }
   }, [reason]);
 
@@ -45,15 +46,17 @@ const StudentLogin: NextPage = () => {
       if (response.ok) {
         // Redirect to the student dashboard
         router.push("/student/dashboard");
+        toast.success("Login Successful!");
       } else {
         // Handle error response
         const errorData = await response.json();
         setError(errorData.message || 'Failed to authenticate');
-        alert(`${errorData.message}`);
+        toast.error(`${errorData.message}`);
       }
     } catch (error) {
       // Handle network or other errors
       setError("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again.")
     }
   };
 
