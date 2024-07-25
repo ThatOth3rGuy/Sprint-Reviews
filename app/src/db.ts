@@ -772,11 +772,20 @@ export async function getReviewGroups(studentID?: number, assignmentID?: number,
   }
 }
 
-interface Group { groupNumber: number; studentIDs: number[]; }
+interface Group {
+  groupNumber: number;
+  studentIDs: number[];
+}
+
 export async function createGroups(groups: Group[], courseID: number) {
-  const sql = `
+  const deleteSql = `
+    DELETE FROM course_groups
+    WHERE courseID = ? AND groupID NOT IN (?)
+  `;
+  const insertSql = `
     INSERT INTO course_groups (groupID, studentID, courseID)
     VALUES (?, ?, ?)
+    ON DUPLICATE KEY UPDATE studentID = VALUES(studentID)
   `;
 
   if (!groups || !courseID) {
@@ -784,13 +793,39 @@ export async function createGroups(groups: Group[], courseID: number) {
   }
 
   try {
+    // Get the list of current group numbers
+    const currentGroupNumbers = groups.map(group => group.groupNumber);
+
+    // Prepare the delete query
+    const deletePlaceholders = groups.map(() => '?').join(', ');
+    const deleteParams = [courseID, ...currentGroupNumbers];
+
+    await query(`DELETE FROM course_groups WHERE courseID = ? AND groupID NOT IN (${deletePlaceholders})`, deleteParams);
+
     for (const group of groups) {
       for (const studentID of group.studentIDs) {
-        await query(sql, [group.groupNumber, studentID, courseID]);
+        await query(insertSql, [group.groupNumber, studentID, courseID]);
       }
     }
   } catch (error) {
     console.error('Error creating groups:', error);
+    throw error;
+  }
+}
+
+export async function getCourseGroups(courseID: number): Promise<any[]> {
+  const sql = `
+    SELECT *
+    FROM course_groups
+    WHERE courseID = ?
+    ORDER BY groupID, studentID
+  `;
+
+  try {
+    const rows = await query(sql, [courseID]);
+    return rows;
+  } catch (error) {
+    console.error('Error fetching students:', error);
     throw error;
   }
 }

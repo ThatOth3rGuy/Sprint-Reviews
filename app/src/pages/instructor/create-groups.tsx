@@ -42,21 +42,48 @@ export default function CreateGroup() {
 
   useEffect(() => {
     if (session && session.user && session.user.userID && courseId) {
-      fetchStudents(courseId as string);
+      fetchStudentsAndGroups(courseId as string);
     }
   }, [session, courseId]);
 
-  const fetchStudents = async (courseId: string) => {
+  const fetchStudentsAndGroups = async (courseId: string) => {
     try {
-      const response = await fetch(`/api/courses/getCourseList?courseID=${courseId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setStudents(data || []);
+      const studentsResponse = await fetch(`/api/courses/getCourseList?courseID=${courseId}`);
+      if (studentsResponse.ok) {
+        const studentsData = await studentsResponse.json();
+        setStudents(studentsData || []);
+
+        const groupsResponse = await fetch(`/api/groups/getCourseGroups?courseID=${courseId}`);
+        if (groupsResponse.ok) {
+          const groupsData = await groupsResponse.json();
+          console.log("Group data", groupsData);
+
+          // Transform flat group data into nested group structure
+          const groupsMap = new Map<number, Group>();
+
+          groupsData.forEach((item: { groupID: number; studentID: number; courseID: number }) => {
+            if (!groupsMap.has(item.groupID)) {
+              groupsMap.set(item.groupID, { groupID: item.groupID, groupName: `Group ${item.groupID}`, members: [] });
+            }
+
+            const group = groupsMap.get(item.groupID);
+            const student = studentsData.find((student: Student) => student.studentID === item.studentID);
+
+            if (group && student) {
+              group.members.push(student);
+            }
+          });
+
+          const groupsArray = Array.from(groupsMap.values());
+          setGroups(groupsArray);
+        } else {
+          console.error('Failed to fetch groups');
+        }
       } else {
         console.error('Failed to fetch students');
       }
     } catch (error) {
-      console.error('Error fetching students:', error);
+      console.error('Error fetching students and groups:', error);
     }
   };
 
