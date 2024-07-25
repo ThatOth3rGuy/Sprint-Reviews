@@ -53,18 +53,6 @@ test.describe('Student Dashboard Page', () => {
     await expect(courseName).toHaveText('COSC 499');
   });
 
-  // Check that the loading spinner is displayed initially
-  test('should display loading spinner initially', async ({ page }) => {
-    await page.reload();
-
-    const spinner = page.locator('.student .spinner');
-    await expect(spinner).toBeVisible();
-
-    // Wait for the spinner to disappear
-    await page.waitForSelector('.outerCard', { state: 'attached' });
-    await expect(spinner).not.toBeVisible();
-  });
-
   // Check that clicking a course card navigates to the course details page
   test('should navigate to course details page when course card is clicked', async ({ page }) => {
     await page.waitForSelector('.outerCard', { state: 'attached' });

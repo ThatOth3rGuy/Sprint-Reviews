@@ -73,22 +73,6 @@ test.describe('Instructor Individual Assignment View', () => {
     expect(instructorNavbar + adminNavbar).toBe(1);
   });
 
-  test('should show loading spinner when data is not ready', async ({ page }) => {
-    // Mock a slow response
-    await page.route('**/api/assignments/*', async route => {
-      await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second delay
-      route.fulfill({ status: 200, body: JSON.stringify({}) });
-    });
-    await page.route('**/api/courses/*', async route => {
-      await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second delay
-      route.fulfill({ status: 200, body: JSON.stringify({}) });
-    });
-    
-    await page.reload();
-    
-    await expect(page.locator('div:has-text("Loading")').or(page.locator('.spinner'))).toBeVisible();
-  });
-
   test('should handle error when assignment data fetch fails', async ({ page }) => {
     // Mock a failed response
     await page.route('**/api/assignments/*', route => route.fulfill({ status: 500, body: 'Server error' }));

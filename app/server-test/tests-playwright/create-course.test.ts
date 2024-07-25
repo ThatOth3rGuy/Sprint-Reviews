@@ -94,6 +94,11 @@ test.describe('Create Course Page', () => {
 
   // Check for error handling when the create course API call fails
   test('should show error when create course API call fails', async ({ page }) => {
+    /*
+    This test is so weird. Running it in isolation with 'Show browser' on in the Playwright settings it passes.
+    Running it in any other situation it times out. ??????
+    */
+
     await page.route('**/api/addNew/createCourse', route => {
       route.fulfill({
         status: 500,
@@ -133,10 +138,19 @@ test.describe('Create Course Page', () => {
     const filePath = path.resolve(__dirname, '../test-files/students.csv');
     await page.setInputFiles('input[type="file"]', filePath);
 
-    const [dialog] = await Promise.all([
-      page.waitForEvent('dialog'),
-      page.locator('role=button[name="Create Course"]').click(),
-    ]);
+    // Debugging logs
+    console.log('About to click the Create Course button');
+
+    await page.locator('role=button[name="Create Course"]').click();
+
+    // Debugging logs
+    console.log('Create Course button clicked, waiting for alert');
+
+    // Wait for the alert event
+    const dialog = await page.waitForEvent('dialog', { timeout: 30000 }); // Wait for alert event
+
+    // Debugging logs
+    console.log('Alert appeared:', dialog.message());
 
     expect(dialog.message()).toBe('Failed to enroll students');
     await dialog.accept();

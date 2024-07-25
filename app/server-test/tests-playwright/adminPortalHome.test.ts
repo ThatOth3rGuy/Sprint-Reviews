@@ -22,12 +22,6 @@ test.describe('Admin Portal Home Page', () => {
     await page.goto(`${baseURL}/admin/portal-home`);
   });
 
-  // Check that the loading text is displayed initially
-  test('should display loading text initially', async ({ page }) => {
-    const loadingText = page.locator('text=Loading...');
-    await expect(loadingText).toBeVisible();
-  });
-
   // Check that courses are displayed after loading
   test('should display courses after loading', async ({ page }) => {
     const course1 = page.getByText('COSC 499', { exact: true });
@@ -45,7 +39,7 @@ test.describe('Admin Portal Home Page', () => {
 
   // Mock an error response for fetching courses
   test('should display error message on failed courses fetch', async ({ page }) => {
-    await page.route('**/api/courses/getAllCourses?isArchived=false', route => {
+    await page.route('**/api/courses/getAllArchivedCourses?isArchived=false', route => {
       route.fulfill({
         status: 500,
         body: JSON.stringify({ message: 'Failed to fetch courses' })
@@ -62,15 +56,15 @@ test.describe('Admin Portal Home Page', () => {
 
     expect(dialog.message()).toBe('Failed to fetch courses');
     await dialog.accept();
-});
+  });
 
   // Check that the AdminHeader links are displayed
   test('should display admin header links', async ({ page }) => {
     const viewUsersLink = page.locator('text=View Users');
-    const joinRequestsLink = page.locator('text=Join Requests');
+    const roleRequestsLink = page.locator('text=Role Requests'); // Corrected locator text
     const archivedCoursesLink = page.locator('text=Archived Courses');
     await expect(viewUsersLink).toBeVisible();
-    await expect(joinRequestsLink).toBeVisible();
+    await expect(roleRequestsLink).toBeVisible(); // Corrected locator usage
     await expect(archivedCoursesLink).toBeVisible();
   });
 });

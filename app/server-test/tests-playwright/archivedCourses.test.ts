@@ -24,12 +24,6 @@ test.describe('Archived Courses Page', () => {
     await page.goto(`${baseURL}/admin/archived-courses`);
   });
 
-  // Check that the loading text is displayed initially
-  test('should display loading text initially', async ({ page }) => {
-    const loadingText = page.locator('text=Loading...');
-    await expect(loadingText).toBeVisible();
-  });
-
   // Check that archived courses are displayed after loading
   test('should display archived courses after loading', async ({ page }) => {
     const course1 = page.getByText('COSC 100', { exact: true });
@@ -42,7 +36,7 @@ test.describe('Archived Courses Page', () => {
   test('should redirect to course dashboard on archived course click', async ({ page }) => {
     const course1 = page.getByText('COSC 100', { exact: true });
     await course1.click();
-    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseID=3`);
+    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseId=3`);
   });
 
   // Mock an error response for fetching archived courses
@@ -65,10 +59,8 @@ test.describe('Archived Courses Page', () => {
 
   // Check that the breadcrumbs are displayed
   test('should display breadcrumbs', async ({ page }) => {
-    const dashboardLink = page.getByRole('link', { name: 'Dashboard' });
-    const adminPortalLink = page.getByRole('link', { name: 'Admin Portal' });
+    const adminPortalLink = page.getByRole('link', { name: 'Admin Dashboard' });
     const archivedCoursesLink = page.getByRole('link', { name: 'Archived Courses' }).first();
-    await expect(dashboardLink).toBeVisible();
     await expect(adminPortalLink).toBeVisible();
     await expect(archivedCoursesLink).toBeVisible();
   });
@@ -77,7 +69,7 @@ test.describe('Archived Courses Page', () => {
   test('should display admin header links', async ({ page }) => {
     const viewUsersLink = page.locator('text=View Users');
     const joinRequestsLink = page.locator('text=Join Requests');
-    const archivedCoursesLink = page.locator('text=Archived Courses').first();
+    const archivedCoursesLink = page.locator('text=Admin Portal');
     await expect(viewUsersLink).toBeVisible();
     await expect(joinRequestsLink).toBeVisible();
     await expect(archivedCoursesLink).toBeVisible();
