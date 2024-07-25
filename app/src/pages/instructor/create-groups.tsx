@@ -34,6 +34,7 @@ export default function CreateGroup() {
   const [editableGroups, setEditableGroups] = useState<Group[]>([]);
   const [isRandomizeModalOpen, setIsRandomizeModalOpen] = useState(false);
   const [isEditGroupsModalOpen, setIsEditGroupsModalOpen] = useState(false);
+  const [isRemoveGroupsModalOpen, setIsRemoveGroupsModalOpen] = useState(false);
   const [groupSize, setGroupSize] = useState<number>(3); // Default group size
   const [selectedStudents, setSelectedStudents] = useState<{ student: Student, groupID: number }[]>([]);
   const { courseId } = router.query;
@@ -161,6 +162,34 @@ export default function CreateGroup() {
   const handleEditGroups = () => {
     setEditableGroups(groups);
     setIsEditGroupsModalOpen(true); // Open the modal to edit groups
+  };
+
+  const handleRemoveGroups = () => {
+    setIsRemoveGroupsModalOpen(true); // Open the modal to confirm group removal
+  };
+
+  const confirmRemoveGroups = async () => {
+    try {
+      const response = await fetch(`/api/groups/removeGroups`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ courseID: courseId }),
+      });
+
+      if (response.ok) {
+        alert('Groups removed successfully');
+        setGroups([]);
+        setIsRemoveGroupsModalOpen(false);
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to remove groups', errorData);
+        alert(errorData.error);
+      }
+    } catch (error) {
+      console.error('Error removing groups:', error);
+    }
   };
 
   const handleMemberClick = (student: Student, groupID: number) => {
@@ -328,7 +357,7 @@ export default function CreateGroup() {
               <ListboxItem key="peer-review">Randomize Groups</ListboxItem>
             </Listbox>
             <Button color="primary" variant="ghost" onClick={handleEditGroups}>Edit groups</Button>
-            <Button color="danger" variant="ghost">Remove groups </Button>
+            <Button color="danger" variant="ghost" onClick={handleRemoveGroups}>Remove groups</Button>
           </div>
         </div>
 
@@ -404,6 +433,29 @@ export default function CreateGroup() {
               </Button>
               <Button color="primary" onPress={handleSaveGroups}>
                 Save
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+        {/* Remove Groups Modal */}
+        <Modal
+          className='z-20'
+          backdrop="blur"
+          isOpen={isRemoveGroupsModalOpen}
+          onOpenChange={(open) => setIsRemoveGroupsModalOpen(open)}
+        >
+          <ModalContent>
+            <ModalHeader>Remove Groups</ModalHeader>
+            <ModalBody>
+              <p>Are you sure you want to remove all groups?</p>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" variant="light" onPress={() => setIsRemoveGroupsModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button color="danger" onPress={confirmRemoveGroups}>
+                Confirm
               </Button>
             </ModalFooter>
           </ModalContent>
