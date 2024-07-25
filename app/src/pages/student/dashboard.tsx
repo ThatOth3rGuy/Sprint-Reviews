@@ -1,13 +1,11 @@
+// student/dashboard.tsx
 import React, { useState, useEffect } from 'react';
 import StudentCourseCard from "../components/student-components/student-course";
-import InstructorCourseCard from "../components/instructor-components/instructor-course";
-import StudentHeader from "../components/student-components/student-header";
 import StudentNavbar from "../components/student-components/student-navbar";
 import { useSessionValidation } from '../api/auth/checkSession';
 import { useRouter } from 'next/router';
-import { Button, Spinner } from '@nextui-org/react';
+import { Spinner } from '@nextui-org/react';
 import styles from '../../styles/student-dashboard.module.css';
-import { Modal,Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 
 interface Course {
   courseID: number;
@@ -31,11 +29,6 @@ export default function Page() {
       fetchCourses(session.user.userID);
     }
   }, [session]);
-
-
-  const handleCreateCourseClick = () => {
-    router.push('/instructor/create-course');
-  };
   
   const fetchCourses = async (userID: number) => {
     try {
@@ -88,7 +81,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-        
     </>
   );
 }
