@@ -780,7 +780,7 @@ interface Group {
 export async function createGroups(groups: Group[], courseID: number) {
   const deleteSql = `
     DELETE FROM course_groups
-    WHERE courseID = ? AND groupID NOT IN (?)
+    WHERE courseID = ?
   `;
   const insertSql = `
     INSERT INTO course_groups (groupID, studentID, courseID)
@@ -793,15 +793,10 @@ export async function createGroups(groups: Group[], courseID: number) {
   }
 
   try {
-    // Get the list of current group numbers
-    const currentGroupNumbers = groups.map(group => group.groupNumber);
+    // Delete all existing groups for the course
+    await query(deleteSql, [courseID]);
 
-    // Prepare the delete query
-    const deletePlaceholders = groups.map(() => '?').join(', ');
-    const deleteParams = [courseID, ...currentGroupNumbers];
-
-    await query(`DELETE FROM course_groups WHERE courseID = ? AND groupID NOT IN (${deletePlaceholders})`, deleteParams);
-
+    // Insert the new groups
     for (const group of groups) {
       for (const studentID of group.studentIDs) {
         await query(insertSql, [group.groupNumber, studentID, courseID]);
@@ -812,6 +807,7 @@ export async function createGroups(groups: Group[], courseID: number) {
     throw error;
   }
 }
+
 
 export async function getCourseGroups(courseID: number): Promise<any[]> {
   const sql = `

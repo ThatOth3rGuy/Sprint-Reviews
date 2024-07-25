@@ -56,7 +56,6 @@ export default function CreateGroup() {
         const groupsResponse = await fetch(`/api/groups/getCourseGroups?courseID=${courseId}`);
         if (groupsResponse.ok) {
           const groupsData = await groupsResponse.json();
-          console.log("Group data", groupsData);
 
           // Transform flat group data into nested group structure
           const groupsMap = new Map<number, Group>();
@@ -100,7 +99,6 @@ export default function CreateGroup() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Randomized groups response:', data);
         if (data.groups) {
           const newGroups = data.groups.map((group: { id: number, members: number[] }, index: number) => ({
             groupID: group.id,
