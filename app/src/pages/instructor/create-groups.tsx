@@ -20,8 +20,9 @@ interface Student {
 }
 
 interface Group {
+  groupID: number;
   groupName: string;
-  members: string[];
+  members: Student[];
 }
 
 export default function CreateGroup() {
@@ -30,10 +31,13 @@ export default function CreateGroup() {
   const [session, setSession] = useState<any>(null);
   const [students, setStudents] = useState<Student[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
+  const [editableGroups, setEditableGroups] = useState<Group[]>([]);
   const [isRandomizeModalOpen, setIsRandomizeModalOpen] = useState(false);
+  const [isEditGroupsModalOpen, setIsEditGroupsModalOpen] = useState(false);
   const [groupSize, setGroupSize] = useState<number>(3); // Default group size
+  const [selectedStudents, setSelectedStudents] = useState<{ student: Student, groupID: number }[]>([]);
   const { courseId } = router.query;
-  
+
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
@@ -69,14 +73,20 @@ export default function CreateGroup() {
 
       if (response.ok) {
         const data = await response.json();
-        const newGroups = data.groups.map((group: number[], index: number) => ({
-          groupName: `Group ${index + 1}`,
-          members: group.map(id => {
-            const student = students.find(student => student.studentID === id);
-            return `${student?.firstName} ${student?.lastName}`;
-          }),
-        }));
-        setGroups(newGroups);
+        console.log('Randomized groups response:', data);
+        if (data.groups) {
+          const newGroups = data.groups.map((group: { id: number, members: number[] }, index: number) => ({
+            groupID: group.id,
+            groupName: `Group ${index + 1}`,
+            members: group.members.map(id => {
+              const student = students.find(student => student.studentID === id);
+              return student ? student : null;
+            }).filter(student => student !== null) as Student[],
+          }));
+          setGroups(newGroups);
+        } else {
+          console.error('Data.groups is undefined');
+        }
         setIsRandomizeModalOpen(false); // Close the modal after successful group randomization
       } else {
         const errorData = await response.json();
@@ -92,16 +102,11 @@ export default function CreateGroup() {
     const groupsData = groups.map((group, index) => {
       return {
         groupNumber: index + 1,
-        studentIDs: group.members.map(member => {
-          const student = students.find(student => `${student.firstName} ${student.lastName}` === member);
-          return student ? student.studentID : null;
-        }).filter(studentID => studentID !== null)
+        studentIDs: group.members.map(member => member.studentID),
+        groupID: group.groupID,
       };
     });
-  
-    console.log('Creating groups:', groupsData);
-    console.log('Course ID:', courseId);
-  
+
     try {
       const response = await fetch(`/api/groups/createGroups`, {
         method: 'POST',
@@ -110,7 +115,7 @@ export default function CreateGroup() {
         },
         body: JSON.stringify({ groups: groupsData, courseID: courseId }),
       });
-  
+
       if (response.ok) {
         alert('Groups created successfully');
         router.push(`/instructor/course-dashboard?courseId=${courseId}`);
@@ -126,6 +131,64 @@ export default function CreateGroup() {
 
   const handleGroupRandomizer = () => {
     setIsRandomizeModalOpen(true); // Open the modal to input group size
+  };
+
+  const handleEditGroups = () => {
+    setEditableGroups(groups);
+    setIsEditGroupsModalOpen(true); // Open the modal to edit groups
+  };
+
+  const handleMemberClick = (student: Student, groupID: number) => {
+    if (selectedStudents.length === 0) {
+      setSelectedStudents([{ student, groupID }]);
+    } else if (selectedStudents.length === 1) {
+      const [firstSelection] = selectedStudents;
+      if (firstSelection.student.studentID === student.studentID) {
+        // Same student clicked, clear the selection
+        setSelectedStudents([]);
+      } else {
+        // Swap the groups of the two selected students
+        if(firstSelection.groupID != groupID) {
+          swapStudentGroups(firstSelection.student, student, firstSelection.groupID, groupID);
+        }
+      }
+    }
+  };
+
+  const swapStudentGroups = (student1: Student, student2: Student, group1ID: number, group2ID: number) => {
+    setEditableGroups(prevGroups => {
+      const newGroups = prevGroups.map(group => {
+        if (group.groupID === group1ID) {
+          return {
+            ...group,
+            members: group.members.map(member =>
+              member.studentID === student1.studentID ? student2 : member
+            ),
+          };
+        } else if (group.groupID === group2ID) {
+          return {
+            ...group,
+            members: group.members.map(member =>
+              member.studentID === student2.studentID ? student1 : member
+            ),
+          };
+        } else {
+          return group;
+        }
+      });
+      return newGroups;
+    });
+
+    setSelectedStudents([]);
+  };
+
+  const handleRandomizeGroupsSubmit = () => {
+    fetchRandomizedGroups(groupSize);
+  };
+
+  const handleSaveGroups = () => {
+    setGroups(editableGroups);
+    setIsEditGroupsModalOpen(false);
   };
 
   if (loading) {
@@ -155,10 +218,6 @@ export default function CreateGroup() {
   const handleHomeClick = async () => {
     router.push("/instructor/dashboard");
   }
-
-  const handleRandomizeGroupsSubmit = () => {
-    fetchRandomizedGroups(groupSize);
-  };
 
   return (
     <>
@@ -190,8 +249,16 @@ export default function CreateGroup() {
               <h2>Groups</h2>
               <Accordion variant="bordered">
                 {groups.map((group, index) => (
-                  <AccordionItem key={index} aria-label={group.groupName} title={group.groupName}>
-                    {group.members.join(', ')}
+                  <AccordionItem
+                    key={index}
+                    aria-label={group.groupName}
+                    title={group.groupName}
+                  >
+                    {group.members.map((member, i) => (
+                      <div key={i} style={{ margin: '5px' }}>
+                        {member.firstName} {member.lastName}
+                      </div>
+                    ))}
                   </AccordionItem>
                 ))}
               </Accordion>
@@ -202,7 +269,7 @@ export default function CreateGroup() {
               <ListboxItem key="create">Create Group</ListboxItem>
               <ListboxItem key="peer-review">Randomize Groups</ListboxItem>
             </Listbox>
-            <Button color="primary" variant="ghost">Edit groups</Button>
+            <Button color="primary" variant="ghost" onClick={handleEditGroups}>Edit groups</Button>
             <Button color="danger" variant="ghost">Remove groups </Button>
           </div>
         </div>
@@ -231,6 +298,46 @@ export default function CreateGroup() {
               </Button>
               <Button color="primary" onPress={handleRandomizeGroupsSubmit}>
                 Randomize
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+        {/* Edit Groups Modal */}
+        <Modal
+          className='z-20'
+          backdrop="blur"
+          isOpen={isEditGroupsModalOpen}
+          onOpenChange={(open) => setIsEditGroupsModalOpen(open)}
+        >
+          <ModalContent>
+            <ModalHeader>Edit Groups</ModalHeader>
+            <ModalBody>
+              {editableGroups.map((group, index) => (
+                <div key={index} style={{ marginBottom: '20px' }}>
+                  <h3>{group.groupName}</h3>
+                  {group.members.map((member, i) => (
+                    <Button
+                      key={i}
+                      auto
+                      onPress={() => handleMemberClick(member, group.groupID)}
+                      style={{
+                        margin: '5px',
+                        backgroundColor: selectedStudents.find(s => s.student.studentID === member.studentID) ? 'lightblue' : undefined
+                      }}
+                    >
+                      {member.firstName} {member.lastName}
+                    </Button>
+                  ))}
+                </div>
+              ))}
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" variant="light" onPress={() => setIsEditGroupsModalOpen(false)}>
+                Close
+              </Button>
+              <Button color="primary" onPress={handleSaveGroups}>
+                Save
               </Button>
             </ModalFooter>
           </ModalContent>

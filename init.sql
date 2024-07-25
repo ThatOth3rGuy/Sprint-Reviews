@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS course_groups (
     groupID INT,
     studentID INT,
     courseID INT,
-    PRIMARY KEY (groupID, studentID),
+    PRIMARY KEY (groupID, studentID, courseID),
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID)
 );
