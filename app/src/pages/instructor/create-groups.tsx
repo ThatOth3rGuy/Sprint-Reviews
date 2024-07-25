@@ -44,10 +44,10 @@ export default function CreateGroup() {
 
   const fetchStudents = async (courseId: string) => {
     try {
-      const response = await fetch(`/api/getStudentByCourse?courseId=${courseId}`);
+      const response = await fetch(`/api/courses/getCourseList?courseID=${courseId}`);
       if (response.ok) {
         const data = await response.json();
-        setStudents(data.student || []);
+        setStudents(data || []);
       } else {
         console.error('Failed to fetch students');
       }
