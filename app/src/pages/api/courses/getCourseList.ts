@@ -7,8 +7,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'GET') {
     const { courseID } = req.query;
 
+    console.log('Fetching students in course:', courseID);
+
     try {
       const students = await getStudentsInCourse(Number(courseID));
+      console.log('Fetched students:', students);
       res.status(200).json(students);
     } catch (error) {
       const err = error as Error;
