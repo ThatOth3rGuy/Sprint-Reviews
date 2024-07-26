@@ -14,7 +14,7 @@
         <img src="./images/week10Burnup2.png" width="max" />
         <h3>Additional Items: </h3>
     <h4>Clokify for the week:</h4>
- <img src="./images/week10Clokify2.jpeg" width="max" />
+ <img src="./images/week10Clokify2.png" width="max" />
     <h4>Test 2 :</h4>
     <img src="./images/test1.png" width="max" />
     <img src="./images/test2.png" width="max" />
