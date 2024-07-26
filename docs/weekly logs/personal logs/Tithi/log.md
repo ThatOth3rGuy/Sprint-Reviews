@@ -13,7 +13,7 @@ I worked on fixing the navigation UI for the login and registration pages, updat
 
 | Task | Due By | Status |
 | ------- | ------- | ------- |
-| Peer Review Dashboard for student | 07/26/2024 | WIP |
+| Peer Review Dashboard for student | 07/26/2024 | Needs to be checked for bug fixes |
 | Frontend testing for submit assignment | 07/26/2024 | WIP |
 | File viewer for assignments and peer reviews | 07/26/2024 | WIP |
 | Set up email api for account confirmation and email notifications | 07/28/2024 | Have notifications done, email api is WIP |
