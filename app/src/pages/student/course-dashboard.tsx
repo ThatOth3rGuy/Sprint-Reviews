@@ -9,6 +9,7 @@ import InstructorAssignmentCard from "../components/instructor-components/instru
 import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
 import StudentNavbar from "../components/student-components/student-navbar";
 import StudentAssignmentCard from "../components/student-components/student-assignment-card";
+import StudentReviewCard from "../components/student-components/student-peer-review-card";
 interface CourseData {
   courseID: string;
   courseName: string;
@@ -22,6 +23,15 @@ interface Assignment {
   rubric: string;
 }
 
+interface PeerReview {
+  reviewID: number;
+  assignmentID: number;
+  title: string;
+  deadline: string;
+  courseID: number;
+  courseName: string;
+}
+
 export default function Page() {
   const [loading, setLoading] = useState(true);
   const [assignmentsLoading, setAssignmentsLoading] = useState(true);
@@ -32,12 +42,14 @@ export default function Page() {
 
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [peerReviews, setPeerReviews] = useState<PeerReview[]>([]);
 
   useSessionValidation('student', setLoading, setSession);
 
   useEffect(() => {
     if (session && session.user && session.user.userID) {
       fetchAssignments(session.user.userID);
+      fetchPeerReviews(session.user.userID);
     }
     if (courseId) {
       
@@ -70,6 +82,20 @@ export default function Page() {
       }
     } catch (error) {
       console.error('Error fetching courses:', error);
+    }
+  };
+
+  const fetchPeerReviews = async (studentID: string) => {
+    try {
+      const response = await fetch(`/api/peer-reviews/${studentID}`);
+      if (response.ok) {
+        const data = await response.json();
+        setPeerReviews(data);
+      } else {
+        console.error('Failed to fetch peer reviews');
+      }
+    } catch (error) {
+      console.error('Error fetching peer reviews:', error);
     }
   };
 
@@ -114,8 +140,8 @@ export default function Page() {
               <Checkbox value="peerReviews">Peer Reviews</Checkbox>
               <Checkbox value="peerReviews">Peer Evaluations</Checkbox>
             </CheckboxGroup>
-            <h3 className={styles.innerTitle}>Assignments Created</h3>
-            <br /> <Divider className="instructor bg-secondary" /> <br />
+            <h3 className={styles.innerTitle}>Assignments</h3>
+            <br /> <Divider className="student bg-secondary" /> <br />
             <div className={styles.courseCard}>
               {assignments.length > 0 ? (
                 assignments.map((assignment) => (
@@ -131,22 +157,24 @@ export default function Page() {
               ) : (
                 <p>No assignments found for this course.</p>
               )}
-            </div><h3 className={styles.innerTitle}>Peer Reviews Created</h3>
-            <br /><Divider className="instructor bg-secondary" /><br />
+            </div><h3 className={styles.innerTitle}>Peer Reviews</h3>
+            <br /><Divider className="student bg-secondary" /><br />
             <div className={styles.courseCard}>
-              {assignments.length > 0 ? (
-                assignments.map((assignment) => (
-                  <div key={assignment.assignmentID} className={styles.courseCard}>
-                    <StudentAssignmentCard
-                      courseID={45}
-                      courseName="Peer review Assignment"
-                      color="#b3d0c3" dueDate={assignment.deadline}                    />
-                  </div>
-                ))
-              ) : (
-                <p>No assignments found for this course.</p>
-              )}
-            </div>
+            {peerReviews.length > 0 ? (
+              peerReviews.map((review) => (
+                <div key={review.reviewID} className={styles.courseCard}>
+                  <StudentReviewCard
+                    courseID={review.assignmentID}
+                    courseName={review.title}
+                    color="#b3d0c3"
+                    dueDate={review.deadline}
+                  />
+                </div>
+              ))
+            ) : (
+              <p>No peer reviews assigned for this course.</p>
+            )}
+          </div>
           </div>
           <div className={styles.notificationsSection}>
           <h2 className="my-3">Notifications</h2>
