@@ -16,10 +16,32 @@ I worked on fixing the navigation UI for the login and registration pages, updat
 | Peer Review Dashboard for student | 07/26/2024 | WIP |
 | Frontend testing for submit assignment | 07/26/2024 | WIP |
 | File viewer for assignments and peer reviews | 07/26/2024 | WIP |
-| Set up email api for account confirmation and email notifications | 07/28/2024 | WIP |
+| Set up email api for account confirmation and email notifications | 07/28/2024 | Have notifications done, email api is WIP |
 | Set up student submission for peer review assignments | 07/25/2024 | WIP |
 
 ![week 11 time tracking](img/week11.png)
+
+### 07/26/2024
+
+Topics Covered:
+*working on student peer review dashboard
+
+My contributions since Wednesday's log:
+
+I spent some time working on the student view for peer reviews. I made some progress, i have a basic dashboard made to view all information, including a component for handling the criteria view, a component for handling the file view, and a component that handles the card view of the peer reviews on the course dashboard. I am having some trouble getting the peer reviews to show for the student at the moment, most likely an issue of not having all of the submissions from every student.
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Peer Review Dashboard for student | 07/26/2024 | Mostly complete, just fixing bugs |
+| File viewer for assignments and peer reviews | 07/28/2024 | WIP |
+| Set up email api for account confirmation and email notifications | 07/28/2024 | WIP |
+| Set up student submission for peer review assignments | 07/28/2024 | Have some code to handle it but functionality is not there |
+
+#### Cycle Review and Goals
+
+I think we had a good amount of work completed throughout this cycle. The testing round was really helpful for getting feedback from other teams about where we could improve and what we needed to fix. A lot of the feedback we received was complementing the UI changes we made, which was really nice to hear since I spent a lot of time redesigning the entire application. As a team, we spent the first part of the cycle implementing the feedback we got from testing, from which a majority of it has been completed and is just waiting on some fixes before it is merged into development. The guys have gotten the randomizer and groups stuff mostly functioning, while I set up the notifications, added some more error handling on the frontend, and set up the student dashboard for peer reviews. For the next cycle, I am planning to get as much work done so that our application is mostly tested and complete for next Wednesday. I am planning to get the email api and file viewer set up as it is important for submissions and notifications. I also want to get the edit aspect of the site working, which include editing profile, editing course name, editing student in a course, etc. 
+
+![week 11 time tracking](img/week11.2.png)
 
 ## Personal Log For Week 10
 
