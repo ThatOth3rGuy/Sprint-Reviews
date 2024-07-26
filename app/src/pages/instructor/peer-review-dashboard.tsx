@@ -140,9 +140,27 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
     // }
     console.log("Randomize button clicked");
   };
-  function handleRelease(): void {
-    router.push("/instructor/dashboard");
-  }
+  
+  const handleRelease = async () => {
+    try {
+      const response = await fetch('/api/reviews/releaseReviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ assignmentID: review?.assignmentID }),
+      });
+
+      if (response.ok) {
+        console.log('Assignment released for reviews');
+        router.push(`/instructor/dashboard`);
+      } else {
+        console.error('Failed to release assignment for reviews');
+      }
+    } catch (error) {
+      console.error('Error releasing assignment for reviews:', error);
+    }
+  };
 
   return (
     <>

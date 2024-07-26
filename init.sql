@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS review_groups  (
     assignmentID INT,
     courseID INT,
     submissionID INT,
-    isReleased BOOLEAN,
+    isReleased BOOLEAN DEFAULT false,
     PRIMARY KEY (studentID, submissionID),
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
