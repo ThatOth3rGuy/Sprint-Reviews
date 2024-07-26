@@ -5,11 +5,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { assignmentID } = req.query;
   try {
     const submissions = await getStudentSubmissions(Number(assignmentID));
-    console.log('API response:', submissions.length);
 
     const allGroups = [];
     for (const sub of submissions) {
-      const group = await getReviewGroups(undefined, Number(assignmentID), sub.submissionID, undefined);
+      const group = await getReviewGroups(sub.studentID, Number(assignmentID), undefined, undefined);
       if (group.length > 0) {
         allGroups.push(group);
       }

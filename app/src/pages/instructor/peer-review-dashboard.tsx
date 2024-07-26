@@ -48,6 +48,26 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
+    if (session && session.user && session.user.userID) {
+      fetchCourses(session.user.userID);
+    }
+  }, [session]);
+
+  const fetchCourses = async (instructorID: number) => {
+    try {
+      const response = await fetch(`/api/getCourse4Instructor?instructorID=${instructorID}`);
+      if (response.ok) {
+        const data = await response.json();
+        setCourseData(data.courses);
+      } else {
+        console.error('Failed to fetch courses');
+      }
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+    }
+  };
+
+  useEffect(() => {
     if (reviewID) {
       // Fetch review data
       fetch(`/api/reviews/${reviewID}`)
@@ -55,17 +75,9 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
         .then((data: Review) => {
           console.log("Fetched review data:", data);
           setReview(data);
+          console.log("Review data: ", data);
         })
         .catch((error) => console.error('Error fetching review data:', error));
-
-      // Fetch course data
-      fetch(`/api/courses/3`)
-        .then((response) => response.json())
-        .then((data: CourseData) => {
-          console.log("Fetched course data:", data);
-          setCourseData(data);
-        })
-        .catch((error) => console.error('Error fetching course data:', error));
     }
   }, [reviewID]);
 
@@ -162,11 +174,10 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
               <div key={groupIndex} className={styles.courseCards}>
                 <Card className={styles.assignmentCard}>
                   <CardBody>
-                    <h3 className={styles.assignmentTitle}>{`Review Group ${groupIndex + 1}`}</h3>
+                    <h3 className={styles.assignmentTitle}>{`Student ID: ${group[0].studentID}`}</h3>
                     <div className={styles.assignmentDescription}>
                       {group.map((student, studentIndex) => (
                         <p key={studentIndex}>
-                          Student ID: {student.studentID},
                           Assigned  Submission ID: {student.submissionID},
                           
                         </p>

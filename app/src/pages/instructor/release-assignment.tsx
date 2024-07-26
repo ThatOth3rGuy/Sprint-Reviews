@@ -101,7 +101,6 @@ const ReleaseAssignment: React.FC = () => {
       const res = await fetch(`/api/getCourse4Instructor?instructorID=${userID}`);
       if (res.ok) {
         const cid = await res.json();
-        console.log(cid.courses[0].courseID);
         setCourse(cid.courses[0].courseID);
       }
     } catch (error) {
@@ -230,14 +229,14 @@ const ReleaseAssignment: React.FC = () => {
       if (!responseReleaseAssignment.ok) {
         throw new Error("Failed to release assignment for review");
       }
-      const reviewGroups = randomizePeerReviewGroups(studentSubmissions, 4); // 4 reviews per assignment
+      
+      //const reviewGroups = randomizePeerReviewGroups(studentSubmissions, 4); // 4 reviews per assignment
       // Second API call to release randomized peer reviews
       const responseReleasePeerReviews = await fetch("/api/addNew/releaseRandomizedPeerReview", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          //reviewsPerAssignment: 4,
-          reviewGroups,
+          reviewsPerAssignment: 4, // This number should be changed into an input field
           studentSubmissions,
           assignmentID,
         }),
