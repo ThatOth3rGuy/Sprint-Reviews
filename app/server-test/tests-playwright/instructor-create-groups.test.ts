@@ -43,53 +43,65 @@ test.describe('Create Group Page', () => {
     }
   });
   
-
   test('should display list of groups', async ({ page }) => {
     await expect(page.locator('h2:has-text("Groups")')).toBeVisible();
-
+  
     // Wait for groups to load
-    await page.waitForSelector('div[role="accordion"]:has-text("Groups")', { state: 'attached' });
-
+    await page.waitForSelector('div.instructor-course-dashboard_outerCard___bOt1', { state: 'attached' });
+  
     // Check if groups are loaded or "No groups available" message is displayed
-    const groupsLoaded = await page.locator('div[role="accordion"]:has-text("Groups") >> div').count();
+    const groupsLoaded = await page.locator('div.instructor-course-dashboard_outerCard___bOt1 div[data-orientation="vertical"]').count();
     if (groupsLoaded > 0) {
-      await expect(page.locator('div[role="accordion"]:has-text("Groups") >> div').first()).toBeVisible();
+      await expect(page.locator('div.instructor-course-dashboard_outerCard___bOt1 div[data-orientation="vertical"]').first()).toBeVisible();
     } else {
       await expect(page.getByText('No groups available', { exact: true })).toBeVisible();
     }
   });
-
+  
   test('should open and close randomize groups modal', async ({ page }) => {
+    // Click the button to open the randomize groups modal
     await page.click('text=Randomize Groups');
-    await expect(page.locator('text=Randomize Groups')).toBeVisible();
-
+    
+    // Verify that the modal header is visible
+    await expect(page.locator('header:text("Randomize Groups")')).toBeVisible();
+  
+    // Fill in the group size input
     await page.fill('input[type="number"]', '3');
     await expect(page.locator('input[type="number"]')).toHaveValue('3');
-
-    await page.click('text=Close');
-    await expect(page.locator('text=Randomize Groups')).not.toBeVisible();
+  
+    // Close the modal
+    await page.click('button:text("Close")');
+    
+    // Verify that the modal is no longer visible
+    await expect(page.locator('header:text("Randomize Groups")')).not.toBeVisible();
   });
-
+  
   test('should open and close edit groups modal', async ({ page }) => {
-    await page.click('text=Edit groups');
-    await expect(page.locator('text=Edit Groups')).toBeVisible();
-
-    await page.click('text=Close');
-    await expect(page.locator('text=Edit Groups')).not.toBeVisible();
+    // Click the button to open the edit groups modal
+    await page.click('button:has-text("Edit groups")');
+    
+    // Verify that the modal header is visible
+    await expect(page.locator('header:has-text("Edit Groups")')).toBeVisible();
+  
+    // Close the modal
+    await page.click('button:has-text("Close")');
+    
+    // Verify that the modal is no longer visible
+    await expect(page.locator('header:has-text("Edit Groups")')).not.toBeVisible();
   });
-
+  
   test('should open and close remove groups modal', async ({ page }) => {
-    await page.click('text=Remove groups');
-    await expect(page.locator('text=Remove Groups')).toBeVisible();
-
-    await page.click('text=Cancel');
-    await expect(page.locator('text=Remove Groups')).not.toBeVisible();
-  });
-
-  test('should create groups and navigate to course dashboard', async ({ page }) => {
-    await page.click('text=Create/Update Groups');
-    await page.waitForNavigation();
-    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseId=1`);
+    // Click the button to open the remove groups modal
+    await page.click('button:has-text("Remove groups")');
+    
+    // Verify that the modal header is visible
+    await expect(page.locator('header:has-text("Remove Groups")')).toBeVisible();
+  
+    // Click the cancel button to close the modal
+    await page.click('button:has-text("Cancel")');
+    
+    // Verify that the modal header is no longer visible
+    await expect(page.locator('header:has-text("Remove Groups")')).not.toBeVisible();
   });
 
   test('should display the correct navbar based on user role', async ({ page }) => {
@@ -105,4 +117,79 @@ test.describe('Create Group Page', () => {
     // Ensure only one navbar is present
     expect(instructorNavbar + adminNavbar).toBe(1);
   });
+
+  test('should display error when creating/updating groups without randomizing', async ({ page }) => {
+    // Attempt to click the button to create/update groups without randomizing
+    page.on('dialog', dialog => {
+      expect(dialog.message()).toBe('Please randomize groups before creating/updating.');
+      dialog.accept();
+    });
+    await page.click('text=Create/Update Groups');
+  });
+
+  test('should randomize, create, and remove groups, then navigate to course dashboard', async ({ page }) => {
+    // Open the randomize groups modal
+    await page.click('text=Randomize Groups');
+    
+    // Verify that the modal header is visible
+    await expect(page.locator('header:has-text("Randomize Groups")')).toBeVisible();
+  
+    // Fill in the group size input
+    await page.fill('input[type="number"]', '3');
+    await expect(page.locator('input[type="number"]')).toHaveValue('3');
+  
+    // Submit the randomize groups form
+    await page.click('button:has-text("Randomize")');
+    
+    // Wait for the modal to close
+    await expect(page.locator('header:has-text("Randomize Groups")')).not.toBeVisible();
+
+    // Ensure success message pops up
+    page.on('dialog', dialog => {
+      expect(dialog.message()).toBe('Groups created successfully');
+      dialog.accept();
+    });
+    // Click the button to create/update groups
+    await page.click('text=Create/Update Groups');
+    
+    // Wait for navigation to the course dashboard
+    await page.waitForNavigation();
+    
+    // Verify the URL is correct
+    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseId=1`);
+  
+    // Navigate back to the create groups page
+    await page.click('text=Create Student Groups');
+    await expect(page).toHaveURL(`${baseURL}/instructor/create-groups?courseId=1`);
+    
+    // Open the remove groups modal
+    await page.click('button:has-text("Remove groups")');
+    
+    // Verify that the modal header is visible
+    await expect(page.locator('header:has-text("Remove Groups")')).toBeVisible();
+  
+    // Click the cancel button to close the modal
+    await page.click('button:has-text("Cancel")');
+    
+    // Verify that the modal is no longer visible
+    await expect(page.locator('header:has-text("Remove Groups")')).not.toBeVisible();
+  
+    // Open the remove groups modal again
+    await page.click('button:has-text("Remove groups")');
+    
+    // Click the confirm button to remove the groups
+    await page.click('button:has-text("Confirm")');
+    
+    // Verify the success message pops up
+    page.on('dialog', dialog => {
+      expect(dialog.message()).toBe('Groups removed successfully');
+      dialog.accept();
+    });
+    // Verify that the modal is no longer visible
+    await expect(page.locator('header:has-text("Remove Groups")')).not.toBeVisible();
+  
+    // Verify that the groups are removed
+    const groupsLoaded = await page.locator('div[data-orientation="vertical"] div[aria-label^="Group"]').count();
+    expect(groupsLoaded).toBe(0);
+  });   
 });
