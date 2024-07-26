@@ -29,7 +29,11 @@ interface ReviewDashboardProps {
 
 interface ReviewGroup {
   studentID: number;
+  studentFirstName: string;
+  studentLastName: string;
   submissionID: number;
+  submissionFirstName: string;
+  submissionLastName: string;
   assignedSubmissionId: number;
   groupData: any; // You may want to define a more specific type based on the actual data structure
 }
@@ -73,9 +77,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
       fetch(`/api/reviews/${reviewID}`)
         .then((response) => response.json())
         .then((data: Review) => {
-          console.log("Fetched review data:", data);
           setReview(data);
-          console.log("Review data: ", data);
         })
         .catch((error) => console.error('Error fetching review data:', error));
     }
@@ -86,7 +88,6 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
       fetch(`/api/groups/${review.assignmentID}`)
         .then((response) => response.json())
         .then((data) => {
-          console.log("Fetched group data:", data);
           if (data.groups && Array.isArray(data.groups)) {
             setReviewGroups(data.groups);
           } else {
@@ -174,16 +175,16 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
               <div key={groupIndex} className={styles.courseCards}>
                 <Card className={styles.assignmentCard}>
                   <CardBody>
-                    <h3 className={styles.assignmentTitle}>{`Student ID: ${group[0].studentID}`}</h3>
+                    <h3 className={styles.assignmentTitle}>{`Student: ${group[0].studentFirstName} ${group[0].studentLastName}`}</h3>
                     <div className={styles.assignmentDescription}>
                       {group.map((student, studentIndex) => (
                         <p key={studentIndex}>
-                          Assigned  Submission ID: {student.submissionID},
+                          Assigned submission for: {student.submissionFirstName} {student.submissionLastName}, 
+                          ({student.submissionID})
                           
                         </p>
                       ))}
                     </div>
-                    <p>Total students in this group: {group.length}</p>
                   </CardBody>
                 </Card>
               </div>

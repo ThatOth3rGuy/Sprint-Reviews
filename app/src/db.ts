@@ -352,7 +352,6 @@ export async function getStudentSubmissions(assignmentId: number): Promise<Array
   `;
   try {
     const results = await query(sql, [assignmentId]);
-    console.log('Fetched student submissions:', results);
     return results;
   } catch (error) {
     console.error('Error in getSubmissionsByAssignmentId:', error);
@@ -786,14 +785,43 @@ export async function getReviewGroups(studentID?: number, assignmentID?: number,
   `;
 
   try {
-    console.log('Fetching review groups:', sql, params);
     const rows = await query(sql, params);
-    console.log('Fetched review groups:', rows);
     return rows;
   } catch (error) {
     console.error('Error fetching review groups:', error);
     throw error;
   }
+}
+export async function getGroupDetails(groups: any[]) {
+  if (groups.length === 0) {
+    return [];
+  }
+
+  const groupDetails = [];
+
+  for (const group of groups) {
+    const sql = `
+      SELECT 
+        sg.*,
+        stu.firstName AS studentFirstName,
+        stu.lastName AS studentLastName,
+        subu.firstName AS submissionFirstName,
+        subu.lastName AS submissionLastName
+      FROM student_groups sg
+      JOIN student st ON sg.studentID = st.studentID
+      JOIN user stu ON st.userID = stu.userID
+      JOIN submission s ON sg.submissionID = s.submissionID
+      JOIN student sub ON s.studentID = sub.studentID
+      JOIN user subu ON sub.userID = subu.userID
+      WHERE sg.studentID = ? AND sg.assignmentID = ? AND sg.submissionID = ?
+    `;
+
+    const params = [group.studentID, group.assignmentID, group.submissionID];
+    const rows = await query(sql, params);
+    groupDetails.push(...rows);
+  }
+
+  return groupDetails;
 }
 //Get students for setting unique due date
 // export async function getStudents(): Promise<any[]> {
