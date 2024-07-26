@@ -5,7 +5,8 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import { Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody, Button, ListboxItem, Listbox } from "@nextui-org/react";
+import { randomizePeerReviewGroups } from "../api/addNew/randomizationAlgorithm";
 
 interface Review {
   reviewID: number;
@@ -42,6 +43,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   const [review, setReview] = useState<Review | null>(null);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [reviewGroups, setReviewGroups] = useState<ReviewGroup[][]>([]);
+  const [randomizedReviewGroups, setRandomizedReviewGroups] = useState<ReviewGroup[][]>([]);
 
   useSessionValidation('instructor', setLoading, setSession);
 
@@ -105,6 +107,29 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   const handleHomeClick = () => {
     router.push("/instructor/dashboard");
   };
+  const handleRandomizeClick = async () => {
+    // // TODO: Call the randomizer API and update the reviewGroups state with the randomized data
+    // try {
+    //   // Fetch all student submissions
+    //   const response = await fetch(`/api/assignments/getSubmissionsList`);
+    //   if (!response.ok) {
+    //     throw new Error("Failed to fetch student submissions");
+    //   }
+    //   const studentSubmissions = await response.json();
+  
+    //   // Randomize the student submissions
+    //   const reviewGroups = randomizePeerReviewGroups(studentSubmissions, 4); // 4 reviews per assignment
+  
+    //   // Set the randomized review groups state
+    //   setRandomizedReviewGroups(reviewGroups);
+    // } catch (error) {
+    //   console.error("Error randomizing review groups:", error);
+    // }
+    console.log("Randomize button clicked");
+  };
+  function handleRelease(): void {
+    router.push("/instructor/dashboard");
+  }
 
   return (
     <>
@@ -116,13 +141,17 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
             <BreadcrumbItem onClick={handleBackClick}>{courseData ? courseData.courseName : "Course Dashboard"}</BreadcrumbItem>
-            <BreadcrumbItem>{review.reviewID ? `Review ${review.reviewID}` : "Review"}</BreadcrumbItem>
+            <BreadcrumbItem>{review.reviewID ? `Review ${review.assignmentName}` : "Review"}</BreadcrumbItem>
           </Breadcrumbs>
         </div>
         <div className={styles.assignmentsSection}>
+        
+        <Button color="secondary" variant="ghost" onClick={handleRandomizeClick}>Randomize Review Groups</Button>
+       
+
           {review && (
             <ReviewDetailCard
-              title={`Review ${review.reviewID}`}
+              title={`Review ${review.assignmentName}`}
               description={`Assignment: ${review.assignmentName}`}
               deadline={review.deadline}
             />
@@ -138,7 +167,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
                       {group.map((student, studentIndex) => (
                         <p key={studentIndex}>
                           Student ID: {student.studentID},
-                          Original Submission ID: {student.submissionID},
+                          Assigned  Submission ID: {student.submissionID},
                           
                         </p>
                       ))}
@@ -148,6 +177,9 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
                 </Card>
               </div>
             ))}
+          </div>
+          <div className={styles.notificationsSection}>
+          <Button color="primary" variant="ghost" onClick={handleRelease}>Release Assignment for Reviews</Button>
           </div>
         </div>
       </div>

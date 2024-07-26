@@ -781,7 +781,7 @@ export async function getReviewGroups(studentID?: number, assignmentID?: number,
   const sql = `
     SELECT *
     FROM student_groups
-    ${whereClause}
+    assignmentID
     ${groupByClause}
   `;
 
