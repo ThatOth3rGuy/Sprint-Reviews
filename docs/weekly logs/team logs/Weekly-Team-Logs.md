@@ -2,6 +2,61 @@
 
 # Weekly Team Logs
  # Week 10 summary (Test-ORAMA week)
+ ## July 24th (Wed) - July 26th (Fri)
+ ### Features in the Project Plan Cycle: 
+1. Randomizer to work with  instructor peer review dashboard
+2. Create a Group feature with all features for groups formation in the course
+3. Student peer review dashboard
+
+
+
+###  Tasks from the Project Board:
+![week10Kanban2](https://github.com/user-attachments/assets/6b99d001-de9c-4916-8c73-38923d70bd6a)
+
+
+
+### Tasks for Next Cycle:
+
+![week10ToDo2](https://github.com/user-attachments/assets/e93b518b-0138-4cb0-8df1-8b18ce698632)
+
+
+
+### Burn-up Chart (Velocity):
+![week10Burnup2](https://github.com/user-attachments/assets/af09cdb0-a2c3-47a4-94d0-c6d4f4b43ca5)
+
+
+
+### Times for Team/Individual:
+
+
+Clockify Times:
+
+![week10Clokify2](https://github.com/user-attachments/assets/133b3181-730a-4ca6-a431-bb5754245cc3)
+
+
+
+
+
+### Completed Tasks:
+![week10Done](https://github.com/user-attachments/assets/3b931bdb-d4e3-450e-98e3-1f4301a11c6a)
+
+
+### In Progress Tasks/ To do:
+![week10InProgress2](https://github.com/user-attachments/assets/10634009-12c5-4424-9233-6f8d978e311c)
+
+
+### Test Results 
+Playwright :
+
+![Playwright test report](https://github.com/user-attachments/assets/48cab5d3-b273-4dfd-9ce7-1a0603ad88ae)
+Jest : 
+
+![image](https://github.com/user-attachments/assets/b43f7ede-a023-4497-98fe-cb88ad5e881f)
+
+
+### Overview:
+This week's cycle was slower, yet significant progress was made in the group formation and student view of the dashboard. More work is needed over the weekend to prepare the prototype for testing. Currently, we have some tests ready, and more are in the process of being written.
+
 ## July 17th (Wed) - July 24th (Wed)
 ### Features in the Project Plan Cycle: 
 1. Fixed the following items as per feedback:
