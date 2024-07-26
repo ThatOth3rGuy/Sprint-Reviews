@@ -5,6 +5,7 @@ import styles from '../../styles/instructor-course-dashboard.module.css';
 import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Card, Accordion, AccordionItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from "@nextui-org/react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import React, { useState, useEffect } from 'react';
+import toast from "react-hot-toast";
 
 interface Assignment {
   assignmentID: number;
@@ -117,7 +118,7 @@ export default function CreateGroup() {
       } else {
         const errorData = await response.json();
         console.error('Failed to fetch randomized groups', errorData);
-        alert(errorData.error);
+        toast.error(errorData.error);
       }
     } catch (error) {
       console.error('Error fetching randomized groups:', error);
@@ -143,12 +144,12 @@ export default function CreateGroup() {
       });
 
       if (response.ok) {
-        alert('Groups created successfully');
+        toast.success('Groups created successfully');
         router.push(`/instructor/course-dashboard?courseId=${courseId}`);
       } else {
         const errorData = await response.json();
         console.error('Failed to create groups', errorData);
-        alert(errorData.error);
+        toast.error(errorData.error);
       }
     } catch (error) {
       console.error('Error creating groups:', error);
@@ -179,13 +180,13 @@ export default function CreateGroup() {
       });
 
       if (response.ok) {
-        alert('Groups removed successfully');
+        toast.success('Groups removed successfully');
         setGroups([]);
         setIsRemoveGroupsModalOpen(false);
       } else {
         const errorData = await response.json();
         console.error('Failed to remove groups', errorData);
-        alert(errorData.error);
+        toast.error(errorData.error);
       }
     } catch (error) {
       console.error('Error removing groups:', error);
