@@ -68,12 +68,11 @@ After the Test-O-Rama we have a list of fixes/suggestions to help the UI. First 
 
 ### Cycle Review
 
---
+For the wedesday to friday split the main goal is to finish fixing the peer review release/randomizer and the group creation features. My main task during this time is to finish the group creation by adding the ability to edit/remove groups and testing it. As well as this I will continue to write/fix the playwright and jest tests from before.
 
 ### Current Tasks
-  * 1: -
-  * 2: -
-  * 3: -
+  * 1: Finish group creation
+  * 2: Fix all the testing
 
 ### Progress Update: Wed-Fri
 <table>
@@ -85,28 +84,19 @@ After the Test-O-Rama we have a list of fixes/suggestions to help the UI. First 
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> -
+        <td> Finish group creation
         </td>
         <!-- Status -->
-        <td> -
+        <td> Done
         </td>
     </tr>
         <tr>
         <!-- Task/Issue # -->
-        <td> -
+        <td> Fix all the testing
         </td>
         <!-- Status -->
-        <td> -
+        <td> In Progress (Playwright is done)
         </td>
-    </tr>
-        <tr>
-        <!-- Task/Issue # -->
-        <td> -
-        </td>
-        <!-- Status -->
-        <td> -
-        </td>
-    </tr>
 </table>
 
 # Week 10
