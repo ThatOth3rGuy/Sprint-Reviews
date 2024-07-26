@@ -59,6 +59,10 @@ const SubmitAssignment: React.FC<SubmitAssignmentProps> = ({ assignmentID, userI
     formData.append('assignmentID', assignmentID.toString());
     formData.append('studentID', studentInfo.studentID.toString());
 
+    const handleClick = () => {
+        router.push(`/student/assignment-dashboard?courseID=${courseID}&assignmentID=${assignmentID}`);
+      };
+
     try {
       const response = await fetch('/api/submitAssignment', {
         method: 'POST',

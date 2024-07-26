@@ -74,7 +74,9 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   }, [reviewID]);
 
   if (!review || loading) {
-    return <Spinner color='primary' size="lg" className='instructor' />;
+    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+    <Spinner color='primary' size="lg" />
+</div>;
   }
 
   if (!session || !session.user || !session.user.userID) {

@@ -114,7 +114,7 @@ if (loading) {
                       courseID={assignment.assignmentID}
                       courseName={assignment.title}
                       dueDate={assignment.deadline}
-                      color="#72a98f"
+                      color="#b3d0c3"
                     />
                   </div>
                 ))
