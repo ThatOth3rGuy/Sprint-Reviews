@@ -48,7 +48,7 @@ Clockify Times:
 ### Test Results 
 Playwright :
 
-![image](https://github.com/user-attachments/assets/19f8aa9b-7d4a-4a71-803a-c7c14316955a)
+![Playwright test report](https://github.com/user-attachments/assets/48cab5d3-b273-4dfd-9ce7-1a0603ad88ae)
 Jest : 
 
 ![image](https://github.com/user-attachments/assets/b43f7ede-a023-4497-98fe-cb88ad5e881f)
