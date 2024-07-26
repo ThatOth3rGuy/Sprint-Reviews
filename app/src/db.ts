@@ -693,27 +693,13 @@ export async function getStudentsInCourse(courseID: number): Promise<any[]> {
 }
 // Inserts a student into the selected_students table for the defined submission in a course.
 export async function selectStudentForSubmission(studentID: number, assignmentID: number, courseID: number, submissionID: number): Promise<void> {
-  const createTableSql = `
-    CREATE TABLE IF NOT EXISTS student_groups (
-      studentID INT,
-      assignmentID INT,
-      courseID INT,
-      submissionID INT,
-      PRIMARY KEY (studentID, submissionID),
-      FOREIGN KEY (studentID) REFERENCES student(studentID),
-      FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
-      FOREIGN KEY (courseID) REFERENCES course(courseID),
-      FOREIGN KEY (submissionID) REFERENCES submission(submissionID)
-    )
-  `;
 
   const insertSql = `
-    INSERT INTO student_groups (studentID, assignmentID, courseID, submissionID)
+    INSERT INTO review_groups (studentID, assignmentID, courseID, submissionID)
     VALUES (?, ?, ?, ?)
   `;
 
   try {
-    await query(createTableSql);
     await query(insertSql, [studentID, assignmentID, courseID, submissionID]);
   } catch (error) {
     const err = error as Error;
@@ -728,7 +714,7 @@ export async function updateReviewer(studentID: number, assignmentID: number, su
 
   // Update SQL template
   const updateSql = `
-    UPDATE student_groups
+    UPDATE review_groups
     SET ${assignmentID ? 'assignmentID = ?' : ''}${assignmentID && submissionID ? ', ' : ''}${submissionID ? 'submissionID = ?' : ''}
     WHERE studentID = ?
   `;
@@ -779,7 +765,7 @@ export async function getReviewGroups(studentID?: number, assignmentID?: number,
 
   const sql = `
     SELECT *
-    FROM student_groups
+    FROM review_groups
     ${whereClause}
     ${groupByClause}
   `;
@@ -807,7 +793,7 @@ export async function getGroupDetails(groups: any[]) {
         stu.lastName AS studentLastName,
         subu.firstName AS submissionFirstName,
         subu.lastName AS submissionLastName
-      FROM student_groups sg
+      FROM review_groups sg
       JOIN student st ON sg.studentID = st.studentID
       JOIN user stu ON st.userID = stu.userID
       JOIN submission s ON sg.submissionID = s.submissionID
