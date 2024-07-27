@@ -9,6 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       const students = await getStudentsInCourse(Number(courseID));
+      console.log('API response:', students);
       res.status(200).json(students);
     } catch (error) {
       const err = error as Error;

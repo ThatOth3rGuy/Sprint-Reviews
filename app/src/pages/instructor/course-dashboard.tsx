@@ -22,6 +22,7 @@ import {
   ModalHeader
 } from "@nextui-org/react";
 import InstructorReviewCard from "../components/instructor-components/instructor-PR-card";
+import { enrollStudent } from "@/db";
 
 interface CourseData {
   courseID: string;
@@ -30,7 +31,7 @@ interface CourseData {
 
 interface Assignment {
   assignmentID: number;
-  linkedAssignmentID: number;
+  linkedAssignmentID: string;
   title: string;
   description: string;
   deadline: string;

@@ -17,13 +17,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 async function getCoursesByInstructorID(instructorID: number) {
   const sql = `
-    SELECT courseID, courseName, userID
+    SELECT courseID, courseName, userID, i.instructorID
     FROM course c join instructor i on c.instructorID=i.instructorID
     WHERE userID = ? AND isArchived = false
   `;
   try {
     const results = await query(sql, [instructorID]);
     return results;
+    //.map((row: any) => ({ courseID: row.courseID, courseName: row.courseName, instructorID: row.userID }));
   } catch (error) {
     console.error('Error in getCoursesByInstructorID:', error);
     throw error;

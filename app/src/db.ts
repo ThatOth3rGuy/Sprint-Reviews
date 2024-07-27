@@ -2,6 +2,7 @@
 import mysql from 'mysql2/promise';
 import fs from 'fs/promises';
 import config from './dbConfig'; // Import the database configuration from dbConfig.ts
+import { JsonObject } from '@prisma/client/runtime/library';
 
 let dbConfig;
 
@@ -39,6 +40,20 @@ export async function createUser(firstName: string, lastName: string, email: str
     return result.insertId; // Return the inserted user ID for adding to the instructor or student table
   } catch (error) {
     console.error('Error in addUser:', error); // Log the error
+    throw error;
+  }
+}
+export async function getUser(userID: string): Promise<any> {
+  const sql = `SELECT * FROM user WHERE userID = ?`;
+
+  try {
+    const rows = await query(sql, [userID]);
+    if (rows.length > 0) {
+      return rows[0];
+    }
+    return null; // Return null if no user is found (update later)
+  } catch (error) {
+    console.error(`Error fetching user ${userID}:`, error);
     throw error;
   }
 }
@@ -344,6 +359,20 @@ export async function getAssignmentsWithSubmissions() {
     console.error('Error in getAssignmentsWithSubmissions:', error);
   }
 }
+export async function getStudentSubmissions(assignmentId: number): Promise<Array<{ submissionID: number; studentID: number }>> {
+  const sql = `
+    SELECT studentID, submissionID
+    FROM submission
+    WHERE assignmentID = ?
+  `;
+  try {
+    const results = await query(sql, [assignmentId]);
+    return results;
+  } catch (error) {
+    console.error('Error in getSubmissionsByAssignmentId:', error);
+    throw error;
+  }
+}
 
 export async function getCoursesByStudentID(studentID: number): Promise<any[]> {
   const sql = `SELECT c.courseID, c.courseName, u.firstName AS instructorFirstName
@@ -599,9 +628,20 @@ export async function selectStudentsForAssignment(assignmentID: number, studentI
     console.error(`Error selecting students for assignment:`, err.message);
   }
 }
-export async function getCourse(courseID: number): Promise<any> {
+export async function getCourse(courseID: number): Promise<any> { //CHANGE NOW
   const sql = `
     SELECT courseID, courseName  FROM course WHERE instructorID = ?  `;
+  try {
+    const rows = await query(sql, [courseID]);
+    return rows[0];
+  } catch (error) {
+    console.error('Error in getCourse:', error);
+    throw error;
+  }
+}
+export async function getCourseByID(courseID: number): Promise<any> { //Gets course by ID instead of instructorID
+  const sql = `
+    SELECT courseID, courseName, instructorID  FROM course WHERE courseID = ?  `;
   try {
     const rows = await query(sql, [courseID]);
     return rows[0];
@@ -626,9 +666,9 @@ export async function getCourse(courseID: number): Promise<any> {
       console.error('Error in getStudents:', error);
       throw error;
     }
-  }
+}
     // grab all students from the database matching their student ID's
-    export async function getStudentsById(userID: number, customPool: mysql.Pool = pool) {
+export async function getStudentsById(userID: number, customPool: mysql.Pool = pool) {
       const sql = `
         SELECT studentID, u.userID FROM student s JOIN user u ON s.userID = u.userID WHERE u.userID = ?
       `;
@@ -643,7 +683,7 @@ export async function getCourse(courseID: number): Promise<any> {
         console.error('Error in getStudents:', error);
         throw error;
       }
-    }
+}
 //  enroll student in a course
 export async function enrollStudent(userID: string, courseID: string, customPool: mysql.Pool = pool): Promise<void> {
   const sql = `
@@ -679,27 +719,13 @@ export async function getStudentsInCourse(courseID: number): Promise<any[]> {
 }
 // Inserts a student into the selected_students table for the defined submission in a course.
 export async function selectStudentForSubmission(studentID: number, assignmentID: number, courseID: number, submissionID: number): Promise<void> {
-  const createTableSql = `
-    CREATE TABLE IF NOT EXISTS student_groups (
-      studentID INT,
-      assignmentID INT,
-      courseID INT,
-      submissionID INT,
-      PRIMARY KEY (studentID, submissionID),
-      FOREIGN KEY (studentID) REFERENCES student(studentID),
-      FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
-      FOREIGN KEY (courseID) REFERENCES course(courseID),
-      FOREIGN KEY (submissionID) REFERENCES submission(submissionID)
-    )
-  `;
 
   const insertSql = `
-    INSERT INTO student_groups (studentID, assignmentID, courseID, submissionID)
+    INSERT INTO review_groups (studentID, assignmentID, courseID, submissionID)
     VALUES (?, ?, ?, ?)
   `;
 
   try {
-    await query(createTableSql);
     await query(insertSql, [studentID, assignmentID, courseID, submissionID]);
   } catch (error) {
     const err = error as Error;
@@ -714,7 +740,7 @@ export async function updateReviewer(studentID: number, assignmentID: number, su
 
   // Update SQL template
   const updateSql = `
-    UPDATE student_groups
+    UPDATE review_groups
     SET ${assignmentID ? 'assignmentID = ?' : ''}${assignmentID && submissionID ? ', ' : ''}${submissionID ? 'submissionID = ?' : ''}
     WHERE studentID = ?
   `;
@@ -741,21 +767,73 @@ export async function updateReviewer(studentID: number, assignmentID: number, su
 }
 // Get review groups for a student based on the provided parameters
 export async function getReviewGroups(studentID?: number, assignmentID?: number, submissionID?: number, groupBy?: string) {
+  const conditions = [];
+  const params = [];
+
+  if (studentID !== undefined) {
+    conditions.push('studentID = ?');
+    params.push(studentID);
+  }
+
+  if (assignmentID !== undefined) {
+    conditions.push('assignmentID = ?');
+    params.push(assignmentID);
+  }
+
+  if (submissionID !== undefined) {
+    conditions.push('submissionID = ?');
+    params.push(submissionID);
+  }
+
+  const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+  const groupByClause = groupBy ? `GROUP BY ${groupBy}` : '';
+
   const sql = `
     SELECT *
-    FROM student_groups
-    WHERE ${studentID ? 'studentID = ?' : ''}${studentID && (assignmentID || submissionID) ? ' AND ' : ''}${assignmentID ? 'assignmentID = ?' : ''}${assignmentID && submissionID ? ' AND ' : ''}${submissionID ? 'submissionID = ?' : ''}
-    ${groupBy ? `GROUP BY ${groupBy}` : ''}
+    FROM review_groups
+    ${whereClause}
+    ${groupByClause}
   `;
 
   try {
-    const params = [studentID, assignmentID, submissionID].filter(value => value !== undefined);
     const rows = await query(sql, params);
     return rows;
   } catch (error) {
     console.error('Error fetching review groups:', error);
     throw error;
   }
+}
+export async function getGroupDetails(groups: any[]) {
+  if (groups.length === 0) {
+    return [];
+  }
+
+  const groupDetails = [];
+
+  for (const group of groups) {
+    const sql = `
+      SELECT 
+        sg.*,
+        stu.firstName AS studentFirstName,
+        stu.lastName AS studentLastName,
+        subu.firstName AS submissionFirstName,
+        subu.lastName AS submissionLastName
+      FROM review_groups sg
+      JOIN student st ON sg.studentID = st.studentID
+      JOIN user stu ON st.userID = stu.userID
+      JOIN submission s ON sg.submissionID = s.submissionID
+      JOIN student sub ON s.studentID = sub.studentID
+      JOIN user subu ON sub.userID = subu.userID
+      WHERE sg.studentID = ? AND sg.assignmentID = ? AND sg.submissionID = ?
+    `;
+
+    const params = [group.studentID, group.assignmentID, group.submissionID];
+    const rows = await query(sql, params);
+    groupDetails.push(...rows);
+  }
+
+  return groupDetails;
 }
 //Get students for setting unique due date
 // export async function getStudents(): Promise<any[]> {
@@ -801,3 +879,135 @@ export async function getReviewGroups(studentID?: number, assignmentID?: number,
 //     throw err;
 //   }
 // }
+/*
+UPDATE USER QUERIES FOR EACH TABLE
+*/
+// Update user information in the database with the given values
+export async function updateUser(userID: string, firstName?: string, lastName?: string, email?: string, password?: string): Promise<any> {
+  const updateFields = [];
+  const params = [];
+
+  if (firstName !== undefined) { updateFields.push('firstName = ?'); params.push(firstName); }
+  if (lastName !== undefined) { updateFields.push('lastName = ?'); params.push(lastName); }
+  if (email !== undefined) { updateFields.push('email = ?'); params.push(email); }
+  if (password !== undefined) { updateFields.push('password = ?'); params.push(password); }
+
+  const sql = `UPDATE user SET ${updateFields.join(', ')} WHERE userID = ?`;
+
+  try {
+    // Check if the user already exists with the given values
+    const existingUser = await getUser(userID);
+    if (!existingUser) {
+      throw new Error(`User with ID ${userID} does not exist.`);
+    }
+    // Proceed with the update
+    const update = await query(sql, [...params, userID]);
+    return update;
+  } catch (error) {
+    console.error(`Error updating user ${userID}:`, error);
+    throw error;
+  }
+}
+// Update student information in the database with the given values
+export async function updateStudent(sID: string, uID: string, pNum?: string, address?: string, dob?: string): Promise<any> {
+  const updateFields = [];
+  const params = [];
+
+  if ( pNum!== undefined) { updateFields.push('phoneNumber = ?'); params.push(pNum); }
+  if (address !== undefined) { updateFields.push('homeAddress = ?'); params.push(address); }
+  if (dob !== undefined) { updateFields.push('dateOfBirth = ?'); params.push(dob); }
+
+  const sql = `UPDATE student SET ${updateFields.join(', ')} WHERE studentID = ?`;
+
+  try {
+    // Check if the user already exists with the given values
+    const existingUser = await getStudentsById(Number(uID));
+    if (!existingUser) {
+      throw new Error(`Student ${sID} does not exist.`);
+    }
+    // Proceed with the update
+    const update = await query(sql, [...params, sID]);
+    return update;
+  } catch (error) {
+    console.error(`Error updating student ${sID}:`, error);
+    throw error;
+  }
+}
+// Update course information in the database with the given values
+export async function updateCourse(courseID: string, courseName?: string, instructorID?: string): Promise<any> {
+  const updateFields = [];
+  const params = [];
+
+  if (courseName !== undefined) { updateFields.push('courseName = ?'); params.push(courseName); }
+  if (instructorID !== undefined) { updateFields.push('instructorID = ?'); params.push(instructorID); }
+
+  const sql = `UPDATE course SET ${updateFields.join(', ')} WHERE courseID = ?`;
+
+  try {
+    // Check if the user already exists with the given values
+    const existingCourse = await getCourse(Number(courseID));
+    if (!existingCourse) {
+      throw new Error(`Course with ID ${courseID} does not exist.`);
+    }
+    // Proceed with the update
+    const update = await query(sql, [...params, courseID]);
+    return update;
+  } catch (error) {
+    console.error(`Error updating course ${courseID}:`, error);
+    throw error;
+  }
+}
+// Update student submission information in the database with the given values
+export async function updateSubmission(
+  submissionID: string, assignmentID?: string, 
+  studentID?: string, fname?: string, fcontent?: JsonObject, fType?: string, 
+  subDate?: string, grade?: string
+): Promise<any> {
+  /**This function might need to be handled differently for several things, such as file uploads, 
+  or the fact of storing each submission compared to just updating it as the same submission */
+  const updateFields = [];
+  const params = [];
+
+  if (assignmentID !== undefined) { updateFields.push('assignmentID = ?'); params.push(assignmentID); }
+  if (studentID !== undefined) { updateFields.push('studentID = ?'); params.push(studentID); }
+  if (fname !== undefined) { updateFields.push('fileName = ?'); params.push(fname); }
+  if (fcontent !== undefined) { updateFields.push('fileContent = ?'); params.push(fcontent); }
+  if (fType !== undefined) { updateFields.push('fileType = ?'); params.push(fType); }
+  if (subDate !== undefined) { updateFields.push('submissionDate = ?'); params.push(subDate); }
+  if (grade !== undefined) { updateFields.push('grade = ?'); params.push(grade); }
+
+  const sql = `UPDATE submission SET ${updateFields.join(', ')} WHERE submissionID = ?`;
+
+  try {
+    // Check if the user already exists with the given values
+    const existingSubmission = await getSubmissionFile(Number(submissionID)); //This might need to be changed
+    if (!existingSubmission) {
+      throw new Error(`Submission with ID ${submissionID} does not exist.`);
+    }
+    // Proceed with the update
+    const update = await query(sql, [...params, submissionID]);
+    return update;
+  } catch (error) {
+    console.error(`Error updating submission ${submissionID}:`, error);
+    throw error;
+  }
+}
+// Update enrollment information in the database with the given values
+export async function updateEnrollment(studentID: string, courseID: string): Promise<any> {
+
+  const sql = `UPDATE enrollment SET studentID = ?, courseID = ? WHERE studentID = ?`;
+
+  try {
+    // Check if the user already exists with the given values
+    const existingEnrollment = await getEnrollment(Number(enrollmentID));
+    if (!existingEnrollment) {
+      throw new Error(`Enrollment with ID ${studentID} does not exist.`);
+    }
+    // Proceed with the update
+    const update = await query(sql, [studentID, courseID]);
+    return update;
+  } catch (error) {
+    console.error(`Error updating enrollment. Student ${studentID} cant be moved to course ${courseID}:`, error);
+    throw error;
+  }
+}

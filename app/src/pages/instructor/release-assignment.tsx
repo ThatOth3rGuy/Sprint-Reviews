@@ -1,5 +1,3 @@
-// release-assignment.tsx
-// Import necessary libraries
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSessionValidation } from '../api/auth/checkSession';
@@ -8,8 +6,16 @@ import InstructorNavbar from "../components/instructor-components/instructor-nav
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import styles from "../../styles/instructor-assignments-creation.module.css";
-import { Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spinner } from "@nextui-org/react";
-import toast from "react-hot-toast";
+
+import {
+  Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs,
+  BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader,
+  ModalBody, ModalFooter, useDisclosure,
+  Spinner
+} from "@nextui-org/react";
+import { getSession, updateSession } from "@/lib";
+import { randomizePeerReviewGroups } from "../api/addNew/randomizationAlgorithm";
+
 
 // Define the structure for assignment and Rubric items
 interface Assignment {
@@ -27,6 +33,7 @@ interface Student {
   name: string;
 }
 
+// Main component for releasing an assignment for peer review
 const ReleaseAssignment: React.FC = () => {
   const router = useRouter();
   const [assignments, setAssignments] = useState<Assignment[]>([]);
@@ -42,9 +49,9 @@ const ReleaseAssignment: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const dummyassignments = ['Assignment 1', 'Assignment 2', 'Assignment 3'];
-  const [courseName, setCourseName] = useState<string>("");
-
-
+  const [studentSubmissions, setStudentSubmissions] = useState<{ studentID: number; submissionID: number; }[]>([]);
+  const [course, setCourse] = useState<string>("");
+  const [reviewsPerAssignment, setReviewsPerAssignment] = useState<number>(4);
   // Dummy rubric
   const dummyrubric = [
     { criterion: 'Criterion 1', maxMarks: 10 },
@@ -54,39 +61,26 @@ const ReleaseAssignment: React.FC = () => {
 
   // Dummy questions
   const questions = ['Was the work clear and easy to understand?', 'Was the content relevant and meaningful?', 'Was the work well-organized and logically structured?', 'Did the author provide sufficient evidence or examples to support their arguments or points?', 'Improvements: What suggestions do you have for improving the work?'];
+
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
- 
-  //get course name or assignment page for breadcrumbs
-  useEffect(() => {
-    const { source, courseId } = router.query;
-
-    if (source === 'course' && courseId) {
-      // Fetch course name
-      fetchCourseName(courseId as string);
-    }
-  }, [router.query]);
-
-  const fetchCourseName = async (courseId: string) => {
-    try {
-      const response = await fetch(`/api/courses/${courseId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setCourseName(data.courseName);
-      }
-    } catch (error) {
-      console.error('Error fetching course name:', error);
-    }
-  };
 
   // Fetch assignments and students in the course when the component mounts
   useEffect(() => {
     if (session && session.user) {
       fetchAssignments(session.user.userID);
-      fetchStudents(session.user.courseID);
+      fetchCourse(session.user.userID);
+      fetchStudents(session.user.userID);
     }
   }, [session]);
+
+  // Debug selectedAssignment state changes
+  useEffect(() => {
+    if (selectedAssignment !== "") {
+      fetchStudentSubmissions(Number(selectedAssignment));
+    }
+  }, [selectedAssignment]);
 
   // Function to fetch assignments
   const fetchAssignments = async (userID: string) => {
@@ -102,10 +96,21 @@ const ReleaseAssignment: React.FC = () => {
       console.error('Error fetching assignments:', error);
     }
   };
-
+  const fetchCourse = async (userID: string) => {
+    try {
+      const res = await fetch(`/api/getCourse4Instructor?instructorID=${userID}`);
+      if (res.ok) {
+        const cid = await res.json();
+        setCourse(cid.courses[0].courseID);
+      }
+    } catch (error) {
+      console.error('Error fetching course:', error);
+    }
+  }
   // Function to fetch students in the course
   const fetchStudents = async (courseID: string) => {
     try {
+      courseID = '3';
       const response = await fetch(`/api/courses/getCourseList?courseID=${courseID}`);
       if (response.ok) {
         const students = await response.json();
@@ -115,6 +120,24 @@ const ReleaseAssignment: React.FC = () => {
       }
     } catch (error) {
       console.error("Error fetching students:", error);
+    }
+  };
+
+  const fetchStudentSubmissions = async (assignmentID: number) => {
+    try {
+      const response = await fetch("/api/assignments/getSubmissionList", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ assignmentID }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setStudentSubmissions(data.formattedSubmissions); // Use the formatted submissions
+      } else {
+        console.error("Failed to fetch student submissions");
+      }
+    } catch (error) {
+      console.error("Failed to fetch student submissions");
     }
   };
 
@@ -142,15 +165,13 @@ const ReleaseAssignment: React.FC = () => {
       });
 
       if (response.ok) {
-        toast.success("Students selected successfully");
+        alert("Students selected successfully");
         setSelectedStudents([]);
         setUniqueDueDate("");
       } else {
-        toast.error("Failed to select students");
         console.error("Failed to select students");
       }
     } catch (error) {
-      toast.error("There was an error while selecting students")
       console.error("Error selecting students:", error);
     }
   };
@@ -186,42 +207,58 @@ const ReleaseAssignment: React.FC = () => {
     setRubric(updatedRubric);
   };
 
-// In the handleSubmit function of ReleaseAssignment.tsx
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      // Ensure submissions are fetched correctly
+      const assignmentID = Number(selectedAssignment);
+      await fetchStudentSubmissions(assignmentID);
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  try {
-    const response = await fetch("/api/assignments/releaseAssignment", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        assignmentID: selectedAssignment,
-        rubric,
-        isGroupAssignment,
-        allowedFileTypes,
-        deadline,
-      }),
-    });
+      const responseReleaseAssignment = await fetch("/api/assignments/releaseAssignment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          assignmentID,
+          rubric,
+          isGroupAssignment,
+          allowedFileTypes,
+          deadline,
+        }),
+      });
 
-    if (response.ok) {
-      toast.success("Assignment released for review successfully");
+      if (!responseReleaseAssignment.ok) {
+        throw new Error("Failed to release assignment for review");
+      }
+
+      //const reviewGroups = randomizePeerReviewGroups(studentSubmissions, 4); // 4 reviews per assignment
+      // Second API call to release randomized peer reviews
+      const responseReleasePeerReviews = await fetch("/api/addNew/releaseRandomizedPeerReview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reviewsPerAssignment, // This number should be changed into an input field
+          studentSubmissions,
+          assignmentID,
+        }),
+      });
+
+      if (!responseReleasePeerReviews.ok) {
+        throw new Error("Failed to release randomized peer reviews");
+      }
+
+      // If both requests are successful
+      alert("Assignment and peer reviews released for review successfully");
       router.push("/instructor/dashboard");
-    } else {
-      toast.error("Failed to release assignment for review.")
-      console.error("Failed to release assignment for review");
+    } catch (error) {
+      console.error("Error releasing assignment or peer reviews for review:", error);
     }
-  } catch (error) {
-    toast.error("Error releasing assignment for review")
-    console.error("Error releasing assignment for review:", error);
-  }
-};
+  };
 
   const options = students.map((student) => ({
     value: student.id,
     label: student.name,
   }));
 
-  // If the session exists, check if the user is an admin
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
     return <p>No user found in session</p>;
@@ -231,26 +268,15 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   if (loading) {
     return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
-    <Spinner color='primary' size="lg" />
-</div>;
+      <Spinner color='primary' size="lg" />
+    </div>;
   }
+
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");
   }
-  function handleAssignmentClick(): void {
-    router.push("/instructor/assignments");
-  }
 
-  const handleBackClick = () => { //redirect to course dashboard or all assignments
-    const { source } = router.query;
-    if (source === 'course') {
-      router.push(`/instructor/course-dashboard?courseId=${router.query.courseId}`);
-    } else {
-      router.push('/instructor/assignments');
-    }
-  };
   return (
-
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
       <div className={`overflow-y-auto instructor text-primary-900 ${styles.container}`}>
@@ -259,10 +285,8 @@ const handleSubmit = async (e: React.FormEvent) => {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-            <BreadcrumbItem onClick={handleBackClick}>{router.query.source === 'course' ? (courseName || 'Course Dashboard') : 'Assignments'}</BreadcrumbItem>
             <BreadcrumbItem>Release Peer Review</BreadcrumbItem>
           </Breadcrumbs>
-
         </div>
         <div className={styles.mainContent}>
           <div className={styles.rectangle}>
@@ -301,12 +325,9 @@ const handleSubmit = async (e: React.FormEvent) => {
                         onChange={(e) =>
                           handleRubricChange(index, "criterion", e.target.value)
                         }
-                        // placeholder="Review criterion"
-                        // className={styles.textbox}
                         required
                       />
                       <br />
-                      {/* <label>Enter the maximum number of marks allowed:</label> */}
                       <Input
                         label="Maximum Marks for Criterion"
                         variant="bordered"
@@ -335,11 +356,19 @@ const handleSubmit = async (e: React.FormEvent) => {
                     variant="ghost"
                     color="success"
                     onClick={addRubricItem}
-                  // className={styles.criterion}
                   >Add Criterion
                   </Button>
                 </div>
               </div>
+              <br />
+              <Input
+                label="Number of Reviews per Assignment"
+                type="number"
+                min="1"
+                value={reviewsPerAssignment.toString()} // Convert number to string
+                onChange={(e) => setReviewsPerAssignment(Number(e.target.value))}
+                required
+              />
               <br />
               <label>Enter Due Date:</label>
               <br />
@@ -348,35 +377,29 @@ const handleSubmit = async (e: React.FormEvent) => {
                 type="datetime-local"
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
-                // className={styles.textbox}
                 color="primary"
                 required
-
               />
               <Button onClick={handleSubmit} color="primary" variant="solid" className="float-right m-4" size="sm">
-                <b>Release</b>
+                <b>Draft Release</b>
               </Button>
-              {/* TODO: fix select students in advanced options */}
               <Button variant="bordered" onPress={onOpen} color="primary" className="float-left m-4 ml-0" size="sm">
                 Advanced Options</Button>
-              <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="instructor"
-              // className={styles.advancedOptions}
-              >
+              <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="instructor">
                 <ModalContent>
                   {(onClose) => (
                     <>
                       <ModalHeader>Advanced Options</ModalHeader>
                       <ModalBody>
                         <div >
-                        <p className="text-left p-0 m-0 mb-2">Assign a unique due date to select students:</p>
+                          <p className="text-left p-0 m-0 mb-2">Assign a unique due date to select students:</p>
                           <p>
                             <Select
-                            size="sm"
+                              size="sm"
                               label="Select Students"
                               selectionMode="multiple"
-                              // placeholder="Select students"
                               onChange={(selectedValues) => {
-                                setSelectedStudents(selectedValues.map(Number));
+                                setSelectedStudents((selectedValues as unknown) as number[]);
                               }}
                             >
                               {students.map((student) => (
@@ -408,7 +431,6 @@ const handleSubmit = async (e: React.FormEvent) => {
                               type="datetime-local"
                               value={uniqueDueDate}
                               onChange={(e) => setUniqueDueDate(e.target.value)}
-                              // className={styles.textbox}
                               required
                             />
                             <br />
@@ -416,22 +438,15 @@ const handleSubmit = async (e: React.FormEvent) => {
                               Set Unique Due Date
                             </Button>
                           </form>
-                          {/* <button onClick={closeModal} className={styles.closeModal}>Close</button> */}
                         </div>
                       </ModalBody>
                     </>
                   )}
                 </ModalContent>
-                {/* <h2>Advanced Options</h2> */}
-
-
               </Modal>
               <br />
-              
             </form>
           </div>
-
-          
         </div>
       </div>
     </>
