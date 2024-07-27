@@ -656,10 +656,10 @@ export async function enrollStudent(userID: string, courseID: string, customPool
     const err = error as any;
     if (err.code === 'ER_DUP_ENTRY') {
       console.log(`Student ${userID} is already enrolled in course ${courseID}`);
-      return; // Return instead of throwing an error
+      throw err;
     } else {
       console.error(`Error enrolling student ${userID} in course ${courseID}:`, err.message);
-      throw err; // Only throw if it's not a duplicate entry error
+      throw err;
     }
   }
 }

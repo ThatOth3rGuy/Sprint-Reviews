@@ -97,7 +97,6 @@ export default function ManageStudents() {
       });
 
       if (response.ok) {
-        alert('Student enrolled successfully');
         toast.success('Student enrolled successfully');
         setNewStudentID(null);
         setIsEnrollModalOpen(false);
@@ -105,11 +104,11 @@ export default function ManageStudents() {
       } else {
         const errorData = await response.json();
         console.error('Failed to enroll student', errorData);
-        alert(errorData.error);
+        toast.error(errorData.error);
       }
     } catch (error) {
       console.error('Error enrolling student:', error);
-      alert('Error enrolling student');
+      toast.error('Error enrolling student');
     }
   };
 

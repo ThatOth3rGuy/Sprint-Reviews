@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const missingStudents: number[] = missingData ? missingData.map(Number) : [];
 
   // Enrolling an individual student
-  if (!Array.isArray(studentIDs)) {
+  if (studentIDs.length <= 1) {
     try {
       await enrollStudent(studentIDs.toString(), courseID.toString());
       return res.status(201).json({ courseID, studentIDs });
