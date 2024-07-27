@@ -644,20 +644,26 @@ export async function getCourse(courseID: number): Promise<any> {
         throw error;
       }
     }
-//  enroll student in a course
+// enroll student in a course
 export async function enrollStudent(userID: string, courseID: string, customPool: mysql.Pool = pool): Promise<void> {
   const sql = `
     INSERT INTO enrollment (studentID, courseID)
     VALUES (?, ?)
   `;
   try {
-    const result = await query(sql, [userID, courseID], customPool);
+    await query(sql, [userID, courseID], customPool);
   } catch (error) {
-    const err = error as Error;
-    console.error(`Error enrolling student ${userID} in course ${courseID}:`, err.message);
-    throw err;
+    const err = error as any;
+    if (err.code === 'ER_DUP_ENTRY') {
+      console.log(`Student ${userID} is already enrolled in course ${courseID}`);
+      return; // Return instead of throwing an error
+    } else {
+      console.error(`Error enrolling student ${userID} in course ${courseID}:`, err.message);
+      throw err; // Only throw if it's not a duplicate entry error
+    }
   }
 }
+
 
 export async function getStudentsInCourse(courseID: number): Promise<any[]> {
   const sql = `

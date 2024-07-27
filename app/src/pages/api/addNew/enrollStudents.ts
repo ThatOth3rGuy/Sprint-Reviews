@@ -12,17 +12,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { studentIDs, courseID, missingData } = req.body;
   const missingStudents: number[] = missingData ? missingData.map(Number) : [];
 
-  console.log('Enrolling students:', studentIDs, 'in course:', courseID);
-  console.log(!Array.isArray(studentIDs));
-
   // Enrolling an individual student
   if (!Array.isArray(studentIDs)) {
     try {
       await enrollStudent(studentIDs.toString(), courseID.toString());
       return res.status(201).json({ courseID, studentIDs });
     } catch (error) {
-      console.error(`Failed to enroll student: ${studentIDs} in course: ${courseID}. Error:`, (error as Error).message);
-      return res.status(500).json({ error: `Failed to enroll student ${studentIDs}`, details: (error as Error).message });
+      const err = error as any;
+      if (err.code === 'ER_DUP_ENTRY') {
+        return res.status(409).json({ error: `Student ${studentIDs} is already enrolled in course ${courseID}` });
+      } else {
+        console.error(`Failed to enroll student: ${studentIDs} in course: ${courseID}. Error:`, err.message);
+        return res.status(500).json({ error: `Failed to enroll student ${studentIDs}`, details: err.message });
+      }
     }
   }
 
@@ -34,8 +36,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         await enrollStudent(userID.toString(), courseID.toString());
         console.log(`Enrolled student: ${userID} in course: ${courseID}`);
       } catch (error) {
-        console.error(`Failed to enroll student: ${userID} in course: ${courseID}. Error:`, (error as Error).message);
-        missingStudents.push(userID);
+        const err = error as any;
+        if (err.code === 'ER_DUP_ENTRY') {
+          console.log(`Student ${userID} is already enrolled in course ${courseID}`);
+        } else {
+          console.error(`Failed to enroll student: ${userID} in course: ${courseID}. Error:`, err.message);
+          missingStudents.push(userID);
+        }
       }
     }
 

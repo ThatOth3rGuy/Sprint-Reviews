@@ -24,6 +24,8 @@ export default function ManageStudents() {
   const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
   const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const [isFileEnrollModalOpen, setIsFileEnrollModalOpen] = useState(false);
+  const [isConfirmRemoveModalOpen, setIsConfirmRemoveModalOpen] = useState(false);
+  const [studentToRemove, setStudentToRemove] = useState<Student | null>(null);
   const { courseId } = router.query;
 
   useSessionValidation('instructor', setLoading, setSession);
@@ -95,6 +97,7 @@ export default function ManageStudents() {
       });
 
       if (response.ok) {
+        alert('Student enrolled successfully');
         toast.success('Student enrolled successfully');
         setNewStudentID(null);
         setIsEnrollModalOpen(false);
@@ -102,11 +105,11 @@ export default function ManageStudents() {
       } else {
         const errorData = await response.json();
         console.error('Failed to enroll student', errorData);
-        toast.error(errorData.error);
+        alert(errorData.error);
       }
     } catch (error) {
       console.error('Error enrolling student:', error);
-      toast.error('Error enrolling student');
+      alert('Error enrolling student');
     }
   };
 
@@ -141,19 +144,22 @@ export default function ManageStudents() {
     }
   };
 
-  const handleRemoveStudent = async (studentID: number) => {
+  const handleRemoveStudent = async () => {
+    if (!studentToRemove) return;
+
     try {
-      const response = await fetch(`/api/students/removeStudent`, {
+      const response = await fetch(`/api/unenrollStudent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ studentID, courseID: courseId }),
+        body: JSON.stringify({ studentID: studentToRemove.studentID, courseID: courseId }),
       });
 
       if (response.ok) {
         toast.success('Student removed successfully');
-        setIsRemoveModalOpen(false);
+        setIsConfirmRemoveModalOpen(false);
+        setStudentToRemove(null);
         fetchStudents(courseId as string);
       } else {
         const errorData = await response.json();
@@ -283,7 +289,7 @@ export default function ManageStudents() {
               <Listbox>
                 {students.length > 0 ? (
                   students.map((student) => (
-                    <ListboxItem key={student.studentID} onClick={() => handleRemoveStudent(student.studentID)}>{student.firstName} {student.lastName}</ListboxItem>
+                    <ListboxItem key={student.studentID} onClick={() => { setStudentToRemove(student); setIsConfirmRemoveModalOpen(true); }}>{student.firstName} {student.lastName}</ListboxItem>
                   ))
                 ) : (
                   <ListboxItem key=''>No students available</ListboxItem>
@@ -293,6 +299,29 @@ export default function ManageStudents() {
             <ModalFooter>
               <Button color="primary" variant="light" onPress={() => setIsRemoveModalOpen(false)}>
                 Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+        {/* Confirm Remove Student Modal */}
+        <Modal
+          className='z-20'
+          backdrop="blur"
+          isOpen={isConfirmRemoveModalOpen}
+          onOpenChange={(open) => setIsConfirmRemoveModalOpen(open)}
+        >
+          <ModalContent>
+            <ModalHeader>Confirm Remove Student</ModalHeader>
+            <ModalBody>
+              <p>Are you sure you want to remove {studentToRemove?.firstName} {studentToRemove?.lastName}?</p>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" variant="light" onPress={() => setIsConfirmRemoveModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button color="danger" onPress={handleRemoveStudent}>
+                Remove
               </Button>
             </ModalFooter>
           </ModalContent>
