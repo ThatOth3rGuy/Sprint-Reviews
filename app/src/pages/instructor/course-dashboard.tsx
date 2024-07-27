@@ -135,6 +135,10 @@ export default function Page() {
     router.push("/instructor/create-groups");
   };
 
+  const handeEnrollRemoveStudentsClick = () => {
+    router.push(`/instructor/manage-students?courseId=${courseData.courseID}`);
+  }
+
   const handleAction = (key: any) => {
     switch (key) {
       case "create":
@@ -145,6 +149,9 @@ export default function Page() {
         break;
       case "group-review":
         handleCreateGroupPeerReviewAssignmentClick();
+        break;
+      case "manage-students":
+        handeEnrollRemoveStudentsClick();
         break;
       case "delete":
         console.log("Delete course");
@@ -228,9 +235,8 @@ export default function Page() {
               <Listbox aria-label="Actions" onAction={handleAction}>
                 <ListboxItem key="create">Create Assignment</ListboxItem>
                 <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
-                <ListboxItem key="group-review">
-                  Create Student Groups
-                </ListboxItem>
+                <ListboxItem key="group-review">Create Student Groups</ListboxItem>
+                <ListboxItem key="manage-students">Manage Students</ListboxItem>
                 <ListboxItem
                   key="delete"
                   className="text-danger"

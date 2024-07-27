@@ -1,6 +1,5 @@
-// pages/api/enrollStudents.ts
 import { NextApiRequest, NextApiResponse } from 'next';
-import { enrollStudent, getCourse } from '../../../db';
+import { enrollStudent } from '../../../db'; // Assuming you have this function implemented
 import fs from 'fs';
 import path from 'path';
 
@@ -13,6 +12,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { studentIDs, courseID, missingData } = req.body;
   const missingStudents: number[] = missingData ? missingData.map(Number) : [];
 
+  console.log('Enrolling students:', studentIDs, 'in course:', courseID);
+  console.log(!Array.isArray(studentIDs));
+
+  // Enrolling an individual student
+  if (!Array.isArray(studentIDs)) {
+    try {
+      await enrollStudent(studentIDs.toString(), courseID.toString());
+      return res.status(201).json({ courseID, studentIDs });
+    } catch (error) {
+      console.error(`Failed to enroll student: ${studentIDs} in course: ${courseID}. Error:`, (error as Error).message);
+      return res.status(500).json({ error: `Failed to enroll student ${studentIDs}`, details: (error as Error).message });
+    }
+  }
+
+  // Enrolling a list of students from a .csv
   try {
     console.log("Enrolling students:", studentIDs);
     for (const userID of studentIDs) {
@@ -31,16 +45,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       fs.writeFileSync(missingDataFilePath, missingStudentsCSV);
     }
 
-    res.status(201).json({ 
-      courseID, 
-      studentIDs, 
-      missingStudentsFilePath: missingStudents.length > 0 ? `/public/course${courseID}_missingStudents.csv` : null 
+    return res.status(201).json({
+      courseID,
+      studentIDs,
+      missingStudentsFilePath: missingStudents.length > 0 ? `/public/course${courseID}_missingStudents.csv` : null
     });
   } catch (error) {
     console.error(`Critical error: Failed to enroll students in course: ${courseID}. Error:`, (error as Error).message);
-    res.status(500).json({ 
-      error: `Failed to enroll students in course ${courseID}`, 
-      details: (error as Error).message 
+    return res.status(500).json({
+      error: `Failed to enroll students in course ${courseID}`,
+      details: (error as Error).message
     });
   }
 }
