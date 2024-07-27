@@ -2,6 +2,7 @@
 import mysql from 'mysql2/promise';
 import fs from 'fs/promises';
 import config from './dbConfig'; // Import the database configuration from dbConfig.ts
+import { JsonObject } from '@prisma/client/runtime/library';
 
 let dbConfig;
 
@@ -39,6 +40,20 @@ export async function createUser(firstName: string, lastName: string, email: str
     return result.insertId; // Return the inserted user ID for adding to the instructor or student table
   } catch (error) {
     console.error('Error in addUser:', error); // Log the error
+    throw error;
+  }
+}
+export async function getUser(userID: string): Promise<any> {
+  const sql = `SELECT * FROM user WHERE userID = ?`;
+
+  try {
+    const rows = await query(sql, [userID]);
+    if (rows.length > 0) {
+      return rows[0];
+    }
+    return null; // Return null if no user is found (update later)
+  } catch (error) {
+    console.error(`Error fetching user ${userID}:`, error);
     throw error;
   }
 }
@@ -614,9 +629,20 @@ export async function selectStudentsForAssignment(assignmentID: number, studentI
     console.error(`Error selecting students for assignment:`, err.message);
   }
 }
-export async function getCourse(courseID: number): Promise<any> {
+export async function getCourse(courseID: number): Promise<any> { //CHANGE NOW
   const sql = `
     SELECT courseID, courseName  FROM course WHERE instructorID = ?  `;
+  try {
+    const rows = await query(sql, [courseID]);
+    return rows[0];
+  } catch (error) {
+    console.error('Error in getCourse:', error);
+    throw error;
+  }
+}
+export async function getCourseByID(courseID: number): Promise<any> { //Gets course by ID instead of instructorID
+  const sql = `
+    SELECT courseID, courseName, instructorID  FROM course WHERE courseID = ?  `;
   try {
     const rows = await query(sql, [courseID]);
     return rows[0];
@@ -641,9 +667,9 @@ export async function getCourse(courseID: number): Promise<any> {
       console.error('Error in getStudents:', error);
       throw error;
     }
-  }
+}
     // grab all students from the database matching their student ID's
-    export async function getStudentsById(userID: number, customPool: mysql.Pool = pool) {
+export async function getStudentsById(userID: number, customPool: mysql.Pool = pool) {
       const sql = `
         SELECT studentID, u.userID FROM student s JOIN user u ON s.userID = u.userID WHERE u.userID = ?
       `;
@@ -658,7 +684,7 @@ export async function getCourse(courseID: number): Promise<any> {
         console.error('Error in getStudents:', error);
         throw error;
       }
-    }
+}
 //  enroll student in a course
 export async function enrollStudent(userID: string, courseID: string, customPool: mysql.Pool = pool): Promise<void> {
   const sql = `
@@ -839,3 +865,135 @@ export async function getReviewGroups(studentID?: number, assignmentID?: number,
 //     throw err;
 //   }
 // }
+/*
+UPDATE USER QUERIES FOR EACH TABLE
+*/
+// Update user information in the database with the given values
+export async function updateUser(userID: string, firstName?: string, lastName?: string, email?: string, password?: string): Promise<any> {
+  const updateFields = [];
+  const params = [];
+
+  if (firstName !== undefined) { updateFields.push('firstName = ?'); params.push(firstName); }
+  if (lastName !== undefined) { updateFields.push('lastName = ?'); params.push(lastName); }
+  if (email !== undefined) { updateFields.push('email = ?'); params.push(email); }
+  if (password !== undefined) { updateFields.push('password = ?'); params.push(password); }
+
+  const sql = `UPDATE user SET ${updateFields.join(', ')} WHERE userID = ?`;
+
+  try {
+    // Check if the user already exists with the given values
+    const existingUser = await getUser(userID);
+    if (!existingUser) {
+      throw new Error(`User with ID ${userID} does not exist.`);
+    }
+    // Proceed with the update
+    const update = await query(sql, [...params, userID]);
+    return update;
+  } catch (error) {
+    console.error(`Error updating user ${userID}:`, error);
+    throw error;
+  }
+}
+// Update student information in the database with the given values
+export async function updateStudent(sID: string, uID: string, pNum?: string, address?: string, dob?: string): Promise<any> {
+  const updateFields = [];
+  const params = [];
+
+  if ( pNum!== undefined) { updateFields.push('phoneNumber = ?'); params.push(pNum); }
+  if (address !== undefined) { updateFields.push('homeAddress = ?'); params.push(address); }
+  if (dob !== undefined) { updateFields.push('dateOfBirth = ?'); params.push(dob); }
+
+  const sql = `UPDATE student SET ${updateFields.join(', ')} WHERE studentID = ?`;
+
+  try {
+    // Check if the user already exists with the given values
+    const existingUser = await getStudentsById(Number(uID));
+    if (!existingUser) {
+      throw new Error(`Student ${sID} does not exist.`);
+    }
+    // Proceed with the update
+    const update = await query(sql, [...params, sID]);
+    return update;
+  } catch (error) {
+    console.error(`Error updating student ${sID}:`, error);
+    throw error;
+  }
+}
+// Update course information in the database with the given values
+export async function updateCourse(courseID: string, courseName?: string, instructorID?: string): Promise<any> {
+  const updateFields = [];
+  const params = [];
+
+  if (courseName !== undefined) { updateFields.push('courseName = ?'); params.push(courseName); }
+  if (instructorID !== undefined) { updateFields.push('instructorID = ?'); params.push(instructorID); }
+
+  const sql = `UPDATE course SET ${updateFields.join(', ')} WHERE courseID = ?`;
+
+  try {
+    // Check if the user already exists with the given values
+    const existingCourse = await getCourse(Number(courseID));
+    if (!existingCourse) {
+      throw new Error(`Course with ID ${courseID} does not exist.`);
+    }
+    // Proceed with the update
+    const update = await query(sql, [...params, courseID]);
+    return update;
+  } catch (error) {
+    console.error(`Error updating course ${courseID}:`, error);
+    throw error;
+  }
+}
+// Update student submission information in the database with the given values
+export async function updateSubmission(
+  submissionID: string, assignmentID?: string, 
+  studentID?: string, fname?: string, fcontent?: JsonObject, fType?: string, 
+  subDate?: string, grade?: string
+): Promise<any> {
+  /**This function might need to be handled differently for several things, such as file uploads, 
+  or the fact of storing each submission compared to just updating it as the same submission */
+  const updateFields = [];
+  const params = [];
+
+  if (assignmentID !== undefined) { updateFields.push('assignmentID = ?'); params.push(assignmentID); }
+  if (studentID !== undefined) { updateFields.push('studentID = ?'); params.push(studentID); }
+  if (fname !== undefined) { updateFields.push('fileName = ?'); params.push(fname); }
+  if (fcontent !== undefined) { updateFields.push('fileContent = ?'); params.push(fcontent); }
+  if (fType !== undefined) { updateFields.push('fileType = ?'); params.push(fType); }
+  if (subDate !== undefined) { updateFields.push('submissionDate = ?'); params.push(subDate); }
+  if (grade !== undefined) { updateFields.push('grade = ?'); params.push(grade); }
+
+  const sql = `UPDATE submission SET ${updateFields.join(', ')} WHERE submissionID = ?`;
+
+  try {
+    // Check if the user already exists with the given values
+    const existingSubmission = await getSubmissionFile(Number(submissionID)); //This might need to be changed
+    if (!existingSubmission) {
+      throw new Error(`Submission with ID ${submissionID} does not exist.`);
+    }
+    // Proceed with the update
+    const update = await query(sql, [...params, submissionID]);
+    return update;
+  } catch (error) {
+    console.error(`Error updating submission ${submissionID}:`, error);
+    throw error;
+  }
+}
+// Update enrollment information in the database with the given values
+export async function updateEnrollment(studentID: string, courseID: string): Promise<any> {
+
+  const sql = `UPDATE enrollment SET studentID = ?, courseID = ? WHERE studentID = ?`;
+
+  try {
+    // Check if the user already exists with the given values
+    const existingEnrollment = await getEnrollment(Number(enrollmentID));
+    if (!existingEnrollment) {
+      throw new Error(`Enrollment with ID ${studentID} does not exist.`);
+    }
+    // Proceed with the update
+    const update = await query(sql, [studentID, courseID]);
+    return update;
+  } catch (error) {
+    console.error(`Error updating enrollment. Student ${studentID} cant be moved to course ${courseID}:`, error);
+    throw error;
+  }
+}
