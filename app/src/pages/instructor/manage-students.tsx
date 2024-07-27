@@ -26,6 +26,7 @@ export default function ManageStudents() {
   const [isFileEnrollModalOpen, setIsFileEnrollModalOpen] = useState(false);
   const [isConfirmRemoveModalOpen, setIsConfirmRemoveModalOpen] = useState(false);
   const [studentToRemove, setStudentToRemove] = useState<Student | null>(null);
+  const [courseName, setCourseName] = useState<string>("");
   const { courseId } = router.query;
 
   useSessionValidation('instructor', setLoading, setSession);
@@ -33,9 +34,24 @@ export default function ManageStudents() {
   useEffect(() => {
     if (session && session.user && session.user.userID && courseId) {
       fetchStudents(courseId as string);
+      fetchCourseName(courseId as string);
     }
   }, [session, courseId]);
 
+  // Fetching course name for breadcrumbs
+  const fetchCourseName = async (courseId: string) => {
+    try {
+      const response = await fetch(`/api/courses/${courseId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setCourseName(data.courseName);
+      }
+    } catch (error) {
+      console.error('Error fetching course name:', error);
+    }
+  };
+
+  // Fetching enrolled students for the course
   const fetchStudents = async (courseId: string) => {
     try {
       const response = await fetch(`/api/courses/getCourseList?courseID=${courseId}`);
@@ -188,6 +204,10 @@ export default function ManageStudents() {
     router.push("/instructor/dashboard");
   }
 
+  const handleBackClick= async () =>{
+    router.push(`/instructor/course-dashboard?courseId=${courseId}`);
+  }
+
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -197,6 +217,7 @@ export default function ManageStudents() {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleBackClick}>{courseName === '' ? 'Course Dashboard': courseName}</BreadcrumbItem> 
             <BreadcrumbItem>Manage Students</BreadcrumbItem>
           </Breadcrumbs>
         </div>
