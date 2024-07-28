@@ -1,8 +1,9 @@
 import StudentNavbar from "../components/student-components/student-navbar";
 import styles from '../../styles/instructor-course-dashboard.module.css';
-import { Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody, CardHeader, Divider, Button,Input } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody, CardHeader, Divider, Button, Input } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import { useSessionValidation } from "../api/auth/checkSession";
 
 interface Assignment {
   assignmentID: number;
@@ -26,61 +27,57 @@ interface ReviewCriterion {
 
 interface Submission {
   submissionID: number;
+  assignmentID: number;
+  studentID: number;
   fileName: string;
-  fileContent: string;
   fileType: string;
+  submissionDate: string;
 }
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<any>(null);
   const [assignment, setAssignment] = useState<Assignment | null>(null);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [reviewCriteria, setReviewCriteria] = useState<ReviewCriterion[]>([]);
-  const [submissionToReview, setSubmissionToReview] = useState<Submission | null>(null);
-  const [reviewGrades, setReviewGrades] = useState<{[key: number]: string}>({});
+  const [submissionsToReview, setSubmissionsToReview] = useState<Submission[]>([]);
+  const [reviewGrades, setReviewGrades] = useState<{ [key: number]: string }>({});
   const router = useRouter();
   const { assignmentID } = router.query;
+  const [error, setError] = useState<string | null>(null)
+  const [reviewData, setReviewData] = useState(null); 
+  useSessionValidation('student', setLoading, setSession);
 
   useEffect(() => {
-    if (!router.isReady) return;
+    //if (!router.isReady) return;
 
     const fetchData = async () => {
-      if (assignmentID) {
-        try {
-          // Fetch assignment and course data
-          const assignmentResponse = await fetch(`/api/assignments/${assignmentID}`);
-          if (assignmentResponse.ok) {
-            const assignmentData: Assignment = await assignmentResponse.json();
-            setAssignment(assignmentData);
+      if (!router.isReady || !session) return;
+      const userID = session.user?.userID;   
+    
+    if (!assignmentID || !userID) {
+      setError('Missing assignmentID or userID');
+      setLoading(false);
+      return;
+    }
 
-            if (assignmentData.courseID) {
-              const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
-              if (courseResponse.ok) {
-                const courseData: CourseData = await courseResponse.json();
-                setCourseData(courseData);
-              }
-            }
-
-            // Fetch review criteria and submission to review
-            const reviewResponse = await fetch(`/api/review-dashboard/${assignmentID}`);
-            if (reviewResponse.ok) {
-              const reviewData = await reviewResponse.json();
-              setReviewCriteria(reviewData.reviewCriteria);
-              setSubmissionToReview(reviewData.submission);
-            } else {
-              console.error('Failed to fetch review data');
-            }
-          }
-        } catch (error) {
-          console.error('Error:', error);
-        } finally {
-          setLoading(false);
+      try {
+        const reviewResponse = await fetch(`/api/review-dashboard/${assignmentID}?userID=${userID}`);
+        if (!reviewResponse.ok) {
+          throw new Error(`Failed to fetch review data: ${await reviewResponse.text()}`);
         }
+        const data = await reviewResponse.json();
+        setReviewData(data); // Update the state with the fetched data
+
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, [router.isReady, assignmentID]);
+  }, [router.isReady, assignmentID, session]);
 
   if (loading) {
     return (
@@ -89,10 +86,12 @@ export default function Page() {
       </div>
     );
   }
-
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
   const handleHomeClick = () => router.push("/student/dashboard");
   const handleGradeChange = (criteriaID: number, value: string) => {
-    setReviewGrades(prev => ({...prev, [criteriaID]: value}));
+    setReviewGrades(prev => ({ ...prev, [criteriaID]: value }));
   };
 
   const handleSubmitReview = (e: React.FormEvent) => {
@@ -101,6 +100,7 @@ export default function Page() {
     console.log("Submitting review:", reviewGrades);
     // Add your API call to submit the review here
   };
+
   return (
     <>
       <StudentNavbar />
@@ -114,9 +114,9 @@ export default function Page() {
           </Breadcrumbs>
         </div>
         <div className={`w-[100%] ${styles.assignmentsSection}`}>
-          <h2>Review Assignment: {assignment?.title}</h2>
+          <h2>Review Assignment: {assignment?.title} FOR </h2>
           <div className="flex flex-col md:flex-row gap-4">
-            <Card className="flex-1">
+          <Card className="flex-1">
               <CardHeader>Review Criteria</CardHeader>
               <Divider />
               <CardBody>
@@ -143,28 +143,25 @@ export default function Page() {
                   </Button>
                 </form>
               </CardBody>
+
             </Card>
-            <Card className="flex-1">
-              <CardHeader>Submission to Review</CardHeader>
-              <Divider />
-              <CardBody>
-                {submissionToReview ? (
-                  <>
-                    <p>File Name: {submissionToReview.fileName}</p>
-                    <p>File Type: {submissionToReview.fileType}</p>
-                    <Divider className="my-2" />
-                    <p>File Content:</p>
-                    <pre className="whitespace-pre-wrap">{submissionToReview.fileContent}</pre>
-                  </>
-                ) : (
-                  <p>No submission to review.</p>
-                )}
-              </CardBody>
-            </Card>
+            <div></div>
+            {submissionsToReview.map((submission) => (
+              <div key={submission.submissionID}>
+                <h2>Submission {submission.submissionID}</h2>
+                <p>File Name: {submission.fileName}</p>
+                <p>File Type: {submission.fileType}</p>
+                <p>Submission Date: {new Date(submission.submissionDate).toLocaleString()}</p>
+                {/* Add more details or a link to review the submission */}
+              </div>
+            ))}
           </div>
-          
         </div>
       </div>
     </>
   );
 }
+function setSession(session: any): void {
+  throw new Error("Function not implemented.");
+}
+
