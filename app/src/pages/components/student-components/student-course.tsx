@@ -1,3 +1,4 @@
+// components/student-components/student-course
 import React from 'react';
 import { useRouter } from 'next/router';
 import { Card, CardBody, CardFooter, Image } from '@nextui-org/react';

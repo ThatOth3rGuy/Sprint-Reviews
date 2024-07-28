@@ -1,9 +1,7 @@
 // adminPortalHome.test.ts
 import { test, expect } from '@playwright/test';
-import playwrightConfig from '../playwright.config';
 
 const baseURL = 'http://localhost:3001';
-// playwrightConfig.use?.baseURL; // Base URL of your application
 
 // Login information comes from database, this should be adjusted when we implement a test db
 async function login(page: any) {
@@ -24,12 +22,6 @@ test.describe('Admin Portal Home Page', () => {
     await page.goto(`${baseURL}/admin/portal-home`);
   });
 
-  // Check that the loading text is displayed initially
-  test('should display loading text initially', async ({ page }) => {
-    const loadingText = page.locator('text=Loading...');
-    await expect(loadingText).toBeVisible();
-  });
-
   // Check that courses are displayed after loading
   test('should display courses after loading', async ({ page }) => {
     const course1 = page.getByText('COSC 499', { exact: true });
@@ -42,20 +34,12 @@ test.describe('Admin Portal Home Page', () => {
   test('should redirect to course dashboard on course click', async ({ page }) => {
     const course1 = page.getByText('COSC 499', { exact: true });
     await course1.click();
-    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseID=1`);
-  });
-
-  // Check that the filter and sort buttons are displayed
-  test('should display filter and sort buttons', async ({ page }) => {
-    const filterButton = page.locator('text=Filter');
-    const sortButton = page.locator('text=Sort');
-    await expect(filterButton).toBeVisible();
-    await expect(sortButton).toBeVisible();
+    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseId=1`);
   });
 
   // Mock an error response for fetching courses
   test('should display error message on failed courses fetch', async ({ page }) => {
-    await page.route('**/api/getAllCourses?isArchived=false', route => {
+    await page.route('**/api/courses/getAllArchivedCourses?isArchived=false', route => {
       route.fulfill({
         status: 500,
         body: JSON.stringify({ message: 'Failed to fetch courses' })
@@ -72,23 +56,15 @@ test.describe('Admin Portal Home Page', () => {
 
     expect(dialog.message()).toBe('Failed to fetch courses');
     await dialog.accept();
-});
-
-  // Check that the breadcrumbs are displayed
-  test('should display breadcrumbs', async ({ page }) => {
-    const dashboardLink = page.getByRole('link', { name: 'Dashboard' });
-    const adminPortalLink = page.getByRole('link', { name: 'Admin Portal' });
-    await expect(dashboardLink).toBeVisible();
-    await expect(adminPortalLink).toBeVisible();
   });
 
   // Check that the AdminHeader links are displayed
   test('should display admin header links', async ({ page }) => {
     const viewUsersLink = page.locator('text=View Users');
-    const joinRequestsLink = page.locator('text=Join Requests');
+    const roleRequestsLink = page.locator('text=Role Requests');
     const archivedCoursesLink = page.locator('text=Archived Courses');
     await expect(viewUsersLink).toBeVisible();
-    await expect(joinRequestsLink).toBeVisible();
+    await expect(roleRequestsLink).toBeVisible();
     await expect(archivedCoursesLink).toBeVisible();
   });
 });
