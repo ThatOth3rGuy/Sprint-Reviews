@@ -40,7 +40,7 @@ export default function Page() {
       fetchAssignments(session.user.userID);
     }
     if (courseId) {
-      
+
       fetch(`/api/courses/${courseId}`)
         .then((response) => response.json())
         .then((data: CourseData) => {
@@ -49,7 +49,7 @@ export default function Page() {
         })
         .catch((error) => console.error('Error fetching course data:', error));
 
-        fetchAssignments(courseId);
+      fetchAssignments(courseId);
     }
   }, [courseId]);
   const handleHomeClick = async () => {
@@ -75,8 +75,8 @@ export default function Page() {
 
   if (!courseData || loading) {
     return <div className='w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto'>
-    <Spinner color='primary' size="lg" />
-</div>;
+      <Spinner color='primary' size="lg" />
+    </div>;
   }
 
   if (!session || !session.user || !session.user.userID) {
@@ -99,7 +99,7 @@ export default function Page() {
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
             <BreadcrumbItem>{courseData.courseName}</BreadcrumbItem>
           </Breadcrumbs>
-          
+
         </div>
         <div className={styles.mainContent}>
           <div className={styles.assignmentsSection}>
@@ -141,7 +141,7 @@ export default function Page() {
                     <StudentAssignmentCard
                       courseID={45}
                       assignmentName="Peer review Assignment"
-                      color="#b3d0c3" deadline={assignment.deadline}                    />
+                      color="#b3d0c3" deadline={assignment.deadline} />
                   </div>
                 ))
               ) : (
@@ -150,11 +150,11 @@ export default function Page() {
             </div>
           </div>
           <div className={styles.notificationsSection}>
-          <h2 className="my-3">Notifications</h2>
-          <div className={styles.notificationsContainer}>
+            <h2 className="my-3">Notifications</h2>
+            <div className={styles.notificationsContainer}>
               <div className={styles.notificationCard}>Dummy Notification</div>
             </div>
-            </div>          
+          </div>
         </div>
       </div>
     </>

@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import InstructorCourseCard from "../components/instructor-components/instructor-course";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
-import InstructorHeader from "../components/instructor-components/instructor-header";
 import AdminNavbar from "../components/admin-components/admin-navbar";
-import AdminHeader from "../components/admin-components/admin-header";
 import { useSessionValidation } from '../api/auth/checkSession';
 import { useRouter } from 'next/router';
 import { Button, Spinner } from '@nextui-org/react';
 import styles from '../../styles/instructor-dashboard.module.css';
-import { Modal,Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 
 interface Course {
   courseID: number;
@@ -67,10 +64,9 @@ export default function Page() {
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.topSection}>
           <h1>Dashboard  </h1>
-          <Button size='sm' color="secondary" variant='ghost' className=' self-end' onClick={handleCreateCourseClick}>Create Course</Button>
+          <Button size='sm' color="secondary" variant='ghost' className='self-end text-right' onClick={handleCreateCourseClick}>Create Course</Button>
         </div>
         <div >
-
           <div className={styles.courseCards}>
             {courses.map((course) => (
               <div key={course.courseID} className={styles.courseCard}>

@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import StudentCourseCard from "../components/student-components/student-course";
-import InstructorCourseCard from "../components/instructor-components/instructor-course";
-import StudentHeader from "../components/student-components/student-header";
 import StudentNavbar from "../components/student-components/student-navbar";
 import { useSessionValidation } from '../api/auth/checkSession';
 import { useRouter } from 'next/router';
-import { Button, Spinner } from '@nextui-org/react';
+import { Spinner } from '@nextui-org/react';
 import styles from '../../styles/student-dashboard.module.css';
-import { Modal,Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 
 interface Course {
   courseID: number;
@@ -61,12 +58,12 @@ export default function Page() {
 
   return (
     <>
-      <StudentNavbar home={{className: "bg-secondary-50"}}/>
+      
 
-      <div className={`instructor text-primary-900 ${styles.container}`}>
+      <div className={`student text-primary-900 ${styles.container}`}>
         <div className={styles.topSection}>
-          <h1>Dashboard  </h1>
-        </div>
+          <h1>Dashboard </h1>
+        </div><StudentNavbar home={{className: "bg-secondary-50"}}/>
         <div >
           <div className={styles.courseCards}>
             {courses.map((course) => (
