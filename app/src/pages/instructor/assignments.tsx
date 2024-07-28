@@ -66,6 +66,8 @@ export default function AssignmentsPage() {
     });
   };
 
+  const handleBackClick = () => {router.back()}
+
 
 
   return (

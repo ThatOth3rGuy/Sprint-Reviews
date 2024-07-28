@@ -86,9 +86,7 @@ interface AssignmentDashboardProps {
   
     const isAdmin = session.user.role === 'admin';
   
-    const handleBackClick = () => {
-      router.back();
-    }
+    const handleBackClick = () => router.push(`/instructor/course-dashboard?courseId=${courseData?.courseID}`);
   
     const handleHomeClick = () => {
       router.push("/instructor/dashboard")
