@@ -32,6 +32,7 @@ interface Submission {
   fileName: string;
   fileType: string;
   submissionDate: string;
+  studentName?: string;
 }
 
 export default function Page() {
@@ -49,17 +50,15 @@ export default function Page() {
   useSessionValidation('student', setLoading, setSession);
 
   useEffect(() => {
-    //if (!router.isReady) return;
-
     const fetchData = async () => {
       if (!router.isReady || !session) return;
       const userID = session.user?.userID;   
     
-    if (!assignmentID || !userID) {
-      setError('Missing assignmentID or userID');
-      setLoading(false);
-      return;
-    }
+      if (!assignmentID || !userID) {
+        setError('Missing assignmentID or userID');
+        setLoading(false);
+        return;
+      }
 
       try {
         const reviewResponse = await fetch(`/api/review-dashboard/${assignmentID}?userID=${userID}`);
@@ -67,10 +66,11 @@ export default function Page() {
           throw new Error(`Failed to fetch review data: ${await reviewResponse.text()}`);
         }
         const data = await reviewResponse.json();
-        setReviewData(data); // Update the state with the fetched data
-
+        console.log('Review data:', data);
+        setReviewCriteria(data.reviewCriteria);
+        setSubmissionsToReview(data.submissions);
       } catch (error) {
-        setError(error.message);
+        setError((error as any).message);
       } finally {
         setLoading(false);
       }
@@ -116,7 +116,7 @@ export default function Page() {
         <div className={`w-[100%] ${styles.assignmentsSection}`}>
           <h2>Review Assignment: {assignment?.title} FOR </h2>
           <div className="flex flex-col md:flex-row gap-4">
-          <Card className="flex-1">
+            <Card className="flex-1">
               <CardHeader>Review Criteria</CardHeader>
               <Divider />
               <CardBody>
@@ -143,7 +143,6 @@ export default function Page() {
                   </Button>
                 </form>
               </CardBody>
-
             </Card>
             <div></div>
             {submissionsToReview.map((submission) => (
@@ -152,7 +151,7 @@ export default function Page() {
                 <p>File Name: {submission.fileName}</p>
                 <p>File Type: {submission.fileType}</p>
                 <p>Submission Date: {new Date(submission.submissionDate).toLocaleString()}</p>
-                {/* Add more details or a link to review the submission */}
+                {submission.studentName && <p>Student Name: {submission.studentName}</p>}
               </div>
             ))}
           </div>
@@ -161,7 +160,3 @@ export default function Page() {
     </>
   );
 }
-function setSession(session: any): void {
-  throw new Error("Function not implemented.");
-}
-
