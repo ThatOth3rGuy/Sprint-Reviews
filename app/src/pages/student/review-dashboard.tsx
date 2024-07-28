@@ -144,7 +144,15 @@ export default function Page() {
                 </form>
               </CardBody>
             </Card>
-            <div></div>
+            <div className={styles.notificationsSection}>{submissionsToReview.map((submission) => (
+              <div key={submission.submissionID}>
+                <h2>Submission {submission.submissionID}</h2>
+                <p>File Name: {submission.fileName}</p>
+                <p>File Type: {submission.fileType}</p>
+                <p>Submission Date: {new Date(submission.submissionDate).toLocaleString()}</p>
+                {submission.studentName && <p>Student Name: {submission.studentName}</p>}
+              </div>
+            ))}</div>
             {submissionsToReview.map((submission) => (
               <div key={submission.submissionID}>
                 <h2>Submission {submission.submissionID}</h2>
