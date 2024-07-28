@@ -237,7 +237,7 @@ WHERE u.userID = ?;
 }
 export async function getAllAssignmentsInstructor(userID: number) {
   const sql = `
-    SELECT a.*
+    SELECT a.*, c.courseName
 FROM assignment a
 JOIN course c ON a.courseID = c.courseID
 JOIN instructor i ON c.instructorID = i.instructorID

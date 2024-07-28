@@ -12,6 +12,7 @@ interface Assignment {
   title: string;
   description: string;
   deadline: string;
+  courseName: string;
 }
 
 export default function AssignmentsPage() {
@@ -101,8 +102,10 @@ export default function AssignmentsPage() {
                   >
                     <InstructorAssignmentCard 
                       courseID={assignment.assignmentID}
-                      courseName={assignment.title}
+                      courseName={assignment.courseName}
+                      assignmentName={assignment.title}
                       color="#9fc3cf"
+                      deadline={assignment.deadline}
                     />
                   </div>
                 ))
