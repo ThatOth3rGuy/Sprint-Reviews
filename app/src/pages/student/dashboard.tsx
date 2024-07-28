@@ -1,3 +1,4 @@
+// student/dashboard.tsx
 import React, { useState, useEffect } from 'react';
 import StudentCourseCard from "../components/student-components/student-course";
 import StudentNavbar from "../components/student-components/student-navbar";
@@ -80,7 +81,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-        
     </>
   );
 }
