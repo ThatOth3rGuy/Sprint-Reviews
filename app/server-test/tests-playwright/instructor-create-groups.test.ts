@@ -14,7 +14,7 @@ async function login(page: any) {
 test.describe('Create Group Page', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
-    await page.goto(`${baseURL}/instructor/create-groups?courseId=1`);
+    await page.goto(`${baseURL}/instructor/create-groups?source=course&courseId=1`);
   });
 
   test('should display create groups header', async ({ page }) => {
@@ -160,7 +160,7 @@ test.describe('Create Group Page', () => {
   
     // Navigate back to the create groups page
     await page.click('text=Create Student Groups');
-    await expect(page).toHaveURL(`${baseURL}/instructor/create-groups?courseId=1`);
+    await expect(page).toHaveURL(`${baseURL}/instructor/create-groups?source=course&courseId=1`);
     
     // Open the remove groups modal
     await page.click('button:has-text("Remove groups")');
