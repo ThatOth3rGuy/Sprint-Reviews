@@ -1,4 +1,3 @@
-// db.ts
 import mysql from 'mysql2/promise';
 import fs from 'fs/promises';
 import config from './dbConfig'; // Import the database configuration from dbConfig.ts
@@ -87,7 +86,7 @@ export async function createStudent(studentID: number, userID: number) {
   }
 }
 
-export async function authenticateAdmin(email: string, password: string): Promise<boolean> {
+export async function authenticateAdmin(email: string, password: string, customPool?: mysql.Pool): Promise<boolean> {
   const sql = `
     SELECT u.* 
     FROM user u
@@ -95,34 +94,37 @@ export async function authenticateAdmin(email: string, password: string): Promis
     WHERE u.email = ? AND u.pwd = ? AND u.userRole = 'instructor' AND i.isAdmin = true
   `;
   try {
-    const rows = await query(sql, [email, password]);
-    return rows.length > 0;
+    const rows = await query(sql, [email, password], customPool);
+    const isAuthenticated = rows.length > 0;
+    return isAuthenticated;
   } catch (error) {
-    console.error('Error in authenticateAdmin:', error); // Log the error
+    console.error('Error in authenticateAdmin:', error);
     throw error;
   }
 }
 
-export async function authenticateInstructor(email: string, password: string): Promise<boolean> {
+export async function authenticateInstructor(email: string, password: string, customPool?: mysql.Pool): Promise<boolean> {
   const sql = `
     SELECT * FROM user WHERE email = ? AND pwd = ? AND userRole = 'instructor'
   `;
   try {
-    const rows = await query(sql, [email, password]);
-    return rows.length > 0;
+    const rows = await query(sql, [email, password], customPool);
+    const isAuthenticated = rows.length > 0;
+    return isAuthenticated;
   } catch (error) {
-    console.error('Error in authenticateInstructor:', error); // Log the error
+    console.error('Error in authenticateInstructor:', error);
     throw error;
   }
 }
 
-export async function authenticateStudent(email: string, password: string): Promise<boolean> {
+export async function authenticateStudent(email: string, password: string, customPool?: mysql.Pool): Promise<boolean> {
   const sql = `
     SELECT * FROM user WHERE email = ? AND pwd = ? AND userRole = 'student'
   `;
   try {
-    const rows = await query(sql, [email, password]);
-    return rows.length > 0;
+    const rows = await query(sql, [email, password], customPool);
+    const isAuthenticated = rows.length > 0;
+    return isAuthenticated;
   } catch (error) {
     console.error('Error in authenticateStudent:', error); // Log the error
     throw error;
@@ -145,7 +147,7 @@ export async function getInstructorID(userID: number): Promise<number | null> {
   }
 }
 
-export async function getAllCourses(isArchived: boolean): Promise<any[]> {
+export async function getAllCourses(isArchived: boolean, customPool?: mysql.Pool): Promise<any[]> {
   const sql = `
     SELECT 
       course.courseID,
@@ -162,7 +164,7 @@ export async function getAllCourses(isArchived: boolean): Promise<any[]> {
     GROUP BY course.courseID, user.userID
   `;
   try {
-    const rows = await query(sql, [isArchived]);
+    const rows = await query(sql, [isArchived], customPool);
     return rows.map((row: any) => ({
       ...row,
       averageGrade: row.averageGrade !== null ? parseFloat(row.averageGrade) : null,
@@ -179,7 +181,8 @@ export async function addAssignmentToCourse(
   file: string, 
   groupAssignment: boolean, 
   courseID: number,
-  allowedFileTypes: string[]
+  allowedFileTypes: string[],
+  customPool?: mysql.Pool
 ) {
   if (!Number.isInteger(courseID)) {
     throw new Error('Invalid courseID');
@@ -193,9 +196,7 @@ export async function addAssignmentToCourse(
   try {
     // Check if the classID exists in the class table
     const classCheckSql = 'SELECT COUNT(*) as count FROM course WHERE courseID = ?';
-    const classCheckResult = await query(classCheckSql, [courseID]);
-    
-    console.log('Class check result:', classCheckResult);
+    const classCheckResult = await query(classCheckSql, [courseID], customPool);
 
     if (!classCheckResult || !Array.isArray(classCheckResult) || classCheckResult.length === 0) {
       throw new Error(`Unexpected result when checking for class with ID ${courseID}`);
@@ -208,8 +209,7 @@ export async function addAssignmentToCourse(
     }
 
     // If the class exists, proceed with the insert
-    const insertResult = await query(sql, [title, description, new Date(dueDate), file, groupAssignment, courseID, allowedFileTypesString]);
-    console.log('Insert result:', insertResult);
+    const insertResult = await query(sql, [title, description, new Date(dueDate), file, groupAssignment, courseID, allowedFileTypesString], customPool);
 
     return insertResult;
   } catch (error: any) {
@@ -242,10 +242,8 @@ FROM assignment a
 JOIN course c ON a.courseID = c.courseID
 JOIN instructor i ON c.instructorID = i.instructorID
 JOIN user u ON i.userID = u.userID
-WHERE u.userID = ?
+WHERE u.userID = ?`;
 
-  
-  `;
   try {
     const results = await query(sql, [userID]);
     return results;
@@ -254,10 +252,10 @@ WHERE u.userID = ?
     throw error;
   }
 }
-export async function getAssignments(): Promise<any[]> {
+export async function getAssignments(customPool?: mysql.Pool): Promise<any[]> {
   const sql = 'SELECT assignmentID, title, descr, DATE_FORMAT(deadline, "%Y-%m-%dT%H:%i:%s.000Z") as deadline FROM assignment';
   try {
-    const rows = await query(sql);
+    const rows = await query(sql, [], customPool);
     console.log('Fetched assignments:', rows);
     return rows as any[];
   } catch (error) {
@@ -266,10 +264,10 @@ export async function getAssignments(): Promise<any[]> {
   }
 }
 
-export async function getCourses(): Promise<any[]> {
+export async function getCourses(customPool?: mysql.Pool): Promise<any[]> {
   const sql = 'SELECT * FROM course';
   try {
-    const rows = await query(sql);
+    const rows = await query(sql, [], customPool);
     return rows as any[];
   } catch (error) {
     console.error('Database query error:', error);
@@ -290,7 +288,7 @@ export async function getCourses(): Promise<any[]> {
 //   }
 // }
 
-export async function getAssignmentsWithSubmissions() {
+export async function getAssignmentsWithSubmissions(customPool?: mysql.Pool) {
   const sql = `
     SELECT 
       a.assignmentID, 
@@ -298,17 +296,17 @@ export async function getAssignmentsWithSubmissions() {
       a.descr as description, 
       DATE_FORMAT(a.deadline, '%Y-%m-%dT%H:%i:%s.000Z') as deadline,
       a.rubric,
-      a.file,
+      a.allowedFileTypes,
       s.studentID,
       DATE_FORMAT(s.submissionDate, '%Y-%m-%dT%H:%i:%s.000Z') as submissionDate,
-      s.file as submissionFile
+      s.fileName as submissionFile
     FROM 
       assignment a
     LEFT JOIN 
-      submissions s ON a.assignmentID = s.assignmentID
+      submission s ON a.assignmentID = s.assignmentID
   `;
   try {
-    const rows = await query(sql);
+    const rows = await query(sql, [], customPool);
     
     // Group submissions by assignment
     const assignments = rows.reduce((acc: any[], row: any) => {
@@ -328,7 +326,7 @@ export async function getAssignmentsWithSubmissions() {
           description: row.description,
           deadline: row.deadline,
           rubric: row.rubric,
-          file: row.file,
+          allowedFileTypes: row.allowedFileTypes ? row.allowedFileTypes.split(',') : [],
           submissions: row.studentID ? [{
             studentID: row.studentID,
             submissionDate: row.submissionDate,
@@ -345,7 +343,8 @@ export async function getAssignmentsWithSubmissions() {
   }
 }
 
-export async function getCoursesByStudentID(studentID: number): Promise<any[]> {
+
+export async function getCoursesByStudentID(studentID: number, customPool?: mysql.Pool): Promise<any[]> {
   const sql = `SELECT c.courseID, c.courseName, u.firstName AS instructorFirstName
 FROM enrollment e
 JOIN course c ON e.courseID = c.courseID
@@ -354,8 +353,7 @@ JOIN user u ON i.userID = u.userID
 WHERE e.studentID = ?
 ORDER BY c.courseID`;
   try {
-    console.log('Fetching courses for student:', studentID);
-    const rows = await query(sql, [studentID]);
+    const rows = await query(sql, [studentID], customPool);
     return rows;
   } catch (error) {
     console.error('Error fetching courses for student:', error);
@@ -363,13 +361,13 @@ ORDER BY c.courseID`;
   }
 }
 
-export async function createCourse(courseName: string, instructorID: number) {
+export async function createCourse(courseName: string, instructorID: number, customPool?: mysql.Pool) {
   const sql = `
     INSERT INTO course (courseName, isArchived, instructorID)
     VALUES (?, false, ?)
   `;
   try {
-    const result = await query(sql, [courseName, instructorID]);
+    const result = await query(sql, [courseName, instructorID], customPool);
     return result.insertId; // Return the inserted course ID
   } catch (error) {
     console.error('Error in createCourse:', error); // Log the error
@@ -377,7 +375,7 @@ export async function createCourse(courseName: string, instructorID: number) {
   }
 }
 
-export async function getAssignmentForStudentView(assignmentId: number) {
+export async function getAssignmentForStudentView(assignmentId: number, customPool?: mysql.Pool) {
   const sql = `
     SELECT 
       assignmentID, 
@@ -392,7 +390,7 @@ export async function getAssignmentForStudentView(assignmentId: number) {
     WHERE assignmentID = ?
   `;
   try {
-    const rows = await query(sql, [assignmentId]);
+    const rows = await query(sql, [assignmentId], customPool);
     if (rows.length === 0) {
       return null;
     }
@@ -428,7 +426,12 @@ export async function getAssignmentForStudentView(assignmentId: number) {
 //   }
 // }
 
-export async function submitAssignment(assignmentID: number, studentID: number, file: Express.Multer.File) {
+export async function submitAssignment(
+  assignmentID: number,
+  studentID: number,
+  file: Express.Multer.File,
+  customPool: mysql.Pool = pool
+): Promise<{ success: boolean; message: string }> {
   const sql = `
     INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate)
     VALUES (?, ?, ?, ?, ?, NOW())
@@ -439,7 +442,7 @@ export async function submitAssignment(assignmentID: number, studentID: number, 
     const fileName = file.originalname;
     const fileType = file.mimetype;
 
-    await query(sql, [assignmentID, studentID, fileName, fileContent, fileType]);
+    await query(sql, [assignmentID, studentID, fileName, fileContent, fileType], customPool);
 
     // Delete the temporary file after it's been saved to the database
     await fs.unlink(file.path);
@@ -630,17 +633,18 @@ export async function getCourse(courseID: number): Promise<any> {
     // grab all students from the database matching their student ID's
     export async function getStudentsById(userID: number, customPool: mysql.Pool = pool) {
       const sql = `
-        SELECT studentID, u.userID FROM student s JOIN user u ON s.userID = u.userID WHERE u.userID = ?
+        SELECT s.studentID, u.userID FROM student s JOIN user u ON s.userID = u.userID WHERE s.studentID = ?
       `;
       try {
         const rows = await query(sql, [userID], customPool);
+        console.log('Query Result:', rows); // Add logging here
         if (rows.length > 0) {
           return rows[0];
         } else {
           return null; // Return null if no student is found
         }
       } catch (error) {
-        console.error('Error in getStudents:', error);
+        console.error('Error in getStudentsById:', error);
         throw error;
       }
     }
@@ -659,7 +663,7 @@ export async function enrollStudent(userID: string, courseID: string, customPool
   }
 }
 
-export async function getStudentsInCourse(courseID: number): Promise<any[]> {
+export async function getStudentsInCourse(courseID: number, customPool?: mysql.Pool): Promise<any[]> {
   const sql = `
     SELECT u.userID, u.firstName, u.lastName, u.email, s.studentID
     FROM user u
@@ -670,7 +674,7 @@ export async function getStudentsInCourse(courseID: number): Promise<any[]> {
   `;
 
   try {
-    const rows = await query(sql, [courseID]);
+    const rows = await query(sql, [courseID], customPool);
     return rows;
   } catch (error) {
     console.error('Error fetching students:', error);

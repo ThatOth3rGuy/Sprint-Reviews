@@ -1,5 +1,10 @@
-import mysql from 'mysql2/promise';
 import '@testing-library/jest-dom';
+import { TextEncoder as UtilTextEncoder, TextDecoder as UtilTextDecoder } from 'util';
+import mysql from 'mysql2/promise';
+
+// Casting to any to avoid type mismatch errors
+global.TextEncoder = UtilTextEncoder as any;
+global.TextDecoder = UtilTextDecoder as any;
 
 let pool: mysql.Pool;
 

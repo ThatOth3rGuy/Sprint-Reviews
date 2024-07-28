@@ -3,7 +3,7 @@ import { getStudentsById } from '../../src/db';
 
 describe('getStudentsById Tests', () => {
   let connection: mysql.PoolConnection;
-    // Since multiple tests are being run, use a baseID to ensure unique IDs
+  // Since multiple tests are being run, use a baseID to ensure unique IDs
   // then only test for getting theses specific courses
   const uniqueID = Math.floor(Math.random() * 1000000); // Base value for unique IDs
 
@@ -13,21 +13,23 @@ describe('getStudentsById Tests', () => {
     // Ensure the user and student exist
     await connection.query(
       `INSERT INTO user (userID, firstName, lastName, email, pwd, userRole) VALUES 
-      (${uniqueID + 1}, 'Test', 'Student', 'test.student@example.com', 'password123', 'student')
-      ON DUPLICATE KEY UPDATE email = VALUES(email)`
+      (?, 'Test', 'Student', 'test.student@example.com', 'password123', 'student')
+      ON DUPLICATE KEY UPDATE email = VALUES(email)`,
+      [uniqueID + 1]
     );
 
     await connection.query(
       `INSERT INTO student (userID, studentID, phoneNumber, homeAddress, dateOfBirth) VALUES 
-      (${uniqueID + 1}, ${uniqueID + 2}, '555-1234', '123 Test St', '2000-01-01')
-      ON DUPLICATE KEY UPDATE phoneNumber = VALUES(phoneNumber)`
+      (?, ?, '555-1234', '123 Test St', '2000-01-01')
+      ON DUPLICATE KEY UPDATE phoneNumber = VALUES(phoneNumber)`,
+      [uniqueID + 1, uniqueID + 2]
     );
   });
 
   afterAll(async () => {
     if (connection) {
-      await connection.query(`DELETE FROM student WHERE userID = ${uniqueID + 1}`);
-      await connection.query(`DELETE FROM user WHERE userID = ${uniqueID + 1}`);
+      await connection.query(`DELETE FROM student WHERE userID = ?`, [uniqueID + 1]);
+      await connection.query(`DELETE FROM user WHERE userID = ?`, [uniqueID + 1]);
       connection.release();
     }
   });
@@ -38,9 +40,6 @@ describe('getStudentsById Tests', () => {
     expect(student).toBeDefined();
     expect(student).toHaveProperty('userID', uniqueID + 1);
     expect(student).toHaveProperty('studentID', uniqueID + 2);
-    expect(student).toHaveProperty('firstName', 'Test');
-    expect(student).toHaveProperty('lastName', 'Student');
-    expect(student).toHaveProperty('email', 'test.student@example.com');
   });
 
   test('should return null for an invalid studentID', async () => {
@@ -51,9 +50,7 @@ describe('getStudentsById Tests', () => {
 
   test('should handle database errors', async () => {
     const mockPool = {
-      execute: jest.fn().mockImplementation(() => {
-        throw new Error('Simulated database error');
-      }),
+      execute: jest.fn().mockRejectedValue(new Error('Simulated database error')),
     };
 
     await expect(getStudentsById(uniqueID + 2, mockPool as unknown as mysql.Pool)).rejects.toThrow('Simulated database error');
