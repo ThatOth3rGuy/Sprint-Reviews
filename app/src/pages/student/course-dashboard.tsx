@@ -8,7 +8,7 @@ import styles from '../../styles/instructor-course-dashboard.module.css';
 import InstructorAssignmentCard from "../components/instructor-components/instructor-assignment-card";
 import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
 import StudentNavbar from "../components/student-components/student-navbar";
-import StudentAssignmentCard from "../components/student-components/student-assignment-card";
+import StudentAssignmentCard from "../components/student-components/student-course-assignment-card";
 interface CourseData {
   courseID: string;
   courseName: string;
@@ -122,9 +122,10 @@ export default function Page() {
                   <div key={assignment.assignmentID} className={styles.courseCard}>
                     <StudentAssignmentCard
                       courseID={assignment.assignmentID}
-                      courseName={assignment.title}
+                      assignmentName={assignment.title}
                       color="#b3d0c3"
-                      dueDate={assignment.deadline}
+                      deadline={assignment.deadline}
+
                     />
                   </div>
                 ))
@@ -139,8 +140,8 @@ export default function Page() {
                   <div key={assignment.assignmentID} className={styles.courseCard}>
                     <StudentAssignmentCard
                       courseID={45}
-                      courseName="Peer review Assignment"
-                      color="#b3d0c3" dueDate={assignment.deadline}                    />
+                      assignmentName="Peer review Assignment"
+                      color="#b3d0c3" deadline={assignment.deadline}                    />
                   </div>
                 ))
               ) : (

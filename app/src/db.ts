@@ -219,7 +219,7 @@ export async function addAssignmentToCourse(
 }
 export async function getAllAssignmentsStudent(userID: number) {
   const sql = `
-    SELECT a.*
+    SELECT a.*, c.courseName
 FROM assignment a
 JOIN course c ON a.courseID = c.courseID
 JOIN enrollment e ON c.courseID = e.courseID

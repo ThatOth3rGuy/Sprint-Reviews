@@ -32,10 +32,6 @@ export default function Page() {
     }
   }, [session]);
 
-
-  const handleCreateCourseClick = () => {
-    router.push('/instructor/create-course');
-  };
   
   const fetchCourses = async (userID: number) => {
     try {
@@ -62,7 +58,6 @@ export default function Page() {
     return null;
   }
 
-  const isAdmin = session.user.role === 'admin';
 
   return (
     <>
