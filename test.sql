@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS review_criteria (
     assignmentID INT NOT NULL,
     criterion VARCHAR(255),
     maxMarks INT,
-    FOREIGN KEY (assignmentID) REFERENCES submission(submissionID) ON DELETE CASCADE
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
 
 -- Table for storing feedback information between students and assignments
@@ -115,7 +115,26 @@ CREATE TABLE IF NOT EXISTS selected_students (
     FOREIGN KEY (assignmentID) REFERENCES submission(submissionID) ON DELETE CASCADE,
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
-
+CREATE TABLE IF NOT EXISTS review (
+    reviewID INT AUTO_INCREMENT PRIMARY KEY,
+    assignmentID INT NOT NULL,
+    isGroupAssignment BOOLEAN,
+    allowedFileTypes VARCHAR(255),
+    deadline DATETIME,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS review_groups  (
+    studentID INT,
+    assignmentID INT,
+    courseID INT,
+    submissionID INT,
+    isReleased BOOLEAN DEFAULT false,
+    PRIMARY KEY (studentID, submissionID),
+    FOREIGN KEY (studentID) REFERENCES student(studentID),
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
+    FOREIGN KEY (courseID) REFERENCES course(courseID),
+    FOREIGN KEY (submissionID) REFERENCES submission(submissionID)
+);
 -- Insert users
 INSERT INTO user (firstName, lastName, email, pwd, userRole) VALUES
 ('John', 'Doe', 'john.doe@example.com', 'password123', 'student'),
@@ -172,3 +191,15 @@ INSERT INTO enrollment (studentID, courseID) VALUES
 INSERT INTO selected_students (assignmentID, studentID, uniqueDeadline) VALUES
 (2, 1001, '2024-08-15 23:59:59'),
 (2, 1002, '2024-08-16 23:59:59');
+
+-- Insert users for new students
+INSERT INTO user (firstName, lastName, email, pwd, userRole) VALUES
+('Alice', 'Johnson', 'alice.johnson@example.com', 'password123', 'student'),
+('Bob', 'Williams', 'bob.williams@example.com', 'password123', 'student'),
+('Charlie', 'Brown', 'charlie.brown@example.com', 'password123', 'student');
+
+-- Insert new students
+INSERT INTO student (studentID, userID, phoneNumber, homeAddress, dateOfBirth) VALUES
+(1003, 5, '555-9876', '789 Pine Street', '2002-03-03'),
+(1004, 6, '555-6543', '321 Birch Street', '2003-04-04'),
+(1005, 7, '555-3210', '654 Maple Street', '2004-05-05');

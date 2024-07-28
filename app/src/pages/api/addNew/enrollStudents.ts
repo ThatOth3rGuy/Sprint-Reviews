@@ -24,7 +24,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } catch (error) {
       const err = error as any;
       if (err.code === 'ER_DUP_ENTRY') {
-        return res.status(409).json({ error: `Student ${studentIDs} is already enrolled in course ${courseID}` });
+        return res.status(405).json({ error: `Student ${studentIDs} is already enrolled in course ${courseID}` });
+      } else if (err.code === 'ER_NO_REFERENCED_ROW_2') {
+        return res.status(409).json({ error: `Student ${studentIDs} does not exist in the database` });
       } else {
         console.error(`Failed to enroll student: ${studentIDs} in course: ${courseID}. Error:`, err.message);
         return res.status(500).json({ error: `Failed to enroll student ${studentIDs}`, details: err.message });

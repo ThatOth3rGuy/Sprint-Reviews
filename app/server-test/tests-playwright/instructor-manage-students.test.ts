@@ -1,6 +1,7 @@
 // manageStudents.test.ts
 import { test, expect } from '@playwright/test';
 import path from 'path';
+import fs from 'fs';
 
 const baseURL = 'http://localhost:3001';
 
@@ -29,15 +30,65 @@ test.describe('Manage Students Page', () => {
     await expect(student).toBeVisible();
   });
 
-  // Check that enrolling a new student works
+  // Check that enrolling a new student individually, and removing them works
+  // Combinging to tests into one to avoid databaes issues
   test('should enroll a new student', async ({ page }) => {
+    // Click on 'Enroll Individual Student'
     await page.click('text=Enroll Individual Student');
-    await page.fill('input[type="number"]', '1001');
-    // Use a more specific selector for the enroll button within the modal
-    await page.click('button:has-text("Enroll")', { force: true });
     
-    //await expect(page.getByText('Student enrolled successfully')).toBeVisible();
-    await expect(page.getByText('John Doe', { exact: true })).toBeVisible();
+    // Fill the student ID
+    await page.fill('input[type="number"]', '1003');
+
+    // Click the correct enroll button within the modal
+    await page.getByRole('button', { name: 'Enroll' }).click({ force: true });
+
+    // Verify that the student is enrolled successfully
+    await expect(page.getByText('Alice Johnson', { exact: true })).toBeVisible();
+
+
+    // Click on 'Remove Student'
+    await page.click('text=Remove Student');
+
+    // Select the student we just added
+    const studentToRemove = page.getByLabel('Remove Student').getByText('Alice Johnson', { exact: true });
+    await studentToRemove.click();
+
+    // Click the correct remove button within the modal
+    await page.getByRole('button', { name: 'Remove' }).click({ force: true });
+    
+    // Ensure the student is removed successfully, and success message is displayed
+    await expect(page.getByText('Student removed successfully')).toBeVisible();
+    await expect(page.getByText('Alice Johnson', { exact: true })).not.toBeVisible();
+  });
+
+  // Check that enrolling a student that's already enrolled fails
+  test('should display error message on duplicate enrollment', async ({ page }) => {
+    // Click on 'Enroll Individual Student'
+    await page.click('text=Enroll Individual Student');
+    
+    // Fill the student ID
+    await page.fill('input[type="number"]', '1002');
+
+    // Ensure error message is displayed when trying to enroll a student that's already enrolled
+    await page.getByRole('button', { name: 'Enroll' }).click({ force: true });
+
+    // Verify that the student is enrolled successfully
+    await expect(page.getByText('Student 1002 is already enrolled in course 2')).toBeVisible();
+  });
+
+  // Check that enrolling a new student individually works
+  test('should display error message when enrolling non-existant student', async ({ page }) => {
+    // Click on 'Enroll Individual Student'
+    await page.click('text=Enroll Individual Student');
+    
+    // Fill the student ID
+    await page.fill('input[type="number"]', '9999');
+
+    // Click the correct enroll button within the modal
+    await page.getByRole('button', { name: 'Enroll' }).click({ force: true });
+
+    // Ensure error message is displayed when trying to enroll a student that doesn't exist
+    await expect(page.getByText("Student 9999 does not exist in the database")).toBeVisible();
   });
 
   // Check that enrolling students from CSV works
@@ -45,23 +96,32 @@ test.describe('Manage Students Page', () => {
     await page.click('text=Enroll Students from CSV');
     const filePath = path.join(__dirname, '../test-files/students.csv');
     await page.setInputFiles('input[type="file"]', filePath);
-    // Use a more specific selector for the enroll button within the modal
-    await page.click('button:has-text("Enroll")', { force: true });
+
+    await page.waitForTimeout(500); // Adding a delay to allow the file to be uploaded
+
+    // Click the correct enroll button within the modal
+    await page.getByRole('button', { name: 'Enroll' }).click({ force: true });
     
     await expect(page.getByText('Students enrolled successfully')).toBeVisible();
-    await expect(page.getByText('CSV Student', { exact: true })).toBeVisible(); // Assuming the CSV contains a student named CSV Student
-  });
+    await expect(page.getByText('John Doe', { exact: true })).toBeVisible();
 
-  // Check that removing a student works
-  test('should remove a student', async ({ page }) => {
+    // Check for the missing students CSV file
+    const missingStudentsFilePath = path.join(__dirname, '../../public/course2_missingStudents.csv');
+    const fileExists = fs.existsSync(missingStudentsFilePath);
+    expect(fileExists).toBeTruthy();
+    console.log('missing_students.csv file exists:', fileExists);
+
+    // Delete the missing_students.csv file if it exists
+    if (fileExists) {
+      fs.unlinkSync(missingStudentsFilePath);
+      console.log('Deleted missing_students.csv file.');
+    }
+
+    // Remove the student that was just added, to avoid issues with other tests
     await page.click('text=Remove Student');
-    const studentToRemove = page.getByText('John Doe', { exact: true });
+    const studentToRemove = page.getByLabel('Remove Student').getByText('John Doe', { exact: true });
     await studentToRemove.click();
-    // Use a more specific selector for the remove button within the modal
-    await page.click('button:has-text("Remove")', { force: true });
-    
-    await expect(page.getByText('Student removed successfully')).toBeVisible();
-    await expect(page.getByText('John Doe', { exact: true })).not.toBeVisible();
+    await page.getByRole('button', { name: 'Remove' }).click({ force: true });
   });
 
   // Mock an error response for fetching students
@@ -76,14 +136,8 @@ test.describe('Manage Students Page', () => {
     // Reload the page to trigger the error
     await page.reload();
 
-    // Capture the alert dialog
-    page.on('dialog', dialog => {
-      expect(dialog.message()).toBe('Failed to fetch students');
-      dialog.accept();
-    });
-
-    // Wait for any dialog event
-    await page.waitForEvent('dialog');
+    // No students should be displayed
+    await expect(page.getByText('No students available')).toBeVisible();
   });
 
   // Check that the breadcrumb navigation works

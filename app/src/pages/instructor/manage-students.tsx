@@ -59,10 +59,13 @@ export default function ManageStudents() {
         const studentsData = await response.json();
         setStudents(studentsData || []);
       } else {
-        console.error('Failed to fetch students');
+        const errorData = await response.json();
+        console.error('Failed to fetch students', errorData);
+        toast.error('Failed to fetch students');
       }
     } catch (error) {
       console.error('Error fetching students:', error);
+      toast.error('Failed to fetch students');
     }
   };
 
@@ -130,7 +133,7 @@ export default function ManageStudents() {
 
   const handleEnrollStudentsFromFile = async () => {
     if (students.length === 0) {
-      toast.error('Please upload a valid CSV file');
+      toast.error('No students to enroll, double check that you uploaded the correct file and that the students have created accounts');
       return;
     }
 
