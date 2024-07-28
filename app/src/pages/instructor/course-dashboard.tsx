@@ -1,3 +1,4 @@
+//instructor/course-dashboard.tsx
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
@@ -88,7 +89,7 @@ export default function Page() {
     try {
       const timestamp = new Date().getTime();
       const response = await fetch(
-        `/api/reviews/getReviewsByCourseId?courseID=${courseID}&t=${timestamp}`
+        `/api/reviews/getReviewsByCourseId?courseID=${courseID}&role=instructor&t=${timestamp}`
       );
       if (response.ok) {
         const data = await response.json();

@@ -24,6 +24,7 @@ interface Assignment {
 }
 
 interface PeerReview {
+  linkedAssignmentID: number;
   reviewID: number;
   assignmentID: number;
   title: string;
@@ -43,16 +44,16 @@ export default function Page() {
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [peerReviews, setPeerReviews] = useState<PeerReview[]>([]);
-
+  const [peerReviewAssignments, setPeerReviewAssignments] = useState<Assignment[]>([]);
   useSessionValidation('student', setLoading, setSession);
 
   useEffect(() => {
     if (session && session.user && session.user.userID) {
       fetchAssignments(session.user.userID);
-      fetchPeerReviews(session.user.userID);
+      
     }
     if (courseId) {
-      
+      fetchPeerReviews(courseId);
       fetch(`/api/courses/${courseId}`)
         .then((response) => response.json())
         .then((data: CourseData) => {
@@ -73,10 +74,10 @@ export default function Page() {
    */
   const fetchAssignments = async (courseID: string | string[]) => {
     try {
-      const response = await fetch(`/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`); //api works in a general fashion which is why it is used here
+      const response = await fetch(`/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`);
       if (response.ok) {
         const data = await response.json();
-        setAssignments(data.courses);
+        setAssignments(data.courses); // Make sure this is the correct property
       } else {
         console.error('Failed to fetch courses');
       }
@@ -85,17 +86,21 @@ export default function Page() {
     }
   };
 
-  const fetchPeerReviews = async (studentID: string) => {
+  const fetchPeerReviews = async (courseID: string | string[]) => {
     try {
-      const response = await fetch(`/api/peer-reviews/${studentID}`);
+      const timestamp = new Date().getTime();
+      const response = await fetch(
+        `/api/reviews/getReviewsByCourseId?courseID=${courseId}&role=student&t=${timestamp}`
+      );
       if (response.ok) {
         const data = await response.json();
-        setPeerReviews(data);
+        console.log("Fetched peer review assignments:", data);
+        setPeerReviews(data.reviews || []);
       } else {
-        console.error('Failed to fetch peer reviews');
+        console.error("Failed to fetch peer review assignments");
       }
     } catch (error) {
-      console.error('Error fetching peer reviews:', error);
+      console.error("Error fetching peer review assignments:", error);
     }
   };
 
@@ -161,19 +166,19 @@ export default function Page() {
             <br /><Divider className="student bg-secondary" /><br />
             <div className={styles.courseCard}>
             {peerReviews.length > 0 ? (
-              peerReviews.map((review) => (
-                <div key={review.reviewID} className={styles.courseCard}>
-                  <StudentReviewCard
-                    courseID={review.assignmentID}
-                    courseName={review.title}
-                    color="#b3d0c3"
-                    dueDate={review.deadline}
-                  />
-                </div>
-              ))
-            ) : (
-              <p>No peer reviews assigned for this course.</p>
-            )}
+  peerReviews.map((review) => (
+    <div key={review.reviewID} className={styles.courseCard}>
+      <StudentReviewCard
+        courseID={review.linkedAssignmentID}
+        courseName={`Review for Assignment - ${review.title}`|| `Review for Assignment ${review.linkedAssignmentID}`}
+        color="#b3d0c3"
+        dueDate={review.deadline}
+      />
+    </div>
+  ))
+) : (
+  <p>No peer reviews assigned for this course.</p>
+)}
           </div>
           </div>
           <div className={styles.notificationsSection}>

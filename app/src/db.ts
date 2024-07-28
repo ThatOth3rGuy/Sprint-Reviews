@@ -1,4 +1,6 @@
 // db.ts
+// Functions I did not find in this review - Yatharth Mathur (27/07/2024)
+// - createGroups 
 import mysql from 'mysql2/promise';
 import fs from 'fs/promises';
 import config from './dbConfig'; // Import the database configuration from dbConfig.ts
@@ -143,6 +145,7 @@ export async function authenticateStudent(email: string, password: string): Prom
     throw error;
   }
 }
+//The below function is used in pages/api/addNew/createCourse.ts
 export async function getInstructorID(userID: number): Promise<number | null> {
   if (typeof userID !== 'number' || isNaN(userID)) {
     throw new Error(`Invalid userID: ${userID}`);
@@ -159,7 +162,7 @@ export async function getInstructorID(userID: number): Promise<number | null> {
     throw error;
   }
 }
-
+// The below function is being used in // pages/courses/getAllArchivedCourses.ts
 export async function getAllCourses(isArchived: boolean): Promise<any[]> {
   const sql = `
     SELECT 
@@ -187,6 +190,8 @@ export async function getAllCourses(isArchived: boolean): Promise<any[]> {
     throw error;
   }
 }
+
+// The below addAssignmentToCourse is used in the addNew/createAssignment.ts
 export async function addAssignmentToCourse(
   title: string, 
   description: string, 
@@ -232,6 +237,8 @@ export async function addAssignmentToCourse(
     throw error;
   }
 }
+// The below function is being used in /api/getAllAssignmentsStudent.ts
+
 export async function getAllAssignmentsStudent(userID: number) {
   const sql = `
     SELECT a.*
@@ -250,6 +257,7 @@ WHERE u.userID = ?;
     throw error;
   }
 }
+// The below function is being used in /api/getAllAssignmentsInstructor.ts
 export async function getAllAssignmentsInstructor(userID: number) {
   const sql = `
     SELECT a.*
@@ -280,7 +288,7 @@ export async function getAssignments(): Promise<any[]> {
     throw error;
   }
 }
-
+// The below function is being used in // pages/courses/getAllCourses.ts
 export async function getCourses(): Promise<any[]> {
   const sql = 'SELECT * FROM course';
   try {
@@ -305,6 +313,7 @@ export async function getCourses(): Promise<any[]> {
 //   }
 // }
 
+// The below function is being used in // pages/assignments/getAssignmentWithSubmissions.ts
 export async function getAssignmentsWithSubmissions() {
   const sql = `
     SELECT 
@@ -359,6 +368,8 @@ export async function getAssignmentsWithSubmissions() {
     console.error('Error in getAssignmentsWithSubmissions:', error);
   }
 }
+// The below function is being used in // groups/[assignmentID].ts
+// The below function is being used in // pages/assignments/getSubmissionList.ts
 export async function getStudentSubmissions(assignmentId: number): Promise<Array<{ submissionID: number; studentID: number }>> {
   const sql = `
     SELECT studentID, submissionID
@@ -391,7 +402,7 @@ ORDER BY c.courseID`;
     throw error;
   }
 }
-
+//The below function is used in pages/api/addNew/createCourse.ts
 export async function createCourse(courseName: string, instructorID: number) {
   const sql = `
     INSERT INTO course (courseName, isArchived, instructorID)
@@ -518,6 +529,8 @@ export async function getSubmissionFile(submissionID: number) {
 //     throw error;
 //   }
 // }
+
+// The below function is being used in // pages/assignments/releaseAssignments.ts
 export async function createReview(
   assignmentID: number, 
   isGroupAssignment: boolean, 
@@ -533,7 +546,7 @@ export async function createReview(
     throw new Error('Failed to create review');
   }
 }
-
+// The below function is being used in // pages/assignments/releaseAssignments.ts
 export async function addReviewCriteria(assignmentID: number, rubric: { criterion: string; maxMarks: number }[]): Promise<void> {
   const connection = await pool.getConnection();
   
@@ -613,6 +626,8 @@ export async function updateAssignment(
 //   }
 // }
 
+// The below function is being used in // pages/api/selectStudentsForAssignment.ts
+
 export async function selectStudentsForAssignment(assignmentID: number, studentIDs: string[], uniqueDeadline: string | null): Promise<void> {
   const sql = `
     INSERT INTO selected_students (assignmentID, studentID, uniqueDeadline)
@@ -667,7 +682,7 @@ export async function getCourseByID(courseID: number): Promise<any> { //Gets cou
       throw error;
     }
 }
-    // grab all students from the database matching their student ID's
+    // grab all students from the database matching their student ID's used in // pages/api/getStudentByID.ts
 export async function getStudentsById(userID: number, customPool: mysql.Pool = pool) {
       const sql = `
         SELECT studentID, u.userID FROM student s JOIN user u ON s.userID = u.userID WHERE u.userID = ?
@@ -684,7 +699,7 @@ export async function getStudentsById(userID: number, customPool: mysql.Pool = p
         throw error;
       }
 }
-//  enroll student in a course
+// The below function is being used in // pages/api/enrollStudents.ts
 export async function enrollStudent(userID: string, courseID: string, customPool: mysql.Pool = pool): Promise<void> {
   const sql = `
     INSERT INTO enrollment (studentID, courseID)
@@ -698,7 +713,7 @@ export async function enrollStudent(userID: string, courseID: string, customPool
     throw err;
   }
 }
-
+// The below function is being used in // pages/courses/getCourseList.ts
 export async function getStudentsInCourse(courseID: number): Promise<any[]> {
   const sql = `
     SELECT u.userID, u.firstName, u.lastName, u.email, s.studentID
@@ -717,6 +732,7 @@ export async function getStudentsInCourse(courseID: number): Promise<any[]> {
     throw error;
   }
 }
+// The below function is being used in // pages/api/addNew/releaseRandomizedPeerReview.ts
 // Inserts a student into the selected_students table for the defined submission in a course.
 export async function selectStudentForSubmission(studentID: number, assignmentID: number, courseID: number, submissionID: number): Promise<void> {
 
@@ -765,6 +781,7 @@ export async function updateReviewer(studentID: number, assignmentID: number, su
     throw err;
   }
 }
+// The below function is being used in // pages/group/[assignmentID].ts and groups/[assignmentID]
 // Get review groups for a student based on the provided parameters
 export async function getReviewGroups(studentID?: number, assignmentID?: number, submissionID?: number, groupBy?: string) {
   const conditions = [];
