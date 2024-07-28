@@ -18,11 +18,11 @@ interface Assignment {
 }
 
 interface CourseData {
-  courseID: string;
+  courseID: number;
   courseName: string;
 }
 interface AssignmentDashboardProps {
-  courseId: string;
+  courseId: number;
 }
 
   const AssignmentDashboard: NextPage = () => {
@@ -52,6 +52,7 @@ interface AssignmentDashboardProps {
                 const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
                 if (courseResponse.ok) {
                   const courseData: CourseData = await courseResponse.json();
+                  console.log(courseData)
                   setCourseData(courseData);
                 }
               }

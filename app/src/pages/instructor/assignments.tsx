@@ -72,6 +72,19 @@ export default function AssignmentsPage() {
     });
   };
 
+  const handleAction = (key: any) => {
+    switch (key) {
+      case "create":
+        handleCreateAssignmentClick();
+        break;
+      case "peer-review":
+        handleCreatePeerReviewAssignmentClick();
+        break;
+      default:
+        console.log("Unknown action:", key);
+    }
+  };
+
   const handleBackClick = () => {router.back()}
 
 
@@ -121,6 +134,9 @@ export default function AssignmentsPage() {
                 <p>No assignments found for this course.</p>
               )}
             </div>
+          </div>
+          <div className={styles.notificationsSection}>
+           <h2>Notifications</h2>
           </div>
           
         </div>
