@@ -55,7 +55,6 @@ export default function Page() {
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
           <h1>Profile</h1>
-          <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
             <BreadcrumbItem>Profile</BreadcrumbItem>
