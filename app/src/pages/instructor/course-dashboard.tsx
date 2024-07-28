@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSessionValidation } from "../api/auth/checkSession";
 import styles from "../../styles/instructor-course-dashboard.module.css";
 import InstructorAssignmentCard from "../components/instructor-components/instructor-assignment-card";
@@ -14,8 +14,12 @@ import {
   Divider,
   Checkbox,
   CheckboxGroup,
-  Progress,
   Spinner,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader
 } from "@nextui-org/react";
 import InstructorReviewCard from "../components/instructor-components/instructor-PR-card";
 
@@ -23,15 +27,10 @@ interface CourseData {
   courseID: string;
   courseName: string;
 }
-interface Review {
-  assignmentID: number;
-  linkedAssignmentID: number;
-  deadline: string;
-}
 
 interface Assignment {
   assignmentID: number;
-  linkedAssignmentID: number; // Add this line
+  linkedAssignmentID: number;
   title: string;
   description: string;
   deadline: string;
@@ -39,17 +38,14 @@ interface Assignment {
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
-  const [assignmentsLoading, setAssignmentsLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
+  const [courseData, setCourseData] = useState<CourseData | null>(null);
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [peerReviewAssignments, setPeerReviewAssignments] = useState<Assignment[]>([]);
+  const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
 
   const router = useRouter();
   const { courseId } = router.query;
-
-  const [courseData, setCourseData] = useState<CourseData | null>(null);
-  const [assignments, setAssignments] = useState<Assignment[]>([]);
-  const [peerReviewAssignments, setPeerReviewAssignments] = useState<
-    Assignment[]
-  >([]);
 
   useSessionValidation("instructor", setLoading, setSession);
 
@@ -66,11 +62,6 @@ export default function Page() {
         .catch((error) => console.error("Error fetching course data:", error));
     }
   }, [courseId]);
-
-  useEffect(() => {
-    console.log("Assignments state:", assignments);
-    console.log("Peer review assignments state:", peerReviewAssignments);
-  }, [assignments, peerReviewAssignments]);
 
   const handleHomeClick = async () => {
     router.push("/instructor/dashboard");
@@ -110,10 +101,32 @@ export default function Page() {
     }
   };
 
+  const archiveCourse = useCallback(async () => {
+    try {
+      const response = await fetch('/api/courses/archiveCourse', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ courseID: courseId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to toggle archive status');
+      }
+
+      router.push("/instructor/dashboard");
+    } catch (error) {
+      console.error('Error toggling archive status:', error);
+    }
+  }, [courseId, router]);
+
   if (!courseData || loading) {
-    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
-    <Spinner color='primary' size="lg" />
-</div>;
+    return (
+      <div className='w-[100vw] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+        <Spinner color='primary' size="lg" />
+      </div>
+    );
   }
 
   if (!session || !session.user || !session.user.userID) {
@@ -124,15 +137,25 @@ export default function Page() {
   const isAdmin = session.user.role === "admin";
 
   const handleCreateAssignmentClick = () => {
-    router.push("/instructor/create-assignment");
+
+    router.push({
+      pathname: '/instructor/create-assignment',
+      query: { source: 'course', courseId: courseId } //sends courseID to create assignment page if clicked from course dashboard
+    });
   };
 
   const handleCreatePeerReviewAssignmentClick = () => {
-    router.push("/instructor/release-assignment");
+    router.push({
+      pathname: '/instructor/release-assignment',
+      query: { source: 'course', courseId: courseId } //sends courseID to release assignment page if clicked from course dashboard
+    });
   };
 
   const handleCreateGroupPeerReviewAssignmentClick = () => {
-    router.push("/instructor/create-groups");
+    router.push({
+      pathname: '/instructor/create-groups',
+      query: { source: 'course', courseId: courseId } //sends courseID to create group page if clicked from course dashboard
+    });
   };
 
   const handleAction = (key: any) => {
@@ -146,8 +169,8 @@ export default function Page() {
       case "group-review":
         handleCreateGroupPeerReviewAssignmentClick();
         break;
-      case "delete":
-        console.log("Delete course");
+      case "archive":
+        setIsArchiveModalOpen(true);
         break;
       default:
         console.log("Unknown action:", key);
@@ -177,7 +200,7 @@ export default function Page() {
             >
               <Checkbox value="assignments">All Assignments</Checkbox>
               <Checkbox value="peerReviews">Peer Reviews</Checkbox>
-              <Checkbox value="peerReviews">Peer Evaluations</Checkbox>
+              <Checkbox value="peerEvaluations">Peer Evaluations</Checkbox>
             </CheckboxGroup>
             <h3 className={styles.innerTitle}>Assignments Created</h3>
             <br /> <Divider className="instructor bg-secondary" /> <br />
@@ -211,7 +234,6 @@ export default function Page() {
                     className={`w-100% ${styles.courseCard}`}
                   >
                     <InstructorReviewCard
-                    
                       reviewID={assignment.assignmentID}
                       linkedAssignmentID={assignment.linkedAssignmentID}
                       color="#9fc3cf"
@@ -228,16 +250,15 @@ export default function Page() {
               <Listbox aria-label="Actions" onAction={handleAction}>
                 <ListboxItem key="create">Create Assignment</ListboxItem>
                 <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
-                <ListboxItem key="group-review">
-                  Create Student Groups
-                </ListboxItem>
-                <ListboxItem
-                  key="delete"
+                <ListboxItem key="group-review">Create Student Groups</ListboxItem>
+                {isAdmin ? (
+                  <ListboxItem key="archive" 
                   className="text-danger"
                   color="danger"
-                >
-                  Archive Course
-                </ListboxItem>
+                  >
+                    Archive Course
+                  </ListboxItem>
+                ) : null}
               </Listbox>
             </div>
             <hr />
@@ -247,6 +268,29 @@ export default function Page() {
             </div>
           </div>
         </div>
+
+        {/* Archive Course Confirmation Modal */}
+        <Modal 
+          className='z-20' 
+          backdrop="blur" 
+          isOpen={isArchiveModalOpen} 
+          onOpenChange={(open) => setIsArchiveModalOpen(open)}
+        >
+          <ModalContent>
+            <ModalHeader>Archive Course</ModalHeader>
+            <ModalBody>
+              <p>Are you sure you want to archive this course? This action can be undone.</p>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" variant="light" onPress={() => setIsArchiveModalOpen(false)}>
+                Close
+              </Button>
+              <Button color="danger" onClick={archiveCourse}>
+                Archive
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </div>
     </>
   );

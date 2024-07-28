@@ -1,12 +1,7 @@
 // admin-course.tsx
 /* eslint-disable @next/next/no-img-element */
-import styles from '../../../styles/admin-course.module.css';
-import { useState, useCallback } from 'react';
 import AdminCourseOptions from "./admin-course-options";
-import PortalPopup from "../../components/portal-popup";
-import { Button, Card, CardBody, CardFooter, CardHeader, Image, Popover, PopoverContent, PopoverTrigger, Tooltip } from '@nextui-org/react';
-import { color } from 'framer-motion';
-// import style from 'styled-jsx/style';
+import { Card, CardBody, CardFooter, Image } from '@nextui-org/react';
 import style from '../../../styles/instructor-components.module.css';
 import { useRouter } from 'next/router';
 
@@ -15,10 +10,11 @@ interface AdminCourseCardProps {
   instructor: string;
   averageGrade: number | null;
   courseID: number;
+  isArchived: boolean;
   img: string;
 }
 
-const AdminCourseCard: React.FC<AdminCourseCardProps> = ({ courseName, instructor, averageGrade, courseID, img }) => {
+const AdminCourseCard: React.FC<AdminCourseCardProps> = ({ courseName, instructor, averageGrade, courseID, isArchived, img }) => {
   // const [isAdminCourseOptionsOpen, setAdminCourseOptionsOpen] = useState(false);
 
   // const openAdminCourseOptions = useCallback(() => {
@@ -41,7 +37,10 @@ const AdminCourseCard: React.FC<AdminCourseCardProps> = ({ courseName, instructo
     <Card shadow="sm" className={`${style.outerCard}`} isPressable onPress={handleClick}>
       
       <CardBody className="overflow-visible p-0">
-      <AdminCourseOptions courseID={courseID} />
+      <AdminCourseOptions 
+      courseID={courseID} 
+      isArchived={isArchived}
+      />
       {/* <img className="ml-auto w-[5%]" alt="More" src="/Images/More.png" onClick={(e) => { e.stopPropagation(); openAdminCourseOptions(); }} /> */}
       {/* <Popover placement="right-end" showArrow={true}>
         <PopoverTrigger>

@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/admin-portal-home.module.css';
 import { useRouter } from 'next/router';
-import { Divider, Listbox, ListboxItem, Input, BreadcrumbItem, Breadcrumbs } from '@nextui-org/react';
+import { Divider, Listbox, ListboxItem, Input, BreadcrumbItem, Breadcrumbs, Spinner } from '@nextui-org/react';
 
 
 interface Course {
@@ -57,7 +57,9 @@ export default function Page() {
   }, [loading]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+    <Spinner color='primary' size="lg" />
+</div>;
   }
 
   if (error) {
@@ -74,7 +76,7 @@ export default function Page() {
     router.push('/admin/view-users');
   };
   const handleJoinRequestClick = () => {
-    router.push('/admin/join-requests');
+    router.push('/admin/role-requests');
   };
   const handleArchivedCoursesClick = () => {
     router.push('/admin/archived-courses');
@@ -93,6 +95,9 @@ export default function Page() {
       case "archives":
         handleArchivedCoursesClick();
         break;
+      case "admin":
+        handleHomeClick();
+        break;
       // case "delete":
       //   // Implement delete course functionality
       //   console.log("Delete course");
@@ -105,9 +110,9 @@ export default function Page() {
     <>
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
-          <h1>Admin Dashboard</h1>
+          <h1>Archived Courses</h1>
           <Breadcrumbs>
-            <BreadcrumbItem onClick={handleHomeClick}>Admin Portal</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleHomeClick}>Admin Dashboard</BreadcrumbItem>
             <BreadcrumbItem>Archived Courses</BreadcrumbItem>
           </Breadcrumbs>        
           <Divider className="my-1" />
@@ -119,16 +124,16 @@ export default function Page() {
 
             <div className={styles.courseCards}>
               {courses.map((course, index) => (
-                <div className={styles.courseCard}>
+                <div className={styles.courseCard} key={course.courseID}>
                   <AdminCourseCard
-                    key={index}
+                    key={course.courseID}
                     courseName={course.courseName}
                     instructor={`${course.instructorFirstName} ${course.instructorLastName}`}
                     averageGrade={course.averageGrade}
                     courseID={course.courseID}
+                    isArchived={true}
                     img="/logo-transparent-png.png"
                   />
-                  
                 </div>
               ))}
             </div>
@@ -136,10 +141,10 @@ export default function Page() {
 
           <div className={styles.notificationsSection}>
             <div className={styles.actionButtons}>
-              <Listbox aria-label="Actions" onAction={handleAction}>
+              <Listbox aria-label="Actions" onAction={handleAction} color='primary' variant='flat'>
+                <ListboxItem key="admin" className='text-primary-900 border-1 border-primary bg-primary-50'>Admin Portal</ListboxItem>
                 <ListboxItem key="join">Join Requests</ListboxItem>
                 <ListboxItem key="view">View Users</ListboxItem>
-                <ListboxItem key="archives">Archived Courses</ListboxItem>
               </Listbox>
             </div>
             <hr />

@@ -116,6 +116,16 @@ CREATE TABLE IF NOT EXISTS selected_students (
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
 
+-- Table for storing peer review assignments
+CREATE TABLE IF NOT EXISTS review (
+    reviewID INT AUTO_INCREMENT PRIMARY KEY,
+    assignmentID INT NOT NULL,
+    isGroupAssignment BOOLEAN,
+    allowedFileTypes VARCHAR(255),
+    deadline DATETIME,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
+);
+
 -- Insert users
 INSERT INTO user (firstName, lastName, email, pwd, userRole) VALUES
 ('John', 'Doe', 'john.doe@example.com', 'password123', 'student'),
