@@ -89,7 +89,7 @@ export default function Page() {
     try {
       const timestamp = new Date().getTime();
       const response = await fetch(
-        `/api/reviews/getReviewsByCourseId?courseID=${courseID}&role=instructor&t=${timestamp}`
+        `/api/reviews/getReviewsByCourseIdForInstructor?courseID=${courseID}&t=${timestamp}`
       );
       if (response.ok) {
         const data = await response.json();

@@ -122,6 +122,7 @@ CREATE TABLE IF NOT EXISTS review (
     isGroupAssignment BOOLEAN,
     allowedFileTypes VARCHAR(255),
     deadline DATETIME,
+    anonymous BOOLEAN,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS review_groups  (

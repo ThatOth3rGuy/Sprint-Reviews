@@ -7,6 +7,7 @@ import { useSessionValidation } from '../api/auth/checkSession';
 import styles from "../../styles/AssignmentDetailCard.module.css";
 import { Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody, Button, ListboxItem, Listbox } from "@nextui-org/react";
 import { randomizePeerReviewGroups } from "../api/addNew/randomizationAlgorithm";
+import toast from "react-hot-toast";
 
 interface Review {
   reviewID: number;
@@ -48,7 +49,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [reviewGroups, setReviewGroups] = useState<ReviewGroup[][]>([]);
   const [randomizedReviewGroups, setRandomizedReviewGroups] = useState<ReviewGroup[][]>([]);
-
+  const [courseName, setCourseName] = useState<string>("");
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
@@ -70,7 +71,26 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
       console.error('Error fetching courses:', error);
     }
   };
+  useEffect(() => {
+    const { source, courseId } = router.query;
 
+    if (source === 'course' && courseId) {
+      // Fetch course name
+      fetchCourseName(courseId as string);
+    }
+  }, [router.query]);
+
+  const fetchCourseName = async (courseId: string) => {
+    try {
+      const response = await fetch(`/api/courses/${courseId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setCourseName(data.courseName);
+      }
+    } catch (error) {
+      console.error('Error fetching course name:', error);
+    }
+  };
   useEffect(() => {
     if (reviewID) {
       // Fetch review data
@@ -113,8 +133,13 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
 
   const isAdmin = session.user.role === 'admin';
 
-  const handleBackClick = () => {
-    router.back();
+  const handleBackClick = () => { //redirect to course dashboard or all assignments
+    const { source } = router.query;
+    if (source === 'course') {
+      router.push(`/instructor/course-dashboard?courseId=${router.query.courseId}`);
+    } else {
+      router.push('/instructor/dashbaord');
+    }
   };
 
   const handleHomeClick = () => {
@@ -152,8 +177,8 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
       });
 
       if (response.ok) {
-        console.log('Assignment released for reviews');
-        router.push(`/instructor/dashboard`);
+        toast.success("Review Released successfully!")
+      
       } else {
         console.error('Failed to release assignment for reviews');
       }
@@ -171,7 +196,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-            <BreadcrumbItem onClick={handleBackClick}>{courseData ? courseData.courseName : "Course Dashboard"}</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleBackClick}>{router.query.source === 'course' ? (courseName || 'Course Dashboard') : 'Course Dashboard'}</BreadcrumbItem>
             <BreadcrumbItem>{review.reviewID ? `Review ${review.assignmentName}` : "Review"}</BreadcrumbItem>
           </Breadcrumbs>
         </div>

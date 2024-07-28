@@ -15,8 +15,12 @@ import {
 } from "@nextui-org/react";
 import { getSession, updateSession } from "@/lib";
 import { randomizePeerReviewGroups } from "../api/addNew/randomizationAlgorithm";
+import toast from "react-hot-toast";
 
-
+interface CourseData {
+  courseID: string;
+  courseName: string;
+}
 // Define the structure for assignment and Rubric items
 interface Assignment {
   assignmentID: number;
@@ -36,6 +40,8 @@ interface Student {
 // Main component for releasing an assignment for peer review
 const ReleaseAssignment: React.FC = () => {
   const router = useRouter();
+  const { source, courseId } = router.query;
+  const [courseName, setCourseName] = useState<string>("");
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [selectedAssignment, setSelectedAssignment] = useState<number | "">("");
   const [rubric, setRubric] = useState<RubricItem[]>([{ criterion: "", maxMarks: 0 }]);
@@ -52,12 +58,13 @@ const ReleaseAssignment: React.FC = () => {
   const [studentSubmissions, setStudentSubmissions] = useState<{ studentID: number; submissionID: number; }[]>([]);
   const [course, setCourse] = useState<string>("");
   const [reviewsPerAssignment, setReviewsPerAssignment] = useState<number>(4);
-  // Dummy rubric
-  const dummyrubric = [
-    { criterion: 'Criterion 1', maxMarks: 10 },
-    { criterion: 'Criterion 2', maxMarks: 20 },
-    { criterion: 'Criterion 3', maxMarks: 30 },
-  ];
+  const [anonymous, setAnonymous] = useState(false);
+  // // Dummy rubric
+  // const dummyrubric = [
+  //   { criterion: 'Criterion 1', maxMarks: 10 },
+  //   { criterion: 'Criterion 2', maxMarks: 20 },
+  //   { criterion: 'Criterion 3', maxMarks: 30 },
+  // ];
 
   // Dummy questions
   const questions = ['Was the work clear and easy to understand?', 'Was the content relevant and meaningful?', 'Was the work well-organized and logically structured?', 'Did the author provide sufficient evidence or examples to support their arguments or points?', 'Improvements: What suggestions do you have for improving the work?'];
@@ -81,8 +88,29 @@ const ReleaseAssignment: React.FC = () => {
       fetchStudentSubmissions(Number(selectedAssignment));
     }
   }, [selectedAssignment]);
+  
+  useEffect(() => {
+    
 
+    if (source === 'course' && courseId) {
+      // Fetch course name
+      fetchCourseName(courseId as string);
+    }
+  }, [router.query]);
+
+  const fetchCourseName = async (courseId: string) => {
+    try {
+      const response = await fetch(`/api/courses/${courseId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setCourseName(data.courseName);
+      }
+    } catch (error) {
+      console.error('Error fetching course name:', error);
+    }
+  };
   // Function to fetch assignments
+ 
   const fetchAssignments = async (userID: string) => {
     try {
       const response = await fetch(`/api/getAllAssignmentsInstructor?userID=${userID}`);
@@ -110,7 +138,7 @@ const ReleaseAssignment: React.FC = () => {
   // Function to fetch students in the course
   const fetchStudents = async (courseID: string) => {
     try {
-      courseID = '3';
+      //courseID = '3';
       const response = await fetch(`/api/courses/getCourseList?courseID=${courseID}`);
       if (response.ok) {
         const students = await response.json();
@@ -223,11 +251,13 @@ const ReleaseAssignment: React.FC = () => {
           isGroupAssignment,
           allowedFileTypes,
           deadline,
+          anonymous,
         }),
       });
 
       if (!responseReleaseAssignment.ok) {
         throw new Error("Failed to release assignment for review");
+       
       }
 
       //const reviewGroups = randomizePeerReviewGroups(studentSubmissions, 4); // 4 reviews per assignment
@@ -247,8 +277,8 @@ const ReleaseAssignment: React.FC = () => {
       }
 
       // If both requests are successful
-      alert("Assignment and peer reviews released for review successfully");
-      router.push("/instructor/dashboard");
+      toast.success("Assignment created successfully!")
+      router.push(`/instructor/course-dashboard?courseId=${courseId}`);
     } catch (error) {
       console.error("Error releasing assignment or peer reviews for review:", error);
     }
@@ -275,7 +305,14 @@ const ReleaseAssignment: React.FC = () => {
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");
   }
-
+  const handleBackClick = () => { //redirect to course dashboard or all assignments
+    const { source } = router.query;
+    if (source === 'course') {
+      router.push(`/instructor/course-dashboard?courseId=${router.query.courseId}`);
+    } else {
+      router.push('/instructor/assignments');
+    }
+  };
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -285,6 +322,8 @@ const ReleaseAssignment: React.FC = () => {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleBackClick}>{router.query.source === 'course' ? (courseName || 'Course Dashboard') : 'Assignments'}</BreadcrumbItem>
+
             <BreadcrumbItem>Release Peer Review</BreadcrumbItem>
           </Breadcrumbs>
         </div>
@@ -360,6 +399,14 @@ const ReleaseAssignment: React.FC = () => {
                   </Button>
                 </div>
               </div>
+              <Checkbox
+                isSelected={anonymous}
+                onValueChange={setAnonymous}
+                color="primary"
+              >
+                Anonymous Review
+              </Checkbox>
+
               <br />
               <Input
                 label="Number of Reviews per Assignment"
