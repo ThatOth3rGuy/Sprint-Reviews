@@ -32,7 +32,7 @@ test.describe('Manage Students Page', () => {
 
   // Check that enrolling a new student individually, and removing them works
   // Combinging to tests into one to avoid databaes issues
-  test('should enroll a new student', async ({ page }) => {
+  test('should enroll and remove a new student', async ({ page }) => {
     // Click on 'Enroll Individual Student'
     await page.click('text=Enroll Individual Student');
     
@@ -148,5 +148,4 @@ test.describe('Manage Students Page', () => {
     await page.click('text=COSC 310', { force: true });
     await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseId=2`);
   });
-
 });
