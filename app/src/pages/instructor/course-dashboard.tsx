@@ -16,6 +16,12 @@ import {
   CheckboxGroup,
   Progress,
   Spinner,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Input,
 } from "@nextui-org/react";
 import InstructorReviewCard from "../components/instructor-components/instructor-PR-card";
 
@@ -23,6 +29,7 @@ interface CourseData {
   courseID: string;
   courseName: string;
 }
+
 interface Review {
   assignmentID: number;
   linkedAssignmentID: number;
@@ -31,7 +38,7 @@ interface Review {
 
 interface Assignment {
   assignmentID: number;
-  linkedAssignmentID: number; // Add this line
+  linkedAssignmentID: number;
   title: string;
   description: string;
   deadline: string;
@@ -41,15 +48,14 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [assignmentsLoading, setAssignmentsLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
+  const [courseData, setCourseData] = useState<CourseData | null>(null);
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [peerReviewAssignments, setPeerReviewAssignments] = useState<Assignment[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newCourseName, setNewCourseName] = useState('');
 
   const router = useRouter();
   const { courseId } = router.query;
-
-  const [courseData, setCourseData] = useState<CourseData | null>(null);
-  const [assignments, setAssignments] = useState<Assignment[]>([]);
-  const [peerReviewAssignments, setPeerReviewAssignments] = useState<
-    Assignment[]
-  >([]);
 
   useSessionValidation("instructor", setLoading, setSession);
 
@@ -110,19 +116,6 @@ export default function Page() {
     }
   };
 
-  if (!courseData || loading) {
-    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
-    <Spinner color='primary' size="lg" />
-</div>;
-  }
-
-  if (!session || !session.user || !session.user.userID) {
-    console.error("No user found in session");
-    return null;
-  }
-
-  const isAdmin = session.user.role === "admin";
-
   const handleCreateAssignmentClick = () => {
     router.push("/instructor/create-assignment");
   };
@@ -133,6 +126,40 @@ export default function Page() {
 
   const handleCreateGroupPeerReviewAssignmentClick = () => {
     router.push("/instructor/create-groups");
+  };
+
+  const handleEditCourseNameClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCourseNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNewCourseName(event.target.value);
+  };
+
+  const handleCourseNameUpdate = async () => {
+    try {
+      const response = await fetch(`/api/courses/updateCourseName`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ courseID: courseId, newCourseName })
+      });
+      if (response.ok) {
+        const updatedCourseData = await response.json();
+        setCourseData(updatedCourseData);
+        setIsModalOpen(false);
+        router.reload();
+      } else {
+        console.error("Failed to update course name");
+      }
+    } catch (error) {
+      console.error("Error updating course name:", error);
+    }
   };
 
   const handleAction = (key: any) => {
@@ -146,6 +173,9 @@ export default function Page() {
       case "group-review":
         handleCreateGroupPeerReviewAssignmentClick();
         break;
+      case "edit-course":
+        handleEditCourseNameClick();
+        break;
       case "delete":
         console.log("Delete course");
         break;
@@ -153,6 +183,19 @@ export default function Page() {
         console.log("Unknown action:", key);
     }
   };
+
+  if (!courseData || loading) {
+    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+      <Spinner color='primary' size="lg" />
+    </div>;
+  }
+
+  if (!session || !session.user || !session.user.userID) {
+    console.error("No user found in session");
+    return null;
+  }
+
+  const isAdmin = session.user.role === "admin";
 
   return (
     <>
@@ -228,8 +271,12 @@ export default function Page() {
               <Listbox aria-label="Actions" onAction={handleAction}>
                 <ListboxItem key="create">Create Assignment</ListboxItem>
                 <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
-                <ListboxItem key="group-review">
-                  Create Student Groups
+                <ListboxItem key="group-review"> Create Student Groups</ListboxItem>
+                <ListboxItem 
+                key="edit-course"
+                color="primary"
+                > 
+                Edit Course Name
                 </ListboxItem>
                 <ListboxItem
                   key="delete"
@@ -248,6 +295,34 @@ export default function Page() {
           </div>
         </div>
       </div>
+
+      <Modal
+        className='z-20'
+        backdrop="blur"
+        isOpen={isModalOpen}
+        onOpenChange={(open) => setIsModalOpen(open)}
+      >
+        <ModalContent>
+          <ModalHeader>Edit Course Name</ModalHeader>
+          <ModalBody>
+            <Input 
+              isClearable 
+              fullWidth 
+              label="Enter New Course Name"
+              value={newCourseName} 
+              onChange={handleCourseNameChange} 
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" variant="light" onPress={() => setIsModalOpen(false)}>
+              Close
+            </Button>
+            <Button color="primary" onPress={handleCourseNameUpdate}>
+              Update
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }
