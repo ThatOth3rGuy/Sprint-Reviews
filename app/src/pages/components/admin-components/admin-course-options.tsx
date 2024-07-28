@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react';
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Popover, PopoverContent, PopoverTrigger, Input } from '@nextui-org/react';
 import React from 'react';
 
 export type AdminCourseOptionsType = {
@@ -16,8 +16,10 @@ export type ConfirmDeleteCourseType = {
 
 const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ courseName = "", courseID }) => {
   const router = useRouter();
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false); //to close popup when modal opens
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false); // To close popup when modal opens
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [newCourseName, setNewCourseName] = useState(courseName);
 
   const onArchiveContainerClick = useCallback(async () => {
     try {
@@ -41,12 +43,17 @@ const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ courseName = "",
 
   const openDeleteModal = () => {
     setIsPopoverOpen(false);
-    setIsModalOpen(true);
+    setIsDeleteModalOpen(true);
+  };
+
+  const openEditModal = () => {
+    setIsPopoverOpen(false);
+    setIsEditModalOpen(true);
   };
 
   const onConfirmDeleteClick = useCallback(async () => {
     try {
-      const response = await fetch('/api/courses/deleteCourse', { //TODO: Fix to actually remove course from db
+      const response = await fetch('/api/courses/deleteCourse', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,14 +65,33 @@ const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ courseName = "",
         throw new Error('Failed to delete course');
       }
 
-      // Handle successful response
       console.log('Course deleted successfully');
-      // onClose(); // Close the popup after deleting
-      router.reload(); // Reload the page to refresh the state
+      router.reload();
     } catch (error) {
       console.error('Error deleting course:', error);
     }
   }, [courseID, router]);
+
+  const onEditCourseNameClick = useCallback(async () => {
+    try {
+      const response = await fetch('/api/courses/updateCourseName', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ courseID, newCourseName }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update course name');
+      }
+
+      console.log('Course name updated successfully');
+      router.reload();
+    } catch (error) {
+      console.error('Error updating course name:', error);
+    }
+  }, [courseID, newCourseName, router]);
 
   return (
     <div className='instructor'>
@@ -80,14 +106,15 @@ const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ courseName = "",
         </PopoverTrigger>
         <PopoverContent className='z-10'>
           <Button className='w-[100%]' variant='light' onClick={onArchiveContainerClick}>Archive {courseName}</Button>
+          <Button className='w-[100%]' variant='light' onClick={openEditModal}>Edit Course Name</Button>
           <Button className='w-[100%]' variant='light' onClick={openDeleteModal}>Delete Course</Button>
         </PopoverContent>
       </Popover>
       <Modal 
         className='z-20' 
         backdrop="blur" 
-        isOpen={isModalOpen} 
-        onOpenChange={(open) => setIsModalOpen(open)}
+        isOpen={isDeleteModalOpen} 
+        onOpenChange={(open) => setIsDeleteModalOpen(open)}
       >
         <ModalContent>
           <ModalHeader>Delete Course</ModalHeader>
@@ -95,11 +122,38 @@ const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ courseName = "",
             <p>Once you confirm delete, the change will be made permanent. Confirm below to continue.</p>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" variant="light" onPress={() => setIsModalOpen(false)}>
+            <Button color="primary" variant="light" onPress={() => setIsDeleteModalOpen(false)}>
               Close
             </Button>
-            <Button color="danger" onClick={onConfirmDeleteClick}>
+            <Button color="danger" onPress={onConfirmDeleteClick}>
               Delete
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal 
+        className='z-20' 
+        backdrop="blur" 
+        isOpen={isEditModalOpen} 
+        onOpenChange={(open) => setIsEditModalOpen(open)}
+      >
+        <ModalContent>
+          <ModalHeader>Edit Course Name</ModalHeader>
+          <ModalBody>
+            <Input 
+              isClearable 
+              fullWidth 
+              label="Enter new course name" 
+              value={newCourseName} 
+              onChange={(e) => setNewCourseName(e.target.value)} 
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" variant="light" onPress={() => setIsEditModalOpen(false)}>
+              Close
+            </Button>
+            <Button color="primary" onPress={onEditCourseNameClick}>
+              Update
             </Button>
           </ModalFooter>
         </ModalContent>
