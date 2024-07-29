@@ -198,7 +198,7 @@ export default function AssignmentDashboard() {
 
 
 
-  const handleBackClick = () => router.back();
+  const handleBackClick = () => router.push(`/student/course-dashboard?courseId=${courseData?.courseID}`);
   const handleHomeClick = () => router.push("/student/dashboard");
 
   return (
@@ -210,6 +210,7 @@ export default function AssignmentDashboard() {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleBackClick}>{courseData?.courseName}</BreadcrumbItem>
             <BreadcrumbItem>
               {assignment.title || "Assignment Name"}
             </BreadcrumbItem>

@@ -12,6 +12,7 @@ interface Assignment {
   title: string;
   description: string;
   deadline: string;
+  courseName: string;
 }
 
 export default function AssignmentsPage() {
@@ -32,8 +33,14 @@ export default function AssignmentsPage() {
   }
   const isAdmin = session.user.role === 'admin';
   const dummyassignments: Assignment[] = [
-    { assignmentID: 1, title: "Assignment 1", description: "Description 1", deadline: "2024-07-20" },
-    { assignmentID: 2, title: "Assignment 2", description: "Description 2", deadline: "2024-07-25" },
+    {
+      assignmentID: 1, title: "Assignment 1", description: "Description 1", deadline: "2024-07-20",
+      courseName: ""
+    },
+    {
+      assignmentID: 2, title: "Assignment 2", description: "Description 2", deadline: "2024-07-25",
+      courseName: ""
+    },
   ];
   
 
@@ -64,6 +71,21 @@ export default function AssignmentsPage() {
       query: { source: 'assignments' } //sends courseID to release assignment if clicked from assignment dashboard
     });
   };
+
+  const handleAction = (key: any) => {
+    switch (key) {
+      case "create":
+        handleCreateAssignmentClick();
+        break;
+      case "peer-review":
+        handleCreatePeerReviewAssignmentClick();
+        break;
+      default:
+        console.log("Unknown action:", key);
+    }
+  };
+
+  const handleBackClick = () => {router.back()}
 
 
 
@@ -101,8 +123,10 @@ export default function AssignmentsPage() {
                   >
                     <InstructorAssignmentCard 
                       courseID={assignment.assignmentID}
-                      courseName={assignment.title}
+                      courseName={assignment.courseName}
+                      assignmentName={assignment.title}
                       color="#9fc3cf"
+                      deadline={assignment.deadline}
                     />
                   </div>
                 ))
@@ -110,6 +134,9 @@ export default function AssignmentsPage() {
                 <p>No assignments found for this course.</p>
               )}
             </div>
+          </div>
+          <div className={styles.notificationsSection}>
+           <h2>Notifications</h2>
           </div>
           
         </div>

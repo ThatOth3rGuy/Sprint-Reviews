@@ -4,7 +4,7 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import { useEffect, useState, useCallback } from "react";
 import { useSessionValidation } from "../api/auth/checkSession";
 import styles from "../../styles/instructor-course-dashboard.module.css";
-import InstructorAssignmentCard from "../components/instructor-components/instructor-assignment-card";
+import InstructorAssignmentCard from "../components/instructor-components/instructor-course-assignment-card";
 import {
   Button,
   Breadcrumbs,
@@ -220,8 +220,9 @@ export default function Page() {
                   >
                     <InstructorAssignmentCard 
                       courseID={assignment.assignmentID}
-                      courseName={assignment.title}
+                      assignmentName={assignment.title}
                       color="#9fc3cf"
+                      deadline={assignment.deadline}
                     />
                   </div>
                 ))
@@ -266,7 +267,7 @@ export default function Page() {
                   >
                     Archive Course
                   </ListboxItem>
-                ) : null}
+                ) : <p></p>}
               </Listbox>
             </div>
             <hr />
