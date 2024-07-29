@@ -37,20 +37,20 @@ test.describe('Manage Students Page', () => {
     await page.click('text=Enroll Individual Student');
     
     // Fill the student ID
-    await page.fill('input[type="number"]', '1003');
+    await page.fill('input[type="number"]', '123467');
 
     // Click the correct enroll button within the modal
     await page.getByRole('button', { name: 'Enroll' }).click({ force: true });
 
     // Verify that the student is enrolled successfully
-    await expect(page.getByText('Alice Johnson', { exact: true })).toBeVisible();
+    await expect(page.getByText('Jack Black', { exact: true })).toBeVisible();
 
 
     // Click on 'Remove Student'
     await page.click('text=Remove Student');
 
     // Select the student we just added
-    const studentToRemove = page.getByLabel('Remove Student').getByText('Alice Johnson', { exact: true });
+    const studentToRemove = page.getByLabel('Remove Student').getByText('Jack Black', { exact: true });
     await studentToRemove.click();
 
     // Click the correct remove button within the modal
@@ -58,7 +58,7 @@ test.describe('Manage Students Page', () => {
     
     // Ensure the student is removed successfully, and success message is displayed
     await expect(page.getByText('Student removed successfully')).toBeVisible();
-    await expect(page.getByText('Alice Johnson', { exact: true })).not.toBeVisible();
+    await expect(page.getByText('Jack Black', { exact: true })).not.toBeVisible();
   });
 
   // Check that enrolling a student that's already enrolled fails
