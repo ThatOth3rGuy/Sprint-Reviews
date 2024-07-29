@@ -1,13 +1,8 @@
 // pages/api/groups/getGroupDetails.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { query } from '../../../db';
+import { query, getStudentsById } from '../../../db';
 
 async function getGroupDetails(courseID: number, userID: number) {
-  const studentIDSQL = `
-    SELECT studentID 
-    FROM student 
-    WHERE userID = ?
-  `;
   const sql = `
     SELECT cg.groupID, s.studentID, u.firstName, u.lastName
     FROM course_groups cg
@@ -21,23 +16,25 @@ async function getGroupDetails(courseID: number, userID: number) {
   `;
 
   try {
-    const studentIDResult = await query(studentIDSQL, [userID]);
+    const studentIDResult = await getStudentsById(userID);
     if (studentIDResult.length === 0) {
       return null;
     }
 
-    const studentID = studentIDResult[0].studentID;
+    const studentID = studentIDResult.studentID;
     const result = await query(sql, [courseID, courseID, studentID]);
     if (result.length === 0) {
       return null;
     }
 
     const groupID = result[0].groupID;
-    const students = result.map((row: any) => ({
-      studentID: row.studentID,
-      firstName: row.firstName,
-      lastName: row.lastName
-    }));
+    const students = result
+      .filter((row: any) => row.studentID !== studentID)
+      .map((row: any) => ({
+        studentID: row.studentID,
+        firstName: row.firstName,
+        lastName: row.lastName
+      }));
 
     return { groupID, students };
   } catch (error) {
