@@ -227,10 +227,13 @@ export default function AssignmentDashboard() {
           ) : (
             <Button onClick={onOpen}>Submit Assignment</Button>
           )}
+          <br /><br />
           {groupDetails && (
             <StudentGroupDetails
               groupID={groupDetails.groupID}
               students={groupDetails.students}
+              assignmentID={assignment.assignmentID}
+              userID={session.user.userID}
             />
           )}
           <Modal

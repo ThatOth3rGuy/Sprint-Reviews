@@ -1,29 +1,113 @@
 // components/student-components/student-group-details.tsx
-import React from 'react';
-import { Card, CardBody } from "@nextui-org/react";
+import React, { useState } from 'react';
+import { Card, CardBody, Button, Input, Textarea } from "@nextui-org/react";
+import toast from "react-hot-toast";
+import styles from "../../../styles/student-group-details.module.css";
+
+interface Student {
+  studentID: number;
+  firstName: string;
+  lastName: string;
+}
 
 interface StudentGroupDetailsProps {
-    groupID: number;
-    students: { studentID: number; firstName: string; lastName: string }[];
+  groupID: number;
+  students: Student[];
+  assignmentID: number;
+  userID: number;
 }
 
-const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, students }) => {
-    return (
-        <Card>
-            <CardBody>
-                <h3>Group: {groupID}</h3>
-                <br />
-                <h3>Group Members:</h3>
-                <ul>
-                    {students.map((student) => (
-                        <li key={student.studentID}>
-                            {student.firstName} {student.lastName}
-                        </li>
-                    ))}
-                </ul>
-            </CardBody>
-        </Card>
-    );
+interface Feedback {
+  revieweeID: number;
+  score: string;
+  content: string;
 }
+
+const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, students, assignmentID, userID }) => {
+  const [feedbacks, setFeedbacks] = useState<Feedback[]>(students.map(student => ({
+    revieweeID: student.studentID,
+    score: '',
+    content: ''
+  })));
+
+  const handleInputChange = (revieweeID: number, field: string, value: string) => {
+    setFeedbacks(prevFeedbacks =>
+      prevFeedbacks.map(feedback =>
+        feedback.revieweeID === revieweeID
+          ? { ...feedback, [field]: value }
+          : feedback
+      )
+    );
+  };
+
+  const handleSubmit = async () => {
+    const incompleteFeedback = feedbacks.find(feedback => feedback.score === '' || feedback.content === '');
+    if (incompleteFeedback) {
+      toast.error('Please fill in an evaluation for all group members before submitting.');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/groups/submitGroupFeedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          assignmentID,
+          reviewerID: userID,
+          feedbacks
+        }),
+      });
+
+      if (response.ok) {
+        toast.success('Feedback submitted successfully.');
+        setFeedbacks(students.map(student => ({
+          revieweeID: student.studentID,
+          score: '',
+          content: ''
+        })));
+      } else {
+        const errorData = await response.json();
+        toast.error(`Error: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      toast.error('Error submitting feedback. Please try again.');
+    }
+  };
+
+  return (
+    <Card>
+      <CardBody>
+        <h3>Group: {groupID}</h3>
+        <br />
+        <h3>Group Members:</h3>
+        <ul className={styles.groupList}>
+          {students.map(student => (
+            <li key={student.studentID}>
+              <div className={styles.groupMember}>
+                <span>{student.firstName} {student.lastName}</span>
+                <Input
+                  type="number"
+                  placeholder="Grade"
+                  className={styles.scoreInput}
+                  value={feedbacks.find(feedback => feedback.revieweeID === student.studentID)?.score}
+                  onChange={(e) => handleInputChange(student.studentID, 'score', e.target.value)}
+                />
+              </div>
+              <Textarea
+                placeholder="Any additional comments"
+                value={feedbacks.find(feedback => feedback.revieweeID === student.studentID)?.content}
+                onChange={(e) => handleInputChange(student.studentID, 'content', e.target.value)}
+              />
+            </li>
+          ))}
+        </ul>
+      </CardBody>
+      <Button onPress={handleSubmit}>Submit Feedback</Button>
+    </Card>
+  );
+};
 
 export default StudentGroupDetails;

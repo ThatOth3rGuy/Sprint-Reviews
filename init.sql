@@ -102,6 +102,19 @@ CREATE TABLE IF NOT EXISTS feedback (
     FOREIGN KEY (reviewerID) REFERENCES student(studentID) ON DELETE SET NULL
 );
 
+-- Table for storing feedback information between students for group assignments
+CREATE TABLE IF NOT EXISTS group_feedback (
+    groupFeedbackID INT AUTO_INCREMENT PRIMARY KEY,
+    assignmentID INT NOT NULL,
+    score INT,
+    content TEXT,
+    reviewerID INT,
+    revieweeID INT,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
+    FOREIGN KEY (reviewerID) REFERENCES student(studentID) ON DELETE SET NULL,
+    FOREIGN KEY (revieweeID) REFERENCES student(studentID) ON DELETE SET NULL
+);
+
 -- Table for storing enrollment information to connect students to courses
 CREATE TABLE IF NOT EXISTS enrollment (
     studentID INT,

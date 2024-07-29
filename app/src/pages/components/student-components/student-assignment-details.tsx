@@ -18,7 +18,7 @@ const StudentAssignmentView: React.FC<StudentAssignmentViewProps> = ({descriptio
                     <p>{description}</p>
                     <br />
                     <h3>Due Date:</h3>
-                    <p>{deadline}</p>
+                    <p>{new Date(deadline).toDateString()}</p>
                     <br />
                     <h3>Upload Restrictions</h3>
                     <p>{allowedFileTypes}</p>
