@@ -39,13 +39,18 @@ test.describe('Student Dashboard Page', () => {
   test('should display course cards', async ({ page }) => {
     // Wait for the courses to load and be displayed
     await page.waitForSelector('.student-dashboard_courseCard__Dx_wy', { state: 'attached' });
-
+  
     const courseCards = page.locator('.student-dashboard_courseCard__Dx_wy');
-    await expect(courseCards).toHaveCount(1);
-
-    const courseName = courseCards.locator('b');
-    await expect(courseName).toHaveText('COSC 499');
+    await expect(courseCards).toHaveCount(2);
+  
+    // Using more specific locator to identify the course card with 'COSC 499'
+    const course499Card = courseCards.locator('b', { hasText: 'COSC 499' });
+    await expect(course499Card).toHaveCount(1);
+  
+    // Validate the exact text of the identified course card
+    await expect(course499Card).toHaveText('COSC 499');
   });
+  
 
   // Check that clicking a course card navigates to the course details page
   test('should navigate to course details page when course card is clicked', async ({ page }) => {

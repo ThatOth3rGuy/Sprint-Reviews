@@ -31,6 +31,12 @@ const StudentLogin: NextPage = () => {
     router.push("/student/registration");
   };
 
+  const handleEnter= async (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSignInClick();
+    }
+  }
+
   const handleSignInClick = async () => {
     setError("");
 
@@ -73,7 +79,7 @@ const StudentLogin: NextPage = () => {
             
             <Input className="my-1 p-2" type="email" labelPlacement="inside" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
             <Input  className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
-              onChange={(e) => setPassword(e.target.value)} />
+              onChange={(e) => setPassword(e.target.value)} onKeyDown={handleEnter}/>
             <Button className="bg-primary text-white my-1 w-full text-medium " variant="solid" onClick={handleSignInClick}>
               Sign In
             </Button>

@@ -4,7 +4,7 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import { useEffect, useState, useCallback } from "react";
 import { useSessionValidation } from "../api/auth/checkSession";
 import styles from "../../styles/instructor-course-dashboard.module.css";
-import InstructorAssignmentCard from "../components/instructor-components/instructor-assignment-card";
+import InstructorAssignmentCard from "../components/instructor-components/instructor-course-assignment-card";
 import {
   Button,
   Breadcrumbs,
@@ -193,6 +193,11 @@ export default function Page() {
       console.error("Error updating course name:", error);
     }
   };
+    
+  const handeEnrollRemoveStudentsClick = () => {
+    router.push(`/instructor/manage-students?courseId=${courseData.courseID}`);
+  }
+
 
   const handleAction = (key: any) => {
     switch (key) {
@@ -207,6 +212,9 @@ export default function Page() {
         break;
       case "edit-course":
         handleEditCourseNameClick();
+        break;
+      case "manage-students":
+        handeEnrollRemoveStudentsClick();
         break;
       case "archive":
         setIsArchiveModalOpen(true);
@@ -265,8 +273,9 @@ export default function Page() {
                   >
                     <InstructorAssignmentCard 
                       courseID={assignment.assignmentID}
-                      courseName={assignment.title}
+                      assignmentName={assignment.title}
                       color="#9fc3cf"
+                      deadline={assignment.deadline}
                     />
                   </div>
                 ))
@@ -309,6 +318,7 @@ export default function Page() {
                 > 
                 Edit Course Name
                 </ListboxItem>
+                <ListboxItem key="manage-students">Manage Students</ListboxItem>
                 {isAdmin ? (
                   <ListboxItem key="archive" 
                   className="text-danger"
@@ -316,7 +326,7 @@ export default function Page() {
                   >
                     Archive Course
                   </ListboxItem>
-                ) : null}
+                ) : <p></p>}
               </Listbox>
             </div>
             <hr />
