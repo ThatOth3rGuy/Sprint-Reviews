@@ -219,13 +219,13 @@ export async function addAssignmentToCourse(
 }
 export async function getAllAssignmentsStudent(userID: number) {
   const sql = `
-    SELECT a.*
+    SELECT a.*, c.courseName, c.isArchived
 FROM assignment a
 JOIN course c ON a.courseID = c.courseID
 JOIN enrollment e ON c.courseID = e.courseID
 JOIN student s ON e.studentID = s.studentID
 JOIN user u ON s.userID = u.userID
-WHERE u.userID = ?;
+WHERE u.userID = ? AND c.isArchived=0;
   `;
   try {
     const results = await query(sql, [userID]);
@@ -237,14 +237,12 @@ WHERE u.userID = ?;
 }
 export async function getAllAssignmentsInstructor(userID: number) {
   const sql = `
-    SELECT a.*
+    SELECT a.*, c.courseName, c.isArchived
 FROM assignment a
 JOIN course c ON a.courseID = c.courseID
 JOIN instructor i ON c.instructorID = i.instructorID
 JOIN user u ON i.userID = u.userID
-WHERE u.userID = ?
-
-  
+WHERE u.userID = ? AND c.isArchived=0;
   `;
   try {
     const results = await query(sql, [userID]);

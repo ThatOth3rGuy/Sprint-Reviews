@@ -29,6 +29,7 @@ export default function Page() {
       fetchCourses(session.user.userID);
     }
   }, [session]);
+
   
   const fetchCourses = async (userID: number) => {
     try {
@@ -55,16 +56,15 @@ export default function Page() {
     return null;
   }
 
-  const isAdmin = session.user.role === 'admin';
 
   return (
     <>
-      <StudentNavbar home={{className: "bg-secondary-50"}}/>
+      
 
-      <div className={`instructor text-primary-900 ${styles.container}`}>
+      <div className={`student text-primary-900 ${styles.container}`}>
         <div className={styles.topSection}>
-          <h1>Dashboard  </h1>
-        </div>
+          <h1>Dashboard </h1>
+        </div><StudentNavbar home={{className: "bg-secondary-50"}}/>
         <div >
           <div className={styles.courseCards}>
             {courses.map((course) => (

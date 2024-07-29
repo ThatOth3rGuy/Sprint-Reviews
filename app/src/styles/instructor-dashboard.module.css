@@ -14,7 +14,7 @@
   gap: 2%;
   background: inherit;
   width: 100%;
-  margin-left: 11vw;
+  margin-left: 12vw;
   padding: 1%;
   padding-top: 0;
   margin-top: 0;
@@ -25,14 +25,15 @@
   margin-top: 0;
   margin-left: auto;
   margin-right: auto;
+  padding-inline: 2%;
   display: flex;
   flex-flow: row wrap;
   align-items: center;
   /* min-width: 50vw; */
   max-width: 75vw;
-  gap: 2%;
+  gap: 0.5%;
   text-align: left;
-  justify-content: center;
+  justify-content: left;
 }
 
 .courseCard {
