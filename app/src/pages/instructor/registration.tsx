@@ -76,6 +76,15 @@ const SignUp: NextPage = () => {
         });
 
         if (response.ok) {
+          // Send email
+          await fetch('/api/emails/sendEmailConfirmation', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ firstName, lastName, email })
+          });
+        
           router.push('/instructor/login');
           toast.success("Account created! Please sign in to continue.")
         } else {

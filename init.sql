@@ -124,6 +124,16 @@ CREATE TABLE IF NOT EXISTS review (
     deadline DATETIME,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS student_notifications (
+    studentID INT,
+    assignmentNotification BOOLEAN DEFAULT TRUE,
+    reviewNotification BOOLEAN DEFAULT TRUE,
+    deadlineNotification BOOLEAN DEFAULT TRUE,
+    evaluationNotification BOOLEAN DEFAULT TRUE,
+    feedbackNotification BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE CASCADE
+)
 -- Insert a sample user (student) into the user table
 INSERT INTO user (firstName, lastName, email, pwd, userRole)
 VALUES ('John', 'Doe', 'john.doe@example.com', 'password123', 'student');

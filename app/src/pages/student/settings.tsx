@@ -3,7 +3,7 @@ import StudentNavbar from "../components/student-components/student-navbar";
 import { useState } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/instructor-course-dashboard.module.css';
-import { Breadcrumbs, BreadcrumbItem, Progress, Spinner } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem, Switch, Spinner } from "@nextui-org/react";
 import router from "next/router";
 
 
@@ -16,16 +16,16 @@ export default function Page() {
 
   if (loading) {
     return <div className='w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto'>
-        <Spinner color='primary' size="lg" />
-      </div>;
+      <Spinner color='primary' size="lg" />
+    </div>;
   }
-  
+
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");
   }
   return (
     <>
-   <div className={`instructor text-primary-900 ${styles.container}`}>
+      <div className={`student text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
           <h1>Settings</h1>
           <br />
@@ -36,24 +36,32 @@ export default function Page() {
         </div>
         <div className={styles.mainContent}>
           <div className={` ${styles.assignmentsSection}`}>
-           <h3>Customization Settings Below</h3>
-           <br />
+            <h3>Customization Settings Below</h3>
+            <br />
             <p>This will be a place where user can customize any changes that they may want to make.</p>
-            
-            <Progress
-      size="sm"
-      isIndeterminate
-      aria-label="Loading..."
-      className="max-w-md mx-auto my-auto"
-    />      </div>
-          <div className="w-[25%] h-[100%] flex-col p-[1%]">
+            <Switch defaultSelected className="m-1">
+              Assignment Notifications
+            </Switch>
+            <Switch defaultSelected className="m-1">
+              Peer Review Notifications
+            </Switch>
+            <Switch defaultSelected className="m-1">
+              Deadline Notifications
+            </Switch>
+            <Switch defaultSelected className="m-1">
+              Peer Evaluation Notifications
+            </Switch>
+            <Switch defaultSelected className="m-1">
+              Feedback Notifications
+            </Switch>
+          </div>
+          <div className="w-[25%] h-[100%] flex-col p-[1%] text-left">
             {/* Add buttons as needed */}
-            {/* <Button color="primary" variant="ghost" className="w-[100%] m-1">Edit Profile</Button>
-            <Button color="danger" variant="ghost" className="w-[100%] m-1">Delete Account</Button> */}
+            
           </div>
         </div>
       </div>
-      <StudentNavbar settings={{ className: "bg-secondary-200" }}/>
+      <StudentNavbar settings={{ className: "bg-secondary-200" }} />
     </>
   );
 }
