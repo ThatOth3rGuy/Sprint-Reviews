@@ -1,5 +1,5 @@
 // components/student-components/student-group-details.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardBody, Button, Input, Textarea } from "@nextui-org/react";
 import toast from "react-hot-toast";
 import styles from "../../../styles/student-group-details.module.css";
@@ -15,6 +15,7 @@ interface StudentGroupDetailsProps {
   students: Student[];
   assignmentID: number;
   userID: number;
+  isFeedbackSubmitted: boolean;
 }
 
 interface Feedback {
@@ -23,12 +24,13 @@ interface Feedback {
   content: string;
 }
 
-const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, students, assignmentID, userID }) => {
+const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, students, assignmentID, userID, isFeedbackSubmitted: initialIsFeedbackSubmitted }) => {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>(students.map(student => ({
     revieweeID: student.studentID,
     score: '',
     content: ''
   })));
+  const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(initialIsFeedbackSubmitted);
 
   const handleInputChange = (revieweeID: number, field: string, value: string) => {
     setFeedbacks(prevFeedbacks =>
@@ -43,7 +45,7 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
   const handleSubmit = async () => {
     const incompleteFeedback = feedbacks.find(feedback => feedback.score === '' || feedback.content === '');
     if (incompleteFeedback) {
-      toast.error('Please fill in an evaluation for all group members before submitting.');
+      toast.error('Please fill in both score and content for all group members.');
       return;
     }
 
@@ -62,11 +64,7 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
 
       if (response.ok) {
         toast.success('Feedback submitted successfully.');
-        setFeedbacks(students.map(student => ({
-          revieweeID: student.studentID,
-          score: '',
-          content: ''
-        })));
+        setIsFeedbackSubmitted(true);
       } else {
         const errorData = await response.json();
         toast.error(`Error: ${errorData.message}`);
@@ -85,7 +83,7 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
         <h3>Group Members:</h3>
         <ul className={styles.groupList}>
           {students.map(student => (
-            <li key={student.studentID}>
+            <li key={student.studentID} className={styles.groupMemberItem}>
               <div className={styles.groupMember}>
                 <span>{student.firstName} {student.lastName}</span>
                 <Input
@@ -101,11 +99,14 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
                 value={feedbacks.find(feedback => feedback.revieweeID === student.studentID)?.content}
                 onChange={(e) => handleInputChange(student.studentID, 'content', e.target.value)}
               />
+              <br />
             </li>
           ))}
         </ul>
+        <Button onPress={handleSubmit} color={isFeedbackSubmitted ? 'success' : 'default'}>
+          {isFeedbackSubmitted ? 'Re-Submit Feedback' : 'Submit Feedback'}
+        </Button>
       </CardBody>
-      <Button onPress={handleSubmit}>Submit Feedback</Button>
     </Card>
   );
 };

@@ -1,4 +1,3 @@
-// assignment-dashboard.tsx
 import { useRouter } from "next/router";
 import StudentNavbar from "../components/student-components/student-navbar";
 import { useEffect, useState } from "react";
@@ -43,6 +42,7 @@ export default function AssignmentDashboard() {
   const [isLateSubmission, setIsLateSubmission] = useState(false);
   const [submittedFileName, setSubmittedFileName] = useState<string | null>(null);
   const [groupDetails, setGroupDetails] = useState<GroupDetails | null>(null);
+  const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false);
 
   useSessionValidation("student", setLoading, setSession);
 
@@ -89,30 +89,51 @@ export default function AssignmentDashboard() {
     fetchData();
   }, [router.isReady, router.query, session]);
 
-  const checkSubmissionStatus = async () => {
-    if (assignmentID && session?.user?.userID) {
-      try {
-        const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`);
-        if (!response.ok) {
-          throw new Error('Failed to check submission status');
-        }
-        const data = await response.json();
+  useEffect(() => {
+    const checkSubmissionStatus = async () => {
+      if (assignmentID && session?.user?.userID) {
+        try {
+          const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`);
+          if (!response.ok) {
+            throw new Error('Failed to check submission status');
+          }
+          const data = await response.json();
 
-        if (data.isSubmitted) {
-          setIsSubmitted(true);
-          setSubmittedFileName(data.fileName);
-          setIsLateSubmission(data.isLate);
-        } else {
-          setIsSubmitted(false);
-          setIsLateSubmission(false);
-          setSubmittedFileName(null);
+          if (data.isSubmitted) {
+            setIsSubmitted(true);
+            setSubmittedFileName(data.fileName);
+            setIsLateSubmission(data.isLate);
+          } else {
+            setIsSubmitted(false);
+            setIsLateSubmission(false);
+            setSubmittedFileName(null);
+          }
+        } catch (error) {
+          console.error('Error checking submission status:', error);
+          toast.error('Error checking submission status. Please refresh the page.');
         }
-      } catch (error) {
-        console.error('Error checking submission status:', error);
-        toast.error('Error checking submission status. Please refresh the page.');
       }
-    }
-  };
+    };
+
+    const checkFeedbackStatus = async () => {
+      if (assignmentID && session?.user?.userID) {
+        try {
+          const response = await fetch(`/api/groups/getFeedbackStatus?assignmentID=${assignmentID}&reviewerID=${session.user.userID}`);
+          if (!response.ok) {
+            throw new Error('Failed to check feedback status');
+          }
+          const data = await response.json();
+          setIsFeedbackSubmitted(data.isFeedbackSubmitted);
+        } catch (error) {
+          console.error('Error checking feedback status:', error);
+          toast.error('Error checking feedback status. Please refresh the page.');
+        }
+      }
+    };
+
+    checkSubmissionStatus();
+    checkFeedbackStatus();
+  }, [assignmentID, session]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -140,6 +161,31 @@ export default function AssignmentDashboard() {
       formData.append('courseID', courseData?.courseID ?? '');
       formData.append('isGroupAssignment', String(assignment?.groupAssignment ?? false));
       formData.append('groupID', JSON.stringify(groupDetails?.groupID ?? null));
+
+      const checkSubmissionStatus = async () => {
+        if (assignmentID && session?.user?.userID) {
+          try {
+            const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`);
+            if (!response.ok) {
+              throw new Error('Failed to check submission status');
+            }
+            const data = await response.json();
+    
+            if (data.isSubmitted) {
+              setIsSubmitted(true);
+              setSubmittedFileName(data.fileName);
+              setIsLateSubmission(data.isLate);
+            } else {
+              setIsSubmitted(false);
+              setIsLateSubmission(false);
+              setSubmittedFileName(null);
+            }
+          } catch (error) {
+            console.error('Error checking submission status:', error);
+            toast.error('Error checking submission status. Please refresh the page.');
+          }
+        }
+      };
 
       try {
         console.log('Submitting assignment...');
@@ -234,6 +280,7 @@ export default function AssignmentDashboard() {
               students={groupDetails.students}
               assignmentID={assignment.assignmentID}
               userID={session.user.userID}
+              isFeedbackSubmitted={isFeedbackSubmitted}
             />
           )}
           <Modal
