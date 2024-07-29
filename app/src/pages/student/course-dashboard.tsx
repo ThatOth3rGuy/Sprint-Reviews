@@ -8,7 +8,7 @@ import styles from '../../styles/instructor-course-dashboard.module.css';
 import InstructorAssignmentCard from "../components/instructor-components/instructor-assignment-card";
 import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
 import StudentNavbar from "../components/student-components/student-navbar";
-import StudentAssignmentCard from "../components/student-components/student-assignment-card";
+import StudentAssignmentCard from "../components/student-components/student-course-assignment-card";
 interface CourseData {
   courseID: string;
   courseName: string;
@@ -40,7 +40,7 @@ export default function Page() {
       fetchAssignments(session.user.userID);
     }
     if (courseId) {
-      
+
       fetch(`/api/courses/${courseId}`)
         .then((response) => response.json())
         .then((data: CourseData) => {
@@ -49,7 +49,7 @@ export default function Page() {
         })
         .catch((error) => console.error('Error fetching course data:', error));
 
-        fetchAssignments(courseId);
+      fetchAssignments(courseId);
     }
   }, [courseId]);
   const handleHomeClick = async () => {
@@ -75,8 +75,8 @@ export default function Page() {
 
   if (!courseData || loading) {
     return <div className='w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto'>
-    <Spinner color='primary' size="lg" />
-</div>;
+      <Spinner color='primary' size="lg" />
+    </div>;
   }
 
   if (!session || !session.user || !session.user.userID) {
@@ -99,7 +99,7 @@ export default function Page() {
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
             <BreadcrumbItem>{courseData.courseName}</BreadcrumbItem>
           </Breadcrumbs>
-          
+
         </div>
         <div className={styles.mainContent}>
           <div className={styles.assignmentsSection}>
@@ -122,9 +122,10 @@ export default function Page() {
                   <div key={assignment.assignmentID} className={styles.courseCard}>
                     <StudentAssignmentCard
                       courseID={assignment.assignmentID}
-                      courseName={assignment.title}
+                      assignmentName={assignment.title}
                       color="#b3d0c3"
-                      dueDate={assignment.deadline}
+                      deadline={assignment.deadline}
+
                     />
                   </div>
                 ))
@@ -139,8 +140,8 @@ export default function Page() {
                   <div key={assignment.assignmentID} className={styles.courseCard}>
                     <StudentAssignmentCard
                       courseID={45}
-                      courseName="Peer review Assignment"
-                      color="#b3d0c3" dueDate={assignment.deadline}                    />
+                      assignmentName="Peer review Assignment"
+                      color="#b3d0c3" deadline={assignment.deadline} />
                   </div>
                 ))
               ) : (
@@ -149,11 +150,11 @@ export default function Page() {
             </div>
           </div>
           <div className={styles.notificationsSection}>
-          <h2 className="my-3">Notifications</h2>
-          <div className={styles.notificationsContainer}>
+            <h2 className="my-3">Notifications</h2>
+            <div className={styles.notificationsContainer}>
               <div className={styles.notificationCard}>Dummy Notification</div>
             </div>
-            </div>          
+          </div>
         </div>
       </div>
     </>

@@ -265,7 +265,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
         </div>
         <div className={styles.mainContent}>
-          <div className={styles.rectangle}>
+          <div className="flex-col w-[85%] bg-white p-[1.5%] pt-[1%] shadow-sm overflow-auto m-auto mr-[1%] text-left ">
             <h2>Release Assignment for Peer Review</h2>
             <br />
             <form onSubmit={handleSubmit}>
@@ -423,15 +423,10 @@ const handleSubmit = async (e: React.FormEvent) => {
                   )}
                 </ModalContent>
                 {/* <h2>Advanced Options</h2> */}
-
-
               </Modal>
               <br />
-              
             </form>
           </div>
-
-          
         </div>
       </div>
     </>
