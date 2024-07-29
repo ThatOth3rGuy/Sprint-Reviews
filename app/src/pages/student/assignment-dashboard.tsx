@@ -1,3 +1,4 @@
+// assignment-dashboard.tsx
 import { useRouter } from "next/router";
 import StudentNavbar from "../components/student-components/student-navbar";
 import { useEffect, useState } from "react";
@@ -13,12 +14,18 @@ interface Assignment {
   descr: string;
   deadline: string;
   allowedFileTypes: string;
+  groupAssignment: boolean;
   courseID: string; 
 }
 
 interface CourseData {
   courseID: string;
   courseName: string;
+}
+
+interface GroupDetails {
+  groupID: number;
+  studentIDs: number[];
 }
 
 export default function AssignmentDashboard() {
@@ -33,12 +40,11 @@ export default function AssignmentDashboard() {
   const [fileError, setFileError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLateSubmission, setIsLateSubmission] = useState(false);
-  const [submittedFileName, setSubmittedFileName] = useState<string | null>(
-    null
-  );
+  const [submittedFileName, setSubmittedFileName] = useState<string | null>(null);
+  const [groupDetails, setGroupDetails] = useState<GroupDetails | null>(null);
 
   useSessionValidation("student", setLoading, setSession);
-//useEffect for breadcrumbs
+
   useEffect(() => {
     if (!router.isReady) return;
 
@@ -53,12 +59,20 @@ export default function AssignmentDashboard() {
             const assignmentData: Assignment = await assignmentResponse.json();
             setAssignment(assignmentData);
 
-            // Assuming the assignment data includes a courseID
             if (assignmentData.courseID) {
               const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
               if (courseResponse.ok) {
                 const courseData: CourseData = await courseResponse.json();
                 setCourseData(courseData);
+              }
+            }
+
+            if (assignmentData.groupAssignment && session?.user?.userID) {
+              const groupResponse = await fetch(`/api/groups/getGroupDetails?courseID=${assignmentData.courseID}&studentID=${session.user.userID}`);
+              if (groupResponse.ok) {
+                const groupData: GroupDetails = await groupResponse.json();
+                console.log('Group details:', groupData);
+                setGroupDetails(groupData);
               }
             }
           } else {
@@ -75,28 +89,7 @@ export default function AssignmentDashboard() {
     };
 
     fetchData();
-  }, [router.isReady, router.query]);
-
-
-  //useEffect for assignment information
-  useEffect(() => {
-    if (assignmentID && session?.user?.userID) {
-      fetch(`/api/assignments/${assignmentID}`)
-        .then((response) => response.json())
-        .then((data: Assignment) => {
-          console.log("Fetched assignment data:", data);
-          setAssignment(data);
-          return fetch(`/api/courses/${data.courseID}`);
-        })
-        .then((response) => response.json())
-        .then((data: CourseData) => {
-          console.log("Fetched course data:", data);
-          setCourseData(data);
-          checkSubmissionStatus();
-        })
-        .catch((error) => console.error("Error fetching data:", error));
-    }
-  }, [assignmentID, session]);
+  }, [router.isReady, router.query, session]);
 
   const checkSubmissionStatus = async () => {
     if (assignmentID && session?.user?.userID) {
@@ -147,6 +140,8 @@ export default function AssignmentDashboard() {
         formData.append('assignmentID', assignment?.assignmentID?.toString() ?? '');
         formData.append('studentID', session.user.userID.toString());
         formData.append('courseID', courseData?.courseID ?? '');
+        formData.append('isGroupAssignment', String(assignment?.groupAssignment ?? false));
+        formData.append('groupID', JSON.stringify(groupDetails?.groupID ?? null));
 
         try {
             console.log('Submitting assignment...');
@@ -155,9 +150,8 @@ export default function AssignmentDashboard() {
                 body: formData,
             });
 
-            console.log('Response status:', response.status);
             const result = await response.json();
-            console.log('Response body:', result);
+            console.log('Submit result:', result);
 
             if (response.ok) {
                 if (result.success) {
@@ -197,8 +191,6 @@ export default function AssignmentDashboard() {
     );
   }
 
-
-
   const handleBackClick = () => router.push(`/student/course-dashboard?courseId=${courseData?.courseID}`);
   const handleHomeClick = () => router.push("/student/dashboard");
 
@@ -236,6 +228,16 @@ export default function AssignmentDashboard() {
             </div>
           ) : (
             <Button onClick={onOpen}>Submit Assignment</Button>
+          )}
+          {groupDetails && (
+            <div>
+              <h2>Group Members</h2>
+              <ul>
+                {groupDetails.studentIDs.map((id) => (
+                  <li key={id}>{id}</li>
+                ))}
+              </ul>
+            </div>
           )}
           <Modal
             className="student"
