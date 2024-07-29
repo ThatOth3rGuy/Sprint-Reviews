@@ -2,29 +2,44 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { query } from '../../../db';
 
-async function getGroupDetails(courseID: number, studentID: number) {
-  const studentIDSQL = `SELECT studentID FROM user JOIN student ON user.userID = student.userID WHERE user.userID = ?`;
+async function getGroupDetails(courseID: number, userID: number) {
+  const studentIDSQL = `
+    SELECT studentID 
+    FROM student 
+    WHERE userID = ?
+  `;
   const sql = `
-    SELECT groupID
-    FROM course_groups
-    WHERE courseID = ? AND studentID = ?
+    SELECT cg.groupID, s.studentID, u.firstName, u.lastName
+    FROM course_groups cg
+    JOIN student s ON cg.studentID = s.studentID
+    JOIN user u ON s.userID = u.userID
+    WHERE cg.courseID = ? AND cg.groupID IN (
+      SELECT groupID 
+      FROM course_groups 
+      WHERE courseID = ? AND studentID = ?
+    )
   `;
 
   try {
-    const studentResult = await query(studentIDSQL, [studentID]);
-    const result = await query(sql, [courseID, studentResult[0].studentID]);
+    const studentIDResult = await query(studentIDSQL, [userID]);
+    if (studentIDResult.length === 0) {
+      return null;
+    }
+
+    const studentID = studentIDResult[0].studentID;
+    const result = await query(sql, [courseID, courseID, studentID]);
+    if (result.length === 0) {
+      return null;
+    }
+
     const groupID = result[0].groupID;
+    const students = result.map((row: any) => ({
+      studentID: row.studentID,
+      firstName: row.firstName,
+      lastName: row.lastName
+    }));
 
-    const studentSQL = `
-      SELECT studentID
-      FROM course_groups
-      WHERE courseID = ? AND groupID = ?
-    `;
-
-    const studentResults = await query(studentSQL, [courseID, groupID]);
-    const studentIDs = studentResults.map((row: any) => row.studentID);
-
-    return { groupID, studentIDs };
+    return { groupID, students };
   } catch (error) {
     console.error('Error in getGroupDetails:', error);
     throw error;
@@ -36,6 +51,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const groupDetails = await getGroupDetails(parseInt(courseID as string), parseInt(studentID as string));
+    if (!groupDetails) {
+      return res.status(404).json({ message: 'Group not found' });
+    }
     res.status(200).json(groupDetails);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching group details' });
