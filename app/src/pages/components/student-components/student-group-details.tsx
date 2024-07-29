@@ -103,10 +103,10 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
             </li>
           ))}
         </ul>
-        <Button onPress={handleSubmit} color={isFeedbackSubmitted ? 'success' : 'default'}>
-          {isFeedbackSubmitted ? 'Re-Submit Feedback' : 'Submit Feedback'}
-        </Button>
       </CardBody>
+      <Button onPress={handleSubmit} color={isFeedbackSubmitted ? 'success' : 'default'}>
+          {isFeedbackSubmitted ? 'Re-Submit Feedback' : 'Submit Feedback'}
+      </Button>
     </Card>
   );
 };

@@ -66,7 +66,7 @@ export default function AssignmentDashboard() {
             }
 
             if (assignmentData.groupAssignment && session?.user?.userID) {
-              const groupResponse = await fetch(`/api/groups/getGroupDetails?courseID=${assignmentData.courseID}&studentID=${session.user.userID}`);
+              const groupResponse = await fetch(`/api/groups/getGroupDetails?courseID=${assignmentData.courseID}&userID=${session.user.userID}`);
               if (groupResponse.ok) {
                 const groupData: GroupDetails = await groupResponse.json();
                 console.log('Group details:', groupData);
@@ -157,10 +157,14 @@ export default function AssignmentDashboard() {
       const formData = new FormData();
       formData.append('file', uploadedFile);
       formData.append('assignmentID', assignment?.assignmentID?.toString() ?? '');
-      formData.append('studentID', session.user.userID.toString());
-      formData.append('courseID', courseData?.courseID ?? '');
+      formData.append('userID', session.user.userID.toString());
+      //formData.append('courseID', courseData?.courseID ?? '');
       formData.append('isGroupAssignment', String(assignment?.groupAssignment ?? false));
-      formData.append('groupID', JSON.stringify(groupDetails?.groupID ?? null));
+      formData.append('groupID', groupDetails?.groupID?.toString() ?? '');
+      if (assignment?.groupAssignment) {
+        const studentList = groupDetails?.students?.map(student => student.studentID);
+        formData.append('students', JSON.stringify(studentList));
+      }
 
       const checkSubmissionStatus = async () => {
         if (assignmentID && session?.user?.userID) {
@@ -188,7 +192,7 @@ export default function AssignmentDashboard() {
       };
 
       try {
-        console.log('Submitting assignment...');
+        console.log('Submitting assignment...', formData.get('file'), formData.get('assignmentID'), formData.get('userID'), formData.get('isGroupAssignment'), formData.get('groupID'));
         const response = await fetch('/api/assignments/submitAssignment', {
           method: 'POST',
           body: formData,

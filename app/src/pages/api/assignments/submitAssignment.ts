@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import multer from 'multer';
 import fs from 'fs/promises';
-import { query } from '../../../db';
+import { query, getStudentsById } from '../../../db';
 
 export const config = {
   api: {
@@ -45,13 +45,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const file = (req as any).file;
-    const { assignmentID, studentID, courseID, isGroupAssignment, groupID } = req.body;
+    let { assignmentID, userID, isGroupAssignment, groupID, students } = req.body;
 
     try {
-      const studentIDList = isGroupAssignment ? JSON.parse(groupID) : [studentID];
+      // Parse students if it is a string (assuming it comes as a JSON string)
+      if (typeof students === 'string') {
+        students = JSON.parse(students);
+      }
+
+      // Convert userID to studentID
+      const studentIDResult = await getStudentsById(parseInt(userID));
+      const studentID = studentIDResult.studentID;
+
+      // Set studentIDList to either the studentID or the list of student IDs in the group
+      const studentIDList = [studentID];
+      if (isGroupAssignment === '1' && Array.isArray(students)) {
+        studentIDList.push(...students.map((id: string) => parseInt(id)));
+      }
 
       const results = await Promise.all(
-        studentIDList.map((studentID: number) => submitAssignment(parseInt(assignmentID), studentID, file, isGroupAssignment ? parseInt(groupID) : null))
+        studentIDList.map((id) => submitAssignment(parseInt(assignmentID), id, file, isGroupAssignment === '1' ? parseInt(groupID) : null))
       );
 
       // Delete the temporary file after all submissions are complete

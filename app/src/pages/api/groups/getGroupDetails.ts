@@ -44,10 +44,10 @@ async function getGroupDetails(courseID: number, userID: number) {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { courseID, studentID } = req.query;
+  const { courseID, userID } = req.query;
 
   try {
-    const groupDetails = await getGroupDetails(parseInt(courseID as string), parseInt(studentID as string));
+    const groupDetails = await getGroupDetails(parseInt(courseID as string), parseInt(userID as string));
     if (!groupDetails) {
       return res.status(404).json({ message: 'Group not found' });
     }
