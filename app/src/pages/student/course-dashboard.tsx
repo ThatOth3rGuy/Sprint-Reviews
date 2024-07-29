@@ -155,7 +155,7 @@ export default function Page() {
                       courseID={assignment.assignmentID}
                       courseName={assignment.title}
                       color="#b3d0c3"
-                      dueDate={assignment.deadline}
+                      dueDate={new Date(assignment.deadline).toLocaleString()}
                     />
                   </div>
                 ))
@@ -172,7 +172,7 @@ export default function Page() {
         courseID={review.linkedAssignmentID}
         courseName={`Review for Assignment - ${review.title}`|| `Review for Assignment ${review.linkedAssignmentID}`}
         color="#b3d0c3"
-        dueDate={review.deadline}
+        dueDate={new Date(review.deadline).toLocaleString()}
       />
     </div>
   ))

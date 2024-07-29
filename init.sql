@@ -91,11 +91,14 @@ CREATE TABLE IF NOT EXISTS review_criteria (
 -- Table for storing feedback information between students and assignments
 CREATE TABLE IF NOT EXISTS feedback (
     feedbackID INT AUTO_INCREMENT PRIMARY KEY,
+    submissionID INT NOT NULL,
     assignmentID INT NOT NULL,
-    content TEXT,
-    reviewerID INT,
-    FOREIGN KEY (assignmentID) REFERENCES submission(submissionID) ON DELETE CASCADE,
-    FOREIGN KEY (reviewerID) REFERENCES student(studentID) ON DELETE SET NULL
+    feedbackDetails TEXT,
+    feedbackDate DATETIME,
+    lastUpdated DATETIME,
+    comment TEXT NOT NULL,
+    FOREIGN KEY (submissionID) REFERENCES submission(submissionID) ON DELETE CASCADE,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
 
 -- Table for storing enrollment information to connect students to courses

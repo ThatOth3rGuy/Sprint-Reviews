@@ -1,17 +1,17 @@
 import StudentNavbar from "../components/student-components/student-navbar";
 import styles from '../../styles/instructor-course-dashboard.module.css';
-import { Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody, CardHeader, Divider, Button, Input } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody, CardHeader, Divider, Button, Input, Pagination } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useSessionValidation } from "../api/auth/checkSession";
-
+import submitReviews from "../api/reviews/submitReviews"
 interface Assignment {
   assignmentID: number;
   title: string;
   descr: string;
   deadline: string;
   allowedFileTypes: string;
-  courseID: string;
+  courseID: string; 
 }
 
 interface CourseData {
@@ -35,25 +35,27 @@ interface Submission {
   studentName?: string;
 }
 
-export default function Page() {
+export default function ReviewDashboard() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [assignment, setAssignment] = useState<Assignment | null>(null);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
+  const [courseName, setCourseName] = useState<string>("");
   const [reviewCriteria, setReviewCriteria] = useState<ReviewCriterion[]>([]);
   const [submissionsToReview, setSubmissionsToReview] = useState<Submission[]>([]);
-  const [reviewGrades, setReviewGrades] = useState<{ [key: number]: string }>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [reviewGrades, setReviewGrades] = useState<{ [key: number]: { [key: number]: string } }>({});
+  const [reviewComments, setReviewComments] = useState<{ [key: number]: string }>({});
   const router = useRouter();
   const { assignmentID } = router.query;
-  const [error, setError] = useState<string | null>(null)
-  const [reviewData, setReviewData] = useState(null); 
+  const [error, setError] = useState<string | null>(null);
+
   useSessionValidation('student', setLoading, setSession);
 
   useEffect(() => {
+    if (!router.isReady || !session) return;
     const fetchData = async () => {
-      if (!router.isReady || !session) return;
-      const userID = session.user?.userID;   
-    
+      const userID = session.user?.userID;
       if (!assignmentID || !userID) {
         setError('Missing assignmentID or userID');
         setLoading(false);
@@ -61,23 +63,132 @@ export default function Page() {
       }
 
       try {
-        const reviewResponse = await fetch(`/api/review-dashboard/${assignmentID}?userID=${userID}`);
-        if (!reviewResponse.ok) {
-          throw new Error(`Failed to fetch review data: ${await reviewResponse.text()}`);
+        const [assignmentResponse, reviewResponse] = await Promise.all([
+          fetch(`/api/assignments/${assignmentID}`),
+          fetch(`/api/review-dashboard/${assignmentID}?userID=${userID}`)
+        ]);
+
+        if (assignmentResponse.ok && reviewResponse.ok) {
+          const [assignmentData, reviewData] = await Promise.all([
+            assignmentResponse.json(),
+            reviewResponse.json()
+          ]);
+
+          setAssignment(assignmentData);
+          setReviewCriteria(reviewData.reviewCriteria);
+          setSubmissionsToReview(reviewData.submissions);
+
+          if (assignmentData.courseID) {
+            const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
+            if (courseResponse.ok) {
+              const courseData = await courseResponse.json();
+              setCourseData(courseData);
+              setCourseName(courseData.courseName);
+            }
+          }
+
+          // Initialize reviewGrades and reviewComments state
+          const initialGrades = reviewData.submissions.reduce((acc: any, submission: Submission) => {
+            acc[submission.submissionID] = {};
+            return acc;
+          }, {});
+          setReviewGrades(initialGrades);
+
+          const initialComments = reviewData.submissions.reduce((acc: any, submission: Submission) => {
+            acc[submission.submissionID] = '';
+            return acc;
+          }, {});
+          setReviewComments(initialComments);
+
+        } else {
+          throw new Error('Failed to fetch data');
         }
-        const data = await reviewResponse.json();
-        console.log('Review data:', data);
-        setReviewCriteria(data.reviewCriteria);
-        setSubmissionsToReview(data.submissions);
       } catch (error) {
-        setError((error as any).message);
+        setError((error as Error).message);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [router.isReady, assignmentID, session]);
+  }, [router.isReady, session, assignmentID]);
+
+  const handleHomeClick = () => router.push("/student/dashboard");
+
+  const handleBackClick = () => {
+    const { source } = router.query;
+    if (source === 'course') {
+      router.push(`/student/course-dashboard?courseId=${assignment?.courseID}`);
+    } else {
+      router.push('/student/dashboard');
+    }
+  };
+
+  const handleGradeChange = (submissionID: number, criteriaID: number, value: string) => {
+    setReviewGrades(prev => ({
+      ...prev,
+      [submissionID]: {
+        ...prev[submissionID],
+        [criteriaID]: value
+      }
+    }));
+  };
+
+  const handleCommentChange = (submissionID: number, value: string) => {
+    setReviewComments(prev => ({
+      ...prev,
+      [submissionID]: value
+    }));
+  };
+
+  const submitReviews = async (assignmentID, reviews) => {
+    try {
+      const response = await fetch('/api/reviews/submitReviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          assignmentID,
+          reviews,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to submit reviews');
+      }
+  
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error submitting reviews:', error);
+      throw error;
+    }
+  };
+  
+  // Usage in your component
+  const handleSubmitAllReviews = async () => {
+    const assignmentID = assignment?.assignmentID;
+    const reviews = submissionsToReview.map(submission => ({
+      submissionID: submission.submissionID,
+      feedbackDetails: reviewCriteria.map(criterion => ({
+        criteriaID: criterion.criteriaID,
+        grade: Number(reviewGrades[submission.submissionID][criterion.criteriaID])
+      })),
+      comment: reviewComments[submission.submissionID]
+    }));
+  
+    try {
+      const result = await submitReviews(assignmentID, reviews);
+      console.log(result.message); // 'Reviews submitted successfully'
+      // Handle successful submission (e.g., show success message, redirect)
+      alert(result.message);
+      router.push('/student/dashboard');
+    } catch (error) {
+      console.error('Failed to submit reviews:', error);
+      alert(`Error submitting reviews: ${error.message}`);
+    }
+  };
 
   if (loading) {
     return (
@@ -86,41 +197,45 @@ export default function Page() {
       </div>
     );
   }
+
   if (error) {
     return <div>Error: {error}</div>;
   }
-  const handleHomeClick = () => router.push("/student/dashboard");
-  const handleGradeChange = (criteriaID: number, value: string) => {
-    setReviewGrades(prev => ({ ...prev, [criteriaID]: value }));
-  };
 
-  const handleSubmitReview = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Here you would typically send the review data to your backend
-    console.log("Submitting review:", reviewGrades);
-    // Add your API call to submit the review here
-  };
+  const currentSubmission = submissionsToReview[currentPage - 1];
 
   return (
     <>
       <StudentNavbar />
       <div className={`student text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
-          <h1>{courseData?.courseName}</h1>
+          <h2>Reviewing Assignment: {assignment?.title || "Assignment Details"}</h2>
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-            <BreadcrumbItem>{courseData?.courseName}</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleBackClick}>{courseName}</BreadcrumbItem>
+            <BreadcrumbItem>
+              Review for {assignment?.title || "Assignment Name"}
+            </BreadcrumbItem>
           </Breadcrumbs>
         </div>
-        <div className={`w-[100%] ${styles.assignmentsSection}`}>
-          <h2>Review Assignment: {assignment?.title} FOR </h2>
-          <div className="flex flex-col md:flex-row gap-4">
-            <Card className="flex-1">
-              <CardHeader>Review Criteria</CardHeader>
-              <Divider />
-              <CardBody>
-                <form onSubmit={handleSubmitReview}>
+        <div className={`w-[100%] flex flex-col ${styles.assignmentsSection}`}>
+          {currentSubmission && (
+            <>
+              <Card className="mb-4">
+                <CardHeader>Submission {currentSubmission.submissionID}</CardHeader>
+                <Divider />
+                <CardBody>
+                  <p>File Name: {currentSubmission.fileName}</p>
+                  <p>File Type: {currentSubmission.fileType}</p>
+                  <p>Submission Date: {new Date(currentSubmission.submissionDate).toLocaleString()}</p>
+                  <p>Student Name: {currentSubmission.studentName}</p>
+                </CardBody>
+              </Card>
+              <Card>
+                <CardHeader>Review Criteria</CardHeader>
+                <Divider />
+                <CardBody>
                   {reviewCriteria.map((criterion) => (
                     <div key={criterion.criteriaID} className="flex flex-col mb-4">
                       <div className="flex justify-between mb-2">
@@ -131,37 +246,32 @@ export default function Page() {
                         type="number"
                         label={`Grade for ${criterion.criterion}`}
                         placeholder="Enter grade"
-                        value={reviewGrades[criterion.criteriaID] || ''}
-                        onChange={(e) => handleGradeChange(criterion.criteriaID, e.target.value)}
+                        value={reviewGrades[currentSubmission.submissionID]?.[criterion.criteriaID] || ''}
+                        onChange={(e) => handleGradeChange(currentSubmission.submissionID, criterion.criteriaID, e.target.value)}
                         max={criterion.maxMarks}
                         min={0}
                       />
                     </div>
                   ))}
-                  <Button type="submit" color="primary" className="mt-4">
-                    Submit Review
-                  </Button>
-                </form>
-              </CardBody>
-            </Card>
-            <div className={styles.notificationsSection}>{submissionsToReview.map((submission) => (
-              <div key={submission.submissionID}>
-                <h2>Submission {submission.submissionID}</h2>
-                <p>File Name: {submission.fileName}</p>
-                <p>File Type: {submission.fileType}</p>
-                <p>Submission Date: {new Date(submission.submissionDate).toLocaleString()}</p>
-                {submission.studentName && <p>Student Name: {submission.studentName}</p>}
-              </div>
-            ))}</div>
-            {submissionsToReview.map((submission) => (
-              <div key={submission.submissionID}>
-                <h2>Submission {submission.submissionID}</h2>
-                <p>File Name: {submission.fileName}</p>
-                <p>File Type: {submission.fileType}</p>
-                <p>Submission Date: {new Date(submission.submissionDate).toLocaleString()}</p>
-                {submission.studentName && <p>Student Name: {submission.studentName}</p>}
-              </div>
-            ))}
+                  <Input
+                    type="text"
+                    label="Comment"
+                    placeholder="Enter comment"
+                    value={reviewComments[currentSubmission.submissionID] || ''}
+                    onChange={(e) => handleCommentChange(currentSubmission.submissionID, e.target.value)}
+                    className="mt-4"
+                  />
+                </CardBody>
+              </Card>
+            </>
+          )}
+          <div className="flex justify-between items-center mt-4">
+            <Pagination
+              total={submissionsToReview.length}
+              page={currentPage}
+              onChange={setCurrentPage}
+            />
+            <Button color="primary" onClick={handleSubmitAllReviews}>Submit All Reviews</Button>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { query } from '../../../db';
-import { getStudentsById } from '../../../db'; // Import the function to get studentID
+import { getStudentsById } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { assignmentID } = req.query;
@@ -12,36 +12,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ message: 'Missing userID or assignmentID' });
       }
 
-      // Convert userID to studentID
       const student = await getStudentsById(Number(userID));
       if (!student) {
         return res.status(404).json({ message: 'Student not found' });
       }
       const studentID = student.studentID;
 
-      // Fetch the review groups for the assignment and student
       const reviewGroups = await getReviewGroups(Number(assignmentID), studentID);
+      const reviewCriteria = await getReviewCriteria(Number(assignmentID));
 
-      // Fetch the submissions and student names for each review group
       const submissions = await Promise.all(
-        reviewGroups.map(async (reviewGroup: { submissionID: number; anonymous: any; }) => {
+        reviewGroups.map(async (reviewGroup: { submissionID: number; anonymous: boolean; }) => {
           const submission = await getSubmission(reviewGroup.submissionID);
-          let studentName = null;
+          let studentName = "Anonymous";
+
           if (!reviewGroup.anonymous) {
-            if (submission[0]?.studentID !== undefined) {
-              const student = await getStudent(submission[0].studentID);
-              //console.log('student:', student);
-              studentName = student.studentID;
-            } else {
-              console.error(`No studentID for submissionID: ${reviewGroup.submissionID}`);
+            const student = await getStudent(submission[0].studentID);
+            if (student) {
+              studentName = student.firstName + ' ' + student.lastName;
             }
           }
+
           return { ...submission[0], studentName };
         })
       );
-
-      // Fetch the review criteria for the assignment
-      const reviewCriteria = await getReviewCriteria(Number(assignmentID));
 
       res.status(200).json({ reviewCriteria, submissions });
     } catch (error: any) {
@@ -71,9 +65,10 @@ async function getReviewCriteria(assignmentID: number) {
 
 async function getReviewGroups(assignmentID: number, studentID: number) {
   const sql = `
-    SELECT *
-    FROM review_groups
-    WHERE assignmentID = ? AND studentID = ?
+    SELECT rg.*, r.anonymous
+    FROM review_groups rg
+    JOIN review r ON rg.assignmentID = r.assignmentID
+    WHERE rg.assignmentID = ? AND rg.studentID = ?
   `;
 
   try {
@@ -87,9 +82,9 @@ async function getReviewGroups(assignmentID: number, studentID: number) {
 
 async function getSubmission(submissionID: number) {
   const sql = `
-    SELECT *
-    FROM submission
-    WHERE submissionID = ?
+    SELECT s.*, s.studentID
+    FROM submission s
+    WHERE s.submissionID = ?
   `;
 
   try {
@@ -103,14 +98,15 @@ async function getSubmission(submissionID: number) {
 
 async function getStudent(studentID: number) {
   const sql = `
-    SELECT *
-    FROM student
-    WHERE studentID = ?
+    SELECT u.firstName, u.lastName
+    FROM student s
+    JOIN user u ON s.userID = u.userID
+    WHERE s.studentID = ?
   `;
 
   try {
     const student = await query(sql, [studentID]);
-    return student;
+    return student[0];
   } catch (error) {
     console.error('Error fetching student:', error);
     throw error;
