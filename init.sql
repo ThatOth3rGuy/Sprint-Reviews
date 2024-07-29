@@ -124,18 +124,21 @@ CREATE TABLE IF NOT EXISTS review (
     deadline DATETIME,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
+
 -- Table for storing connected submissions for students to peer review --
-CREATE TABLE IF NOT EXISTS student_reviews (
+CREATE TABLE IF NOT EXISTS review_groups  (
     studentID INT,
     assignmentID INT,
     courseID INT,
     submissionID INT,
+    isReleased BOOLEAN DEFAULT false,
     PRIMARY KEY (studentID, submissionID),
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID),
     FOREIGN KEY (submissionID) REFERENCES submission(submissionID)
 );
+
 -- Table for storing course specific groups --
 CREATE TABLE IF NOT EXISTS course_groups (
     groupID INT,
@@ -145,6 +148,7 @@ CREATE TABLE IF NOT EXISTS course_groups (
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID)
 );
+
 -- Insert a sample user (student) into the user table
 INSERT INTO user (firstName, lastName, email, pwd, userRole)
 VALUES ('John', 'Doe', 'john.doe@example.com', 'password123', 'student');

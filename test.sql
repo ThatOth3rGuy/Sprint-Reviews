@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS review_criteria (
     assignmentID INT NOT NULL,
     criterion VARCHAR(255),
     maxMarks INT,
-    FOREIGN KEY (assignmentID) REFERENCES submission(submissionID) ON DELETE CASCADE
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
 
 -- Table for storing feedback information between students and assignments
@@ -134,6 +134,18 @@ CREATE TABLE IF NOT EXISTS review (
     allowedFileTypes VARCHAR(255),
     deadline DATETIME,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS review_groups  (
+    studentID INT,
+    assignmentID INT,
+    courseID INT,
+    submissionID INT,
+    isReleased BOOLEAN DEFAULT false,
+    PRIMARY KEY (studentID, submissionID),
+    FOREIGN KEY (studentID) REFERENCES student(studentID),
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
+    FOREIGN KEY (courseID) REFERENCES course(courseID),
+    FOREIGN KEY (submissionID) REFERENCES submission(submissionID)
 );
 
 -- Insert users

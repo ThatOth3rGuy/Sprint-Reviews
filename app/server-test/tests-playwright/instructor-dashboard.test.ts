@@ -68,11 +68,13 @@ test.describe('Instructor Dashboard Page', () => {
     const createAssignmentLink = page.locator('text=Create Assignment');
     const createPeerReviewLink = page.locator('text=Create Peer Review');
     const createStudentGroupsLink = page.locator('text=Create Student Groups');
+    const manageStudentsLink = page.locator('text=Manage Students');
     const archiveCourseLink = page.locator('text=Archive Course');
 
     await expect(createAssignmentLink).toBeVisible();
     await expect(createPeerReviewLink).toBeVisible();
     await expect(createStudentGroupsLink).toBeVisible();
+    await expect(manageStudentsLink).toBeVisible();
     await expect(archiveCourseLink).toBeVisible();
   });
 
@@ -89,6 +91,11 @@ test.describe('Instructor Dashboard Page', () => {
   test('should navigate to create student groups page', async ({ page }) => {
     await page.click('text=Create Student Groups');
     await expect(page).toHaveURL(`${baseURL}/instructor/create-groups?source=course&courseId=1`);
+  });
+
+  test('should navigate to manage students page', async ({ page }) => {
+    await page.click('text=Manage Students');
+    await expect(page).toHaveURL(`${baseURL}/instructor/manage-students?courseId=1`);
   });
 
   test('should display notifications section', async ({ page }) => {
