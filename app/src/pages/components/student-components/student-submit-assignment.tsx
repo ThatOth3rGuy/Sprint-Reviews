@@ -60,10 +60,6 @@ const SubmitAssignment: React.FC<SubmitAssignmentProps> = ({ assignmentID, userI
     formData.append('assignmentID', assignmentID.toString());
     formData.append('studentID', studentInfo.studentID.toString());
 
-    const handleClick = () => {
-        router.push(`/student/assignment-dashboard?courseID=${courseID}&assignmentID=${assignmentID}`);
-      };
-
     try {
       const response = await fetch('/api/submitAssignment', {
         method: 'POST',
@@ -79,7 +75,7 @@ const SubmitAssignment: React.FC<SubmitAssignmentProps> = ({ assignmentID, userI
       } else {
         throw new Error(result.message || 'Failed to submit assignment');
       }
-    } catch (error) {
+    } catch (error: any) {
       setMessage(error.message);
     } finally {
       setSubmitting(false);
