@@ -342,6 +342,20 @@ export async function getAssignmentsWithSubmissions() {
     console.error('Error in getAssignmentsWithSubmissions:', error);
   }
 }
+export async function getStudentSubmissions(assignmentId: number): Promise<Array<{ submissionID: number; studentID: number }>> {
+  const sql = `
+    SELECT studentID, submissionID
+    FROM submission
+    WHERE assignmentID = ?
+  `;
+  try {
+    const results = await query(sql, [assignmentId]);
+    return results;
+  } catch (error) {
+    console.error('Error in getSubmissionsByAssignmentId:', error);
+    throw error;
+  }
+}
 
 export async function getCoursesByStudentID(studentID: number): Promise<any[]> {
   const sql = `SELECT c.courseID, c.courseName, u.firstName AS instructorFirstName
@@ -642,20 +656,26 @@ export async function getCourse(courseID: number): Promise<any> {
         throw error;
       }
     }
-//  enroll student in a course
+// enroll student in a course
 export async function enrollStudent(userID: string, courseID: string, customPool: mysql.Pool = pool): Promise<void> {
   const sql = `
     INSERT INTO enrollment (studentID, courseID)
     VALUES (?, ?)
   `;
   try {
-    const result = await query(sql, [userID, courseID], customPool);
+    await query(sql, [userID, courseID], customPool);
   } catch (error) {
-    const err = error as Error;
-    console.error(`Error enrolling student ${userID} in course ${courseID}:`, err.message);
-    throw err;
+    const err = error as any;
+    if (err.code === 'ER_DUP_ENTRY') {
+      console.log(`Student ${userID} is already enrolled in course ${courseID}`);
+      throw err;
+    } else {
+      console.error(`Error enrolling student ${userID} in course ${courseID}:`, err.message);
+      throw err;
+    }
   }
 }
+
 
 export async function getStudentsInCourse(courseID: number): Promise<any[]> {
   const sql = `
@@ -678,7 +698,7 @@ export async function getStudentsInCourse(courseID: number): Promise<any[]> {
 // Inserts a student into the selected_students table for the defined submission in a course.
 export async function selectStudentForSubmission(studentID: number, assignmentID: number, courseID: number, submissionID: number): Promise<void> {
   const createTableSql = `
-    CREATE TABLE IF NOT EXISTS student_groups (
+    CREATE TABLE IF NOT EXISTS student_reviews (
       studentID INT,
       assignmentID INT,
       courseID INT,
@@ -692,7 +712,7 @@ export async function selectStudentForSubmission(studentID: number, assignmentID
   `;
 
   const insertSql = `
-    INSERT INTO student_groups (studentID, assignmentID, courseID, submissionID)
+    INSERT INTO student_reviews (studentID, assignmentID, courseID, submissionID)
     VALUES (?, ?, ?, ?)
   `;
 
@@ -755,6 +775,64 @@ export async function getReviewGroups(studentID?: number, assignmentID?: number,
     throw error;
   }
 }
+
+interface Group {
+  groupNumber: number;
+  studentIDs: number[];
+}
+
+export async function createGroups(groups: Group[] | null, courseID: number | null, customPool: mysql.Pool = pool) {
+  const deleteSql = `
+    DELETE FROM course_groups
+    WHERE courseID = ?
+  `;
+  const insertSql = `
+    INSERT INTO course_groups (groupID, studentID, courseID)
+    VALUES (?, ?, ?)
+    ON DUPLICATE KEY UPDATE studentID = VALUES(studentID)
+  `;
+
+  if (!groups || !courseID) {
+    throw new Error('Invalid input');
+  }
+
+  try {
+    // Delete all existing groups for the course
+    await query(deleteSql, [courseID], customPool);
+
+    // Insert the new groups
+    for (const group of groups) {
+      for (const studentID of group.studentIDs) {
+        await query(insertSql, [group.groupNumber, studentID, courseID], customPool);
+      }
+    }
+  } catch (error) {
+    console.error('Error creating groups:', error);
+    throw error;
+  }
+}
+
+export async function getCourseGroups(courseID: number, customPool: mysql.Pool = pool): Promise<any[]> {
+  if (!courseID) {
+    throw new Error('Invalid course ID');
+  }
+
+  const sql = `
+    SELECT *
+    FROM course_groups
+    WHERE courseID = ?
+    ORDER BY groupID, studentID
+  `;
+
+  try {
+    const rows = await query(sql, [courseID], customPool);
+    return rows;
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    throw error;
+  }
+}
+
 //Get students for setting unique due date
 // export async function getStudents(): Promise<any[]> {
 //   const sql = `

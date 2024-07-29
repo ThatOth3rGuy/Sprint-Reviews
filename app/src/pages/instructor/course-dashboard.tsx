@@ -158,6 +158,10 @@ export default function Page() {
     });
   };
 
+  const handeEnrollRemoveStudentsClick = () => {
+    router.push(`/instructor/manage-students?courseId=${courseData.courseID}`);
+  }
+
   const handleAction = (key: any) => {
     switch (key) {
       case "create":
@@ -168,6 +172,9 @@ export default function Page() {
         break;
       case "group-review":
         handleCreateGroupPeerReviewAssignmentClick();
+        break;
+      case "manage-students":
+        handeEnrollRemoveStudentsClick();
         break;
       case "archive":
         setIsArchiveModalOpen(true);
@@ -252,6 +259,7 @@ export default function Page() {
                 <ListboxItem key="create">Create Assignment</ListboxItem>
                 <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
                 <ListboxItem key="group-review">Create Student Groups</ListboxItem>
+                <ListboxItem key="manage-students">Manage Students</ListboxItem>
                 {isAdmin ? (
                   <ListboxItem key="archive" 
                   className="text-danger"

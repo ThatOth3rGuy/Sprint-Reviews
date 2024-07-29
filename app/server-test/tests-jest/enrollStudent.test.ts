@@ -4,6 +4,9 @@ import { enrollStudent } from '../../src/db';
 
 describe('enrollStudent Tests', () => {
   let connection: mysql.PoolConnection;
+  // Since multiple tests are being run, use a baseID to ensure unique IDs
+  // then only test for getting these specific courses
+  const uniqueID = Math.floor(Math.random() * 1000000); // Base value for unique IDs
 
   beforeAll(async () => {
     connection = await global.pool.getConnection();
@@ -11,42 +14,47 @@ describe('enrollStudent Tests', () => {
     // Ensure the user exists for both student and instructor
     await connection.query(
       `INSERT INTO user (userID, firstName, lastName, email, pwd, userRole) VALUES 
-      (1000, 'Test', 'Student', 'test.student@example.com', 'password123', 'student'),
-      (1001, 'Test', 'Instructor', 'test.instructor@example.com', 'password123', 'instructor')
+      (${uniqueID + 1}, 'Test', 'Student', 'test.student@example.com', 'password123', 'student'),
+      (${uniqueID + 2}, 'Test', 'Instructor', 'test.instructor@example.com', 'password123', 'instructor')
       ON DUPLICATE KEY UPDATE email = VALUES(email)`
     );
 
     // Ensure the student exists
     await connection.query(
-        `INSERT INTO student (userID, studentID, phoneNumber, homeAddress, dateOfBirth) VALUES 
-        (1000, 1000, '1234567890', '123 Test St', '2000-01-01')
-        ON DUPLICATE KEY UPDATE phoneNumber = '1234567890'`
+      `INSERT INTO student (studentID, userID, phoneNumber, homeAddress, dateOfBirth) VALUES 
+      (${uniqueID + 1}, ${uniqueID + 1}, '1234567890', '123 Test St', '2000-01-01')
+      ON DUPLICATE KEY UPDATE phoneNumber = '1234567890'`
     );
 
     // Ensure the instructor exists
     await connection.query(
-      `INSERT INTO instructor (userID, isAdmin, departments) VALUES (1001, TRUE, 'Test Department') ON DUPLICATE KEY UPDATE departments = 'Test Department'`
+      `INSERT INTO instructor (instructorID, userID, isAdmin, departments) VALUES 
+      (${uniqueID + 2}, ${uniqueID + 2}, TRUE, 'Test Department')
+      ON DUPLICATE KEY UPDATE departments = 'Test Department'`
     );
 
     // Ensure the course exists
     await connection.query(
-      `INSERT INTO course (courseID, courseName, isArchived, instructorID) VALUES (2000, 'Test Course', FALSE, 1001) ON DUPLICATE KEY UPDATE courseName = 'Test Course'`
+      `INSERT INTO course (courseID, courseName, isArchived, instructorID) VALUES 
+      (${uniqueID + 3}, 'Test Course', FALSE, ${uniqueID + 2})
+      ON DUPLICATE KEY UPDATE courseName = 'Test Course'`
     );
   });
 
   afterAll(async () => {
     if (connection) {
-      await connection.query(`DELETE FROM enrollment WHERE studentID = 1000 AND courseID = 2000`);
-      await connection.query(`DELETE FROM course WHERE courseID = 2000`);
-      await connection.query(`DELETE FROM instructor WHERE userID = 1001`);
-      await connection.query(`DELETE FROM user WHERE userID IN (1000, 1001)`);
+      await connection.query(`DELETE FROM enrollment WHERE studentID = ${uniqueID + 1} AND courseID = ${uniqueID + 3}`);
+      await connection.query(`DELETE FROM course WHERE courseID = ${uniqueID + 3}`);
+      await connection.query(`DELETE FROM instructor WHERE instructorID = ${uniqueID + 2}`);
+      await connection.query(`DELETE FROM student WHERE studentID = ${uniqueID + 1}`);
+      await connection.query(`DELETE FROM user WHERE userID IN (${uniqueID + 1}, ${uniqueID + 2})`);
       connection.release();
     }
   });
 
   test('should enroll a student successfully', async () => {
-    const userID = '1000';
-    const courseID = '2000';
+    const userID = (uniqueID + 1).toString();
+    const courseID = (uniqueID + 3).toString();
 
     await enrollStudent(userID, courseID, global.pool);
 
@@ -61,8 +69,8 @@ describe('enrollStudent Tests', () => {
   });
 
   test('should handle errors during enrollment', async () => {
-    const userID = '1000';
-    const invalidCourseID = '9999'; // Assume this ID does not exist
+    const userID = (uniqueID + 1).toString();
+    const invalidCourseID = (uniqueID + 9999).toString(); // Assume this ID does not exist
 
     await expect(enrollStudent(userID, invalidCourseID, global.pool)).rejects.toThrow();
 
