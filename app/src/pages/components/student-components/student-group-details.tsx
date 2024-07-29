@@ -104,7 +104,7 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
           ))}
         </ul>
       </CardBody>
-      <Button onPress={handleSubmit} color={isFeedbackSubmitted ? 'success' : 'default'}>
+      <Button onPress={handleSubmit} className={isFeedbackSubmitted ? "text-primary-900 text-large font-bold bg-success-300 my-2 p-1" : ""}>
           {isFeedbackSubmitted ? 'Re-Submit Feedback' : 'Submit Feedback'}
       </Button>
     </Card>
