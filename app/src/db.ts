@@ -831,6 +831,23 @@ export async function getCourseGroups(courseID: number, customPool: mysql.Pool =
     console.error('Error fetching students:', error);
     throw error;
   }
+};
+
+export async function addStudentNotification(studentID: number, customPool: mysql.Pool = pool): Promise<any[]> {
+  if (!studentID) {
+    throw new Error('Invalid studentID');
+  }
+  const insertSql = `
+  INSERT INTO student_notifications (studentID)
+  VALUES (?)
+`;
+  try {
+    const rows = await query(insertSql, [studentID], customPool);
+    return rows;
+  } catch (error) {
+    console.error('Error adding student to notifications:', error);
+    throw error;
+  }
 }
 
 //Get students for setting unique due date

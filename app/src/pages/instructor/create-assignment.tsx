@@ -9,6 +9,7 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import toast from "react-hot-toast";
+import { getNotificationsForStudent } from '../utils/getNotificationsForStudent';
 
 interface CourseData {
   courseID: string;
@@ -42,7 +43,7 @@ const Assignments: NextPage = () => {
 
 
   // useEffect(() => {
-   
+
   //   if (courseId) {
   //     fetch(`/api/courses/${courseId}`)
   //       .then((response) => response.json())
@@ -147,22 +148,56 @@ const Assignments: NextPage = () => {
     });
 
     if (response.ok) {
+      const assignmentData = await response.json();
       toast.success("Assignment created successfully!")
-      router.push(`/instructor/course-dashboard?courseId=${courseId}`);
 
+      // Fetch course name
+      const courseResponse = await fetch(`/api/courses/${courseId}`);
+      const courseData = await courseResponse.json();
+
+      const studentsResponse = await fetch(`/api/courses/getCourseList?courseID=${courseId}`);
+      if (studentsResponse.ok) {
+        const students = await studentsResponse.json();
+        for (let student of students) {
+          console.log(student.userID)
+          try {
+            const notifications = await getNotificationsForStudent(student.userID);
+            console.log(`Notifications for student ${student.userID}:`, notifications);
+            if (notifications.assignmentNotification) {
+              await fetch('/api/emails/assignmentEmail', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  firstName: student.firstName,
+                  email: student.email,
+                  title: assignmentData.title,
+                  courseName: courseData.courseName
+                }),
+              });
+            }
+          } catch (error) {
+            console.error(`Error processing notifications for student ${student.userID}:`, error);
+          }
+        }
+      }
+
+      router.push(`/instructor/course-dashboard?courseId=${courseId}`);
     } else {
+
       const errorData = await response.json();
       setError(errorData.message || "An error occurred while creating the assignment");
       toast.error(errorData.message)
     }
   }, [title, description, dueDate, courseId, fileContent, groupAssignment, allowedFileTypes, router, session]);
 
-  
+
 
   if (loading) {
     return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
-    <Spinner color='primary' size="lg" />
-</div>;
+      <Spinner color='primary' size="lg" />
+    </div>;
   }
 
   if (!session || !session.user || !session.user.userID) {
@@ -227,7 +262,7 @@ const Assignments: NextPage = () => {
 
   return (
     <>
-      {isAdmin ? <AdminNavbar/> : <InstructorNavbar />}
+      {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
           <h1>Create Assignment for {router.query.source === 'course' ? courseName : 'Course'}</h1>
@@ -269,7 +304,7 @@ const Assignments: NextPage = () => {
             />
             <br />
             <h3 className={styles.innerTitle}>Group Assignment:</h3>
-  
+
             <Checkbox
               className={styles.innerTitle}
               isSelected={groupAssignment}
@@ -277,7 +312,7 @@ const Assignments: NextPage = () => {
             >
               Group Assignment
             </Checkbox>
-            <br/><div>
+            <br /><div>
               <CheckboxGroup
                 size="sm"
                 color="primary"

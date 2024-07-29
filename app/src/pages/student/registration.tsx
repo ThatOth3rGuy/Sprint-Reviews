@@ -84,7 +84,7 @@ const SignUp: NextPage = () => {
             },
             body: JSON.stringify({ firstName, email })
           });
-        
+        console.log(email)
           router.push('/student/login');
           toast.success("Account created! Please sign in to continue.")
         } else {

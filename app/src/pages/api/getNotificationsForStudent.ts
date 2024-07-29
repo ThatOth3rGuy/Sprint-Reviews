@@ -6,27 +6,28 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    const { userID } = req.body;
+    const { userID } = req.query;
     try {
-      const courses = await getNotificationsForStudent(Number(userID));
-      res.status(200).json({ courses });
+      const notifications = await fetchNotificationsFromDB(Number(userID));
+      res.status(200).json(notifications);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch courses" });
+      res.status(500).json({ error: "Failed to fetch notifications" });
     }
   } else {
     res.status(405).end(); // Method Not Allowed
   }
 }
-async function getNotificationsForStudent(userID: number) {
+
+async function fetchNotificationsFromDB(userID: number) {
   const sql = `
       SELECT n.*, s.userID from student_notifications n join student s on n.studentID=s.studentID
-      where userID =?
+      where userID = ?
     `;
   try {
     const results = await query(sql, [userID]);
-    return results;
+    return results[0]; // Return the first (and should be only) result
   } catch (error) {
-    console.error("Error in getNotificationsForStudent:", error);
+    console.error("Error in fetchNotificationsFromDB:", error);
     throw error;
   }
 }
