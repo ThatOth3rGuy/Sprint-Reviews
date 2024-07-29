@@ -5,7 +5,8 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import { Button, Breadcrumbs, BreadcrumbItem, Spinner } from "@nextui-org/react";
+import { Listbox,ListboxItem,Breadcrumbs, BreadcrumbItem, Spinner } from "@nextui-org/react";
+import { group } from "console";
 
 interface Review {
   reviewID: number;
@@ -25,6 +26,9 @@ interface CourseData {
 interface ReviewDashboardProps {
   courseId: string;
 }
+interface SubmissionGroups{
+studentID : string;
+}
 
 export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   const [loading, setLoading] = useState(true);
@@ -34,6 +38,8 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
 
   const [review, setReview] = useState<Review | null>(null);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
+  const [submissionGroups , setsubmissionGroups ] = useState<SubmissionGroups[]| null>()
+
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
@@ -55,6 +61,15 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
           setCourseData(data);
         })
         .catch((error) => console.error('Error fetching course data:', error));
+    }
+    if (review) {
+      fetch(`/api/reviews/${review.assignmentID}`)
+        .then((response) => response.json())
+        .then((data: SubmissionGroups) => {
+          console.log("Fetched course data:", data);
+          setsubmissionGroups(data);
+        })
+        .catch((error) => console.error('Error fetching course data:', error));  
     }
   }, [reviewID]);
 
@@ -100,6 +115,14 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
     deadline={review.deadline}
   />
 )}
+      <div>
+      <Listbox aria-label="Student IDs">
+        {submissionGroups.map((group, index) => (
+          <ListboxItem key={index}>{group.studentID}</ListboxItem>
+        ))}
+      </Listbox>
+      </div>
+
 
         </div>
       </div>

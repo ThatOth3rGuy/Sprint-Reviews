@@ -116,6 +116,16 @@ CREATE TABLE IF NOT EXISTS selected_students (
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
 
+-- Table for storing course specific groups --
+CREATE TABLE IF NOT EXISTS course_groups (
+    groupID INT,
+    studentID INT,
+    courseID INT,
+    PRIMARY KEY (groupID, studentID, courseID),
+    FOREIGN KEY (studentID) REFERENCES student(studentID),
+    FOREIGN KEY (courseID) REFERENCES course(courseID)
+);
+
 -- Table for storing peer review assignments
 CREATE TABLE IF NOT EXISTS review (
     reviewID INT AUTO_INCREMENT PRIMARY KEY,
@@ -182,3 +192,67 @@ INSERT INTO enrollment (studentID, courseID) VALUES
 INSERT INTO selected_students (assignmentID, studentID, uniqueDeadline) VALUES
 (2, 1001, '2024-08-15 23:59:59'),
 (2, 1002, '2024-08-16 23:59:59');
+
+-- Insert 10 more students into the user table
+INSERT INTO user (firstName, lastName, email, pwd, userRole) VALUES 
+('Jack', 'Black', 'jack.black@example.com', 'password123', 'student'),
+('Karen', 'Miller', 'karen.miller@example.com', 'password123', 'student'),
+('Larry', 'Moore', 'larry.moore@example.com', 'password123', 'student'),
+('Nancy', 'Green', 'nancy.green@example.com', 'password123', 'student'),
+('Oscar', 'King', 'oscar.king@example.com', 'password123', 'student'),
+('Paul', 'Scott', 'paul.scott@example.com', 'password123', 'student'),
+('Rachel', 'Adams', 'rachel.adams@example.com', 'password123', 'student'),
+('Steve', 'Johnson', 'steve.johnson@example.com', 'password123', 'student'),
+('Tom', 'Carter', 'tom.carter@example.com', 'password123', 'student'),
+('Uma', 'Taylor', 'uma.taylor@example.com', 'password123', 'student');
+
+-- Get the userIDs of the newly inserted students
+SET @userID11 = LAST_INSERT_ID();
+SET @userID12 = @userID11 + 1;
+SET @userID13 = @userID11 + 2;
+SET @userID14 = @userID11 + 3;
+SET @userID15 = @userID11 + 4;
+SET @userID16 = @userID11 + 5;
+SET @userID17 = @userID11 + 6;
+SET @userID18 = @userID11 + 7;
+SET @userID19 = @userID11 + 8;
+SET @userID20 = @userID11 + 9;
+
+-- Insert the students into the student table
+INSERT INTO student (studentID, userID, phoneNumber, homeAddress, dateOfBirth) VALUES
+(123467, @userID11, '1234567811', '134 Main St', '2011-01-01'),
+(123468, @userID12, '1234567812', '135 Main St', '2012-01-01'),
+(123469, @userID13, '1234567813', '136 Main St', '2013-01-01'),
+(123470, @userID14, '1234567814', '137 Main St', '2014-01-01'),
+(123471, @userID15, '1234567815', '138 Main St', '2015-01-01'),
+(123472, @userID16, '1234567816', '139 Main St', '2016-01-01'),
+(123473, @userID17, '1234567817', '140 Main St', '2017-01-01'),
+(123474, @userID18, '1234567818', '141 Main St', '2018-01-01'),
+(123475, @userID19, '1234567819', '142 Main St', '2019-01-01'),
+(123476, @userID20, '1234567820', '143 Main St', '2020-01-01');
+
+-- Enroll the 10 additional students into the new course
+INSERT INTO enrollment (studentID, courseID) VALUES
+(123467, 1),
+(123468, 1),
+(123469, 1),
+(123470, 1),
+(123471, 1),
+(123472, 1),
+(123473, 1),
+(123474, 1),
+(123475, 1),
+(123476, 1);
+
+-- Insert a submission for each of the newly added students for the new assignment
+INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate) VALUES
+(1, 123467, 'project_123467.sql', NULL, 'sql', NOW()),
+(1, 123468, 'project_123468.sql', NULL, 'sql', NOW()),
+(1, 123469, 'project_123469.sql', NULL, 'sql', NOW()),
+(1, 123470, 'project_123470.sql', NULL, 'sql', NOW()),
+(1, 123471, 'project_123471.sql', NULL, 'sql', NOW()),
+(1, 123472, 'project_123472.sql', NULL, 'sql', NOW()),
+(1, 123473, 'project_123473.sql', NULL, 'sql', NOW()),
+(1, 123474, 'project_123474.sql', NULL, 'sql', NOW()),
+(1, 123475, 'project_123475.sql', NULL, 'sql', NOW()),
+(1, 123476, 'project_123476.sql', NULL, 'sql', NOW());
