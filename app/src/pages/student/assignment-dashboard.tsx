@@ -144,8 +144,9 @@ export default function AssignmentDashboard() {
     if (uploadedFile && isFileTypeAllowed(uploadedFile) && session?.user?.userID) {
         const formData = new FormData();
         formData.append('file', uploadedFile);
-        formData.append('assignmentID', assignment.assignmentID.toString());
+        formData.append('assignmentID', assignment?.assignmentID?.toString() ?? '');
         formData.append('studentID', session.user.userID.toString());
+        formData.append('courseID', courseData?.courseID ?? '');
 
         try {
             console.log('Submitting assignment...');

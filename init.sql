@@ -13,6 +13,9 @@ DROP TABLE IF EXISTS feedback;
 DROP TABLE IF EXISTS enrollment;
 DROP TABLE IF EXISTS selected_students;
 DROP TABLE IF EXISTS review_criteria;
+DROP TABLE IF EXISTS review;
+DROP TABLE IF EXISTS review_groups;
+DROP TABLE IF EXISTS course_groups;
 
 -- Table for storing users, which are separated into students and instructors
 CREATE TABLE IF NOT EXISTS user (
@@ -75,6 +78,7 @@ CREATE TABLE IF NOT EXISTS submission (
     fileType VARCHAR(100),
     submissionDate DATETIME,
     grade INT,
+    groupID INT,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
@@ -116,6 +120,8 @@ CREATE TABLE IF NOT EXISTS selected_students (
     FOREIGN KEY (assignmentID) REFERENCES submission(submissionID) ON DELETE CASCADE,
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
+
+-- Table for storing review information for peer review
 CREATE TABLE IF NOT EXISTS review (
     reviewID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT NOT NULL,
