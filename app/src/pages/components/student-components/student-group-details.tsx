@@ -33,10 +33,19 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
   const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(initialIsFeedbackSubmitted);
 
   const handleInputChange = (revieweeID: number, field: string, value: string) => {
+    let validatedValue = value;
+    if (field === 'score') {
+      const numericValue = Number(value);
+      if (numericValue < 0) {
+        validatedValue = '0';
+      } else if (numericValue > 10) {
+        validatedValue = '10';
+      }
+    }
     setFeedbacks(prevFeedbacks =>
       prevFeedbacks.map(feedback =>
         feedback.revieweeID === revieweeID
-          ? { ...feedback, [field]: value }
+          ? { ...feedback, [field]: validatedValue }
           : feedback
       )
     );
@@ -88,14 +97,16 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
                 <span>{student.firstName} {student.lastName}</span>
                 <Input
                   type="number"
-                  placeholder="Grade"
+                  placeholder="Score"
                   className={styles.scoreInput}
                   value={feedbacks.find(feedback => feedback.revieweeID === student.studentID)?.score}
+                  min={0}
+                  max={10}
                   onChange={(e) => handleInputChange(student.studentID, 'score', e.target.value)}
                 />
               </div>
               <Textarea
-                placeholder="Any additional comments"
+                placeholder="Additional comments"
                 value={feedbacks.find(feedback => feedback.revieweeID === student.studentID)?.content}
                 onChange={(e) => handleInputChange(student.studentID, 'content', e.target.value)}
               />
