@@ -93,16 +93,12 @@ CREATE TABLE IF NOT EXISTS feedback (
     feedbackID INT AUTO_INCREMENT PRIMARY KEY,
     submissionID INT NOT NULL,
     assignmentID INT NOT NULL,
-    reviewerID INT,
     feedbackDetails TEXT,
     feedbackDate DATETIME,
     lastUpdated DATETIME,
     comment TEXT NOT NULL,
-    grade FLOAT,
-    feedbackType ENUM('peer', 'instructor'),
     FOREIGN KEY (submissionID) REFERENCES submission(submissionID) ON DELETE CASCADE,
-    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
-    FOREIGN KEY (reviewerID) REFERENCES user(userID)
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
 
 -- Table for storing enrollment information to connect students to courses
@@ -200,8 +196,7 @@ INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType
 VALUES (@assignmentID, 123456, 'final_project.pdf', NULL, 'pdf', NOW());
 
 -- Insert a sample feedback
-INSERT INTO feedback (assignmentID, content, reviewerID)
-VALUES (@assignmentID, 'Great job on the project!', 123456);
+
 
 -- Insert a sample review criteria
 INSERT INTO review_criteria (assignmentID, criterion, maxMarks)
