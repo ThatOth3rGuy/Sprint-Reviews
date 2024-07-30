@@ -2,7 +2,7 @@ import handler from '../../src/pages/api/updateTable';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { updateAssignment, updateAssignmentName, updateCourse, updateEnrollment, updateFeedback, updateReviewCriteria, updateReviewer, updateStudent, updateSubmission, updateUser } from '../../src/db';
 
-jest.mock('../../db', () => ({
+jest.mock('../../src/db', () => ({
     updateAssignment: jest.fn(),
     updateAssignmentName: jest.fn(),
     updateCourse: jest.fn(),
