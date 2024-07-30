@@ -287,3 +287,20 @@ INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType
 (1, 123474, 'project_123474.sql', NULL, 'sql', NOW()),
 (1, 123475, 'project_123475.sql', NULL, 'sql', NOW()),
 (1, 123476, 'project_123476.sql', NULL, 'sql', NOW());
+
+-- Insert 5 more people into course 2, for testing group feedback
+INSERT INTO enrollment (studentID, courseID) VALUES
+(123467, 2),
+(123468, 2),
+(123469, 2),
+(123470, 2),
+(123471, 2);
+
+-- Insert selected students into course groups
+INSERT INTO course_groups (groupID, studentID, courseID) VALUES
+(1, 123467, 2),
+(1, 123468, 2),
+(1, 123469, 2),
+(2, 123470, 2),
+(2, 123471, 2),
+(2, 1002, 2);
