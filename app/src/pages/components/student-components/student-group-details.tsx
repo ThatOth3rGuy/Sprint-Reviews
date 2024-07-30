@@ -35,6 +35,7 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
   const handleInputChange = (revieweeID: number, field: string, value: string) => {
     let validatedValue = value;
     if (field === 'score') {
+      validatedValue = Math.floor(Number(value)).toString();
       const numericValue = Number(value);
       if (numericValue < 0) {
         validatedValue = '0';
@@ -58,6 +59,14 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
       return;
     }
 
+    if (!isFeedbackSubmitted) {
+      submitFeedback();
+    } else {
+      updateFeedback();
+    }
+  }
+
+  const submitFeedback = async () => {
     try {
       const response = await fetch('/api/groups/submitGroupFeedback', {
         method: 'POST',
@@ -82,6 +91,10 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
       console.error('Error submitting feedback:', error);
       toast.error('Error submitting feedback. Please try again.');
     }
+  };
+
+  const updateFeedback = async () => {
+    // Call the update feedback API
   };
 
   return (
