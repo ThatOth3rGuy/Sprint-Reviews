@@ -1,7 +1,7 @@
 // pages/api/peer-reviews/[assignmentID]/[studentID].ts
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { query } from '../../../../db'; // Import your database query function
+import { query, getStudentsById } from '../../../../db'; // Import your database query function
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { assignmentID, studentID } = req.query;
@@ -12,7 +12,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const feedbacks = await getFeedbacksForAssignment(assignmentID, studentID);
+    const studentIDResponse = await getStudentsById(Number(studentID));
+    const student = studentIDResponse.studentID;
+
+    console.log("Fetching feedbacks for assignment", assignmentID, "for student", student);
+
+    const feedbacks = await getFeedbacksForAssignment(assignmentID, student);
+    console.log(feedbacks);
     res.status(200).json(feedbacks);
   } catch (error) {
     console.error('Error fetching feedbacks:', error);
