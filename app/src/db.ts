@@ -2,6 +2,7 @@
 import mysql from 'mysql2/promise';
 import fs from 'fs/promises';
 import config from './dbConfig'; // Import the database configuration from dbConfig.ts
+import bcrypt from 'bcrypt';
 
 let dbConfig;
 
@@ -35,10 +36,11 @@ export async function createUser(firstName: string, lastName: string, email: str
     VALUES (?, ?, ?, ?, ?)
   `;
   try {
-    const result = await query(sql, [firstName, lastName, email, password, role]);
+    const hashedPassword = await bcrypt.hash(password, 10); // Hash the password with a salt round of 10
+    const result = await query(sql, [firstName, lastName, email, hashedPassword, role]);
     return result.insertId; // Return the inserted user ID for adding to the instructor or student table
   } catch (error) {
-    console.error('Error in addUser:', error); // Log the error
+    console.error('Error in createUser:', error); // Log the error
     throw error;
   }
 }
@@ -92,11 +94,16 @@ export async function authenticateAdmin(email: string, password: string): Promis
     SELECT u.* 
     FROM user u
     JOIN instructor i ON u.userID = i.userID
-    WHERE u.email = ? AND u.pwd = ? AND u.userRole = 'instructor' AND i.isAdmin = true
+    WHERE u.email = ? AND u.userRole = 'instructor' AND i.isAdmin = true
   `;
   try {
-    const rows = await query(sql, [email, password]);
-    return rows.length > 0;
+    const rows = await query(sql, [email]);
+    if (rows.length > 0) {
+      const user = rows[0];
+      const match = await bcrypt.compare(password, user.pwd); // Compare provided password with hashed password
+      return match;
+    }
+    return false;
   } catch (error) {
     console.error('Error in authenticateAdmin:', error); // Log the error
     throw error;
@@ -105,11 +112,16 @@ export async function authenticateAdmin(email: string, password: string): Promis
 
 export async function authenticateInstructor(email: string, password: string): Promise<boolean> {
   const sql = `
-    SELECT * FROM user WHERE email = ? AND pwd = ? AND userRole = 'instructor'
+    SELECT * FROM user WHERE email = ? AND userRole = 'instructor'
   `;
   try {
-    const rows = await query(sql, [email, password]);
-    return rows.length > 0;
+    const rows = await query(sql, [email]);
+    if (rows.length > 0) {
+      const user = rows[0];
+      const match = await bcrypt.compare(password, user.pwd); // Compare provided password with hashed password
+      return match;
+    }
+    return false;
   } catch (error) {
     console.error('Error in authenticateInstructor:', error); // Log the error
     throw error;
@@ -118,16 +130,25 @@ export async function authenticateInstructor(email: string, password: string): P
 
 export async function authenticateStudent(email: string, password: string): Promise<boolean> {
   const sql = `
-    SELECT * FROM user WHERE email = ? AND pwd = ? AND userRole = 'student'
+    SELECT * FROM user WHERE email = ? AND userRole = 'student'
   `;
   try {
-    const rows = await query(sql, [email, password]);
-    return rows.length > 0;
+    const rows = await query(sql, [email]);
+    if (rows.length > 0) {
+      const user = rows[0];
+      console.log('Password:', password);
+      console.log('Hashed password:', user.pwd);
+      const match = await bcrypt.compare(password, user.pwd); // Compare provided password with hashed password
+      console.log('Match:', match);
+      return match;
+    }
+    return false;
   } catch (error) {
     console.error('Error in authenticateStudent:', error); // Log the error
     throw error;
   }
 }
+
 export async function getInstructorID(userID: number): Promise<number | null> {
   if (typeof userID !== 'number' || isNaN(userID)) {
     throw new Error(`Invalid userID: ${userID}`);

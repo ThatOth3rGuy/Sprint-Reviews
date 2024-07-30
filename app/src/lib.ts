@@ -4,6 +4,7 @@ import cookie from 'cookie';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from './db';
+import bcrypt from 'bcrypt';
 
 
 // Take the secret key from the .env file, if it doesn't exist default to 'secret'
@@ -27,17 +28,27 @@ export async function decrypt(input: string): Promise<any> {
 
 // This function is used to create a session for the user during the login process
 export async function login({ email, password, role }: { email: string; password: string, role: string }, res: NextApiResponse) {
-  // Query the database for the userID
-  const result = await query('SELECT userID FROM user WHERE email = ? AND pwd = ?', [email, password]);
-  const userID = result[0]?.userID;
 
-  if (!userID) {
+  // Query the database for the user information
+  const result = await query('SELECT userID, pwd FROM user WHERE email = ?', [email]);
+  const user = result[0];
+  console.log("user: ", user);
+
+  if (!user) {
     throw new Error('User not found');
   }
 
-  const user = { email, role, userID }; // Include the userID in the user object
+  // Compare the provided password with the hashed password
+  const match = await bcrypt.compare(password, user.pwd);
+
+  if (!match) {
+    throw new Error('Incorrect password');
+  }
+
+  const userID = user.userID; // Retrieve the userID from the query result
+  const userSession = { email, role, userID }; // Include the userID in the user session object
   const expires = new Date(Date.now() + 10 * 60 * 1000); // Each session expires in 10 minutes
-  const session = await encrypt({ user, expires });
+  const session = await encrypt({ user: userSession, expires });
 
   res.setHeader(
     'Set-Cookie',

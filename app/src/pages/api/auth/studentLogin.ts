@@ -9,6 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     try {
       const isAuthenticated = await authenticateStudent(email, password);
+      console.log("isAuthenticated: ", isAuthenticated);
       if (isAuthenticated) {
         // Create session for this user before authenticating
         await login({ email, password, role: 'student' }, res);
