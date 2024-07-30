@@ -1,4 +1,3 @@
-// course-dashboard.tsx
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
@@ -75,6 +74,10 @@ export default function Page() {
     return null;
   }
 
+  const individualAssignments = assignments.filter(assignment => !assignment.groupAssignment);
+  const groupAssignments = assignments.filter(assignment => assignment.groupAssignment);
+  const peerReviews = assignments.filter(assignment => assignment.title.toLowerCase().includes('peer review'));
+
   return (
     <>
       <StudentNavbar />
@@ -89,24 +92,26 @@ export default function Page() {
         </div>
         <div className={styles.mainContent}>
           <div className={styles.assignmentsSection}>
-            <CheckboxGroup
+          <CheckboxGroup
               label="Select assignment type:"
               orientation="horizontal"
               color="primary"
               size="sm"
-              className="text-left flex-row mb-2 text-primary-900 "
+              className="text-left flex-row mb-2 text-primary-900"
             >
-              <Checkbox value="assignments">All Assignments</Checkbox>
+              <Checkbox value="all">All Assignments</Checkbox>
+              <Checkbox value="individual">Individual Assignments</Checkbox>
+              <Checkbox value="group">Group Assignments</Checkbox>
               <Checkbox value="peerReviews">Peer Reviews</Checkbox>
-              <Checkbox value="peerReviews">Peer Evaluations</Checkbox>
             </CheckboxGroup>
-            <h3 className={styles.innerTitle}>Assignments Created</h3>
+
+            <h3 className={styles.innerTitle}>Individual Assignments</h3>
             <br />
             <Divider className="instructor bg-secondary" />
             <br />
             <div className={styles.courseCard}>
-              {assignments.length > 0 ? (
-                assignments.map((assignment) => (
+              {individualAssignments.length > 0 ? (
+                individualAssignments.map((assignment) => (
                   <div key={assignment.assignmentID} className={styles.courseCard}>
                     <StudentAssignmentCard
                       courseID={assignment.assignmentID}
@@ -118,30 +123,54 @@ export default function Page() {
                   </div>
                 ))
               ) : (
-                <p>No assignments found for this course.</p>
+                <p>No individual assignments found for this course.</p>
               )}
             </div>
-            <h3 className={styles.innerTitle}>Peer Reviews Created</h3>
+
+            <h3 className={styles.innerTitle}>Group Assignments</h3>
             <br />
             <Divider className="instructor bg-secondary" />
             <br />
             <div className={styles.courseCard}>
-              {assignments.length > 0 ? (
-                assignments.map((assignment) => (
+              {groupAssignments.length > 0 ? (
+                groupAssignments.map((assignment) => (
                   <div key={assignment.assignmentID} className={styles.courseCard}>
                     <StudentAssignmentCard
-                      courseID={45}
-                      assignmentName="Peer review Assignment"
+                      courseID={assignment.assignmentID}
+                      assignmentName={assignment.title}
                       color="#b3d0c3"
                       deadline={assignment.deadline}
-                      groupAssignment={false} // Placeholder for peer review example
+                      groupAssignment={assignment.groupAssignment}
                     />
                   </div>
                 ))
               ) : (
-                <p>No assignments found for this course.</p>
+                <p>No group assignments found for this course.</p>
               )}
             </div>
+
+            <h3 className={styles.innerTitle}>Peer Reviews</h3>
+            <br />
+            <Divider className="instructor bg-secondary" />
+            <br />
+            <div className={styles.courseCard}>
+              {peerReviews.length > 0 ? (
+                peerReviews.map((assignment) => (
+                  <div key={assignment.assignmentID} className={styles.courseCard}>
+                    <StudentAssignmentCard
+                      courseID={assignment.assignmentID}
+                      assignmentName={assignment.title}
+                      color="#b3d0c3"
+                      deadline={assignment.deadline}
+                      groupAssignment={false} // Assuming peer reviews are not group assignments
+                    />
+                  </div>
+                ))
+              ) : (
+                <p>No peer reviews found for this course.</p>
+              )}
+            </div>
+
           </div>
           <div className={styles.notificationsSection}>
             <h2 className="my-3">Notifications</h2>
