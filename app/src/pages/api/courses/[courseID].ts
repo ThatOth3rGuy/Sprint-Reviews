@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(500).json({ error: 'Internal server error' });
   }
 }
-async function getCourse(courseID: string) {
+async function getCourse(courseID: number) {
   const sql = `
     SELECT courseID, courseName
     FROM course

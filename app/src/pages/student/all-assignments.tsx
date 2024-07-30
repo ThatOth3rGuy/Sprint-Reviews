@@ -11,6 +11,7 @@ interface Assignment {
   title: string;
   description: string;
   deadline: string;
+  courseName: string;
 }
 
 export default function AssignmentsPage() {
@@ -47,26 +48,7 @@ export default function AssignmentsPage() {
   const handleCheckboxChange = (value: string) => {
     setSelectedAssignmentType(value);
   };
-  const handleCreateAssignmentClick = () => {
-    router.push('/instructor/create-assignment');
-  };
-
-  const handleCreatePeerReviewAssignmentClick = () => {
-    router.push('/instructor/release-assignment');
-  };
-
-  const handleAction = (key: any) => {
-    switch (key) {
-      case "create":
-        handleCreateAssignmentClick();
-        break;
-      case "peer-review":
-        handleCreatePeerReviewAssignmentClick();
-        break;
-      default:
-        console.log("Unknown action:", key);
-    }
-  };
+ 
   
 if (loading) {
     return <div className='w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto'>
@@ -86,7 +68,7 @@ if (loading) {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-            <BreadcrumbItem> Home</BreadcrumbItem>
+            <BreadcrumbItem> Assignments </BreadcrumbItem>
           </Breadcrumbs>
           
         </div>
@@ -112,8 +94,9 @@ if (loading) {
                   <div key={assignment.assignmentID} className={styles.courseCard}>
                     <StudentAssignmentCard
                       courseID={assignment.assignmentID}
-                      courseName={assignment.title}
-                      dueDate={assignment.deadline}
+                      assignmentName={assignment.title}
+                      courseName={assignment.courseName}
+                      deadline={assignment.deadline}
                       color="#b3d0c3"
                     />
                   </div>
@@ -129,9 +112,10 @@ if (loading) {
                   <div key={assignment.assignmentID} className={styles.courseCard}>
                     <StudentAssignmentCard
                       courseID={45}
-                      courseName="Peer review Assignment"
+                      assignmentName="Peer review Assignment"
                       color="#72a98f" 
-                      dueDate={""}                    />
+                      deadline={""}  
+                      courseName=""                  />
                   </div>
                 ))
               ) : (

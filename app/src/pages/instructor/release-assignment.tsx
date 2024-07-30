@@ -6,16 +6,8 @@ import InstructorNavbar from "../components/instructor-components/instructor-nav
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import styles from "../../styles/instructor-assignments-creation.module.css";
-
-import {
-  Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs,
-  BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader,
-  ModalBody, ModalFooter, useDisclosure,
-  Spinner
-} from "@nextui-org/react";
-import { getSession, updateSession } from "@/lib";
-import { randomizePeerReviewGroups } from "../api/addNew/randomizationAlgorithm";
-
+import { Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spinner } from "@nextui-org/react";
+import toast from "react-hot-toast";
 
 // Define the structure for assignment and Rubric items
 interface Assignment {
@@ -50,7 +42,8 @@ const ReleaseAssignment: React.FC = () => {
   const [session, setSession] = useState<any>(null);
   const dummyassignments = ['Assignment 1', 'Assignment 2', 'Assignment 3'];
   const [studentSubmissions, setStudentSubmissions] = useState<{ studentID: number; submissionID: number; }[]>([]);
-  const [course, setCourse] = useState<string>("");
+  const [courseName, setCourseName] = useState<string>("");
+
 
   // Dummy rubric
   const dummyrubric = [
@@ -65,13 +58,34 @@ const ReleaseAssignment: React.FC = () => {
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+ 
+  //get course name or assignment page for breadcrumbs
+  useEffect(() => {
+    const { source, courseId } = router.query;
+
+    if (source === 'course' && courseId) {
+      // Fetch course name
+      fetchCourseName(courseId as string);
+    }
+  }, [router.query]);
+
+  const fetchCourseName = async (courseId: string) => {
+    try {
+      const response = await fetch(`/api/courses/${courseId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setCourseName(data.courseName);
+      }
+    } catch (error) {
+      console.error('Error fetching course name:', error);
+    }
+  };
 
   // Fetch assignments and students in the course when the component mounts
   useEffect(() => {
     if (session && session.user) {
       fetchAssignments(session.user.userID);
-      fetchCourse(session.user.userID);
-      fetchStudents(session.user.userID);
+      fetchStudents(session.user.courseID);
     }
   }, [session]);
 
@@ -96,30 +110,18 @@ const ReleaseAssignment: React.FC = () => {
       console.error('Error fetching assignments:', error);
     }
   };
-  const fetchCourse = async (userID: string) => {
-    try {
-      const res = await fetch(`/api/getCourse4Instructor?instructorID=${userID}`);
-      if (res.ok) {
-        const cid = await res.json();
-        console.log(cid.courses[0].courseID);
-        setCourse(cid.courses[0].courseID);
-      }
-    } catch (error) {
-      console.error('Error fetching course:', error);
-    }
-  }
+
   // Function to fetch students in the course
   const fetchStudents = async (courseID: string) => {
     try {
-        courseID = '3';
-        const response = await fetch(`/api/courses/getCourseList?courseID=${courseID}`);
-        if (response.ok) {
-          const students = await response.json();
-          setStudents(students);
-        } else {
-          console.error("Failed to fetch students");
-        }
-      } catch (error) {
+      const response = await fetch(`/api/courses/getCourseList?courseID=${courseID}`);
+      if (response.ok) {
+        const students = await response.json();
+        setStudents(students);
+      } else {
+        console.error("Failed to fetch students");
+      }
+    } catch (error) {
       console.error("Error fetching students:", error);
     }
   };
@@ -166,13 +168,15 @@ const ReleaseAssignment: React.FC = () => {
       });
 
       if (response.ok) {
-        alert("Students selected successfully");
+        toast.success("Students selected successfully");
         setSelectedStudents([]);
         setUniqueDueDate("");
       } else {
+        toast.error("Failed to select students");
         console.error("Failed to select students");
       }
     } catch (error) {
+      toast.error("There was an error while selecting students")
       console.error("Error selecting students:", error);
     }
   };
@@ -230,14 +234,13 @@ const ReleaseAssignment: React.FC = () => {
       if (!responseReleaseAssignment.ok) {
         throw new Error("Failed to release assignment for review");
       }
-      const reviewGroups = randomizePeerReviewGroups(studentSubmissions, 4); // 4 reviews per assignment
+    
       // Second API call to release randomized peer reviews
       const responseReleasePeerReviews = await fetch("/api/addNew/releaseRandomizedPeerReview", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          //reviewsPerAssignment: 4,
-          reviewGroups,
+          reviewsPerAssignment: 4,
           studentSubmissions,
           assignmentID,
         }),
@@ -248,7 +251,7 @@ const ReleaseAssignment: React.FC = () => {
       }
     
       // If both requests are successful
-      alert("Assignment and peer reviews released for review successfully");
+      toast.success("Assignment and peer reviews released for review successfully");
       router.push("/instructor/dashboard");
     } catch (error) {
       console.error("Error releasing assignment or peer reviews for review:", error);
@@ -277,6 +280,18 @@ const ReleaseAssignment: React.FC = () => {
     router.push("/instructor/dashboard");
   }
   
+  function handleAssignmentClick(): void {
+    router.push("/instructor/assignments");
+  }
+
+  const handleBackClick = () => { //redirect to course dashboard or all assignments
+    const { source } = router.query;
+    if (source === 'course') {
+      router.push(`/instructor/course-dashboard?courseId=${router.query.courseId}`);
+    } else {
+      router.push('/instructor/assignments');
+    }
+  };
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -286,11 +301,12 @@ const ReleaseAssignment: React.FC = () => {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleBackClick}>{router.query.source === 'course' ? (courseName || 'Course Dashboard') : 'Assignments'}</BreadcrumbItem>
             <BreadcrumbItem>Release Peer Review</BreadcrumbItem>
           </Breadcrumbs>
         </div>
         <div className={styles.mainContent}>
-          <div className={styles.rectangle}>
+          <div className="flex-col w-[85%] bg-white p-[1.5%] pt-[1%] shadow-sm overflow-auto m-auto mr-[1%] text-left ">
             <h2>Release Assignment for Peer Review</h2>
             <br />
             <form onSubmit={handleSubmit}>
@@ -387,11 +403,11 @@ const ReleaseAssignment: React.FC = () => {
                         <p className="text-left p-0 m-0 mb-2">Assign a unique due date to select students:</p>
                           <p>
                             <Select
-                              size="sm"
+                            size="sm"
                               label="Select Students"
                               selectionMode="multiple"
                               onChange={(selectedValues) => {
-                                setSelectedStudents((selectedValues as unknown) as number[]);
+                                setSelectedStudents(selectedValues.map(Number));
                               }}
                             >
                               {students.map((student) => (
@@ -435,6 +451,7 @@ const ReleaseAssignment: React.FC = () => {
                     </>
                   )}
                 </ModalContent>
+                {/* <h2>Advanced Options</h2> */}
               </Modal>
               <br />
             </form>

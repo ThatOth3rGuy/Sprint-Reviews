@@ -47,6 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
           }
           // Respond with the retrieved students and missing IDs
+          console.log('Students retrieved successfully', students, missingData);
           res.status(200).json({ message: 'Students retrieved successfully', students, missingData, showInPopup: true });
         } catch (error) {
           console.error(error);

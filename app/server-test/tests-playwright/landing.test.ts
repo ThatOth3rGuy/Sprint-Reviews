@@ -1,10 +1,7 @@
 // landing.test.ts
 import { test, expect } from '@playwright/test';
-import playwrightConfig from '../playwright.config';
 
 const baseURL = 'http://localhost:3001';
-// playwrightConfig.use?.baseURL; // Base URL of your application
-
 
 test.describe('Role selection page', () => {
 
@@ -17,11 +14,11 @@ test.describe('Role selection page', () => {
     // Check if landing page displays a logo
     const logo = page.locator('img[alt="SprintRunners Logo"]');
     await expect(logo).toBeVisible();
-    await expect(logo).toHaveAttribute('src', /\/_next\/image\?url=%2FLogo.png/); // Dynamic URL due to nextJS's optimization
+    await expect(logo).toHaveAttribute('src', '/_next/image?url=%2Flogo-transparent-png.png&w=384&q=75'); // Next.js image optimization
   });
 
   test('should display the role selection header', async ({ page }) => {
-    // Check if landing page deisplays the 'Role Selection' header
+    // Check if landing page displays the 'Select Your Role' header
     const roleSelectionHeader = page.getByText('Select Your Role');
     await expect(roleSelectionHeader).toBeVisible();
   });

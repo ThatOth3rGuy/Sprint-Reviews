@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import InstructorHeader from "../components/instructor-components/instructor-header";
+import InstructorAssignmentCard from "../components/instructor-components/instructor-assignment-card";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import styles from '../../styles/instructor-course-dashboard.module.css';
 import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress } from "@nextui-org/react";
@@ -12,6 +12,7 @@ interface Assignment {
   title: string;
   description: string;
   deadline: string;
+  courseName: string;
 }
 
 export default function AssignmentsPage() {
@@ -32,8 +33,14 @@ export default function AssignmentsPage() {
   }
   const isAdmin = session.user.role === 'admin';
   const dummyassignments: Assignment[] = [
-    { assignmentID: 1, title: "Assignment 1", description: "Description 1", deadline: "2024-07-20" },
-    { assignmentID: 2, title: "Assignment 2", description: "Description 2", deadline: "2024-07-25" },
+    {
+      assignmentID: 1, title: "Assignment 1", description: "Description 1", deadline: "2024-07-20",
+      courseName: ""
+    },
+    {
+      assignmentID: 2, title: "Assignment 2", description: "Description 2", deadline: "2024-07-25",
+      courseName: ""
+    },
   ];
   
 
@@ -52,11 +59,17 @@ export default function AssignmentsPage() {
   };
 
   const handleCreateAssignmentClick = () => {
-    router.push('/instructor/create-assignment');
+    router.push({
+      pathname: '/instructor/create-assignment',
+      query: { source: 'assignments' } //sends courseID to create assignment if clicked from assignment dashboard
+    });
   };
 
   const handleCreatePeerReviewAssignmentClick = () => {
-    router.push('/instructor/release-assignment');
+    router.push({
+      pathname: '/instructor/release-assignment',
+      query: { source: 'assignments' } //sends courseID to release assignment if clicked from assignment dashboard
+    });
   };
 
   const handleAction = (key: any) => {
@@ -71,7 +84,10 @@ export default function AssignmentsPage() {
         console.log("Unknown action:", key);
     }
   };
-  
+
+  const handleBackClick = () => {router.back()}
+
+
 
   return (
     <>
@@ -99,23 +115,30 @@ export default function AssignmentsPage() {
             <h3 className={styles.innerTitle}>Assignments Created</h3>
             <Divider className="instructor bg-secondary" />
             <div className={styles.courseCard}>
-              {assignments.map((assignment) => (
-                <div key={assignment.assignmentID} className={styles.courseCard}>
-                  <div className={styles.card}>
-                    <h2>{assignment.title}</h2>
-                    <p>{assignment.description}</p>
-                    <p>Deadline: {assignment.deadline}</p>
+              {assignments.length > 0 ? (
+                assignments.map((assignment) => (
+                  <div
+                    key={assignment.assignmentID}
+                    className={styles.courseCard}
+                  >
+                    <InstructorAssignmentCard 
+                      courseID={assignment.assignmentID}
+                      courseName={assignment.courseName}
+                      assignmentName={assignment.title}
+                      color="#9fc3cf"
+                      deadline={assignment.deadline}
+                    />
                   </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p>No assignments found for this course.</p>
+              )}
             </div>
           </div>
           <div className={styles.notificationsSection}>
-            <Listbox aria-label="Actions" onAction={handleAction}>
-              <ListboxItem key="create">Create Assignment</ListboxItem>
-              <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
-            </Listbox>
+           <h2>Notifications</h2>
           </div>
+          
         </div>
       </div>
     </>

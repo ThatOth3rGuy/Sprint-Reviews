@@ -4,6 +4,7 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import { useState } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
+import { Spinner } from "@nextui-org/react";
 
 export default function Page() {
   const [loading, setLoading] = useState(true);

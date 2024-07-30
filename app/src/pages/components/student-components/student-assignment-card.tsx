@@ -6,11 +6,12 @@ import style from '../../../styles/student-components.module.css';
 interface StudentAssignmentCardProps {
   courseID: number;
   courseName: string;
+  assignmentName: string;
   color: string;
-  dueDate: string;
+  deadline: string;
 }
 
-const StudentAssignmentCard: React.FC<StudentAssignmentCardProps> = ({ courseID, courseName, color, dueDate }) => {
+const StudentAssignmentCard: React.FC<StudentAssignmentCardProps> = ({ courseID, courseName, assignmentName, color, deadline }) => {
   const router = useRouter();
 
   const handleClick = () => {
@@ -19,11 +20,12 @@ const StudentAssignmentCard: React.FC<StudentAssignmentCardProps> = ({ courseID,
 
   return (
     <Card shadow="sm" className={`${style.outerCard}`} isPressable onPress={handleClick}>
-      <CardBody className="overflow-visible p-0">
+      <CardBody className="overflow-visible p-2 rounded-sm" style={{ backgroundColor: color }}>
+        <p>{assignmentName}</p>
       </CardBody>
-      <CardFooter className="text-small justify-between" style={{ backgroundColor: color }}>
+      <CardFooter className="text-small justify-between p-1" >
         <b>{courseName}</b>
-        <p>{dueDate}</p>
+        <p>{deadline}</p>
       </CardFooter>
     </Card>
   );

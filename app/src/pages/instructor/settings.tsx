@@ -55,7 +55,6 @@ export default function Page() {
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
           <h1>Settings</h1>
-          <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
             <BreadcrumbItem>Settings</BreadcrumbItem>
@@ -66,7 +65,6 @@ export default function Page() {
            <h3>Customization Settings Below</h3>
            <br />
             <p>This will be a place where user can customize any changes that they may want to make.</p>
-            
             <Progress
       size="sm"
       isIndeterminate
