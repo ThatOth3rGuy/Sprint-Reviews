@@ -19,10 +19,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const studentID = student.studentID;
 
       const reviewGroups = await getReviewGroups(Number(assignmentID), studentID);
+      console.log(reviewGroups)
       const reviewCriteria = await getReviewCriteria(Number(assignmentID));
 
       const submissions = await Promise.all(
-        reviewGroups.map(async (reviewGroup: { submissionID: number; anonymous: boolean; }) => {
+        reviewGroups.map(async (reviewGroup: {
+          deadline: any; submissionID: number; anonymous: boolean; 
+}) => {
           const submission = await getSubmission(reviewGroup.submissionID);
           let studentName = "Anonymous";
 
@@ -33,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
           }
 
-          return { ...submission[0], studentName };
+          return { ...submission[0], studentName, deadline: reviewGroup.deadline };
         })
       );
 
@@ -65,7 +68,7 @@ async function getReviewCriteria(assignmentID: number) {
 
 async function getReviewGroups(assignmentID: number, studentID: number) {
   const sql = `
-    SELECT rg.*, r.anonymous
+    SELECT rg.*, r.anonymous, r.deadline
     FROM review_groups rg
     JOIN review r ON rg.assignmentID = r.assignmentID
     WHERE rg.assignmentID = ? AND rg.studentID = ?

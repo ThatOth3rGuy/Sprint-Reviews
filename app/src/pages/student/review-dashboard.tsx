@@ -4,7 +4,9 @@ import { Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody, CardHeader, Divid
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useSessionValidation } from "../api/auth/checkSession";
-import submitReviews from "../api/reviews/submitReviews"
+import submitReviews from "../api/reviews/submitReviews";
+import dayjs from "dayjs";
+
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -33,6 +35,7 @@ interface Submission {
   fileType: string;
   submissionDate: string;
   studentName?: string;
+  deadline:string;
 }
 
 export default function ReviewDashboard() {
@@ -49,6 +52,7 @@ export default function ReviewDashboard() {
   const router = useRouter();
   const { assignmentID } = router.query;
   const [error, setError] = useState<string | null>(null);
+  const [deadlinePassed, setDeadlinePassed] = useState<boolean>(false);
 
   useSessionValidation('student', setLoading, setSession);
 
@@ -99,6 +103,12 @@ export default function ReviewDashboard() {
             return acc;
           }, {});
           setReviewComments(initialComments);
+
+          // Check if deadline has passed
+          const assignmentDeadline = currentSubmission ? dayjs(currentSubmission.deadline) : null;
+          const currentDate = dayjs();
+          //const assignmentDeadline = dayjs(currentSubmission.deadline);
+          setDeadlinePassed(currentDate.isAfter(assignmentDeadline));
 
         } else {
           throw new Error('Failed to fetch data');
@@ -228,7 +238,7 @@ export default function ReviewDashboard() {
                 <CardBody>
                   <p>File Name: {currentSubmission.fileName}</p>
                   <p>File Type: {currentSubmission.fileType}</p>
-                  <p>Submission Date: {new Date(currentSubmission.submissionDate).toLocaleString()}</p>
+                  <p>Submission Deadline: {new Date(currentSubmission.deadline).toLocaleString()}</p>
                   <p>Student Name: {currentSubmission.studentName}</p>
                 </CardBody>
               </Card>
@@ -253,26 +263,32 @@ export default function ReviewDashboard() {
                       />
                     </div>
                   ))}
-                  <Input
-                    type="text"
-                    label="Comment"
-                    placeholder="Enter comment"
-                    value={reviewComments[currentSubmission.submissionID] || ''}
-                    onChange={(e) => handleCommentChange(currentSubmission.submissionID, e.target.value)}
-                    className="mt-4"
-                  />
+                  <div className="flex flex-col mb-4">
+                    <Input
+                      type="text"
+                      label="Comments"
+                      placeholder="Enter your comments"
+                      value={reviewComments[currentSubmission.submissionID] || ''}
+                      onChange={(e) => handleCommentChange(currentSubmission.submissionID, e.target.value)}
+                      required={reviewCriteria.some(criterion => criterion.maxMarks === 0)}
+                    />
+                  </div>
+                  {!deadlinePassed && (
+                    <Button className={"color=primary"} onClick={handleSubmitAllReviews}>
+                      Submit All Reviews
+                    </Button>
+                  )}
+
                 </CardBody>
               </Card>
             </>
           )}
-          <div className="flex justify-between items-center mt-4">
-            <Pagination
-              total={submissionsToReview.length}
-              page={currentPage}
-              onChange={setCurrentPage}
-            />
-            <Button color="primary" onClick={handleSubmitAllReviews}>Submit All Reviews</Button>
-          </div>
+          <Pagination
+            total={submissionsToReview.length}
+            initialPage={1}
+            onChange={(page) => setCurrentPage(page)}
+            current={currentPage}
+          />
         </div>
       </div>
     </>

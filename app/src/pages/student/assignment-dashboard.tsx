@@ -20,7 +20,17 @@ interface CourseData {
   courseID: string;
   courseName: string;
 }
-
+interface Feedback {
+  feedbackID: number;
+  submissionID: number;
+  reviewerID: number;
+  feedbackDetails: string;
+  feedbackDate: string;
+  lastUpdated: string;
+  comment: string;
+  grade: number | null;
+  feedbackType: 'peer' | 'instructor';
+}
 export default function AssignmentDashboard() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
@@ -36,7 +46,7 @@ export default function AssignmentDashboard() {
   const [submittedFileName, setSubmittedFileName] = useState<string | null>(
     null
   );
-
+  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   useSessionValidation("student", setLoading, setSession);
 //useEffect for breadcrumbs
   useEffect(() => {
@@ -60,6 +70,11 @@ export default function AssignmentDashboard() {
                 const courseData: CourseData = await courseResponse.json();
                 setCourseData(courseData);
               }
+            } // Fetch feedbacks for this assignment and student
+            const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${session.user.userID}`);
+            if (feedbacksResponse.ok) {
+              const feedbacksData: Feedback[] = await feedbacksResponse.json();
+              setFeedbacks(feedbacksData);
             }
           } else {
             console.error('Error fetching assignment data');
@@ -277,6 +292,22 @@ export default function AssignmentDashboard() {
               )}
             </ModalContent>
           </Modal>
+          <div className={styles.feedbackSection}>
+          <h2>Feedback</h2>
+          {feedbacks.length > 0 ? (
+            feedbacks.map((feedback, index) => (
+              <div key={feedback.feedbackID} className={styles.assignmentsSection}>
+                <p><strong>Feedback {index + 1}:</strong></p>
+                <p><strong>Details:</strong> {feedback.feedbackDetails}</p>
+                <p><strong>Comment:</strong> {feedback.comment}</p>
+                <p><strong>Date:</strong> {new Date(feedback.feedbackDate).toLocaleString()}</p>
+                <p><strong>Grade:</strong> 0</p> {/* Placeholder grade */}
+              </div>
+            ))
+          ) : (
+            <p>No feedback available yet.</p>
+          )}
+        </div>
         </div>
       </div>
     </>

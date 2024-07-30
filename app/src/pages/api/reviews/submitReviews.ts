@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ message: 'Invalid input data' });
     }
 
-    await query('START TRANSACTION');
+    
 
     try {
       for (const review of reviews) {
@@ -43,10 +43,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       }
 
-      await query('COMMIT');
+      
       res.status(200).json({ message: 'Reviews submitted successfully' });
     } catch (error) {
-      await query('ROLLBACK');
+      
       throw error;
     }
   } catch (error) {
