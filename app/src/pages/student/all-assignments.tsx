@@ -9,8 +9,9 @@ import StudentAssignmentCard from "../components/student-components/student-assi
 interface Assignment {
   assignmentID: number;
   title: string;
-  description: string;
+  descr: string;
   deadline: string;
+  groupAssignment: boolean;
   courseName: string;
 }
 

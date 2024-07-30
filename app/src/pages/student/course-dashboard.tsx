@@ -1,14 +1,12 @@
 // course-dashboard.tsx
 import { useRouter } from "next/router";
-import InstructorNavbar from "../components/instructor-components/instructor-navbar";
-import AdminNavbar from "../components/admin-components/admin-navbar";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/instructor-course-dashboard.module.css';
-import InstructorAssignmentCard from "../components/instructor-components/instructor-assignment-card";
-import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Spinner } from "@nextui-org/react";
 import StudentNavbar from "../components/student-components/student-navbar";
 import StudentAssignmentCard from "../components/student-components/student-course-assignment-card";
+
 interface CourseData {
   courseID: string;
   courseName: string;
@@ -17,14 +15,13 @@ interface CourseData {
 interface Assignment {
   assignmentID: number;
   title: string;
-  description: string;
+  descr: string;
   deadline: string;
-  rubric: string;
+  groupAssignment: boolean;
 }
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
-  const [assignmentsLoading, setAssignmentsLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
 
   const router = useRouter();
@@ -36,11 +33,7 @@ export default function Page() {
   useSessionValidation('student', setLoading, setSession);
 
   useEffect(() => {
-    if (session && session.user && session.user.userID) {
-      fetchAssignments(session.user.userID);
-    }
     if (courseId) {
-
       fetch(`/api/courses/${courseId}`)
         .then((response) => response.json())
         .then((data: CourseData) => {
@@ -52,16 +45,14 @@ export default function Page() {
       fetchAssignments(courseId);
     }
   }, [courseId]);
+
   const handleHomeClick = async () => {
-    router.push("/student/dashboard")
-  }
-  /**
-   * Fetches assignments based on the provided course ID.
-   * @param {string | string[]} courseID - The ID of the course to fetch assignments for.
-   */
+    router.push("/student/dashboard");
+  };
+
   const fetchAssignments = async (courseID: string | string[]) => {
     try {
-      const response = await fetch(`/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`); //api works in a general fashion which is why it is used here
+      const response = await fetch(`/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`);
       if (response.ok) {
         const data = await response.json();
         setAssignments(data.courses);
@@ -84,10 +75,6 @@ export default function Page() {
     return null;
   }
 
-  /**
-   * Renders the instructor course dashboard page.
-   * @returns {JSX.Element} The instructor course dashboard page.
-   */
   return (
     <>
       <StudentNavbar />
@@ -99,7 +86,6 @@ export default function Page() {
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
             <BreadcrumbItem>{courseData.courseName}</BreadcrumbItem>
           </Breadcrumbs>
-
         </div>
         <div className={styles.mainContent}>
           <div className={styles.assignmentsSection}>
@@ -115,7 +101,9 @@ export default function Page() {
               <Checkbox value="peerReviews">Peer Evaluations</Checkbox>
             </CheckboxGroup>
             <h3 className={styles.innerTitle}>Assignments Created</h3>
-            <br /> <Divider className="instructor bg-secondary" /> <br />
+            <br />
+            <Divider className="instructor bg-secondary" />
+            <br />
             <div className={styles.courseCard}>
               {assignments.length > 0 ? (
                 assignments.map((assignment) => (
@@ -125,15 +113,18 @@ export default function Page() {
                       assignmentName={assignment.title}
                       color="#b3d0c3"
                       deadline={assignment.deadline}
-
+                      groupAssignment={assignment.groupAssignment}
                     />
                   </div>
                 ))
               ) : (
                 <p>No assignments found for this course.</p>
               )}
-            </div><h3 className={styles.innerTitle}>Peer Reviews Created</h3>
-            <br /><Divider className="instructor bg-secondary" /><br />
+            </div>
+            <h3 className={styles.innerTitle}>Peer Reviews Created</h3>
+            <br />
+            <Divider className="instructor bg-secondary" />
+            <br />
             <div className={styles.courseCard}>
               {assignments.length > 0 ? (
                 assignments.map((assignment) => (
@@ -141,7 +132,10 @@ export default function Page() {
                     <StudentAssignmentCard
                       courseID={45}
                       assignmentName="Peer review Assignment"
-                      color="#b3d0c3" deadline={assignment.deadline} />
+                      color="#b3d0c3"
+                      deadline={assignment.deadline}
+                      groupAssignment={false} // Placeholder for peer review example
+                    />
                   </div>
                 ))
               ) : (
