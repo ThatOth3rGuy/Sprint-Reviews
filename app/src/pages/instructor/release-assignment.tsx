@@ -249,7 +249,7 @@ const ReleaseAssignment: React.FC = () => {
       if (!responseReleasePeerReviews.ok) {
         throw new Error("Failed to release randomized peer reviews");
       }
-    
+      
       // If both requests are successful
       toast.success("Assignment and peer reviews released for review successfully");
       router.push("/instructor/dashboard");

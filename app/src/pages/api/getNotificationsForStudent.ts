@@ -11,6 +11,7 @@ export default async function handler(
       const notifications = await fetchNotificationsFromDB(Number(userID));
       res.status(200).json(notifications);
     } catch (error) {
+      console.error("Error fetching notifications:", error);
       res.status(500).json({ error: "Failed to fetch notifications" });
     }
   } else {
@@ -20,9 +21,11 @@ export default async function handler(
 
 async function fetchNotificationsFromDB(userID: number) {
   const sql = `
-      SELECT n.*, s.userID from student_notifications n join student s on n.studentID=s.studentID
-      where userID = ?
-    `;
+    SELECT n.*, s.userID 
+    FROM student_notifications n 
+    JOIN student s ON n.studentID = s.studentID
+    WHERE s.userID = ?
+  `;
   try {
     const results = await query(sql, [userID]);
     return results[0]; // Return the first (and should be only) result

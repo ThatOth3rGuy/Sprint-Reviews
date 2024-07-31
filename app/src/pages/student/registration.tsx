@@ -17,6 +17,7 @@ const SignUp: NextPage = () => {
   const [studentID, setStudentID] = useState('');
   const router = useRouter();
   const [errors, setErrors] = useState({ firstName: '', lastName: '', studentID: '', email: '', password: '' });
+  const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
 
   const validateEmail = (email: string) => {
     // Regex for validating email
@@ -24,7 +25,7 @@ const SignUp: NextPage = () => {
     return regex.test(email);
   };
   const validatePassword = (password: string) => {
-    // Regex for validating password: minimum 8 characters, one capital, one lowercase, and one special character
+    // Regex for validating password: minimum 8 characters, one capital, one lowercase, one number, and one special character
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return regex.test(password);
   };
@@ -140,22 +141,24 @@ const handleBackClick = () => {
           </div>
           <div className='flex'>
             <Input size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
-              onChange={(e) => setPassword(e.target.value)} />
+              onChange={(e) => setPassword(e.target.value)}  onFocus={() => setShowPasswordRequirements(true)}
+              onBlur={() => setShowPasswordRequirements(false)}/>
             <Input size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Confirm Password" value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)} />
           </div>
           <p className='text-danger-300 font-bold my-2'>{errors.password}</p>
-          <div className='text-sm  text-left border-3 border-solid border-danger-50 p-1'>
-            <p >
-              Password must contain the following:
-            </p>
-            <ul className='text-xs list-decimal px-6'>
-              <li>Minimum 8 characters</li>
-              <li>One uppercase</li>
-              <li>One lowercase</li>
-              <li>A special character</li>
-            </ul>
-          </div>
+          {showPasswordRequirements && (
+  <div className='text-xs text-left text-danger-700 mt-0 ml-2'>
+    <p>Password must contain the following:</p>
+    <ul className='text-xs list-decimal px-6'>
+      <li>Minimum 8 characters</li>
+      <li>One uppercase</li>
+      <li>One lowercase</li>
+      <li>A special character</li>
+      <li>A number</li>
+    </ul>
+  </div>
+)}
           <Button color='primary' className='w-full mt-2' variant="solid" onClick={handleSignUpClick}>
             Sign Up
           </Button>
