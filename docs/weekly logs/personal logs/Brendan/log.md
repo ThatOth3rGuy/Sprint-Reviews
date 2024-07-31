@@ -1,6 +1,108 @@
 
 # Weekly Logs
 ------------------------------------
+# Week 12
+## Wednesday - July 31, 2024
+**Timesheet Tracking (Friday-Tuesday)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_07_26_2024-07_30_2024.pdf)
+*SAME AS WEDNESDAY*
+### Cycle Review
+
+This cycle was much more of a grind for myself and the team as a whole. Given we are down to the wire, we are working hard to ensure everything is complete and ready
+for demo this week. As we have a bunch of testing, documentation, deployment, and demos to do over the next week, the main goal was to have all the main code done by 
+Wednesday so only fixes remain. As such we have nearly completed the entire app, all that is left in terms of development is to finish the edit implementations on the front end of the work I did in the DB all weekend. I wish I had more time to spend, but I am also moving, so time is in short supply for myself. I'm so glad to be 
+part of the team I am and proud of what we managed to do. All the hours have really paid off. I will unfortunately be gone moving the next two days, so I regrettably 
+have to leave much of the remaining work to the team, however any time I can spend the rest of the week providing walkthrough instructions, code documentation and
+set up the demo (as well as bug fixing) I will. I believe as long as we have all the code complete to the point it *mostly* meets all the requirements we are set.
+The hope is to use the last week on just minor things such as feedback fixes, so that we can focus on the final report. II also have to finish with the moving next
+week, so I do really hope we can do that! I won't have much for Friday Logs, so this is my big one of the week!
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Create Feature Definition and Sub-divisions on Project Board For Team Division
+  * #3: Run and Configure Tests For Database/API Changes
+  * #4: Fix Issues With Update Query Integration
+  * #5: Refactor Database Schema to Handle Appropriate Input & Update API/UI Code to handle new DB Tables/Queries
+  * #6: Test Randomization Calls and Display Results to UI 
+  * #7: Integrate Front-end code to handle Updates for User Edits
+
+### Progress Update: Fri-Wed
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Ongoing
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Feature breakdown/sub-division for parallel task work
+        </td>
+        <!-- Status -->
+        <td>COMPLETE!!!
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create and Run Integration Tests on Database/API Updates
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Fix Issues With Update Query Integration
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Reconfigure DB and API Calls for Peer Review Creation Randomizer - UI Handling
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Test Changes to UI API calls and Query Functions According To DB Updates (Display to Page)
+        </td>
+        <!-- Status -->
+        <td>In-Progress/Fixing
+        </td>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Connect All Randomizer Calls, Queries, Handlers, to store proper data
+        </td>
+        <!-- Status -->
+        <td>COMPLETE
+        </td>
+    </tr>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> 
+        </td> Integrate Front-end code to handle Updates for User Edits
+        <!-- Status -->
+        <td>COMPLETE
+        </td>
+    </tr>
+</table>
+
+#
 # Week 11
 ## Friday - July 26, 2024
 **Timesheet Tracking (Friday-Friday?)**
