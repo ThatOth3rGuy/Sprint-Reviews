@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { query,
     updateAssignment, updateAssignmentName, updateCourse, updateEnrollment,
-    updateFeedback, updateReviewCriteria, updateReviewer, updateStudent,
-    updateSubmission, updateUser
+    updateFeedback, updateGroupFeedback, updateReviewCriteria, updateReviewer, 
+    updateStudent, updateSubmission, updateUser
  } from '../../db';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
@@ -45,6 +45,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             
             case 'feedback':
             result = await updateFeedback(data.assignmentID, data.studentID, data.feedback);
+            break;
+
+            case 'groupFeedback':
+            result = await Promise.all(data.map((feedback: any) => 
+                updateGroupFeedback(feedback.assignmentID, feedback.content, feedback.score, feedback.reviewerID, feedback.revieweeID)
+            ));
             break;
             
             case 'reviewCriteria':

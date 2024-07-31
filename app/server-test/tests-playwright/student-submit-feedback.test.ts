@@ -19,7 +19,7 @@ async function login(page: any) {
 test.describe('Student Group Details Component', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
-    await page.goto(`${baseURL}/student/assignment-dashboard?assignmentID=2`);
+    await page.goto(`${baseURL}/student/group-assignment-dashboard?assignmentID=2`);
   });
 
   // Test that the group header is displaying the correct group number
@@ -157,6 +157,6 @@ test.describe('Student Group Details Component', () => {
     await page.click('button:text("Re-Submit Feedback")');
 
     // Verify the success message
-    await expect(page.locator('text=Feedback updated successfully.')).toBeVisible();
+    await expect(page.locator('div[role="status"]:has-text("Feedback updated successfully.")').nth(2)).toBeVisible();
   });
 });

@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS assignment;
 DROP TABLE IF EXISTS submission;
 DROP TABLE IF EXISTS feedback;
+DROP TABLE IF EXISTS group_feedback;
 DROP TABLE IF EXISTS enrollment;
 DROP TABLE IF EXISTS selected_students;
 DROP TABLE IF EXISTS review_criteria;

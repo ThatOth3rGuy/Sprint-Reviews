@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardBody, Button, Input, Textarea } from "@nextui-org/react";
 import toast from "react-hot-toast";
 import styles from "../../../styles/student-group-details.module.css";
+import { table } from 'console';
 
 interface Student {
   studentID: number;
@@ -94,7 +95,34 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
   };
 
   const updateFeedback = async () => {
-    // Call the update feedback API
+    try {
+      const response = await fetch('/api/updateTable', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          table: 'groupFeedback',
+          data: feedbacks.map(feedback => ({
+            assignmentID,
+            content: feedback.content,
+            score: feedback.score,
+            reviewerID: userID,
+            revieweeID: feedback.revieweeID,
+          })),
+        }),
+      });
+
+      if (response.ok) {
+        toast.success('Feedback updated successfully.');
+      } else {
+        const errorData = await response.json();
+        toast.error(`Error: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error('Error updating feedback:', error);
+      toast.error('Error updating feedback. Please try again.');
+    }
   };
 
   return (
