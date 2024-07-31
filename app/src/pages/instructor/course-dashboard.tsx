@@ -1,4 +1,4 @@
-//instructor/course-dashboard.tsx
+// instructor/course-dashboard.tsx
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
@@ -43,6 +43,7 @@ interface Assignment {
   title: string;
   description: string;
   deadline: string;
+  groupAssignment: boolean;
 }
 
 export default function Page() {
@@ -54,6 +55,7 @@ export default function Page() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newCourseName, setNewCourseName] = useState('');
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
+  const [selectedAssignmentTypes, setSelectedAssignmentTypes] = useState<string[]>(['all']);
 
   const router = useRouter();
   const { courseId } = router.query;
@@ -73,6 +75,21 @@ export default function Page() {
         .catch((error) => console.error("Error fetching course data:", error));
     }
   }, [courseId]);
+
+  const handleCheckboxChange = (type: string, isChecked: boolean) => {
+    if (type === 'all') {
+      setSelectedAssignmentTypes(['all']);
+    } else {
+      setSelectedAssignmentTypes(prevTypes => {
+        if (isChecked) {
+          return [...prevTypes.filter(t => t !== 'all'), type];
+        } else {
+          const newTypes = prevTypes.filter(t => t !== type);
+          return newTypes.length > 0 ? newTypes : ['all'];
+        }
+      });
+    }
+  };
 
   const handleHomeClick = async () => {
     router.push("/instructor/dashboard");
@@ -141,7 +158,6 @@ export default function Page() {
   }
 
   const handleCreateAssignmentClick = () => {
-
     router.push({
       pathname: '/instructor/create-assignment',
       query: { source: 'course', courseId: courseId } //sends courseID to create assignment page if clicked from course dashboard
@@ -206,7 +222,6 @@ export default function Page() {
     router.push(`/instructor/manage-students?courseId=${courseData.courseID}`);
   }
 
-
   const handleAction = (key: any) => {
     switch (key) {
       case "create":
@@ -245,6 +260,14 @@ export default function Page() {
 
   const isAdmin = session.user.role === "admin";
 
+  const individualAssignments = assignments.filter(assignment => !assignment.groupAssignment && !assignment.title.toLowerCase().includes('peer review'));
+  const groupAssignments = assignments.filter(assignment => assignment.groupAssignment);
+  const peerReviewCards = assignments.filter(assignment => assignment.title.toLowerCase().includes('peer review'));
+
+  const shouldRenderAssignments = (type: string) => {
+    return selectedAssignmentTypes.includes('all') || selectedAssignmentTypes.includes(type);
+  };
+
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -264,55 +287,114 @@ export default function Page() {
               orientation="horizontal"
               color="primary"
               size="sm"
-              className="text-left flex-row mb-2 text-primary-900 "
+              className="text-left flex-row mb-2 text-primary-900"
+              value={selectedAssignmentTypes}
             >
-              <Checkbox value="assignments">All Assignments</Checkbox>
-              <Checkbox value="peerReviews">Peer Reviews</Checkbox>
-              <Checkbox value="peerEvaluations">Peer Evaluations</Checkbox>
+              <Checkbox 
+                value="all" 
+                onChange={(e) => handleCheckboxChange('all', e.target.checked)}
+                isSelected={selectedAssignmentTypes.includes('all')}
+              >
+                All Assignments
+              </Checkbox>
+              <Checkbox 
+                value="individual" 
+                onChange={(e) => handleCheckboxChange('individual', e.target.checked)}
+                isSelected={selectedAssignmentTypes.includes('individual')}
+              >
+                Individual Assignments
+              </Checkbox>
+              <Checkbox 
+                value="group" 
+                onChange={(e) => handleCheckboxChange('group', e.target.checked)}
+                isSelected={selectedAssignmentTypes.includes('group')}
+              >
+                Group Assignments
+              </Checkbox>
+              <Checkbox 
+                value="peerReviews" 
+                onChange={(e) => handleCheckboxChange('peerReviews', e.target.checked)}
+                isSelected={selectedAssignmentTypes.includes('peerReviews')}
+              >
+                Peer Reviews
+              </Checkbox>
             </CheckboxGroup>
-            <h3 className={styles.innerTitle}>Assignments Created</h3>
-            <br /> <Divider className="instructor bg-secondary" /> <br />
-            <div className={styles.courseCard}>
-              {assignments.length > 0 ? (
-                assignments.map((assignment) => (
-                  <div
-                    key={assignment.assignmentID}
-                    className={styles.courseCard}
-                  >
-                    <InstructorAssignmentCard 
-                      courseID={assignment.assignmentID}
-                      assignmentName={assignment.title}
-                      color="#9fc3cf"
-                      deadline={assignment.deadline}
-                    />
-                  </div>
-                ))
-              ) : (
-                <p>No assignments found for this course.</p>
-              )}
-            </div>
-            <h3 className={styles.innerTitle}>Peer Reviews Created</h3>
-            <br />
-            <Divider className="instructor bg-secondary" />
-            <br />
-            <div className={`w-100% ${styles.courseCard}`}>
-              {peerReviewAssignments && peerReviewAssignments.length > 0 ? (
-                peerReviewAssignments.map((assignment) => (
-                  <div
-                    key={assignment.assignmentID}
-                    className={`w-100% ${styles.courseCard}`}
-                  >
-                    <InstructorReviewCard
-                      reviewID={assignment.assignmentID}
-                      linkedAssignmentID={assignment.linkedAssignmentID}
-                      color="#9fc3cf"
-                    />
-                  </div>
-                ))
-              ) : (
-                <p>No peer review assignments found for this course.</p>
-              )}
-            </div>
+
+            {shouldRenderAssignments('individual') && (
+              <>
+                <h3 className={styles.innerTitle}>Individual Assignments</h3>
+                <br />
+                <Divider className="instructor bg-secondary" />
+                <br />
+                <div className={styles.courseCard}>
+                  {individualAssignments.length > 0 ? (
+                    individualAssignments.map((assignment) => (
+                      <div key={assignment.assignmentID} className={styles.courseCard}>
+                        <InstructorAssignmentCard
+                          courseID={assignment.assignmentID}
+                          assignmentName={assignment.title}
+                          color="#9fc3cf"
+                          deadline={assignment.deadline}
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <p>No individual assignments found for this course.</p>
+                  )}
+                </div>
+              </>
+            )}
+
+            {shouldRenderAssignments('group') && (
+              <>
+                <h3 className={styles.innerTitle}>Group Assignments</h3>
+                <br />
+                <Divider className="instructor bg-secondary" />
+                <br />
+                <div className={styles.courseCard}>
+                  {groupAssignments.length > 0 ? (
+                    groupAssignments.map((assignment) => (
+                      <div key={assignment.assignmentID} className={styles.courseCard}>
+                        <InstructorAssignmentCard
+                          courseID={assignment.assignmentID}
+                          assignmentName={assignment.title}
+                          color="#9fc3cf"
+                          deadline={assignment.deadline}
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <p>No group assignments found for this course.</p>
+                  )}
+                </div>
+              </>
+            )}
+
+            {shouldRenderAssignments('peerReviews') && (
+              <>
+                <h3 className={styles.innerTitle}>Peer Reviews</h3>
+                <br />
+                <Divider className="instructor bg-secondary" />
+                <br />
+                <div className={styles.courseCard}>
+                  {peerReviewCards.length > 0 ? (
+                    peerReviewCards.map((assignment) => (
+                      <div key={assignment.assignmentID} className={styles.courseCard}>
+                        <InstructorAssignmentCard
+                          courseID={assignment.assignmentID}
+                          assignmentName={assignment.title}
+                          color="#9fc3cf"
+                          deadline={assignment.deadline}
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <p>No peer reviews found for this course.</p>
+                  )}
+                </div>
+              </>
+            )}
+
           </div>
           <div className={styles.notificationsSection}>
             <div className={styles.actionButtons}>

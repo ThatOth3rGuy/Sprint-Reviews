@@ -1,3 +1,4 @@
+// student/course-dashboard.tsx
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
