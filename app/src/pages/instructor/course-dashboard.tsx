@@ -175,12 +175,18 @@ export default function Page() {
 
   const handleCourseNameUpdate = async () => {
     try {
-      const response = await fetch(`/api/courses/updateCourseName`, {
+      const response = await fetch(`/api/updateTable`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ courseID: courseId, newCourseName })
+        body: JSON.stringify({
+          table: 'course',
+          data: {
+            courseID: courseId,
+            courseName: newCourseName
+          }
+        })
       });
       if (response.ok) {
         const updatedCourseData = await response.json();
