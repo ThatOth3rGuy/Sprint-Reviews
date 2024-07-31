@@ -5,16 +5,16 @@
 <p float="left">
     <h3>Feature Development Table</h3>
     <h4> Completed Features: </h4>
-        <img src="./images/week10Done.png" width="max" />
+        <img src="./images/week11Done.png" width="max" />
     <h4> In Progress Features: </h4>
-        <img src="./images/week10InProgress2.png" width="max" />
+        <img src="./images/week11InProgress.png" width="max" />
     <h4> ToDo Features: </h4>
-        <img src="./images/week10ToDo2.png" width="max" />
+        <img src="./images/week11Todo.png" width="max" />
     <h3>Burnup</h3>
-        <img src="./images/week10Burnup2.png" width="max" />
+        <img src="./images/week11Burnup.png" width="max" />
         <h3>Additional Items: </h3>
     <h4>Clokify for the week:</h4>
- <img src="./images/week10Clokify2.png" width="max" />
+ <img src="./images/week11Clokify.png" width="max" />
     <h4>Test 2 :</h4>
     <img src="./images/test1.png" width="max" />
     <img src="./images/test2.png" width="max" />
