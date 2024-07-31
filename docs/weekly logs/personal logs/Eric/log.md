@@ -1,5 +1,148 @@
 # Weekly Logs
 
+# Week 12
+
+## Friday-Wednesday (July 26-31, 2024)
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%2012.1-1.png)
+![Clockify Timesheet](./images/EricClockify%2012.1-2.png)
+
+### Cycle Review
+
+Since we have the final user testing event next Friday, the plan for this split is to fully finish the application's features by Wednesday. That way we have the split from Wednesday-Friday to finish up testing and integration of all the seperate branches before the testing. With that said, the first step was to go over the list of necessary requirements and turn everything not already completed into issues (in total there were 17). After that we're just going to assign ourselves issues as we go and try to finish them all by Wednesday.
+
+### Current Tasks
+  * 1: Fixing peer review dashboard issues
+  * 2: Instructor manual student enrollment/unenrollment
+  * 3: Password hashing
+  * 4: Instructor/Admin course editing
+  * 5: Student peer evaluation form
+  * 6: Group assignment submissions 
+  * 7: Assignment view filtering
+  * 8: Instructor feedback on assignments
+
+### Progress Update: Fri-Tue
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Fixing peer review dashboard issues
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Instructor manual student enrollment/unenrollment
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Password hashing
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Instructor/Admin course editing
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+        </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Student peer evaluation form
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Group assignment submissions
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Assignment view filtering
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Instructor feedback on assignments
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
+## Wednesday-Friday (July 31-August 2, 2024)
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%2012.2.png)
+
+### Cycle Review
+
+-
+
+### Current Tasks
+  * 1: -
+  * 2: -
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> -
+        </td>
+        <!-- Status -->
+        <td> -
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> -
+        </td>
+        <!-- Status -->
+        <td> -
+        </td>
+</table>
+
 # Week 11
 
 ## Friday - July 19, 2024
@@ -87,7 +230,7 @@ For the wedesday to friday split the main goal is to finish fixing the peer revi
         <td> Finish group creation
         </td>
         <!-- Status -->
-        <td> Done
+        <td> Complete
         </td>
     </tr>
         <tr>
@@ -144,7 +287,7 @@ For the first half of this cycle I was still in Calgary, so I made sure to do as
         <td>Refactoring student enrollment
         </td>
         <!-- Status -->
-        <td>Done
+        <td>Complete
         </td>
     </tr>
 </table>
@@ -177,7 +320,7 @@ This cycle is the final prep before the Test-O-Rama event on Friday. For this cy
         <td> Create API handlers for peer-review randomization
         </td>
         <!-- Status -->
-        <td> Done
+        <td> Complete
         </td>
     </tr>
         <tr>
@@ -185,7 +328,7 @@ This cycle is the final prep before the Test-O-Rama event on Friday. For this cy
         <td> Write the randomization algorithms
         </td>
         <!-- Status -->
-        <td> Done
+        <td> Complete
         </td>
     </tr>
         <tr>
@@ -193,7 +336,7 @@ This cycle is the final prep before the Test-O-Rama event on Friday. For this cy
         <td> Merge all current features into demo branch
         </td>
         <!-- Status -->
-        <td> Done
+        <td> Complete
         </td>
     </tr>
         <tr>
@@ -712,7 +855,7 @@ Not much to talk about during this cycle meeting. We just need to get to work to
         <td>Create Landing Page
         </td>
         <!-- Status -->
-        <td>Done
+        <td>Complete
         </td>
     </tr>
     <tr>
@@ -720,7 +863,7 @@ Not much to talk about during this cycle meeting. We just need to get to work to
         <td>Create registration pages
         </td>
         <!-- Status -->
-        <td>Done
+        <td>Complete
         </td>
     </tr>
     <tr>
@@ -728,7 +871,7 @@ Not much to talk about during this cycle meeting. We just need to get to work to
         <td>Finish login pages
         </td>
         <!-- Status -->
-        <td>Done
+        <td>Complete
         </td>
     </tr>
 </table>
