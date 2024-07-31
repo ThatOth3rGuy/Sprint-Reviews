@@ -8,7 +8,10 @@ import styles from '../../styles/instructor-course-dashboard.module.css';
 import InstructorAssignmentCard from "../components/instructor-components/instructor-assignment-card";
 import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
 import StudentNavbar from "../components/student-components/student-navbar";
-import StudentAssignmentCard from "../components/student-components/student-course-assignment-card";
+
+import StudentAssignmentCard from "../components/student-components/student-assignment-card";
+import StudentReviewCard from "../components/student-components/student-peer-review-card";
+
 interface CourseData {
   courseID: string;
   courseName: string;
@@ -22,6 +25,16 @@ interface Assignment {
   rubric: string;
 }
 
+interface PeerReview {
+  linkedAssignmentID: number;
+  reviewID: number;
+  assignmentID: number;
+  title: string;
+  deadline: string;
+  courseID: number;
+  courseName: string;
+}
+
 export default function Page() {
   const [loading, setLoading] = useState(true);
   const [assignmentsLoading, setAssignmentsLoading] = useState(true);
@@ -32,14 +45,18 @@ export default function Page() {
 
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
-
+  const [peerReviews, setPeerReviews] = useState<PeerReview[]>([]);
+  const [peerReviewAssignments, setPeerReviewAssignments] = useState<Assignment[]>([]);
   useSessionValidation('student', setLoading, setSession);
 
   useEffect(() => {
     if (session && session.user && session.user.userID) {
       fetchAssignments(session.user.userID);
+      
     }
     if (courseId) {
+
+      fetchPeerReviews(courseId);
 
       fetch(`/api/courses/${courseId}`)
         .then((response) => response.json())
@@ -61,15 +78,33 @@ export default function Page() {
    */
   const fetchAssignments = async (courseID: string | string[]) => {
     try {
-      const response = await fetch(`/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`); //api works in a general fashion which is why it is used here
+      const response = await fetch(`/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`);
       if (response.ok) {
         const data = await response.json();
-        setAssignments(data.courses);
+        setAssignments(data.courses); // Make sure this is the correct property
       } else {
         console.error('Failed to fetch courses');
       }
     } catch (error) {
       console.error('Error fetching courses:', error);
+    }
+  };
+
+  const fetchPeerReviews = async (courseID: string | string[]) => {
+    try {
+      const timestamp = new Date().getTime();
+      const response = await fetch(
+        `/api/reviews/getReviewsByCourseId?courseID=${courseId}&role=student&t=${timestamp}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Fetched peer review assignments:", data);
+        setPeerReviews(data.reviews || []);
+      } else {
+        console.error("Failed to fetch peer review assignments");
+      }
+    } catch (error) {
+      console.error("Error fetching peer review assignments:", error);
     }
   };
 
@@ -114,8 +149,8 @@ export default function Page() {
               <Checkbox value="peerReviews">Peer Reviews</Checkbox>
               <Checkbox value="peerReviews">Peer Evaluations</Checkbox>
             </CheckboxGroup>
-            <h3 className={styles.innerTitle}>Assignments Created</h3>
-            <br /> <Divider className="instructor bg-secondary" /> <br />
+            <h3 className={styles.innerTitle}>Assignments</h3>
+            <br /> <Divider className="student bg-secondary" /> <br />
             <div className={styles.courseCard}>
               {assignments.length > 0 ? (
                 assignments.map((assignment) => (
@@ -124,7 +159,7 @@ export default function Page() {
                       courseID={assignment.assignmentID}
                       assignmentName={assignment.title}
                       color="#b3d0c3"
-                      deadline={assignment.deadline}
+                      dueDate={new Date(assignment.deadline).toLocaleString()}
 
                     />
                   </div>
@@ -132,22 +167,27 @@ export default function Page() {
               ) : (
                 <p>No assignments found for this course.</p>
               )}
-            </div><h3 className={styles.innerTitle}>Peer Reviews Created</h3>
-            <br /><Divider className="instructor bg-secondary" /><br />
+            </div><h3 className={styles.innerTitle}>Peer Reviews</h3>
+            <br /><Divider className="student bg-secondary" /><br />
             <div className={styles.courseCard}>
-              {assignments.length > 0 ? (
-                assignments.map((assignment) => (
-                  <div key={assignment.assignmentID} className={styles.courseCard}>
-                    <StudentAssignmentCard
-                      courseID={45}
-                      assignmentName="Peer review Assignment"
-                      color="#b3d0c3" deadline={assignment.deadline} />
-                  </div>
-                ))
-              ) : (
-                <p>No assignments found for this course.</p>
-              )}
-            </div>
+
+            {peerReviews.length > 0 ? (
+  peerReviews.map((review) => (
+    <div key={review.reviewID} className={styles.courseCard}>
+      <StudentReviewCard
+        courseID={review.linkedAssignmentID}
+        courseName={`Review for Assignment - ${review.title}`|| `Review for Assignment ${review.linkedAssignmentID}`}
+        color="#b3d0c3"
+        dueDate={new Date(review.deadline).toLocaleString()}
+      />
+    </div>
+  ))
+) : (
+  <p>No peer reviews assigned for this course.</p>
+)}
+          </div>
+
+
           </div>
           <div className={styles.notificationsSection}>
             <h2 className="my-3">Notifications</h2>

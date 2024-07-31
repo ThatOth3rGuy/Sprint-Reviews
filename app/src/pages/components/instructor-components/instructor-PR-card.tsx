@@ -6,7 +6,7 @@ import styles from "../../../styles/AssignmentDetailCard.module.css";
 
 interface InstructorReviewCardProps {
     reviewID: number;
-    linkedAssignmentID: number;
+    linkedAssignmentID: string;
     color: string;
   }
   

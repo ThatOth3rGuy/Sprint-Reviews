@@ -1,3 +1,4 @@
+//instructor/course-dashboard.tsx
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
@@ -31,7 +32,7 @@ interface CourseData {
 
 interface Assignment {
   assignmentID: number;
-  linkedAssignmentID: number;
+  linkedAssignmentID: string;
   title: string;
   description: string;
   deadline: string;
@@ -88,7 +89,7 @@ export default function Page() {
     try {
       const timestamp = new Date().getTime();
       const response = await fetch(
-        `/api/reviews/getReviewsByCourseId?courseID=${courseID}&t=${timestamp}`
+        `/api/reviews/getReviewsByCourseIdForInstructor?courseID=${courseID}&t=${timestamp}`
       );
       if (response.ok) {
         const data = await response.json();
@@ -261,14 +262,11 @@ export default function Page() {
                 <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
                 <ListboxItem key="group-review">Create Student Groups</ListboxItem>
                 <ListboxItem key="manage-students">Manage Students</ListboxItem>
-                {isAdmin ? (
-                  <ListboxItem key="archive" 
-                  className="text-danger"
-                  color="danger"
-                  >
+                {isAdmin && (
+                  <ListboxItem key="archive" className="text-danger" color="danger">
                     Archive Course
                   </ListboxItem>
-                ) : <p></p>}
+                )}
               </Listbox>
             </div>
             <hr />
