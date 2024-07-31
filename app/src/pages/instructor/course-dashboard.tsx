@@ -262,14 +262,11 @@ export default function Page() {
                 <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
                 <ListboxItem key="group-review">Create Student Groups</ListboxItem>
                 <ListboxItem key="manage-students">Manage Students</ListboxItem>
-                {isAdmin ? (
-                  <ListboxItem key="archive" 
-                  className="text-danger"
-                  color="danger"
-                  >
+                {isAdmin && (
+                  <ListboxItem key="archive" className="text-danger" color="danger">
                     Archive Course
                   </ListboxItem>
-                ) : <p></p>}
+                )}
               </Listbox>
             </div>
             <hr />

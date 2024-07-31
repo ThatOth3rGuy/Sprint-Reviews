@@ -15,9 +15,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const groups = await getReviewGroups(sub.studentID, Number(assignmentID), undefined, undefined);
       if (groups.length > 0) {
         allGroups.push(groups);
-
-
-
       }
     }
 
@@ -25,7 +22,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // Flatten the array of groups into a single array for details fetching
       const flattenedGroups = allGroups.flat();
+      console.log('flattenedGroups:', flattenedGroups);
       const detailedGroups = await getGroupDetails(flattenedGroups);
+      console.log('detailedGroups:', detailedGroups);
 
       // Reconstruct the groups back to the original nested structure
       let groupedDetails = [];
@@ -37,7 +36,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       res.status(200).json({ groups: groupedDetails });
-
 
     } else {
       res.status(404).json({ error: 'No review groups found' });

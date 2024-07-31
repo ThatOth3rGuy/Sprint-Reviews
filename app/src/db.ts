@@ -123,30 +123,16 @@ export async function addAssignmentToCourse(
     throw error;
   }
 }
-// Inserts a student into the selected_students table for the defined submission in a course. Adds to the student_groups table 
+// Inserts a student into the selected_students table for the defined submission in a course. Adds to the review_groups table 
 // for the selected student and submission (called by releaseRandomizedPeerReview api)
 export async function selectStudentForSubmission(studentID: number, assignmentID: number, courseID: number, submissionID: number): Promise<void> {
-  const createTableSql = `
-    CREATE TABLE IF NOT EXISTS student_groups (
-      studentID INT,
-      assignmentID INT,
-      courseID INT,
-      submissionID INT,
-      PRIMARY KEY (studentID, submissionID),
-      FOREIGN KEY (studentID) REFERENCES student(studentID),
-      FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
-      FOREIGN KEY (courseID) REFERENCES course(courseID),
-      FOREIGN KEY (submissionID) REFERENCES submission(submissionID)
-    )
-  `;
 
   const insertSql = `
-    INSERT INTO student_groups (studentID, assignmentID, courseID, submissionID)
+    INSERT INTO review_groups (studentID, assignmentID, courseID, submissionID)
     VALUES (?, ?, ?, ?)
   `;
 
   try {
-    await query(createTableSql);
     await query(insertSql, [studentID, assignmentID, courseID, submissionID]);
   } catch (error) {
     const err = error as Error;
@@ -210,11 +196,12 @@ export async function createReview(
   assignmentID: number, 
   isGroupAssignment: boolean, 
   allowedFileTypes: string, 
-  deadline: Date
+  deadline: Date,
+  anonymous: boolean
 ): Promise<void> {
   const result = await query(
-    'INSERT INTO review (assignmentID, isGroupAssignment, allowedFileTypes, deadline) VALUES (?, ?, ?, ?)',
-    [assignmentID, isGroupAssignment, allowedFileTypes, deadline]
+    'INSERT INTO review (assignmentID, isGroupAssignment, allowedFileTypes, deadline, anonymous) VALUES (?, ?, ?, ?, ?)',
+    [assignmentID, isGroupAssignment, allowedFileTypes, deadline, anonymous]
   );
   
   if (result.affectedRows === 0) {
@@ -496,15 +483,15 @@ export async function getReviewGroups(studentID?: number, assignmentID?: number,
 
   const sql = `
     SELECT *
-    FROM student_groups
+    FROM review_groups
     ${whereClause}
     ${groupByClause}
   `;
 
   try {
-    console.log('Fetching review groups:', sql, params);
+    //console.log('Fetching review groups:', sql, params);
     const rows = await query(sql, params);
-    console.log('Fetched review groups:', rows);
+    //console.log('Fetched review groups:', rows);
     return rows;
   } catch (error) {
     console.error('Error fetching review groups:', error);
@@ -960,7 +947,7 @@ export async function updateReviewer(studentID: number, assignmentID: number, su
 
   // Update SQL template
   const updateSql = `
-    UPDATE student_groups
+    UPDATE review_groups
     SET ${assignmentID ? 'assignmentID = ?' : ''}${assignmentID && submissionID ? ', ' : ''}${submissionID ? 'submissionID = ?' : ''}
     WHERE studentID = ?
   `;
