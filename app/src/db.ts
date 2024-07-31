@@ -697,7 +697,7 @@ WHERE u.userID = ?;
 // gets all assignments for an instructor based on the userID via join tables (called by getAllAssignmentsInstructor api)
 export async function getAllAssignmentsInstructor(userID: number) {
   const sql = `
-    SELECT a.*
+    SELECT a.*, c.courseName
 FROM assignment a
 JOIN course c ON a.courseID = c.courseID
 JOIN instructor i ON c.instructorID = i.instructorID

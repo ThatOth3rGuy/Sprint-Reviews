@@ -335,6 +335,7 @@ export default function Page() {
                           assignmentName={assignment.title}
                           color="#9fc3cf"
                           deadline={assignment.deadline}
+                          groupAssignment={assignment.groupAssignment}
                         />
                       </div>
                     ))
@@ -360,6 +361,7 @@ export default function Page() {
                           assignmentName={assignment.title}
                           color="#9fc3cf"
                           deadline={assignment.deadline}
+                          groupAssignment={assignment.groupAssignment}
                         />
                       </div>
                     ))
@@ -385,6 +387,7 @@ export default function Page() {
                           assignmentName={assignment.title}
                           color="#9fc3cf"
                           deadline={assignment.deadline}
+                          groupAssignment={assignment.groupAssignment}
                         />
                       </div>
                     ))

@@ -8,13 +8,18 @@ interface InstructorAssignmentCardProps {
     assignmentName: string;
     color: string;
     deadline: string;
+    groupAssignment: boolean;
 }
 
-const InstructorAssignmentCard: React.FC<InstructorAssignmentCardProps> = ({ courseID, assignmentName, color, deadline }) => {
+const InstructorAssignmentCard: React.FC<InstructorAssignmentCardProps> = ({ courseID, assignmentName, color, deadline, groupAssignment }) => {
     const router = useRouter();
 
     const handleClick = () => {
-        router.push(`/instructor/assignment-dashboard?assignmentID=${courseID}`);
+        if (groupAssignment) {
+            router.push(`/instructor/group-assignment-dashboard?assignmentID=${courseID}`);
+          } else {
+            router.push(`/instructor/assignment-dashboard?assignmentID=${courseID}`);
+          }
     };
 
     return (

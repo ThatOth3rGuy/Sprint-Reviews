@@ -43,6 +43,7 @@ export default function AssignmentsPage() {
       if (response.ok) {
         const data = await response.json();
         setAssignments(data.assignments);
+        console.log("Setting assignment data: ", data.assignments);
       } else {
         console.error('Failed to fetch assignments');
       }
