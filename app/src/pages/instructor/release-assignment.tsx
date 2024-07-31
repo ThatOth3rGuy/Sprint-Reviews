@@ -10,11 +10,17 @@ import styles from "../../styles/instructor-assignments-creation.module.css";
 import {
   Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs,
   BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader,
-  ModalBody, ModalFooter, useDisclosure
+  ModalBody, ModalFooter, useDisclosure,
+  Spinner
 } from "@nextui-org/react";
 import { getSession, updateSession } from "@/lib";
+import { randomizePeerReviewGroups } from "../api/addNew/randomizationAlgorithm";
+import toast from "react-hot-toast";
 
-
+interface CourseData {
+  courseID: string;
+  courseName: string;
+}
 // Define the structure for assignment and Rubric items
 interface Assignment {
   assignmentID: number;
@@ -34,6 +40,8 @@ interface Student {
 // Main component for releasing an assignment for peer review
 const ReleaseAssignment: React.FC = () => {
   const router = useRouter();
+  const { source, courseId } = router.query;
+  const [courseName, setCourseName] = useState<string>("");
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [selectedAssignment, setSelectedAssignment] = useState<number | "">("");
   const [rubric, setRubric] = useState<RubricItem[]>([{ criterion: "", maxMarks: 0 }]);
@@ -49,13 +57,14 @@ const ReleaseAssignment: React.FC = () => {
   const dummyassignments = ['Assignment 1', 'Assignment 2', 'Assignment 3'];
   const [studentSubmissions, setStudentSubmissions] = useState<{ studentID: number; submissionID: number; }[]>([]);
   const [course, setCourse] = useState<string>("");
-
-  // Dummy rubric
-  const dummyrubric = [
-    { criterion: 'Criterion 1', maxMarks: 10 },
-    { criterion: 'Criterion 2', maxMarks: 20 },
-    { criterion: 'Criterion 3', maxMarks: 30 },
-  ];
+  const [reviewsPerAssignment, setReviewsPerAssignment] = useState<number>(4);
+  const [anonymous, setAnonymous] = useState(false);
+  // // Dummy rubric
+  // const dummyrubric = [
+  //   { criterion: 'Criterion 1', maxMarks: 10 },
+  //   { criterion: 'Criterion 2', maxMarks: 20 },
+  //   { criterion: 'Criterion 3', maxMarks: 30 },
+  // ];
 
   // Dummy questions
   const questions = ['Was the work clear and easy to understand?', 'Was the content relevant and meaningful?', 'Was the work well-organized and logically structured?', 'Did the author provide sufficient evidence or examples to support their arguments or points?', 'Improvements: What suggestions do you have for improving the work?'];
@@ -79,8 +88,29 @@ const ReleaseAssignment: React.FC = () => {
       fetchStudentSubmissions(Number(selectedAssignment));
     }
   }, [selectedAssignment]);
+  
+  useEffect(() => {
+    
 
+    if (source === 'course' && courseId) {
+      // Fetch course name
+      fetchCourseName(courseId as string);
+    }
+  }, [router.query]);
+
+  const fetchCourseName = async (courseId: string) => {
+    try {
+      const response = await fetch(`/api/courses/${courseId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setCourseName(data.courseName);
+      }
+    } catch (error) {
+      console.error('Error fetching course name:', error);
+    }
+  };
   // Function to fetch assignments
+ 
   const fetchAssignments = async (userID: string) => {
     try {
       const response = await fetch(`/api/getAllAssignmentsInstructor?userID=${userID}`);
@@ -99,7 +129,6 @@ const ReleaseAssignment: React.FC = () => {
       const res = await fetch(`/api/getCourse4Instructor?instructorID=${userID}`);
       if (res.ok) {
         const cid = await res.json();
-        console.log(cid.courses[0].courseID);
         setCourse(cid.courses[0].courseID);
       }
     } catch (error) {
@@ -109,15 +138,15 @@ const ReleaseAssignment: React.FC = () => {
   // Function to fetch students in the course
   const fetchStudents = async (courseID: string) => {
     try {
-        courseID = '3';
-        const response = await fetch(`/api/courses/getCourseList?courseID=${courseID}`);
-        if (response.ok) {
-          const students = await response.json();
-          setStudents(students);
-        } else {
-          console.error("Failed to fetch students");
-        }
-      } catch (error) {
+      //courseID = '3';
+      const response = await fetch(`/api/courses/getCourseList?courseID=${courseID}`);
+      if (response.ok) {
+        const students = await response.json();
+        setStudents(students);
+      } else {
+        console.error("Failed to fetch students");
+      }
+    } catch (error) {
       console.error("Error fetching students:", error);
     }
   };
@@ -212,7 +241,7 @@ const ReleaseAssignment: React.FC = () => {
       // Ensure submissions are fetched correctly
       const assignmentID = Number(selectedAssignment);
       await fetchStudentSubmissions(assignmentID);
-      
+
       const responseReleaseAssignment = await fetch("/api/assignments/releaseAssignment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -222,31 +251,34 @@ const ReleaseAssignment: React.FC = () => {
           isGroupAssignment,
           allowedFileTypes,
           deadline,
+          anonymous,
         }),
       });
-    
+
       if (!responseReleaseAssignment.ok) {
         throw new Error("Failed to release assignment for review");
+       
       }
-    
+
+      //const reviewGroups = randomizePeerReviewGroups(studentSubmissions, 4); // 4 reviews per assignment
       // Second API call to release randomized peer reviews
       const responseReleasePeerReviews = await fetch("/api/addNew/releaseRandomizedPeerReview", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          reviewsPerAssignment: 4,
+          reviewsPerAssignment, // This number should be changed into an input field
           studentSubmissions,
           assignmentID,
         }),
       });
-    
+
       if (!responseReleasePeerReviews.ok) {
         throw new Error("Failed to release randomized peer reviews");
       }
-    
+
       // If both requests are successful
-      alert("Assignment and peer reviews released for review successfully");
-      router.push("/instructor/dashboard");
+      toast.success("Assignment created successfully!")
+      router.push(`/instructor/course-dashboard?courseId=${courseId}`);
     } catch (error) {
       console.error("Error releasing assignment or peer reviews for review:", error);
     }
@@ -266,14 +298,21 @@ const ReleaseAssignment: React.FC = () => {
 
   if (loading) {
     return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
-    <Spinner color='primary' size="lg" />
-</div>;
+      <Spinner color='primary' size="lg" />
+    </div>;
   }
-  
+
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");
   }
-  
+  const handleBackClick = () => { //redirect to course dashboard or all assignments
+    const { source } = router.query;
+    if (source === 'course') {
+      router.push(`/instructor/course-dashboard?courseId=${router.query.courseId}`);
+    } else {
+      router.push('/instructor/assignments');
+    }
+  };
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -283,6 +322,8 @@ const ReleaseAssignment: React.FC = () => {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleBackClick}>{router.query.source === 'course' ? (courseName || 'Course Dashboard') : 'Assignments'}</BreadcrumbItem>
+
             <BreadcrumbItem>Release Peer Review</BreadcrumbItem>
           </Breadcrumbs>
         </div>
@@ -358,6 +399,23 @@ const ReleaseAssignment: React.FC = () => {
                   </Button>
                 </div>
               </div>
+              <Checkbox
+                isSelected={anonymous}
+                onValueChange={setAnonymous}
+                color="primary"
+              >
+                Anonymous Review
+              </Checkbox>
+
+              <br />
+              <Input
+                label="Number of Reviews per Assignment"
+                type="number"
+                min="1"
+                value={reviewsPerAssignment.toString()} // Convert number to string
+                onChange={(e) => setReviewsPerAssignment(Number(e.target.value))}
+                required
+              />
               <br />
               <label>Enter Due Date:</label>
               <br />
@@ -370,7 +428,7 @@ const ReleaseAssignment: React.FC = () => {
                 required
               />
               <Button onClick={handleSubmit} color="primary" variant="solid" className="float-right m-4" size="sm">
-                <b>Release</b>
+                <b>Draft Release</b>
               </Button>
               <Button variant="bordered" onPress={onOpen} color="primary" className="float-left m-4 ml-0" size="sm">
                 Advanced Options</Button>
@@ -381,7 +439,7 @@ const ReleaseAssignment: React.FC = () => {
                       <ModalHeader>Advanced Options</ModalHeader>
                       <ModalBody>
                         <div >
-                        <p className="text-left p-0 m-0 mb-2">Assign a unique due date to select students:</p>
+                          <p className="text-left p-0 m-0 mb-2">Assign a unique due date to select students:</p>
                           <p>
                             <Select
                               size="sm"

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
 import { useSessionValidation } from '@/pages/api/auth/checkSession';
+import router from 'next/router';
 
 interface SubmitAssignmentProps {
   assignmentID: number;

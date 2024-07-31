@@ -22,7 +22,7 @@ const ReviewDetailCard: React.FC<ReviewDetailProps> = ({
         <CardBody>
           <h2 className={styles.assignmentTitle}>{title}</h2>
           <p className={styles.assignmentDescription}>{description}</p>
-          <p className={styles.assignmentDeadline}>Deadline: {deadline}</p>
+          <p className={styles.assignmentDeadline}>Deadline: {new Date(deadline).toLocaleString()}</p>
         </CardBody>
       </Card>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

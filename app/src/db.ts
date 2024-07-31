@@ -1,7 +1,10 @@
 // db.ts
+// Functions I did not find in this review - Yatharth Mathur (27/07/2024)
+// - createGroups 
 import mysql from 'mysql2/promise';
 import fs from 'fs/promises';
 import config from './dbConfig'; // Import the database configuration from dbConfig.ts
+import { JsonObject } from '@prisma/client/runtime/library';
 
 let dbConfig;
 
@@ -39,6 +42,20 @@ export async function createUser(firstName: string, lastName: string, email: str
     return result.insertId; // Return the inserted user ID for adding to the instructor or student table
   } catch (error) {
     console.error('Error in addUser:', error); // Log the error
+    throw error;
+  }
+}
+export async function getUser(userID: string): Promise<any> {
+  const sql = `SELECT * FROM user WHERE userID = ?`;
+
+  try {
+    const rows = await query(sql, [userID]);
+    if (rows.length > 0) {
+      return rows[0];
+    }
+    return null; // Return null if no user is found (update later)
+  } catch (error) {
+    console.error(`Error fetching user ${userID}:`, error);
     throw error;
   }
 }
@@ -128,6 +145,7 @@ export async function authenticateStudent(email: string, password: string): Prom
     throw error;
   }
 }
+//The below function is used in pages/api/addNew/createCourse.ts
 export async function getInstructorID(userID: number): Promise<number | null> {
   if (typeof userID !== 'number' || isNaN(userID)) {
     throw new Error(`Invalid userID: ${userID}`);
@@ -144,7 +162,7 @@ export async function getInstructorID(userID: number): Promise<number | null> {
     throw error;
   }
 }
-
+// The below function is being used in // pages/courses/getAllArchivedCourses.ts
 export async function getAllCourses(isArchived: boolean): Promise<any[]> {
   const sql = `
     SELECT 
@@ -172,6 +190,8 @@ export async function getAllCourses(isArchived: boolean): Promise<any[]> {
     throw error;
   }
 }
+
+// The below addAssignmentToCourse is used in the addNew/createAssignment.ts
 export async function addAssignmentToCourse(
   title: string, 
   description: string, 
@@ -217,6 +237,8 @@ export async function addAssignmentToCourse(
     throw error;
   }
 }
+// The below function is being used in /api/getAllAssignmentsStudent.ts
+
 export async function getAllAssignmentsStudent(userID: number) {
   const sql = `
     SELECT a.*
@@ -235,6 +257,7 @@ WHERE u.userID = ?;
     throw error;
   }
 }
+// The below function is being used in /api/getAllAssignmentsInstructor.ts
 export async function getAllAssignmentsInstructor(userID: number) {
   const sql = `
     SELECT a.*
@@ -265,7 +288,7 @@ export async function getAssignments(): Promise<any[]> {
     throw error;
   }
 }
-
+// The below function is being used in // pages/courses/getAllCourses.ts
 export async function getCourses(): Promise<any[]> {
   const sql = 'SELECT * FROM course';
   try {
@@ -290,6 +313,7 @@ export async function getCourses(): Promise<any[]> {
 //   }
 // }
 
+// The below function is being used in // pages/assignments/getAssignmentWithSubmissions.ts
 export async function getAssignmentsWithSubmissions() {
   const sql = `
     SELECT 
@@ -344,6 +368,8 @@ export async function getAssignmentsWithSubmissions() {
     console.error('Error in getAssignmentsWithSubmissions:', error);
   }
 }
+// The below function is being used in // groups/[assignmentID].ts
+// The below function is being used in // pages/assignments/getSubmissionList.ts
 export async function getStudentSubmissions(assignmentId: number): Promise<Array<{ submissionID: number; studentID: number }>> {
   const sql = `
     SELECT studentID, submissionID
@@ -352,7 +378,6 @@ export async function getStudentSubmissions(assignmentId: number): Promise<Array
   `;
   try {
     const results = await query(sql, [assignmentId]);
-    console.log('Fetched student submissions:', results);
     return results;
   } catch (error) {
     console.error('Error in getSubmissionsByAssignmentId:', error);
@@ -377,7 +402,7 @@ ORDER BY c.courseID`;
     throw error;
   }
 }
-
+//The below function is used in pages/api/addNew/createCourse.ts
 export async function createCourse(courseName: string, instructorID: number) {
   const sql = `
     INSERT INTO course (courseName, isArchived, instructorID)
@@ -504,22 +529,25 @@ export async function getSubmissionFile(submissionID: number) {
 //     throw error;
 //   }
 // }
+
+// The below function is being used in // pages/assignments/releaseAssignments.ts
 export async function createReview(
   assignmentID: number, 
   isGroupAssignment: boolean, 
   allowedFileTypes: string, 
-  deadline: Date
+  deadline: Date,
+  anonymous: boolean
 ): Promise<void> {
   const result = await query(
-    'INSERT INTO review (assignmentID, isGroupAssignment, allowedFileTypes, deadline) VALUES (?, ?, ?, ?)',
-    [assignmentID, isGroupAssignment, allowedFileTypes, deadline]
+    'INSERT INTO review (assignmentID, isGroupAssignment, allowedFileTypes, deadline, anonymous) VALUES (?, ?, ?, ?, ?)',
+    [assignmentID, isGroupAssignment, allowedFileTypes, deadline, anonymous]
   );
   
   if (result.affectedRows === 0) {
     throw new Error('Failed to create review');
   }
 }
-
+// The below function is being used in // pages/assignments/releaseAssignments.ts
 export async function addReviewCriteria(assignmentID: number, rubric: { criterion: string; maxMarks: number }[]): Promise<void> {
   const connection = await pool.getConnection();
   
@@ -599,6 +627,8 @@ export async function updateAssignment(
 //   }
 // }
 
+// The below function is being used in // pages/api/selectStudentsForAssignment.ts
+
 export async function selectStudentsForAssignment(assignmentID: number, studentIDs: string[], uniqueDeadline: string | null): Promise<void> {
   const sql = `
     INSERT INTO selected_students (assignmentID, studentID, uniqueDeadline)
@@ -614,9 +644,20 @@ export async function selectStudentsForAssignment(assignmentID: number, studentI
     console.error(`Error selecting students for assignment:`, err.message);
   }
 }
-export async function getCourse(courseID: number): Promise<any> {
+export async function getCourse(courseID: number): Promise<any> { //CHANGE NOW
   const sql = `
     SELECT courseID, courseName  FROM course WHERE instructorID = ?  `;
+  try {
+    const rows = await query(sql, [courseID]);
+    return rows[0];
+  } catch (error) {
+    console.error('Error in getCourse:', error);
+    throw error;
+  }
+}
+export async function getCourseByID(courseID: number): Promise<any> { //Gets course by ID instead of instructorID
+  const sql = `
+    SELECT courseID, courseName, instructorID  FROM course WHERE courseID = ?  `;
   try {
     const rows = await query(sql, [courseID]);
     return rows[0];
@@ -641,9 +682,9 @@ export async function getCourse(courseID: number): Promise<any> {
       console.error('Error in getStudents:', error);
       throw error;
     }
-  }
-    // grab all students from the database matching their student ID's
-    export async function getStudentsById(userID: number, customPool: mysql.Pool = pool) {
+}
+    // grab all students from the database matching their student ID's used in // pages/api/getStudentByID.ts
+export async function getStudentsById(userID: number, customPool: mysql.Pool = pool) {
       const sql = `
         SELECT studentID, u.userID FROM student s JOIN user u ON s.userID = u.userID WHERE u.userID = ?
       `;
@@ -658,8 +699,8 @@ export async function getCourse(courseID: number): Promise<any> {
         console.error('Error in getStudents:', error);
         throw error;
       }
-    }
-//  enroll student in a course
+}
+// The below function is being used in // pages/api/enrollStudents.ts
 export async function enrollStudent(userID: string, courseID: string, customPool: mysql.Pool = pool): Promise<void> {
   const sql = `
     INSERT INTO enrollment (studentID, courseID)
@@ -673,7 +714,7 @@ export async function enrollStudent(userID: string, courseID: string, customPool
     throw err;
   }
 }
-
+// The below function is being used in // pages/courses/getCourseList.ts
 export async function getStudentsInCourse(courseID: number): Promise<any[]> {
   const sql = `
     SELECT u.userID, u.firstName, u.lastName, u.email, s.studentID
@@ -692,29 +733,16 @@ export async function getStudentsInCourse(courseID: number): Promise<any[]> {
     throw error;
   }
 }
+// The below function is being used in // pages/api/addNew/releaseRandomizedPeerReview.ts
 // Inserts a student into the selected_students table for the defined submission in a course.
 export async function selectStudentForSubmission(studentID: number, assignmentID: number, courseID: number, submissionID: number): Promise<void> {
-  const createTableSql = `
-    CREATE TABLE IF NOT EXISTS student_groups (
-      studentID INT,
-      assignmentID INT,
-      courseID INT,
-      submissionID INT,
-      PRIMARY KEY (studentID, submissionID),
-      FOREIGN KEY (studentID) REFERENCES student(studentID),
-      FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
-      FOREIGN KEY (courseID) REFERENCES course(courseID),
-      FOREIGN KEY (submissionID) REFERENCES submission(submissionID)
-    )
-  `;
 
   const insertSql = `
-    INSERT INTO student_groups (studentID, assignmentID, courseID, submissionID)
+    INSERT INTO review_groups (studentID, assignmentID, courseID, submissionID)
     VALUES (?, ?, ?, ?)
   `;
 
   try {
-    await query(createTableSql);
     await query(insertSql, [studentID, assignmentID, courseID, submissionID]);
   } catch (error) {
     const err = error as Error;
@@ -729,7 +757,7 @@ export async function updateReviewer(studentID: number, assignmentID: number, su
 
   // Update SQL template
   const updateSql = `
-    UPDATE student_groups
+    UPDATE review_groups
     SET ${assignmentID ? 'assignmentID = ?' : ''}${assignmentID && submissionID ? ', ' : ''}${submissionID ? 'submissionID = ?' : ''}
     WHERE studentID = ?
   `;
@@ -754,6 +782,7 @@ export async function updateReviewer(studentID: number, assignmentID: number, su
     throw err;
   }
 }
+// The below function is being used in // pages/group/[assignmentID].ts and groups/[assignmentID]
 // Get review groups for a student based on the provided parameters
 export async function getReviewGroups(studentID?: number, assignmentID?: number, submissionID?: number, groupBy?: string) {
   const conditions = [];
@@ -780,20 +809,49 @@ export async function getReviewGroups(studentID?: number, assignmentID?: number,
 
   const sql = `
     SELECT *
-    FROM student_groups
+    FROM review_groups
     ${whereClause}
     ${groupByClause}
   `;
 
   try {
-    console.log('Fetching review groups:', sql, params);
     const rows = await query(sql, params);
-    console.log('Fetched review groups:', rows);
     return rows;
   } catch (error) {
     console.error('Error fetching review groups:', error);
     throw error;
   }
+}
+export async function getGroupDetails(groups: any[]) {
+  if (groups.length === 0) {
+    return [];
+  }
+
+  const groupDetails = [];
+
+  for (const group of groups) {
+    const sql = `
+      SELECT 
+        sg.*,
+        stu.firstName AS studentFirstName,
+        stu.lastName AS studentLastName,
+        subu.firstName AS submissionFirstName,
+        subu.lastName AS submissionLastName
+      FROM review_groups sg
+      JOIN student st ON sg.studentID = st.studentID
+      JOIN user stu ON st.userID = stu.userID
+      JOIN submission s ON sg.submissionID = s.submissionID
+      JOIN student sub ON s.studentID = sub.studentID
+      JOIN user subu ON sub.userID = subu.userID
+      WHERE sg.studentID = ? AND sg.assignmentID = ? AND sg.submissionID = ?
+    `;
+
+    const params = [group.studentID, group.assignmentID, group.submissionID];
+    const rows = await query(sql, params);
+    groupDetails.push(...rows);
+  }
+
+  return groupDetails;
 }
 //Get students for setting unique due date
 // export async function getStudents(): Promise<any[]> {
@@ -839,3 +897,135 @@ export async function getReviewGroups(studentID?: number, assignmentID?: number,
 //     throw err;
 //   }
 // }
+/*
+UPDATE USER QUERIES FOR EACH TABLE
+*/
+// Update user information in the database with the given values
+export async function updateUser(userID: string, firstName?: string, lastName?: string, email?: string, password?: string): Promise<any> {
+  const updateFields = [];
+  const params = [];
+
+  if (firstName !== undefined) { updateFields.push('firstName = ?'); params.push(firstName); }
+  if (lastName !== undefined) { updateFields.push('lastName = ?'); params.push(lastName); }
+  if (email !== undefined) { updateFields.push('email = ?'); params.push(email); }
+  if (password !== undefined) { updateFields.push('password = ?'); params.push(password); }
+
+  const sql = `UPDATE user SET ${updateFields.join(', ')} WHERE userID = ?`;
+
+  try {
+    // Check if the user already exists with the given values
+    const existingUser = await getUser(userID);
+    if (!existingUser) {
+      throw new Error(`User with ID ${userID} does not exist.`);
+    }
+    // Proceed with the update
+    const update = await query(sql, [...params, userID]);
+    return update;
+  } catch (error) {
+    console.error(`Error updating user ${userID}:`, error);
+    throw error;
+  }
+}
+// Update student information in the database with the given values
+export async function updateStudent(sID: string, uID: string, pNum?: string, address?: string, dob?: string): Promise<any> {
+  const updateFields = [];
+  const params = [];
+
+  if ( pNum!== undefined) { updateFields.push('phoneNumber = ?'); params.push(pNum); }
+  if (address !== undefined) { updateFields.push('homeAddress = ?'); params.push(address); }
+  if (dob !== undefined) { updateFields.push('dateOfBirth = ?'); params.push(dob); }
+
+  const sql = `UPDATE student SET ${updateFields.join(', ')} WHERE studentID = ?`;
+
+  try {
+    // Check if the user already exists with the given values
+    const existingUser = await getStudentsById(Number(uID));
+    if (!existingUser) {
+      throw new Error(`Student ${sID} does not exist.`);
+    }
+    // Proceed with the update
+    const update = await query(sql, [...params, sID]);
+    return update;
+  } catch (error) {
+    console.error(`Error updating student ${sID}:`, error);
+    throw error;
+  }
+}
+// Update course information in the database with the given values
+export async function updateCourse(courseID: string, courseName?: string, instructorID?: string): Promise<any> {
+  const updateFields = [];
+  const params = [];
+
+  if (courseName !== undefined) { updateFields.push('courseName = ?'); params.push(courseName); }
+  if (instructorID !== undefined) { updateFields.push('instructorID = ?'); params.push(instructorID); }
+
+  const sql = `UPDATE course SET ${updateFields.join(', ')} WHERE courseID = ?`;
+
+  try {
+    // Check if the user already exists with the given values
+    const existingCourse = await getCourse(Number(courseID));
+    if (!existingCourse) {
+      throw new Error(`Course with ID ${courseID} does not exist.`);
+    }
+    // Proceed with the update
+    const update = await query(sql, [...params, courseID]);
+    return update;
+  } catch (error) {
+    console.error(`Error updating course ${courseID}:`, error);
+    throw error;
+  }
+}
+// Update student submission information in the database with the given values
+export async function updateSubmission(
+  submissionID: string, assignmentID?: string, 
+  studentID?: string, fname?: string, fcontent?: JsonObject, fType?: string, 
+  subDate?: string, grade?: string
+): Promise<any> {
+  /**This function might need to be handled differently for several things, such as file uploads, 
+  or the fact of storing each submission compared to just updating it as the same submission */
+  const updateFields = [];
+  const params = [];
+
+  if (assignmentID !== undefined) { updateFields.push('assignmentID = ?'); params.push(assignmentID); }
+  if (studentID !== undefined) { updateFields.push('studentID = ?'); params.push(studentID); }
+  if (fname !== undefined) { updateFields.push('fileName = ?'); params.push(fname); }
+  if (fcontent !== undefined) { updateFields.push('fileContent = ?'); params.push(fcontent); }
+  if (fType !== undefined) { updateFields.push('fileType = ?'); params.push(fType); }
+  if (subDate !== undefined) { updateFields.push('submissionDate = ?'); params.push(subDate); }
+  if (grade !== undefined) { updateFields.push('grade = ?'); params.push(grade); }
+
+  const sql = `UPDATE submission SET ${updateFields.join(', ')} WHERE submissionID = ?`;
+
+  try {
+    // Check if the user already exists with the given values
+    const existingSubmission = await getSubmissionFile(Number(submissionID)); //This might need to be changed
+    if (!existingSubmission) {
+      throw new Error(`Submission with ID ${submissionID} does not exist.`);
+    }
+    // Proceed with the update
+    const update = await query(sql, [...params, submissionID]);
+    return update;
+  } catch (error) {
+    console.error(`Error updating submission ${submissionID}:`, error);
+    throw error;
+  }
+}
+// Update enrollment information in the database with the given values
+export async function updateEnrollment(studentID: string, courseID: string): Promise<any> {
+
+  const sql = `UPDATE enrollment SET studentID = ?, courseID = ? WHERE studentID = ?`;
+
+  try {
+    // Check if the user already exists with the given values
+    const existingEnrollment = await getEnrollment(Number(enrollmentID));
+    if (!existingEnrollment) {
+      throw new Error(`Enrollment with ID ${studentID} does not exist.`);
+    }
+    // Proceed with the update
+    const update = await query(sql, [studentID, courseID]);
+    return update;
+  } catch (error) {
+    console.error(`Error updating enrollment. Student ${studentID} cant be moved to course ${courseID}:`, error);
+    throw error;
+  }
+}

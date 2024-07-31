@@ -91,11 +91,14 @@ CREATE TABLE IF NOT EXISTS review_criteria (
 -- Table for storing feedback information between students and assignments
 CREATE TABLE IF NOT EXISTS feedback (
     feedbackID INT AUTO_INCREMENT PRIMARY KEY,
+    submissionID INT NOT NULL,
     assignmentID INT NOT NULL,
-    content TEXT,
-    reviewerID INT,
-    FOREIGN KEY (assignmentID) REFERENCES submission(submissionID) ON DELETE CASCADE,
-    FOREIGN KEY (reviewerID) REFERENCES student(studentID) ON DELETE SET NULL
+    feedbackDetails TEXT,
+    feedbackDate DATETIME,
+    lastUpdated DATETIME,
+    comment TEXT NOT NULL,
+    FOREIGN KEY (submissionID) REFERENCES submission(submissionID) ON DELETE CASCADE,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
 
 -- Table for storing enrollment information to connect students to courses
@@ -122,13 +125,15 @@ CREATE TABLE IF NOT EXISTS review (
     isGroupAssignment BOOLEAN,
     allowedFileTypes VARCHAR(255),
     deadline DATETIME,
+    anonymous BOOLEAN,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
-CREATE TABLE IF NOT EXISTS student_groups (
+CREATE TABLE IF NOT EXISTS review_groups  (
     studentID INT,
     assignmentID INT,
     courseID INT,
     submissionID INT,
+    isReleased BOOLEAN DEFAULT false,
     PRIMARY KEY (studentID, submissionID),
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
@@ -191,8 +196,7 @@ INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType
 VALUES (@assignmentID, 123456, 'final_project.pdf', NULL, 'pdf', NOW());
 
 -- Insert a sample feedback
-INSERT INTO feedback (assignmentID, content, reviewerID)
-VALUES (@assignmentID, 'Great job on the project!', 123456);
+
 
 -- Insert a sample review criteria
 INSERT INTO review_criteria (assignmentID, criterion, maxMarks)

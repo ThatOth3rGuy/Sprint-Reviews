@@ -6,7 +6,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { instructorID } = req.query;
     try {
       const courses = await getCoursesByInstructorID(Number(instructorID));
-      console.log('API response:', courses);
       res.status(200).json({ courses });
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch courses' });

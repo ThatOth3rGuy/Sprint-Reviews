@@ -20,7 +20,7 @@ const Landing: NextPage = () => {
   }
 
   return ( //bg-gradient-to-r from-[#7887ec] to-[#bbb9b9]
-    <div style={{background: 'linear-gradient(to right, #265652, #4c5699)', minHeight: '100vh', minWidth: '100vw', padding: '10vh'}}>
+    <div style={{background: 'linear-gradient(to right, #265652, #404982)', minHeight: '100vh', minWidth: '100vw', padding: '10vh'}}>
       <div className={styles.roleSelection}>
         <Image
           style={{
