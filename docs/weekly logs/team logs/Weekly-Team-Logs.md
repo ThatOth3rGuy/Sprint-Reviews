@@ -1,11 +1,81 @@
 # Project 3: Peer Review System - Team 3 (SprintRunners)
 
 # Weekly Team Logs
+# Week 11 Summary
+ ## July 24th (Wed) - July 31st (Wed)
+ ### Features in the Project Plan Cycle: 
+1. Create Course Groups Functions and edit the course Groups
+2. Instructor Release Peer Review system post-randomization with anonymous handling
+3. Student View of the form created by the instructor  and the reviews to do
+4. Student Side (back-end) feedback is available
+5. Addition of functions to handle  all table updates for the updating tables(course, assignment etc.)
+6. Instructor ability to edit course details
+7. Instructors ability to add and remove students
+8. Email Confirmation upon signup
+9. Forgot Password Functionality
+10. Email notification when assignment is created and when a student is added in a group
+   
+
+
+
+###  Tasks from the Project Board:
+![week11Kanban](https://github.com/user-attachments/assets/c47ffa3e-4631-461f-90e4-f277fb23c8d6)
+
+
+
+
+### Tasks for Next Cycle:
+
+![week11Todo](https://github.com/user-attachments/assets/26c1741d-9385-4c8d-9618-e887a274e5bf)
+
+
+
+
+### Burn-up Chart (Velocity):
+![week11Burnup](https://github.com/user-attachments/assets/de8e9da1-1fd5-468e-a902-cc1b15b8d2c8)
+
+
+
+
+### Times for Team/Individual:
+
+
+Clockify Times:
+
+![week11Clokify](https://github.com/user-attachments/assets/fb84a6dd-65a7-443a-aafe-61718ccf5554)
+
+
+
+
+
+
+### Completed Tasks:
+![week11Done](https://github.com/user-attachments/assets/8df57b2f-f347-42ae-a82c-1e5981c4d0aa)
+
+
+
+### In Progress Tasks/ To do:
+![week11InProgress](https://github.com/user-attachments/assets/04c7eda4-d926-4003-aef9-90414e963ef2)
+
+
+
+### Test Results 
+Playwright :
+
+![Playwright Test Results](https://github.com/user-attachments/assets/a1017716-304d-49b6-a842-d603038e597d)
+
+Jest : 
+
+![image](https://github.com/user-attachments/assets/b43f7ede-a023-4497-98fe-cb88ad5e881f)
+
+
+### Overview:
+The Project Plan Cycle includes key features to enhance the learning process. It allows the creation and editing of Course Groups. The Instructor Release Peer Review system ensures fair and anonymous peer assessments. Students can view and complete reviews on the instructor-created form. A feedback mechanism is available for students. The system includes functions for updating all tables, such as course and assignment tables. Instructors can edit course details and manage student enrollment. These features collectively aim to provide a comprehensive and interactive educational experience.
  # Week 10 summary (Test-ORAMA week)
  ## July 24th (Wed) - July 26th (Fri)
  ### Features in the Project Plan Cycle: 
 1. Randomizer to work with  instructor peer review dashboard
-2. Create a Group feature with all features for groups formation in the course
+2. Create a Group feature with all features for group formation in the course
 3. Student peer review dashboard
 
 
