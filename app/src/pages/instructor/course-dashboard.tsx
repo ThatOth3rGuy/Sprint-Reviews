@@ -17,10 +17,11 @@ import {
   CheckboxGroup,
   Spinner,
   Modal,
-  ModalBody,
   ModalContent,
+  ModalHeader,
+  ModalBody,
   ModalFooter,
-  ModalHeader
+  Input,
 } from "@nextui-org/react";
 import InstructorReviewCard from "../components/instructor-components/instructor-PR-card";
 import { enrollStudent } from "@/db";
@@ -28,6 +29,12 @@ import { enrollStudent } from "@/db";
 interface CourseData {
   courseID: string;
   courseName: string;
+}
+
+interface Review {
+  assignmentID: number;
+  linkedAssignmentID: number;
+  deadline: string;
 }
 
 interface Assignment {
@@ -44,6 +51,8 @@ export default function Page() {
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [peerReviewAssignments, setPeerReviewAssignments] = useState<Assignment[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newCourseName, setNewCourseName] = useState('');
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
 
   const router = useRouter();
@@ -131,13 +140,6 @@ export default function Page() {
     );
   }
 
-  if (!session || !session.user || !session.user.userID) {
-    console.error("No user found in session");
-    return null;
-  }
-
-  const isAdmin = session.user.role === "admin";
-
   const handleCreateAssignmentClick = () => {
 
     router.push({
@@ -160,9 +162,50 @@ export default function Page() {
     });
   };
 
+  const handleEditCourseNameClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCourseNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNewCourseName(event.target.value);
+  };
+
+  const handleCourseNameUpdate = async () => {
+    try {
+      const response = await fetch(`/api/updateTable`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          table: 'course',
+          data: {
+            courseID: courseId,
+            courseName: newCourseName
+          }
+        })
+      });
+      if (response.ok) {
+        const updatedCourseData = await response.json();
+        setCourseData(updatedCourseData);
+        setIsModalOpen(false);
+        router.reload();
+      } else {
+        console.error("Failed to update course name");
+      }
+    } catch (error) {
+      console.error("Error updating course name:", error);
+    }
+  };
+    
   const handeEnrollRemoveStudentsClick = () => {
     router.push(`/instructor/manage-students?courseId=${courseData.courseID}`);
   }
+
 
   const handleAction = (key: any) => {
     switch (key) {
@@ -175,6 +218,9 @@ export default function Page() {
       case "group-review":
         handleCreateGroupPeerReviewAssignmentClick();
         break;
+      case "edit-course":
+        handleEditCourseNameClick();
+        break;
       case "manage-students":
         handeEnrollRemoveStudentsClick();
         break;
@@ -185,6 +231,19 @@ export default function Page() {
         console.log("Unknown action:", key);
     }
   };
+
+  if (!courseData || loading) {
+    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+      <Spinner color='primary' size="lg" />
+    </div>;
+  }
+
+  if (!session || !session.user || !session.user.userID) {
+    console.error("No user found in session");
+    return null;
+  }
+
+  const isAdmin = session.user.role === "admin";
 
   return (
     <>
@@ -260,7 +319,13 @@ export default function Page() {
               <Listbox aria-label="Actions" onAction={handleAction}>
                 <ListboxItem key="create">Create Assignment</ListboxItem>
                 <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
-                <ListboxItem key="group-review">Create Student Groups</ListboxItem>
+                <ListboxItem key="group-review"> Create Student Groups</ListboxItem>
+                <ListboxItem 
+                key="edit-course"
+                color="primary"
+                > 
+                Edit Course Name
+                </ListboxItem>
                 <ListboxItem key="manage-students">Manage Students</ListboxItem>
                 {isAdmin && (
                   <ListboxItem key="archive" className="text-danger" color="danger">
@@ -300,6 +365,34 @@ export default function Page() {
           </ModalContent>
         </Modal>
       </div>
+
+      <Modal
+        className='z-20'
+        backdrop="blur"
+        isOpen={isModalOpen}
+        onOpenChange={(open) => setIsModalOpen(open)}
+      >
+        <ModalContent>
+          <ModalHeader>Edit Course Name</ModalHeader>
+          <ModalBody>
+            <Input 
+              isClearable 
+              fullWidth 
+              label="Enter New Course Name"
+              value={newCourseName} 
+              onChange={handleCourseNameChange} 
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" variant="light" onPress={() => setIsModalOpen(false)}>
+              Close
+            </Button>
+            <Button color="primary" onPress={handleCourseNameUpdate}>
+              Update
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }
