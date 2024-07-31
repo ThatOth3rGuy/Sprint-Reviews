@@ -1,3 +1,4 @@
+// student/all-assignments.tsx
 import { useRouter } from "next/router";
 import styles from '../../styles/instructor-course-dashboard.module.css';
 import { Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Spinner } from "@nextui-org/react";
