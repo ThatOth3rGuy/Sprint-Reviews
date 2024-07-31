@@ -5,6 +5,7 @@ import styles from '../../styles/instructor-course-dashboard.module.css';
 import { Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Spinner } from "@nextui-org/react";
 import StudentNavbar from "../components/student-components/student-navbar";
 import StudentAssignmentCard from "../components/student-components/student-course-assignment-card";
+import StudentReviewCard from "../components/student-components/student-peer-review-card";
 
 interface CourseData {
   courseID: string;
@@ -19,6 +20,16 @@ interface Assignment {
   groupAssignment: boolean;
 }
 
+interface PeerReview {
+  linkedAssignmentID: number;
+  reviewID: number;
+  assignmentID: number;
+  title: string;
+  deadline: string;
+  courseID: number;
+  courseName: string;
+}
+
 export default function Page() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
@@ -29,11 +40,19 @@ export default function Page() {
 
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
-
+  const [peerReviews, setPeerReviews] = useState<PeerReview[]>([]);
+  const [peerReviewAssignments, setPeerReviewAssignments] = useState<Assignment[]>([]);
   useSessionValidation('student', setLoading, setSession);
 
   useEffect(() => {
+    if (session && session.user && session.user.userID) {
+      fetchAssignments(session.user.userID);
+      
+    }
     if (courseId) {
+
+      fetchPeerReviews(courseId);
+
       fetch(`/api/courses/${courseId}`)
         .then((response) => response.json())
         .then((data: CourseData) => {
@@ -70,12 +89,30 @@ export default function Page() {
       const response = await fetch(`/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`);
       if (response.ok) {
         const data = await response.json();
-        setAssignments(data.courses);
+        setAssignments(data.courses); // Make sure this is the correct property
       } else {
         console.error('Failed to fetch courses');
       }
     } catch (error) {
       console.error('Error fetching courses:', error);
+    }
+  };
+
+  const fetchPeerReviews = async (courseID: string | string[]) => {
+    try {
+      const timestamp = new Date().getTime();
+      const response = await fetch(
+        `/api/reviews/getReviewsByCourseId?courseID=${courseId}&role=student&t=${timestamp}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Fetched peer review assignments:", data);
+        setPeerReviews(data.reviews || []);
+      } else {
+        console.error("Failed to fetch peer review assignments");
+      }
+    } catch (error) {
+      console.error("Error fetching peer review assignments:", error);
     }
   };
 
@@ -92,7 +129,7 @@ export default function Page() {
 
   const individualAssignments = assignments.filter(assignment => !assignment.groupAssignment && !assignment.title.toLowerCase().includes('peer review'));
   const groupAssignments = assignments.filter(assignment => assignment.groupAssignment);
-  const peerReviews = assignments.filter(assignment => assignment.title.toLowerCase().includes('peer review'));
+  const peerReviewCards = assignments.filter(assignment => assignment.title.toLowerCase().includes('peer review'));
 
   const shouldRenderAssignments = (type: string) => {
     return selectedAssignmentTypes.includes('all') || selectedAssignmentTypes.includes(type);
@@ -209,8 +246,8 @@ export default function Page() {
                 <Divider className="instructor bg-secondary" />
                 <br />
                 <div className={styles.courseCard}>
-                  {peerReviews.length > 0 ? (
-                    peerReviews.map((assignment) => (
+                  {peerReviewCards.length > 0 ? (
+                    peerReviewCards.map((assignment) => (
                       <div key={assignment.assignmentID} className={styles.courseCard}>
                         <StudentAssignmentCard
                           courseID={assignment.assignmentID}

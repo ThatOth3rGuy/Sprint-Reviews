@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from "../api/auth/checkSession";
 import StudentAssignmentView from "../components/student-components/student-assignment-details";
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import {  Button,  Breadcrumbs,  BreadcrumbItem,  Spinner,  Modal,  useDisclosure,  ModalContent,  ModalBody,  ModalFooter,  ModalHeader,} from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Spinner, Modal, useDisclosure, ModalContent, ModalBody, ModalFooter, ModalHeader } from "@nextui-org/react";
 import toast from "react-hot-toast";
 
 interface Assignment {
@@ -21,6 +21,18 @@ interface CourseData {
   courseName: string;
 }
 
+interface Feedback {
+  feedbackID: number;
+  submissionID: number;
+  reviewerID: number;
+  feedbackDetails: string;
+  feedbackDate: string;
+  lastUpdated: string;
+  comment: string;
+  grade: number | null;
+  feedbackType: 'peer' | 'instructor';
+}
+
 export default function AssignmentDashboard() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
@@ -33,19 +45,18 @@ export default function AssignmentDashboard() {
   const [fileError, setFileError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLateSubmission, setIsLateSubmission] = useState(false);
-  const [submittedFileName, setSubmittedFileName] = useState<string | null>(
-    null
-  );
-
+  const [submittedFileName, setSubmittedFileName] = useState<string | null>(null);
+  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+  
   useSessionValidation("student", setLoading, setSession);
-//useEffect for breadcrumbs
+
   useEffect(() => {
-    if (!router.isReady) return;
+    if (!router.isReady || !session) return;
 
     const { assignmentID } = router.query;
 
     const fetchData = async () => {
-      if (assignmentID) {
+      if (assignmentID && session?.user?.userID) {
         try {
           const assignmentResponse = await fetch(`/api/assignments/${assignmentID}`);
 
@@ -53,13 +64,19 @@ export default function AssignmentDashboard() {
             const assignmentData: Assignment = await assignmentResponse.json();
             setAssignment(assignmentData);
 
-            // Assuming the assignment data includes a courseID
             if (assignmentData.courseID) {
               const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
               if (courseResponse.ok) {
                 const courseData: CourseData = await courseResponse.json();
                 setCourseData(courseData);
               }
+            }
+
+            // Fetch feedbacks for this assignment and student
+            const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${session.user.userID}`);
+            if (feedbacksResponse.ok) {
+              const feedbacksData: Feedback[] = await feedbacksResponse.json();
+              setFeedbacks(feedbacksData);
             }
           } else {
             console.error('Error fetching assignment data');
@@ -75,22 +92,19 @@ export default function AssignmentDashboard() {
     };
 
     fetchData();
-  }, [router.isReady, router.query]);
+  }, [router.isReady, session, router.query]);
 
-
-  //useEffect for assignment information
+    //useEffect for assignment information
   useEffect(() => {
     if (assignmentID && session?.user?.userID) {
       fetch(`/api/assignments/${assignmentID}`)
         .then((response) => response.json())
         .then((data: Assignment) => {
-          console.log("Fetched assignment data:", data);
           setAssignment(data);
           return fetch(`/api/courses/${data.courseID}`);
         })
         .then((response) => response.json())
         .then((data: CourseData) => {
-          console.log("Fetched course data:", data);
           setCourseData(data);
           checkSubmissionStatus();
         })
@@ -100,28 +114,28 @@ export default function AssignmentDashboard() {
 
   const checkSubmissionStatus = async () => {
     if (assignmentID && session?.user?.userID) {
-        try {
-            const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`);
-            if (!response.ok) {
-                throw new Error('Failed to check submission status');
-            }
-            const data = await response.json();
-
-            if (data.isSubmitted) {
-                setIsSubmitted(true);
-                setSubmittedFileName(data.fileName);
-                setIsLateSubmission(data.isLate);
-            } else {
-                setIsSubmitted(false);
-                setIsLateSubmission(false);
-                setSubmittedFileName(null);
-            }
-        } catch (error) {
-            console.error('Error checking submission status:', error);
-            toast.error('Error checking submission status. Please refresh the page.');
+      try {
+        const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`);
+        if (!response.ok) {
+          throw new Error('Failed to check submission status');
         }
+        const data = await response.json();
+
+        if (data.isSubmitted) {
+          setIsSubmitted(true);
+          setSubmittedFileName(data.fileName);
+          setIsLateSubmission(data.isLate);
+        } else {
+          setIsSubmitted(false);
+          setIsLateSubmission(false);
+          setSubmittedFileName(null);
+        }
+      } catch (error) {
+        console.error('Error checking submission status:', error);
+        toast.error('Error checking submission status. Please refresh the page.');
+      }
     }
-};
+  };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -142,51 +156,47 @@ export default function AssignmentDashboard() {
 
   const handleSubmit = async () => {
     if (uploadedFile && isFileTypeAllowed(uploadedFile) && session?.user?.userID) {
-        const formData = new FormData();
-        formData.append('file', uploadedFile);
-        formData.append('assignmentID', assignment?.assignmentID?.toString() ?? '');
-        formData.append('studentID', session.user.userID.toString());
+      const formData = new FormData();
+      formData.append('file', uploadedFile);
+      formData.append('assignmentID', assignment?.assignmentID?.toString() ?? '');
+      formData.append('studentID', session.user.userID.toString());
 
-        try {
-            console.log('Submitting assignment...');
-            const response = await fetch('/api/assignments/submitAssignment', {
-                method: 'POST',
-                body: formData,
-            });
-
-            console.log('Response status:', response.status);
-            const result = await response.json();
-            console.log('Response body:', result);
-
-            if (response.ok) {
-                if (result.success) {
-                    console.log('File uploaded successfully');
-                    toast.success('Assignment submitted successfully!');
-                    onOpenChange();
-                    setIsSubmitted(true);
-                    setSubmittedFileName(uploadedFile.name);
-                    setIsLateSubmission(result.isLate);
-                    checkSubmissionStatus();
-                } else {
-                    throw new Error(result.message || 'File upload failed');
-                }
-            } else {
-                throw new Error('File upload failed');
-            }
-        } catch (error) {
-            console.error('Error uploading file:', error);
-            setFileError('Failed to upload file. Please try again.');
-            toast.error('Failed to upload file. Please try again.');
-        }
-    } else {
-        console.error('Invalid submission attempt:', { 
-            uploadedFile: !!uploadedFile, 
-            isFileTypeAllowed: isFileTypeAllowed(uploadedFile), 
-            userID: session?.user?.userID 
+      try {
+        const response = await fetch('/api/assignments/submitAssignment', {
+          method: 'POST',
+          body: formData,
         });
-        toast.error('Invalid submission. Please check your file and try again.');
+
+        const result = await response.json();
+
+        if (response.ok) {
+          if (result.success) {
+            toast.success('Assignment submitted successfully!');
+            onOpenChange();
+            setIsSubmitted(true);
+            setSubmittedFileName(uploadedFile.name);
+            setIsLateSubmission(result.isLate);
+            checkSubmissionStatus();
+          } else {
+            throw new Error(result.message || 'File upload failed');
+          }
+        } else {
+          throw new Error('File upload failed');
+        }
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        setFileError('Failed to upload file. Please try again.');
+        toast.error('Failed to upload file. Please try again.');
+      }
+    } else {
+      console.error('Invalid submission attempt:', { 
+        uploadedFile: !!uploadedFile, 
+        isFileTypeAllowed: isFileTypeAllowed(uploadedFile), 
+        userID: session?.user?.userID 
+    });
+      toast.error('Invalid submission. Please check your file and try again.');
     }
-};
+  };
 
   if (!assignment || loading) {
     return (
@@ -198,7 +208,9 @@ export default function AssignmentDashboard() {
 
 
 
+
   const handleBackClick = () => router.push(`/student/course-dashboard?courseId=${courseData?.courseID}`);
+
   const handleHomeClick = () => router.push("/student/dashboard");
 
   return (
@@ -278,6 +290,22 @@ export default function AssignmentDashboard() {
               )}
             </ModalContent>
           </Modal>
+          <div className={styles.feedbackSection}>
+            <h2>Feedback</h2>
+            {feedbacks.length > 0 ? (
+              feedbacks.map((feedback, index) => (
+                <div key={feedback.feedbackID} className={styles.assignmentsSection}>
+                  <p><strong>Feedback {index + 1}:</strong></p>
+                  <p><strong>Details:</strong> {feedback.feedbackDetails}</p>
+                  <p><strong>Comment:</strong> {feedback.comment}</p>
+                  <p><strong>Date:</strong> {new Date(feedback.feedbackDate).toLocaleString()}</p>
+                  <p><strong>Grade:</strong> 0</p> {/* Placeholder grade */}
+                </div>
+              ))
+            ) : (
+              <p>No feedback available yet.</p>
+            )}
+          </div>
         </div>
       </div>
     </>

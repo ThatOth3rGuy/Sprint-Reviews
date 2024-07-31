@@ -1,5 +1,6 @@
 // instructor-dashboard.test.ts
 import { test, expect } from '@playwright/test';
+import { time } from 'console';
 
 const baseURL = 'http://localhost:3001';
 
@@ -68,12 +69,14 @@ test.describe('Instructor Dashboard Page', () => {
     const createAssignmentLink = page.locator('text=Create Assignment');
     const createPeerReviewLink = page.locator('text=Create Peer Review');
     const createStudentGroupsLink = page.locator('text=Create Student Groups');
+    const editCourseName = page.locator('text=Edit Course Name');
     const manageStudentsLink = page.locator('text=Manage Students');
     const archiveCourseLink = page.locator('text=Archive Course');
 
     await expect(createAssignmentLink).toBeVisible();
     await expect(createPeerReviewLink).toBeVisible();
     await expect(createStudentGroupsLink).toBeVisible();
+    await expect(editCourseName).toBeVisible();
     await expect(manageStudentsLink).toBeVisible();
     await expect(archiveCourseLink).toBeVisible();
   });
@@ -115,5 +118,32 @@ test.describe('Instructor Dashboard Page', () => {
 
     // Ensure only one navbar is present
     expect(instructorNavbar + adminNavbar).toBe(1);
+  });
+
+  test('should update course name', async ({ page }) => {
+    // Open the Edit Course Name modal
+    await page.click('text=Edit Course Name');
+  
+    // Input a new course name
+    const newCourseName = 'New Course Name';
+    await page.fill('input[aria-label="Enter New Course Name"]', newCourseName);
+  
+    // Submit the form
+    await page.click('button:has-text("Update")');
+  
+    // Wait for the modal to close
+    await page.waitForSelector('.modal-content', { state: 'hidden' });
+  
+    // Verify that the course name has been updated
+    await page.waitForTimeout(250);
+    const courseName = await page.locator('h1').innerText();
+    expect(courseName).toBe(newCourseName);
+
+    // Change the course name back to the original value to keep the test data consistent
+    await page.click('text=Edit Course Name');
+    const oldCourseName = 'COSC 499';
+    await page.fill('input[aria-label="Enter New Course Name"]', oldCourseName);
+    await page.click('button:has-text("Update")');
+    await page.waitForTimeout(250); // Additional timeout to make sure the update registers
   });
 });

@@ -29,7 +29,7 @@ async function getCourses4Student(userID: number) {
     JOIN instructor i ON c.instructorID = i.instructorID
     JOIN user u ON i.userID = u.userID
     JOIN student s ON e.studentID = s.studentID
-    WHERE s.userID = ?
+    WHERE s.userID = ? AND c.isArchived = 0
     ORDER BY c.courseID
   `;
   try {

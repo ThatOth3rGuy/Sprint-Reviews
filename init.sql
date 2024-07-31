@@ -95,11 +95,14 @@ CREATE TABLE IF NOT EXISTS review_criteria (
 -- Table for storing feedback information between students and assignments
 CREATE TABLE IF NOT EXISTS feedback (
     feedbackID INT AUTO_INCREMENT PRIMARY KEY,
+    submissionID INT NOT NULL,
     assignmentID INT NOT NULL,
-    content TEXT,
-    reviewerID INT,
-    FOREIGN KEY (assignmentID) REFERENCES submission(submissionID) ON DELETE CASCADE,
-    FOREIGN KEY (reviewerID) REFERENCES student(studentID) ON DELETE SET NULL
+    feedbackDetails TEXT,
+    feedbackDate DATETIME,
+    lastUpdated DATETIME,
+    comment TEXT NOT NULL,
+    FOREIGN KEY (submissionID) REFERENCES submission(submissionID) ON DELETE CASCADE,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
 
 -- Table for storing feedback information between students for group assignments
@@ -141,10 +144,13 @@ CREATE TABLE IF NOT EXISTS review (
     isGroupAssignment BOOLEAN,
     allowedFileTypes VARCHAR(255),
     deadline DATETIME,
+    anonymous BOOLEAN,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
 
+
 -- Table for storing connected submissions for students to peer review --
+
 CREATE TABLE IF NOT EXISTS review_groups  (
     studentID INT,
     assignmentID INT,
@@ -157,6 +163,8 @@ CREATE TABLE IF NOT EXISTS review_groups  (
     FOREIGN KEY (courseID) REFERENCES course(courseID),
     FOREIGN KEY (submissionID) REFERENCES submission(submissionID)
 );
+
+
 -- Table for storing course specific groups --
 CREATE TABLE IF NOT EXISTS course_groups (
     groupID INT,
@@ -166,6 +174,7 @@ CREATE TABLE IF NOT EXISTS course_groups (
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID)
 );
+
 -- Insert a sample user (student) into the user table
 INSERT INTO user (firstName, lastName, email, pwd, userRole)
 VALUES ('John', 'Doe', 'john.doe@example.com', 'password123', 'student');
@@ -222,8 +231,7 @@ INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType
 VALUES (@assignmentID, 123456, 'final_project.pdf', NULL, 'pdf', NOW());
 
 -- Insert a sample feedback
-INSERT INTO feedback (assignmentID, content, reviewerID)
-VALUES (@assignmentID, 'Great job on the project!', 123456);
+
 
 -- Insert a sample review criteria
 INSERT INTO review_criteria (assignmentID, criterion, maxMarks)
