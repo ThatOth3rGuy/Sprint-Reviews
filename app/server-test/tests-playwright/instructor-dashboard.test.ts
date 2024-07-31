@@ -144,5 +144,6 @@ test.describe('Instructor Dashboard Page', () => {
     const oldCourseName = 'COSC 499';
     await page.fill('input[aria-label="Enter New Course Name"]', oldCourseName);
     await page.click('button:has-text("Update")');
+    await page.waitForTimeout(250); // Additional timeout to make sure the update registers
   });
 });

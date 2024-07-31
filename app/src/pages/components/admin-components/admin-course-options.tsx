@@ -75,12 +75,18 @@ const AdminCourseOptions: NextPage<AdminCourseOptionsType> = ({ courseName = "",
 
   const onEditCourseNameClick = useCallback(async () => {
     try {
-      const response = await fetch('/api/courses/updateCourseName', {
+      const response = await fetch(`/api/updateTable`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ courseID, newCourseName }),
+        body: JSON.stringify({
+          table: 'course',
+          data: {
+            courseID: courseID,
+            courseName: newCourseName
+          }
+        })
       });
 
       if (!response.ok) {
