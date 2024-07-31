@@ -11,6 +11,9 @@
 5. Addition of functions to handle  all table updates for the updating tables(course, assignment etc.)
 6. Instructor ability to edit course details
 7. Instructors ability to add and remove students
+8. Email Confirmation upon signup
+9. Forgot Password Functionality
+10. Email notification when assignment is created and when a student is added in a group
    
 
 
