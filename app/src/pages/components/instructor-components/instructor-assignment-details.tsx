@@ -6,19 +6,20 @@ interface AssignmentDetailCardProps {
   title: string;
   description: string;
   deadline: string;
-  submittedStudents: string[];
-  remainingStudents: string[];
+  isGroupAssignment: boolean;
+  submittedEntities: { name: string, fileName: string }[];
+  remainingEntities: string[];
 }
 
 const AssignmentDetailCard: React.FC<AssignmentDetailCardProps> = ({
   title,
   description,
   deadline,
-  submittedStudents,
-  remainingStudents
+  isGroupAssignment,
+  submittedEntities,
+  remainingEntities
 }) => {
   return (
-    
     <div className={styles.courseCards}>
       <Card className={styles.assignmentCard}>
         <CardBody>
@@ -29,21 +30,25 @@ const AssignmentDetailCard: React.FC<AssignmentDetailCardProps> = ({
       </Card>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <h3 className="text-lg font-semibold mb-2 text-black">Submitted Students</h3>
-          {submittedStudents.map((student, index) => (
+          <h3 className="text-lg font-semibold mb-2 text-black">
+            {isGroupAssignment ? "Submitted Groups" : "Submitted Students"}
+          </h3>
+          {submittedEntities.map((entity, index) => (
             <Card key={index} className={styles.studentsCard}>
               <CardBody>
-                <p>{student}</p>
+                <p>{entity.name}</p>
               </CardBody>
             </Card>
           ))}
         </div>
         <div>
-          <h3 className="text-lg font-semibold mb-2 text-black">Remaining Students</h3>
-          {remainingStudents.map((student, index) => (
+          <h3 className="text-lg font-semibold mb-2 text-black">
+            {isGroupAssignment ? "Remaining Groups" : "Remaining Students"}
+          </h3>
+          {remainingEntities.map((entity, index) => (
             <Card key={index} className={styles.studentsCard}>
               <CardBody>
-                <p>{student}</p>
+                <p>{entity}</p>
               </CardBody>
             </Card>
           ))}

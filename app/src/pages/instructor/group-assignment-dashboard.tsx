@@ -9,125 +9,131 @@ import styles from "../../styles/AssignmentDetailCard.module.css";
 import { Breadcrumbs, BreadcrumbItem, Spinner } from "@nextui-org/react";
 import type { NextPage } from "next";
 import toast from 'react-hot-toast';
+
 interface Assignment {
   assignmentID: number;
   title: string;
   descr: string;
   deadline: string;
   courseID: number;
-  submittedStudents: string[];
-  remainingStudents: string[];
+  groupAssignment: boolean;
 }
 
 interface CourseData {
   courseID: number;
   courseName: string;
 }
-interface AssignmentDashboardProps {
-  courseId: number;
+
+interface SubmittedEntity {
+  name: string;
+  fileName: string;
 }
 
-  const AssignmentDashboard: NextPage = () => {
-    const [loading, setLoading] = useState(true);
-    const [session, setSession] = useState<any>(null);
-    const [error, setError] = useState('');
-    const router = useRouter();
-    const [assignment, setAssignment] = useState<Assignment | null>(null);
-    const [courseData, setCourseData] = useState<CourseData | null>(null);
-    useSessionValidation('instructor', setLoading, setSession);
-  
-    useEffect(() => {
-      if (!router.isReady) return;
-  
-      const { assignmentID } = router.query;
-  
-      const fetchData = async () => {
-        if (assignmentID) {
-          try {
-            const assignmentResponse = await fetch(`/api/assignments/${assignmentID}`);
-  
-            if (assignmentResponse.ok) {
-              const assignmentData: Assignment = await assignmentResponse.json();
-              setAssignment(assignmentData);
-  
-              // Assuming the assignment data includes a courseID
-              if (assignmentData.courseID) {
-                const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
-                if (courseResponse.ok) {
-                  const courseData: CourseData = await courseResponse.json();
-                  console.log(courseData)
-                  setCourseData(courseData);
-                }
+const GroupAssignmentDashboard: NextPage = () => {
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<any>(null);
+  const [error, setError] = useState('');
+  const router = useRouter();
+  const [assignment, setAssignment] = useState<Assignment | null>(null);
+  const [courseData, setCourseData] = useState<CourseData | null>(null);
+  const [submittedEntities, setSubmittedEntities] = useState<SubmittedEntity[]>([]);
+  const [remainingEntities, setRemainingEntities] = useState<string[]>([]);
+  useSessionValidation('instructor', setLoading, setSession);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+
+    const { assignmentID } = router.query;
+
+    const fetchData = async () => {
+      if (assignmentID) {
+        try {
+          const assignmentResponse = await fetch(`/api/assignments/${assignmentID}`);
+          if (assignmentResponse.ok) {
+            const assignmentData: Assignment = await assignmentResponse.json();
+            setAssignment(assignmentData);
+
+            if (assignmentData.courseID) {
+              const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
+              if (courseResponse.ok) {
+                const courseData: CourseData = await courseResponse.json();
+                setCourseData(courseData);
               }
-            } else {
-              // Handle error response
-              const errorData = await assignmentResponse.json();
-              setError(errorData.message || 'Error fetching assignment data');
-              toast.error(errorData.message);
             }
-          } catch (error) {
-            // Handle network or other errors
-            setError('An error occurred. Please try again.');
-            toast.error("An error occurred. Please try again.")
-          } finally {
-            setLoading(false);
+
+            const entitiesResponse = await fetch(`/api/submissions/${assignmentID}/group-students`);
+            if (entitiesResponse.ok) {
+              const { submittedEntities, remainingEntities } = await entitiesResponse.json();
+              setSubmittedEntities(submittedEntities);
+              console.log("Fetched submitted groups: ", submittedEntities);
+              setRemainingEntities(remainingEntities);
+              console.log("Fetched remaining groups: ", remainingEntities);
+            }
+          } else {
+            const errorData = await assignmentResponse.json();
+            setError(errorData.message || 'Error fetching assignment data');
+            toast.error(errorData.message);
           }
-        } else {
+        } catch (error) {
+          setError('An error occurred. Please try again.');
+          toast.error("An error occurred. Please try again.")
+        } finally {
           setLoading(false);
         }
-      };
-  
-      fetchData();
-    }, [router.isReady, router.query]);
-  
-    if (loading || !assignment) {
-      return (
-        <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
-          <Spinner color='primary' size="lg" />
-        </div>
-      );
-    }
-  
-    if (!session || !session.user || !session.user.userID) {
-      console.error('No user found in session');
-      return null;
-    }
-  
-    const isAdmin = session.user.role === 'admin';
-  
-    const handleBackClick = () => router.push(`/instructor/course-dashboard?courseId=${courseData?.courseID}`);
-  
-    const handleHomeClick = () => {
-      router.push("/instructor/dashboard")
-    }
-  
+      } else {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [router.isReady, router.query]);
+
+  if (loading || !assignment) {
     return (
-      <>
-        {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
-        <div className={styles.container}>
-          <div className={styles.header}>
-            <h1>{assignment.title || "Assignment Name- Details"}</h1>
-            <br />
-            <Breadcrumbs>
-              <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-              <BreadcrumbItem onClick={handleBackClick}>
-                {courseData ? courseData.courseName : "Course Dashboard"}
-              </BreadcrumbItem>
-              <BreadcrumbItem>{assignment.title}</BreadcrumbItem>
-            </Breadcrumbs>
-          </div>
-          <div className={styles.assignmentsSection}>
-            <AssignmentDetailCard
-              title={assignment.title}
-              description={assignment.descr || "No description available"}
-              deadline={assignment.deadline || "No deadline set"}
-              submittedStudents={assignment.submittedStudents || []}
-              remainingStudents={assignment.remainingStudents || []}
-            />
-          </div>
-        </div>
-      </>
+      <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
+        <Spinner color='primary' size="lg" />
+      </div>
     );
   }
-  
-  export default AssignmentDashboard;
+
+  if (!session || !session.user || !session.user.userID) {
+    console.error('No user found in session');
+    return null;
+  }
+
+  const isAdmin = session.user.role === 'admin';
+
+  const handleBackClick = () => router.push(`/instructor/course-dashboard?courseId=${courseData?.courseID}`);
+  const handleHomeClick = () => router.push("/instructor/dashboard");
+
+  return (
+    <>
+      {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h1>{assignment.title || "Assignment Name- Details"}</h1>
+          <br />
+          <Breadcrumbs>
+            <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleBackClick}>
+              {courseData ? courseData.courseName : "Course Dashboard"}
+            </BreadcrumbItem>
+            <BreadcrumbItem>{assignment.title}</BreadcrumbItem>
+          </Breadcrumbs>
+        </div>
+        <div className={styles.assignmentsSection}>
+          <AssignmentDetailCard
+            title={assignment.title}
+            description={assignment.descr || "No description available"}
+            deadline={assignment.deadline || "No deadline set"}
+            isGroupAssignment={assignment.groupAssignment}
+            submittedEntities={submittedEntities || []}
+            remainingEntities={remainingEntities || []}
+          />
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default GroupAssignmentDashboard;
