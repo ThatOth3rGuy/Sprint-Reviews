@@ -1,5 +1,25 @@
 # Weekly Personal Logs
 
+## Personal Log For Week 12
+
+### 07/31/2024
+
+Topics Covered:
+*email notifications and forgot password functionality
+
+My contributions since Friday's log:
+
+I spent some time doing bugfixes a lot of the functionality we wanted to merge after we got feedback from the first TestOrama event. I fixed the breadcrumbs functionality because it breke among all of the merging we did. I also added the functionality to submit a form on enter, specifically the login pages. I noticed a lot of people tried to press enter to sign in and got a little frustrated when it didn't work. I also fixed the assignments page to take only assignments from all courses that are unarchived. Before, it would take all assignments which would cause a lot of the functionality to break on the page. I also started working on the email notifications and forgot password functionality. I was able to set up email notifications once a user creates an account, and when an assignment is assigned to a student. I also added the frontend for the notification switches in the settings page for the student. I finished all of the requirements for the forgot password feature. Since we have no link that we can direct the user to, I made the form so it takes in an email and an ID. If the ID or the email is not found in the database, it throws an error. Otherwise, it will prompt the user to enter a new password. I added onFocus and onBlur functions to all of the password inputs on create account and forgot password pages. When the user enters a valid password and confirms the password, the will be redirected to their respective login pages.
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Email Notifications | 07/31/2024 | Two pages left that need notifications sent |
+| File viewer | 07/31/2024 | WIP |
+| Auto-release assignment | 07/31/2024 | WIP |
+| Assignment due date fixes | 08/01/2024 | WIP |
+
+![week 12 time tracking](img/week12.png)
+
 ## Personal Log For Week 11
 
 ### 07/24/2024
@@ -34,7 +54,7 @@ I spent some time working on the student view for peer reviews. I made some prog
 | ------- | ------- | ------- |
 | Peer Review Dashboard for student | 07/26/2024 | Mostly complete, just fixing bugs |
 | File viewer for assignments and peer reviews | 07/28/2024 | WIP |
-| Set up email api for account confirmation and email notifications | 07/28/2024 | WIP |
+| Set up email api for account confirmation and email notifications | 07/28/2024 | Complete |
 | Set up student submission for peer review assignments | 07/28/2024 | Have some code to handle it but functionality is not there |
 
 #### Cycle Review and Goals
