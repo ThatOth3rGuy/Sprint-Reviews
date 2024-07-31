@@ -8,9 +8,12 @@ import { test, expect } from '@playwright/test';
 
 const baseURL = 'http://localhost:3001';
 
+// Login information comes from the database
 async function login(page: any) {
   await page.goto(`${baseURL}/student/login`);
+  await page.waitForSelector('input[type="email"]', { state: 'visible' });
   await page.fill('input[type="email"]', 'jack.black@example.com');
+  await page.waitForSelector('input[type="password"]', { state: 'visible' });
   await page.fill('input[type="password"]', 'password123');
   await page.click('text=Sign In');
   await page.waitForNavigation();
@@ -108,7 +111,7 @@ test.describe('Student Group Details Component', () => {
         });
     });
     // Mock the API response for feedback update
-    await page.route('**/api/groups/updateGroupFeedback', route => {
+    await page.route('**/api/updateTable', route => {
       route.fulfill({
         status: 200,
         body: JSON.stringify({ message: 'Feedback updated successfully.' })
@@ -157,6 +160,6 @@ test.describe('Student Group Details Component', () => {
     await page.click('button:text("Re-Submit Feedback")');
 
     // Verify the success message
-    await expect(page.locator('div[role="status"]:has-text("Feedback updated successfully.")').nth(2)).toBeVisible();
+    await expect(page.locator('div[role="status"]:has-text("Feedback updated successfully.")').nth(1)).toBeVisible();
   });
 });

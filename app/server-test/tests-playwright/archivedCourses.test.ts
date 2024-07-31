@@ -8,7 +8,9 @@ const baseURL = 'http://localhost:3001';
 // Login information comes from database, this should be adjusted when we implement a test db
 async function login(page: any) {
   await page.goto(`${baseURL}/instructor/login`);
+  await page.waitForSelector('input[type="email"]', { state: 'visible' });
   await page.fill('input[type="email"]', 'admin@example.com');
+  await page.waitForSelector('input[type="password"]', { state: 'visible' });
   await page.fill('input[type="password"]', 'password123');
   await page.click('text=Sign In');
   await page.waitForNavigation();
