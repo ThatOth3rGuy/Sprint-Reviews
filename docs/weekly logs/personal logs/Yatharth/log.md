@@ -1,6 +1,86 @@
  # Weekly Logs 
 ------------------------------------
+# Week 11 Summary 
+## Friday (07/31/2024)
+### Timesheet Week 10 (07/24/2024- 07/26/2024)
+![image](https://github.com/user-attachments/assets/f0af57b3-cbf0-4555-9676-d77735584a2a)
 
+
+### Current Tasks (Complete by the end of the day)
+- Instructor release peer review
+- Instructor setting anonymous reviews
+- Student Review dashboard 
+- Students receive feedback 
+- Email Notifications for creating assignment
+- Fix the dashboard view 
+
+### Progress Update 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> Peer review Dashboard Students 
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr><tr>
+        <!-- Task/Issue # -->
+        <td> Peer review Dashboard Instructor 
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Randomizer Algorithm   
+        </td>
+        <!-- Status -->
+        <td> In re-structure
+        </td>
+    </tr>
+   
+  
+ <tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> Email Notifications   
+        </td>
+        <!-- Status -->
+        <td> Partial Done/In Progress
+        </td>
+    </tr> 
+<tr>
+        <!-- Task/Issue # -->
+        <td> Modifying Assignments    
+        </td>
+        <!-- Status -->
+        <td> Todo
+        </td>
+    </tr>
+     <tr>
+        <!-- Task/Issue # -->
+        <td> Modifying User Details    
+        </td>
+        <!-- Status -->
+        <td> Todo
+        </td>
+    </tr>
+    
+</table>
+
+### Weekly Goal Review :
+This week has been relatively slow, with the main focus being on refining the peer review dashboard to accurately display the appropriate groups for the randomizer. Only a few bits and pieces remain to be addressed.
+### Next Cycle Goals:  
+* Randomizer algorithm and functionality 
+* Adding update features to all pages
+* Group Peer reviews and manual group creation
 # Week 10 Summary 
 ## Friday (07/26/2024)
 ### Timesheet Week 10 (07/24/2024- 07/26/2024)
