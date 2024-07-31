@@ -23,6 +23,7 @@ import {
   Input,
 } from "@nextui-org/react";
 import InstructorReviewCard from "../components/instructor-components/instructor-PR-card";
+import { enrollStudent } from "@/db";
 
 interface CourseData {
   courseID: string;
