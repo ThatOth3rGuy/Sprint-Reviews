@@ -1,7 +1,7 @@
-// pages/api/getStudentsInCourse.ts
+// pages/api/getCourseGroups.ts
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getStudentsInCourse } from '../../../db';
+import { getCourseGroups } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -10,12 +10,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log('Fetching students in course:', courseID);
 
     try {
-      const students = await getStudentsInCourse(Number(courseID));
-
-      console.log('API response:', students);
-
-
-      res.status(200).json(students);
+      const groups = await getCourseGroups(Number(courseID));
+      res.status(200).json(groups);
     } catch (error) {
       const err = error as Error;
       console.error('Failed to fetch students:', err.message);

@@ -7,6 +7,7 @@ import AssignmentDetailCard from '../components/instructor-components/instructor
 import styles from "../../styles/AssignmentDetailCard.module.css";
 import { Breadcrumbs, BreadcrumbItem, Spinner } from "@nextui-org/react";
 import type { NextPage } from "next";
+import toast from 'react-hot-toast';
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -18,16 +19,17 @@ interface Assignment {
 }
 
 interface CourseData {
-  courseID: string;
+  courseID: number;
   courseName: string;
 }
 interface AssignmentDashboardProps {
-  courseId: string;
+  courseId: number;
 }
 
   const AssignmentDashboard: NextPage = () => {
     const [loading, setLoading] = useState(true);
     const [session, setSession] = useState<any>(null);
+    const [error, setError] = useState('');
     const router = useRouter();
     const [assignment, setAssignment] = useState<Assignment | null>(null);
     const [courseData, setCourseData] = useState<CourseData | null>(null);
@@ -52,14 +54,20 @@ interface AssignmentDashboardProps {
                 const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
                 if (courseResponse.ok) {
                   const courseData: CourseData = await courseResponse.json();
+                  console.log(courseData)
                   setCourseData(courseData);
                 }
               }
             } else {
-              console.error('Error fetching assignment data');
+              // Handle error response
+              const errorData = await assignmentResponse.json();
+              setError(errorData.message || 'Error fetching assignment data');
+              toast.error(errorData.message);
             }
           } catch (error) {
-            console.error('Error:', error);
+            // Handle network or other errors
+            setError('An error occurred. Please try again.');
+            toast.error("An error occurred. Please try again.")
           } finally {
             setLoading(false);
           }
@@ -86,9 +94,7 @@ interface AssignmentDashboardProps {
   
     const isAdmin = session.user.role === 'admin';
   
-    const handleBackClick = () => {
-      router.back();
-    }
+    const handleBackClick = () => router.push(`/instructor/course-dashboard?courseId=${courseData?.courseID}`);
   
     const handleHomeClick = () => {
       router.push("/instructor/dashboard")

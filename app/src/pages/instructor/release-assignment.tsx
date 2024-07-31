@@ -56,6 +56,7 @@ const ReleaseAssignment: React.FC = () => {
   const [session, setSession] = useState<any>(null);
   const dummyassignments = ['Assignment 1', 'Assignment 2', 'Assignment 3'];
   const [studentSubmissions, setStudentSubmissions] = useState<{ studentID: number; submissionID: number; }[]>([]);
+
   const [course, setCourse] = useState<string>("");
   const [reviewsPerAssignment, setReviewsPerAssignment] = useState<number>(4);
   const [anonymous, setAnonymous] = useState(false);
@@ -65,6 +66,8 @@ const ReleaseAssignment: React.FC = () => {
   //   { criterion: 'Criterion 2', maxMarks: 20 },
   //   { criterion: 'Criterion 3', maxMarks: 30 },
   // ];
+
+
 
   // Dummy questions
   const questions = ['Was the work clear and easy to understand?', 'Was the content relevant and meaningful?', 'Was the work well-organized and logically structured?', 'Did the author provide sufficient evidence or examples to support their arguments or points?', 'Improvements: What suggestions do you have for improving the work?'];
@@ -109,6 +112,24 @@ const ReleaseAssignment: React.FC = () => {
       console.error('Error fetching course name:', error);
     }
   };
+
+
+  // Fetch assignments and students in the course when the component mounts
+  useEffect(() => {
+    if (session && session.user) {
+      fetchAssignments(session.user.userID);
+      fetchStudents(session.user.courseID);
+    }
+  }, [session]);
+
+  // Debug selectedAssignment state changes
+  useEffect(() => {
+    if (selectedAssignment !== "") {
+      fetchStudentSubmissions(Number(selectedAssignment));
+    }
+  }, [selectedAssignment]);
+
+
   // Function to fetch assignments
  
   const fetchAssignments = async (userID: string) => {
@@ -261,6 +282,7 @@ const ReleaseAssignment: React.FC = () => {
       }
 
       //const reviewGroups = randomizePeerReviewGroups(studentSubmissions, 4); // 4 reviews per assignment
+
       // Second API call to release randomized peer reviews
       const responseReleasePeerReviews = await fetch("/api/addNew/releaseRandomizedPeerReview", {
         method: "POST",
@@ -272,6 +294,7 @@ const ReleaseAssignment: React.FC = () => {
         }),
       });
 
+
       if (!responseReleasePeerReviews.ok) {
         throw new Error("Failed to release randomized peer reviews");
       }
@@ -279,6 +302,8 @@ const ReleaseAssignment: React.FC = () => {
       // If both requests are successful
       toast.success("Assignment created successfully!")
       router.push(`/instructor/course-dashboard?courseId=${courseId}`);
+
+
     } catch (error) {
       console.error("Error releasing assignment or peer reviews for review:", error);
     }
@@ -301,10 +326,16 @@ const ReleaseAssignment: React.FC = () => {
       <Spinner color='primary' size="lg" />
     </div>;
   }
-
+  
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");
   }
+  
+  function handleAssignmentClick(): void {
+    router.push("/instructor/assignments");
+  }
+
+
   const handleBackClick = () => { //redirect to course dashboard or all assignments
     const { source } = router.query;
     if (source === 'course') {
@@ -328,7 +359,7 @@ const ReleaseAssignment: React.FC = () => {
           </Breadcrumbs>
         </div>
         <div className={styles.mainContent}>
-          <div className={styles.rectangle}>
+          <div className="flex-col w-[85%] bg-white p-[1.5%] pt-[1%] shadow-sm overflow-auto m-auto mr-[1%] text-left ">
             <h2>Release Assignment for Peer Review</h2>
             <br />
             <form onSubmit={handleSubmit}>
@@ -490,6 +521,7 @@ const ReleaseAssignment: React.FC = () => {
                     </>
                   )}
                 </ModalContent>
+
               </Modal>
               <br />
             </form>

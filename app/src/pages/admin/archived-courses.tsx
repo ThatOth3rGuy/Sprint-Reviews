@@ -142,10 +142,9 @@ export default function Page() {
           <div className={styles.notificationsSection}>
             <div className={styles.actionButtons}>
               <Listbox aria-label="Actions" onAction={handleAction} color='primary' variant='flat'>
-              <ListboxItem key="admin" className='text-primary-900 border-1 border-primary bg-primary-50'>Admin Portal</ListboxItem>
+                <ListboxItem key="admin" className='text-primary-900 border-1 border-primary bg-primary-50'>Admin Portal</ListboxItem>
                 <ListboxItem key="join">Join Requests</ListboxItem>
                 <ListboxItem key="view">View Users</ListboxItem>
-                
               </Listbox>
             </div>
             <hr />

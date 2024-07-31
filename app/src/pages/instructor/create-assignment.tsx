@@ -230,7 +230,7 @@ const Assignments: NextPage = () => {
       {isAdmin ? <AdminNavbar/> : <InstructorNavbar />}
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
-          <h1>Create Assignment for {courseData ? courseData.courseName : ''}</h1>
+          <h1>Create Assignment for {router.query.source === 'course' ? courseName : 'Course'}</h1>
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>

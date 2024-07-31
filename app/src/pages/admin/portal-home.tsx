@@ -55,7 +55,7 @@ export default function Page() {
 
   if (loading) {
     return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
-    <Spinner color='primary' size="lg" />
+    <Spinner className="Spinner" color='primary' size="lg" />
 </div>;
   }
 
@@ -63,12 +63,6 @@ export default function Page() {
     return <p>Error: {error}</p>;
   }
 
-  const handleCourseClick = (courseID: number) => {
-    router.push({
-      pathname: '/instructor/course-dashboard',
-      query: { courseID },
-    });
-  };
   const handleViewUsersClick = () => {
     router.push('/admin/view-users');
   };
@@ -131,7 +125,7 @@ export default function Page() {
           <div className={styles.notificationsSection}>
             <div className={styles.actionButtons}>
               <Listbox aria-label="Actions" onAction={handleAction}>
-              <ListboxItem key="archives">Archived Courses</ListboxItem>
+                <ListboxItem key="archives">Archived Courses</ListboxItem>
                 <ListboxItem key="role">Role Requests</ListboxItem>
                 <ListboxItem key="view">View Users</ListboxItem>
               </Listbox>

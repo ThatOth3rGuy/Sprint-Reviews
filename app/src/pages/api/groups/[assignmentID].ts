@@ -1,3 +1,4 @@
+
 // pages/api/groups/[assignmentID].ts
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -14,10 +15,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const groups = await getReviewGroups(sub.studentID, Number(assignmentID), undefined, undefined);
       if (groups.length > 0) {
         allGroups.push(groups);
+
+
+
       }
     }
 
     if (allGroups.length > 0) {
+
       // Flatten the array of groups into a single array for details fetching
       const flattenedGroups = allGroups.flat();
       const detailedGroups = await getGroupDetails(flattenedGroups);
@@ -32,6 +37,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       res.status(200).json({ groups: groupedDetails });
+
+
     } else {
       res.status(404).json({ error: 'No review groups found' });
     }
@@ -39,4 +46,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error('Error in API route:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
+
 }
+
