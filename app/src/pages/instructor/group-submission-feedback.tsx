@@ -34,6 +34,18 @@ interface Feedback {
   content: string;
 }
 
+interface Submission {
+  submissionID: number;
+  assignmentID: number;
+  studentID: number;
+  fileName: string;
+  submissionDate: string;
+  autoGrade: number;
+  grade: number;
+  isLate: boolean;
+  isSubmitted: boolean;
+}
+
 export default function AssignmentDashboard() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
@@ -45,9 +57,7 @@ export default function AssignmentDashboard() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isLateSubmission, setIsLateSubmission] = useState(false);
-  const [submittedFileName, setSubmittedFileName] = useState<string | null>(null);
+  const [submission, setSubmission] = useState<Submission | null>(null);
   const [groupDetails, setGroupDetails] = useState<GroupDetails | null>(null);
   const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false);
   const [feedback, setFeedback] = useState<Feedback[]>([]);
@@ -77,7 +87,6 @@ export default function AssignmentDashboard() {
               const groupResponse = await fetch(`/api/groups/getGroupDetails?courseID=${assignmentData.courseID}&userID=${studentID}`);
               if (groupResponse.ok) {
                 const groupData: GroupDetails = await groupResponse.json();
-                console.log('Group details:', groupData);
                 setGroupDetails(groupData);
               }
             }
@@ -105,17 +114,8 @@ export default function AssignmentDashboard() {
           if (!response.ok) {
             throw new Error('Failed to check submission status');
           }
-          const data = await response.json();
-
-          if (data.isSubmitted) {
-            setIsSubmitted(true);
-            setSubmittedFileName(data.fileName);
-            setIsLateSubmission(data.isLate);
-          } else {
-            setIsSubmitted(false);
-            setIsLateSubmission(false);
-            setSubmittedFileName(null);
-          }
+          const data: Submission = await response.json();
+          setSubmission(data);
         } catch (error) {
           console.error('Error checking submission status:', error);
           toast.error('Error checking submission status. Please refresh the page.');
@@ -147,7 +147,6 @@ export default function AssignmentDashboard() {
             throw new Error('Failed to fetch feedback');
           }
           const data = await response.json();
-          console.log('Feedback:', data);
           setFeedback(data);
         } catch (error) {
           console.error('Error fetching feedback:', error);
@@ -160,101 +159,6 @@ export default function AssignmentDashboard() {
     checkFeedbackStatus();
     fetchFeedback();
   }, [assignmentID, groupDetails]);
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setUploadedFile(event.target.files[0]);
-    }
-  };
-
-  const isFileTypeAllowed = (file: File | null) => {
-    if (!file || !assignment?.allowedFileTypes) return false;
-    const fileExtension = file.name.split(".").pop()?.toLowerCase();
-    const allowedFileTypes = assignment.allowedFileTypes.split(",");
-    return allowedFileTypes.some(
-      (type: string) =>
-        type.toLowerCase().trim() === `.${fileExtension}` ||
-        type.toLowerCase().trim() === fileExtension
-    );
-  };
-
-  const handleSubmit = async () => {
-    if (uploadedFile && isFileTypeAllowed(uploadedFile)) {
-      const formData = new FormData();
-      formData.append('file', uploadedFile);
-      formData.append('assignmentID', assignment?.assignmentID?.toString() ?? '');
-      formData.append('userID', studentID?.toString() ?? '');
-      formData.append('isGroupAssignment', String(assignment?.groupAssignment ?? false));
-      formData.append('groupID', groupDetails?.groupID?.toString() ?? '');
-      if (assignment?.groupAssignment) {
-        const studentList = groupDetails?.students?.map(student => student.studentID);
-        formData.append('students', JSON.stringify(studentList));
-      }
-
-      const checkSubmissionStatus = async () => {
-        if (assignmentID) {
-          try {
-            const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${studentID}`);
-            if (!response.ok) {
-              throw new Error('Failed to check submission status');
-            }
-            const data = await response.json();
-    
-            if (data.isSubmitted) {
-              setIsSubmitted(true);
-              setSubmittedFileName(data.fileName);
-              setIsLateSubmission(data.isLate);
-            } else {
-              setIsSubmitted(false);
-              setIsLateSubmission(false);
-              setSubmittedFileName(null);
-            }
-          } catch (error) {
-            console.error('Error checking submission status:', error);
-            toast.error('Error checking submission status. Please refresh the page.');
-          }
-        }
-      };
-
-      try {
-        console.log('Submitting assignment...', formData.get('file'), formData.get('assignmentID'), formData.get('userID'), formData.get('isGroupAssignment'), formData.get('groupID'));
-        const response = await fetch('/api/assignments/submitAssignment', {
-          method: 'POST',
-          body: formData,
-        });
-
-        const result = await response.json();
-        console.log('Submit result:', result);
-
-        if (response.ok) {
-          if (result.success) {
-            console.log('File uploaded successfully');
-            toast.success('Assignment submitted successfully!');
-            onOpenChange();
-            setIsSubmitted(true);
-            setSubmittedFileName(uploadedFile.name);
-            setIsLateSubmission(result.isLate);
-            checkSubmissionStatus();
-          } else {
-            throw new Error(result.message || 'File upload failed');
-          }
-        } else {
-          throw new Error('File upload failed');
-        }
-      } catch (error) {
-        console.error('Error uploading file:', error);
-        setFileError('Failed to upload file. Please try again.');
-        toast.error('Failed to upload file. Please try again.');
-      }
-    } else {
-      console.error('Invalid submission attempt:', {
-        uploadedFile: !!uploadedFile,
-        isFileTypeAllowed: isFileTypeAllowed(uploadedFile),
-        userID: studentID
-      });
-      toast.error('Invalid submission. Please check your file and try again.');
-    }
-  };
 
   if (!assignment || loading) {
     return (
@@ -292,14 +196,14 @@ export default function AssignmentDashboard() {
                 <p className={styles.assignmentDeadline}>Deadline: {assignment.deadline}</p>
                 </CardBody>
             </Card>
-          {isSubmitted ? (
+          {submission?.isSubmitted ? (
             <div>
-              <p className={isLateSubmission ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1" : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"}>
-                {isLateSubmission
+              <p className={submission.isLate ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1" : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"}>
+                {submission.isLate
                   ? "Assignment Submitted Late"
                   : "Assignment Submitted"}
               </p>
-              {submittedFileName && <p className="text-left text-small">Submitted file: {submittedFileName}</p>}
+              {submission.fileName && <p className="text-left text-small">Submitted file: {submission.fileName}</p>}
             </div>
           ) : (
             <p className="text-primary-900 text-large font-bold bg-danger-500 my-2 p-1">Assignment Not Submitted</p>
@@ -312,6 +216,9 @@ export default function AssignmentDashboard() {
               feedbacks={feedback}
             />
           )}
+            <p className="text-primary-900 text-large font-bold bg-primary-100 my-2 p-1">Average Grade: {submission?.grade ?? submission?.autoGrade}
+                <br /><Button className="text-primary-900 text-small font-bold bg-primary-200 my-2 p-0.5">Edit Grade</Button>
+            </p>
         </div>
       </div>
     </>

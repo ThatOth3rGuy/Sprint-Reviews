@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 }
 
-async function checkSubmission(assignmentID: number, userID: number): Promise<{ isSubmitted: boolean, submissionDate: string | null, submissionID: number | null, fileName: string | null, isLate: boolean }> {
+async function checkSubmission(assignmentID: number, userID: number): Promise<{ isSubmitted: boolean, submissionDate: string | null, submissionID: number | null, fileName: string | null, autoGrade: number | null, grade: number | null, isLate: boolean }> {
     const sql = `
         SELECT s.*, st.studentID, st.userID, a.deadline 
         FROM submission s 
@@ -37,10 +37,12 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{ 
                 submissionDate: submissionDate.toISOString(), 
                 submissionID: rows[0].submissionID, 
                 fileName: rows[0].fileName,
+                autoGrade: rows[0].autoGrade,
+                grade: rows[0].grade,
                 isLate
             };
         } else {
-            return { isSubmitted: false, submissionDate: null, submissionID: null, fileName: null, isLate: false };
+            return { isSubmitted: false, submissionDate: null, submissionID: null, fileName: null, autoGrade: null, grade: null, isLate: false };
         }
     } catch (error) {
         console.error('Error in checkSubmission:', error);
