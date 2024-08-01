@@ -35,6 +35,7 @@ interface Feedback {
 }
 
 interface Submission {
+  studentName: string;
   submissionID: number;
   assignmentID: number;
   studentID: number;
@@ -118,6 +119,7 @@ export default function AssignmentDashboard() {
           const data: Submission = await response.json();
           setSubmission(data);
           setNewGrade(data.grade ?? data.autoGrade);
+          console.log(data);
         } catch (error) {
           console.error('Error checking submission status:', error);
           toast.error('Error checking submission status. Please refresh the page.');
@@ -229,7 +231,7 @@ export default function AssignmentDashboard() {
         <div className={styles.assignmentsSection}>
             <Card className={styles.assignmentCard}>
                 <CardBody>
-                <h2 className={styles.assignmentTitle}>{assignment.title}</h2>
+                <h2 className={styles.assignmentTitle}>{assignment.title} - (Submitted by: {submission?.studentName})</h2>
                 <p className={styles.assignmentDescription}>{assignment.descr}</p>
                 <p className={styles.assignmentDeadline}>Deadline: {assignment.deadline}</p>
                 </CardBody>
@@ -250,6 +252,7 @@ export default function AssignmentDashboard() {
           {groupDetails && (
             <InstructorGroupDetails
               groupID={groupDetails.groupID}
+              studentName={submission?.studentName}
               students={groupDetails.students}
               feedbacks={feedback}
             />

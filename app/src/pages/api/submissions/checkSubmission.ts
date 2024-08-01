@@ -18,12 +18,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 }
 
-async function checkSubmission(assignmentID: number, userID: number): Promise<{ isSubmitted: boolean, submissionDate: string | null, submissionID: number | null, fileName: string | null, autoGrade: number | null, grade: number | null, isLate: boolean }> {
+async function checkSubmission(assignmentID: number, userID: number): Promise<{ studentName: string | null, isSubmitted: boolean, submissionDate: string | null, submissionID: number | null, fileName: string | null, autoGrade: number | null, grade: number | null, isLate: boolean }> {
     const sql = `
-        SELECT s.*, st.studentID, st.userID, a.deadline 
+        SELECT s.*, st.studentID, st.userID, a.deadline, CONCAT(u.firstName, ' ', u.lastName) AS name 
         FROM submission s 
         JOIN student st ON s.studentID = st.studentID 
         JOIN assignment a ON s.assignmentID = a.assignmentID
+        JOIN user u ON st.userID = u.userID
         WHERE s.assignmentID = ? AND st.userID = ?
     `;
     try {
@@ -33,6 +34,7 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{ 
             const deadlineDate = new Date(rows[0].deadline);
             const isLate = submissionDate > deadlineDate;
             return { 
+                studentName: rows[0].name,
                 isSubmitted: true, 
                 submissionDate: submissionDate.toISOString(), 
                 submissionID: rows[0].submissionID, 
@@ -42,7 +44,7 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{ 
                 isLate
             };
         } else {
-            return { isSubmitted: false, submissionDate: null, submissionID: null, fileName: null, autoGrade: null, grade: null, isLate: false };
+            return { studentName: null, isSubmitted: false, submissionDate: null, submissionID: null, fileName: null, autoGrade: null, grade: null, isLate: false };
         }
     } catch (error) {
         console.error('Error in checkSubmission:', error);

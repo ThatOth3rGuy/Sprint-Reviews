@@ -17,15 +17,17 @@ interface Feedback {
 
 interface StudentGroupDetailsProps {
   groupID: number;
+  studentName: string | undefined;
   students: Student[];
   feedbacks: Feedback[];
 }
 
-const InstructorGroupFeedback: React.FC<StudentGroupDetailsProps> = ({ groupID, students, feedbacks }) => {
+const InstructorGroupFeedback: React.FC<StudentGroupDetailsProps> = ({ groupID, studentName, students, feedbacks }) => {
   return (
     <Card>
       <CardBody>
         <h3>Group: {groupID}</h3>
+        <h3>{studentName}</h3>
         <br />
         <h3>Group Members:</h3>
         <ul className={styles.groupList}>
