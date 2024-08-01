@@ -1,3 +1,4 @@
+// instructor/group-submission-feedback.tsx
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import { useEffect, useState } from "react";
@@ -257,9 +258,9 @@ export default function AssignmentDashboard() {
             />
           )}
             <p className="text-primary-900 text-large font-bold bg-primary-100 my-2 p-1">
-                    {submission?.grade ? 'Adjusted Grade:' : 'Average Grade:'} {submission?.grade ?? submission?.autoGrade}
-                    <br />
-                    <Button className="text-primary-900 text-small font-bold bg-primary-200 my-2 p-0.5" onClick={handleEditGrade}>Edit Grade</Button>
+              {submission?.grade ? 'Adjusted Grade:' : 'Average Grade:'} {submission?.grade ?? submission?.autoGrade}
+              <br />
+              <Button className="text-primary-900 text-small font-bold bg-primary-200 my-2 p-0.5" onClick={handleEditGrade}>Edit Grade</Button>
             </p>
         </div>
       </div>
