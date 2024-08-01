@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from "../api/auth/checkSession";
 import AssignmentDetailCard from "../components/student-components/student-assignment-details";
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import { Button, Breadcrumbs, BreadcrumbItem, Spinner, Modal, useDisclosure, ModalContent, ModalBody, ModalFooter, ModalHeader } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Spinner, useDisclosure } from "@nextui-org/react";
 import toast from "react-hot-toast";
 
 interface Assignment {
@@ -34,6 +34,19 @@ interface Feedback {
   feedbackType: 'peer' | 'instructor';
 }
 
+interface Submission {
+  studentName: string;
+  submissionID: number;
+  assignmentID: number;
+  studentID: number;
+  fileName: string;
+  submissionDate: string;
+  autoGrade: number;
+  grade: number;
+  isLate: boolean;
+  isSubmitted: boolean;
+}
+
 export default function AssignmentDashboard() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
@@ -44,15 +57,15 @@ export default function AssignmentDashboard() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isLateSubmission, setIsLateSubmission] = useState(false);
-  const [submittedFileName, setSubmittedFileName] = useState<string | null>(null);
+  const [submission, setSubmission] = useState<Submission | null>(null);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   
   useSessionValidation("instructor", setLoading, setSession);
 
   useEffect(() => {
     if (!router.isReady || !studentID) return;
+
+    checkSubmissionStatus();
 
     const fetchData = async () => {
       if (assignmentID && studentID) {
@@ -102,80 +115,12 @@ export default function AssignmentDashboard() {
         }
         const data = await response.json();
 
-        if (data.isSubmitted) {
-          setIsSubmitted(true);
-          setSubmittedFileName(data.fileName);
-          setIsLateSubmission(data.isLate);
-        } else {
-          setIsSubmitted(false);
-          setIsLateSubmission(false);
-          setSubmittedFileName(null);
-        }
+        setSubmission(data);
+         
       } catch (error) {
         console.error('Error checking submission status:', error);
         toast.error('Error checking submission status. Please refresh the page.');
       }
-    }
-  };
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setUploadedFile(event.target.files[0]);
-    }
-  };
-
-  const isFileTypeAllowed = (file: File | null) => {
-    if (!file || !assignment?.allowedFileTypes) return false;
-    const fileExtension = file.name.split(".").pop()?.toLowerCase();
-    const allowedFileTypes = assignment.allowedFileTypes.split(",");
-    return allowedFileTypes.some(
-      (type: string) =>
-        type.toLowerCase().trim() === `.${fileExtension}` ||
-        type.toLowerCase().trim() === fileExtension
-    );
-  };
-
-  const handleSubmit = async () => {
-    if (uploadedFile && isFileTypeAllowed(uploadedFile) && studentID) {
-      const formData = new FormData();
-      formData.append('file', uploadedFile);
-      formData.append('assignmentID', assignment?.assignmentID?.toString() ?? '');
-      formData.append('studentID', studentID.toString());
-
-      try {
-        const response = await fetch('/api/assignments/submitAssignment', {
-          method: 'POST',
-          body: formData,
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-          if (result.success) {
-            toast.success('Assignment submitted successfully!');
-            onOpenChange();
-            setIsSubmitted(true);
-            setSubmittedFileName(uploadedFile.name);
-            setIsLateSubmission(result.isLate);
-            checkSubmissionStatus();
-          } else {
-            throw new Error(result.message || 'File upload failed');
-          }
-        } else {
-          throw new Error('File upload failed');
-        }
-      } catch (error) {
-        console.error('Error uploading file:', error);
-        setFileError('Failed to upload file. Please try again.');
-        toast.error('Failed to upload file. Please try again.');
-      }
-    } else {
-      console.error('Invalid submission attempt:', { 
-        uploadedFile: !!uploadedFile, 
-        isFileTypeAllowed: isFileTypeAllowed(uploadedFile), 
-        studentID 
-    });
-      toast.error('Invalid submission. Please check your file and try again.');
     }
   };
 
@@ -187,7 +132,8 @@ export default function AssignmentDashboard() {
     );
   }
 
-  const handleBackClick = () => router.push(`/instructor/course-dashboard?courseId=${courseData?.courseID}`);
+  const handleAssignmentClick = () => router.push(`/instructor/assignment-dashboard?assignmentID=${assignment.assignmentID}`);
+  const handleCourseClick = () => router.push(`/instructor/course-dashboard?courseId=${courseData?.courseID}`);
   const handleHomeClick = () => router.push("/instructor/dashboard");
 
   return (
@@ -199,9 +145,10 @@ export default function AssignmentDashboard() {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-            <BreadcrumbItem onClick={handleBackClick}>{courseData?.courseName}</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleCourseClick}>{courseData?.courseName}</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleAssignmentClick}>{assignment.title}</BreadcrumbItem>
             <BreadcrumbItem>
-              {assignment.title || "Assignment Name"}
+              {submission?.studentName || "Assignment Name"}
             </BreadcrumbItem>
           </Breadcrumbs>
         </div>
@@ -213,60 +160,18 @@ export default function AssignmentDashboard() {
                 allowedFileTypes={assignment.allowedFileTypes}
             />
           )}
-          {isSubmitted ? (
+          {submission && submission.isSubmitted ? (
             <div>
-              <p className={isLateSubmission ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1" : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"}>
-                {isLateSubmission
-                  ? "Assignment Submitted Late"
-                  : "Assignment Submitted"}
+              <p className={submission.isLate ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1" : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"}>
+                {submission.isLate
+                  ? `${submission?.studentName} - Assignment Submitted Late`
+                  : `${submission?.studentName} - Assignment Submitted`}
               </p>
-              {submittedFileName && <p className="text-left text-small">Submitted file: {submittedFileName}</p>}
+              {submission.fileName && <p className="text-left text-small">Submitted file: {submission.fileName}</p>}
             </div>
           ) : (
-            <Button onClick={onOpen}>Submit Assignment</Button>
+            <p className="text-primary-900 text-large font-bold bg-danger-500 my-2 p-1">{submission?.studentName} - Assignment Not Submitted</p>
           )}
-          <Modal
-            className="instructor"
-            isOpen={isOpen}
-            onOpenChange={onOpenChange}
-            isDismissable={false}
-            isKeyboardDismissDisabled={true}
-          >
-            <ModalContent>
-              {(onClose) => (
-                <>
-                  <ModalHeader className="flex flex-col gap-1">
-                    Submit Assignment
-                  </ModalHeader>
-                  <ModalBody>
-                    <input type="file" onChange={handleFileUpload} />
-                    {fileError && <p style={{ color: "red" }}>{fileError}</p>}
-                    {uploadedFile && (
-                      <div>
-                        <p>Selected file: {uploadedFile.name}</p>
-                      </div>
-                    )}
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button
-                      color="danger"
-                      variant="light"
-                      onPress={() => {
-                        setUploadedFile(null);
-                        setFileError(null);
-                        onClose();
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button color="primary" onPress={handleSubmit}>
-                      Submit
-                    </Button>
-                  </ModalFooter>
-                </>
-              )}
-            </ModalContent>
-          </Modal>
           <div className={styles.feedbackSection}>
             <h2>Feedback</h2>
             {feedbacks.length > 0 ? (
