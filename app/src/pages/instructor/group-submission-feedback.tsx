@@ -1,12 +1,10 @@
-// instructor/group-submission-feedback.tsx
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from "../api/auth/checkSession";
-import AssignmentDetailCard from "../components/instructor-components/instructor-assignment-details";
-import InstructorGroupDetails from "../components/student-components/student-group-details";
+import InstructorGroupDetails from "../components/instructor-components/instructor-group-feedback";
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import { Button, Breadcrumbs, BreadcrumbItem, Spinner, Modal, useDisclosure, ModalContent, ModalBody, ModalFooter, ModalHeader } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Spinner, useDisclosure, Card, CardBody } from "@nextui-org/react";
 import toast from "react-hot-toast";
 
 interface Assignment {
@@ -29,6 +27,13 @@ interface GroupDetails {
   students: { studentID: number; firstName: string; lastName: string }[];
 }
 
+interface Feedback {
+  revieweeID: number;
+  reviewerID: number;
+  score: string;
+  content: string;
+}
+
 export default function AssignmentDashboard() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
@@ -45,6 +50,7 @@ export default function AssignmentDashboard() {
   const [submittedFileName, setSubmittedFileName] = useState<string | null>(null);
   const [groupDetails, setGroupDetails] = useState<GroupDetails | null>(null);
   const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false);
+  const [feedback, setFeedback] = useState<Feedback[]>([]);
 
   useSessionValidation('instructor', setLoading, setSession);
 
@@ -133,9 +139,26 @@ export default function AssignmentDashboard() {
       }
     };
 
+    const fetchFeedback = async () => {
+      if (assignmentID && groupDetails) {
+        try {
+          const response = await fetch(`/api/groups/getSubmittedFeedback?assignmentID=${assignmentID}&groupID=${groupDetails.groupID}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch feedback');
+          }
+          const data = await response.json();
+          setFeedback(data);
+        } catch (error) {
+          console.error('Error fetching feedback:', error);
+          toast.error('Error fetching feedback. Please refresh the page.');
+        }
+      }
+    };
+
     checkSubmissionStatus();
     checkFeedbackStatus();
-  }, [assignmentID]);
+    fetchFeedback();
+  }, [assignmentID, groupDetails]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -240,7 +263,8 @@ export default function AssignmentDashboard() {
     );
   }
 
-  const handleBackClick = () => router.push(`/instructor/course-dashboard?courseId=${courseData?.courseID}`);
+  const handleAssignmentClick = () => router.push(`/instructor/group-assignment-dashboard?assignmentID=${assignment.assignmentID}`);
+  const handleCourseClick = () => router.push(`/instructor/course-dashboard?courseId=${courseData?.courseID}`);
   const handleHomeClick = () => router.push("/instructor/dashboard");
 
   return (
@@ -252,23 +276,21 @@ export default function AssignmentDashboard() {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-            <BreadcrumbItem onClick={handleBackClick}>{courseData?.courseName}</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleCourseClick}>{courseData?.courseName}</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleAssignmentClick}>{assignment.title}</BreadcrumbItem>
             <BreadcrumbItem>
-              {assignment.title || "Assignment Name"}
+              {`Group ${groupDetails?.groupID}` || "Group Submission Feedback"}
             </BreadcrumbItem>
           </Breadcrumbs>
         </div>
         <div className={styles.assignmentsSection}>
-          {assignment && (
-            <AssignmentDetailCard
-                title={assignment.title}
-                description={assignment.descr || "No description available"}
-                deadline={assignment.deadline || "No deadline set"}
-                isGroupAssignment={assignment.groupAssignment}
-                submittedEntities={[]}
-                remainingEntities={[]} assignmentID={0}            
-            />
-          )}
+            <Card className={styles.assignmentCard}>
+                <CardBody>
+                <h2 className={styles.assignmentTitle}>{assignment.title}</h2>
+                <p className={styles.assignmentDescription}>{assignment.descr}</p>
+                <p className={styles.assignmentDeadline}>Deadline: {assignment.deadline}</p>
+                </CardBody>
+            </Card>
           {isSubmitted ? (
             <div>
               <p className={isLateSubmission ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1" : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"}>
@@ -279,60 +301,16 @@ export default function AssignmentDashboard() {
               {submittedFileName && <p className="text-left text-small">Submitted file: {submittedFileName}</p>}
             </div>
           ) : (
-            <Button onClick={onOpen}>Submit Assignment</Button>
+            <p className="text-primary-900 text-large font-bold bg-danger-500 my-2 p-1">Assignment Not Submitted</p>
           )}
           <br /><br />
           {groupDetails && (
             <InstructorGroupDetails
               groupID={groupDetails.groupID}
               students={groupDetails.students}
-              assignmentID={assignment.assignmentID}
-              userID={studentID}
-              isFeedbackSubmitted={isFeedbackSubmitted}
+              feedbacks={feedback}
             />
           )}
-          <Modal
-            className="instructor"
-            isOpen={isOpen}
-            onOpenChange={onOpenChange}
-            isDismissable={false}
-            isKeyboardDismissDisabled={true}
-          >
-            <ModalContent>
-              {(onClose) => (
-                <>
-                  <ModalHeader className="flex flex-col gap-1">
-                    Submit Assignment
-                  </ModalHeader>
-                  <ModalBody>
-                    <input type="file" onChange={handleFileUpload} />
-                    {fileError && <p style={{ color: "red" }}>{fileError}</p>}
-                    {uploadedFile && (
-                      <div>
-                        <p>Selected file: {uploadedFile.name}</p>
-                      </div>
-                    )}
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button
-                      color="danger"
-                      variant="light"
-                      onPress={() => {
-                        setUploadedFile(null);
-                        setFileError(null);
-                        onClose();
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button color="primary" onPress={handleSubmit}>
-                      Submit
-                    </Button>
-                  </ModalFooter>
-                </>
-              )}
-            </ModalContent>
-          </Modal>
         </div>
       </div>
     </>

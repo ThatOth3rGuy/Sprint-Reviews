@@ -20,7 +20,7 @@ const development: DBConfig = {
   password: process.env.DEV_DB_PASSWORD || 'SprintRunners',
   database: process.env.DEV_DB_NAME || 'mydb',
   waitForConnections: true,
-  connectionLimit: 10,
+  connectionLimit: 100,
   queueLimit: 0,
 };
 
@@ -31,7 +31,7 @@ const production: DBConfig = {
   password: process.env.PROD_DB_PASSWORD || 'SprintRunners',
   database: process.env.PROD_DB_NAME || 'mydb',
   waitForConnections: true,
-  connectionLimit: 10,
+  connectionLimit: 100,
   queueLimit: 0,
 };
 
@@ -42,7 +42,7 @@ const testing: DBConfig = {
     password: process.env.DEV_DB_PASSWORD || 'SprintRunnersTest',
     database: process.env.DEV_DB_NAME || 'testdb',
     waitForConnections: true,
-    connectionLimit: 10,
+    connectionLimit: 100,
     queueLimit: 0,
 };
 
@@ -53,7 +53,7 @@ const localhost: DBConfig = {
   password: process.env.DEV_DB_PASSWORD || 'SprintRunners',
   database: process.env.DEV_DB_NAME || 'mydb',
   waitForConnections: true,
-  connectionLimit: 10,
+  connectionLimit: 100,
   queueLimit: 0,
 };
 
