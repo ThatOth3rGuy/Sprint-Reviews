@@ -1,3 +1,5 @@
+// pages/student/assignment-dashboard.tsx
+
 import { useRouter } from "next/router";
 import StudentNavbar from "../components/student-components/student-navbar";
 import { useEffect, useState } from "react";
@@ -11,11 +13,11 @@ interface Assignment {
   assignmentID: number;
   title: string;
   descr: string;
-  startDate: string,
-  endDate: string,
+  startDate: string;
+  endDate: string;
   deadline: string;
   allowedFileTypes: string;
-  courseID: string; 
+  courseID: string;
 }
 
 interface CourseData {
@@ -51,6 +53,7 @@ export default function AssignmentDashboard() {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [submissionType, setSubmissionType] = useState<'file' | 'link'>('file');
   const [linkSubmission, setLinkSubmission] = useState('');
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   useSessionValidation("student", setLoading, setSession);
 
@@ -98,7 +101,6 @@ export default function AssignmentDashboard() {
     fetchData();
   }, [router.isReady, session, router.query]);
 
-    //useEffect for assignment information
   useEffect(() => {
     if (assignmentID && session?.user?.userID) {
       fetch(`/api/assignments/${assignmentID}`)
@@ -124,7 +126,7 @@ export default function AssignmentDashboard() {
           throw new Error('Failed to check submission status');
         }
         const data = await response.json();
-
+        
         if (data.isSubmitted) {
           setIsSubmitted(true);
           setSubmittedFileName(data.fileName);
@@ -157,7 +159,8 @@ export default function AssignmentDashboard() {
         type.toLowerCase().trim() === fileExtension
     );
   };
-const handleSubmissionTypeChange = (type: 'file' | 'link') => {
+
+  const handleSubmissionTypeChange = (type: 'file' | 'link') => {
     setSubmissionType(type);
     setUploadedFile(null);
     setLinkSubmission('');
@@ -175,16 +178,16 @@ const handleSubmissionTypeChange = (type: 'file' | 'link') => {
       const formData = new FormData();
       formData.append('file', uploadedFile);
       formData.append('assignmentID', assignment?.assignmentID?.toString() ?? '');
-      formData.append('studentID', session.user.userID.toString());
-
+      formData.append('userID', session.user.userID.toString());
+  
       try {
         const response = await fetch('/api/assignments/submitAssignment', {
           method: 'POST',
           body: formData,
         });
-
+  
         const result = await response.json();
-
+  
         if (response.ok) {
           if (result.success) {
             toast.success('Assignment submitted successfully!');
@@ -213,13 +216,13 @@ const handleSubmissionTypeChange = (type: 'file' | 'link') => {
           },
           body: JSON.stringify({
             assignmentID: assignment?.assignmentID,
-            studentID: session.user.userID,
+            userID: session.user.userID,
             link: linkSubmission,
           }),
         });
-
+  
         const result = await response.json();
-
+  
         if (response.ok && result.success) {
           toast.success('Link submitted successfully!');
           onOpenChange();
@@ -235,15 +238,16 @@ const handleSubmissionTypeChange = (type: 'file' | 'link') => {
         setFileError('Failed to submit link. Please try again.');
         toast.error('Failed to submit link. Please try again.');
       }
-    }else {
+    } else {
       console.error('Invalid submission attempt:', { 
         uploadedFile: !!uploadedFile, 
         isFileTypeAllowed: isFileTypeAllowed(uploadedFile), 
         userID: session?.user?.userID 
-    });
+      });
       toast.error('Invalid submission. Please check your file and try again.');
     }
   };
+  
 
   if (!assignment || loading) {
     return (
@@ -253,8 +257,13 @@ const handleSubmissionTypeChange = (type: 'file' | 'link') => {
     );
   }
 
-
-
+  const isWithinSubmissionPeriod = () => {
+    if (!assignment) return false;
+    const currentDate = new Date();
+    const startDate = new Date(assignment.startDate);
+    const endDate = new Date(assignment.endDate);
+    return currentDate >= startDate && currentDate <= endDate;
+  };
 
   const handleBackClick = () => router.push(`/student/course-dashboard?courseId=${courseData?.courseID}`);
 
@@ -278,23 +287,27 @@ const handleSubmissionTypeChange = (type: 'file' | 'link') => {
         <div className={styles.assignmentsSection}>
           {assignment && (
             <StudentAssignmentView
-              description={assignment.descr || "No description available"}
-              deadline={assignment.deadline || "No deadline set"}
-              allowedFileTypes={assignment.allowedFileTypes}
+            description={assignment.descr || "No description available"}
+            deadline={assignment.deadline || "No deadline set"}
+            allowedFileTypes={assignment.allowedFileTypes}
+            startDate={assignment.startDate}
+            endDate={assignment.endDate}
             />
           )}
           {isSubmitted ? (
-            <div>
-              <p className={isLateSubmission ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1" : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"}>
-                {isLateSubmission
-                  ? "Assignment Submitted Late"
-                  : "Assignment Submitted"}
-              </p>
-              {submittedFileName && <p className="text-left text-small">Submitted file: {submittedFileName}</p>}
-            </div>
-          ) : (
-            <Button onClick={onOpen}>Submit Assignment</Button>
-          )}
+      <div>
+        <p className={isLateSubmission ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1" : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"}>
+          {isLateSubmission
+            ? "Assignment Submitted Late"
+            : "Assignment Submitted"}
+        </p>
+        {submittedFileName && <p className="text-left text-small">Submitted file: {submittedFileName}</p>}
+      </div>
+    ) : (
+      isWithinSubmissionPeriod() && ( // Conditionally render the submit button
+        <Button onClick={onOpen}>Submit Assignment</Button>
+      )
+    )}
           <Modal
             className="student"
             isOpen={isOpen}
