@@ -1,6 +1,7 @@
 // pages/api/submissions/[assignmentID]/students.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import { query } from '../../../../db';
+import { user } from '@nextui-org/react';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { assignmentID } = req.query;
@@ -19,9 +20,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 }
 
-async function getSubmittedStudents(assignmentID: number): Promise<{ studentID: number, name: string; fileName: string }[]> {
+async function getSubmittedStudents(assignmentID: number): Promise<{ studentID: number, userID: number, name: string; fileName: string }[]> {
     const sql = `
-        SELECT st.studentID, CONCAT(u.firstName, ' ', u.lastName) AS name, s.fileName 
+        SELECT st.studentID, u.userID, CONCAT(u.firstName, ' ', u.lastName) AS name, s.fileName 
         FROM submission s 
         JOIN student st ON s.studentID = st.studentID 
         JOIN user u ON st.userID = u.userID 
@@ -31,6 +32,7 @@ async function getSubmittedStudents(assignmentID: number): Promise<{ studentID: 
         const rows = await query(sql, [assignmentID]);
         return rows.map((row: any) => ({
             studentID: row.studentID,
+            userID: row.userID,
             name: row.name,
             fileName: row.fileName,
         }));
@@ -40,9 +42,9 @@ async function getSubmittedStudents(assignmentID: number): Promise<{ studentID: 
     }
 }
 
-async function getRemainingStudents(assignmentID: number): Promise<{ studentID: number, name: string }[]> {
+async function getRemainingStudents(assignmentID: number): Promise<{ studentID: number, userID: number, name: string }[]> {
     const sql = `
-        SELECT st.studentID, CONCAT(u.firstName, ' ', u.lastName) AS name 
+        SELECT st.studentID, u.userID, CONCAT(u.firstName, ' ', u.lastName) AS name 
         FROM student st
         JOIN user u ON st.userID = u.userID
         LEFT JOIN submission s ON st.studentID = s.studentID AND s.assignmentID = ?
@@ -52,6 +54,7 @@ async function getRemainingStudents(assignmentID: number): Promise<{ studentID: 
         const rows = await query(sql, [assignmentID]);
         return rows.map((row: any) => ({
             studentID: row.studentID,
+            userID: row.userID,
             name: row.name,
         }));
     } catch (error) {

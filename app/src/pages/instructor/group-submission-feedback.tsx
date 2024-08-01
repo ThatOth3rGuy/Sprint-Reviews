@@ -261,12 +261,13 @@ export default function AssignmentDashboard() {
         <div className={styles.assignmentsSection}>
           {assignment && (
             <AssignmentDetailCard
-                          title={assignment.title}
-                          description={assignment.descr || "No description available"}
-                          deadline={assignment.deadline || "No deadline set"}
-                          isGroupAssignment={assignment.groupAssignment}
-                          submittedEntities={[]}
-                          remainingEntities={[]} assignmentID={0}            />
+                title={assignment.title}
+                description={assignment.descr || "No description available"}
+                deadline={assignment.deadline || "No deadline set"}
+                isGroupAssignment={assignment.groupAssignment}
+                submittedEntities={[]}
+                remainingEntities={[]} assignmentID={0}            
+            />
           )}
           {isSubmitted ? (
             <div>
