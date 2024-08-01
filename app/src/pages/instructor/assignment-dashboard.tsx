@@ -23,12 +23,14 @@ interface CourseData {
 }
 
 interface SubmittedEntity {
+  studentID: number;
   name: string;
   fileName: string;
 }
 
-interface AssignmentDashboardProps {
-  courseId: number;
+interface RemainingEntity {
+  studentID: number;
+  name: string;
 }
 
 const AssignmentDashboard: NextPage = () => {
@@ -39,7 +41,7 @@ const AssignmentDashboard: NextPage = () => {
   const [assignment, setAssignment] = useState<Assignment | null>(null);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [submittedEntities, setSubmittedEntities] = useState<SubmittedEntity[]>([]);
-  const [remainingEntities, setRemainingEntities] = useState<string[]>([]);
+  const [remainingEntities, setRemainingEntities] = useState<RemainingEntity[]>([]);
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {

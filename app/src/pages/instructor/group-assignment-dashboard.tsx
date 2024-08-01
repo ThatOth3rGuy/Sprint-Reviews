@@ -15,6 +15,7 @@ interface Assignment {
   descr: string;
   deadline: string;
   courseID: number;
+  groupAssignment: boolean;
 }
 
 interface CourseData {
@@ -23,15 +24,14 @@ interface CourseData {
 }
 
 interface SubmittedEntity {
-  groupID: number;
-  groupName: string;
-  members: { name: string; fileName: string }[];
+  studentID: number;
+  name: string;
+  fileName: string;
 }
 
 interface RemainingEntity {
-  groupID: number;
-  groupName: string;
-  members: string[];
+  studentID: number;
+  name: string;
 }
 
 const AssignmentDashboard: NextPage = () => {
@@ -41,8 +41,8 @@ const AssignmentDashboard: NextPage = () => {
   const router = useRouter();
   const [assignment, setAssignment] = useState<Assignment | null>(null);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
-  const [submittedEntities, setSubmittedEntities] = useState<SubmittedEntity[]>([]);
-  const [remainingEntities, setRemainingEntities] = useState<RemainingEntity[]>([]);
+  const [submittedEntities, setSubmittedEntities] = useState<SubmittedEntity[] | { groupID: number; groupName: string; members: SubmittedEntity[] }[]>([]);
+  const [remainingEntities, setRemainingEntities] = useState<RemainingEntity[] | { groupID: number; groupName: string; members: RemainingEntity[] }[]>([]);
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
@@ -66,11 +66,12 @@ const AssignmentDashboard: NextPage = () => {
               }
             }
 
-            const groupsResponse = await fetch(`/api/submissions/${assignmentID}/group-students`);
-            if (groupsResponse.ok) {
-              const { submittedEntities, remainingEntities } = await groupsResponse.json();
-              setSubmittedEntities(submittedEntities);
-              setRemainingEntities(remainingEntities);
+            const studentsResponse = await fetch(`/api/submissions/${assignmentID}/group-students`);
+              
+            if (studentsResponse.ok) {
+              const { submittedGroups, remainingGroups, submittedStudents, remainingStudents } = await studentsResponse.json();
+              setSubmittedEntities(submittedGroups || submittedStudents);
+              setRemainingEntities(remainingGroups || remainingStudents);
             }
           } else {
             const errorData = await assignmentResponse.json();

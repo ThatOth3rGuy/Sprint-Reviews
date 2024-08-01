@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardBody, Accordion, AccordionItem } from "@nextui-org/react";
+import { Card, CardBody, Listbox, ListboxItem, Accordion, AccordionItem } from "@nextui-org/react";
 import styles from "../../../styles/AssignmentDetailCard.module.css";
 
 interface AssignmentDetailCardProps {
@@ -7,8 +7,8 @@ interface AssignmentDetailCardProps {
   description: string;
   deadline: string;
   isGroupAssignment: boolean;
-  submittedEntities: { name: string; fileName: string }[] | { groupID: number; groupName: string; members: { name: string; fileName: string }[] }[];
-  remainingEntities: string[] | { groupID: number; groupName: string; members: string[] }[];
+  submittedEntities: { studentID: number; name: string; fileName: string }[] | { groupID: number; groupName: string; members: { studentID: number; name: string; fileName: string }[] }[];
+  remainingEntities: { studentID: number; name: string }[] | { groupID: number; groupName: string; members: { studentID: number; name: string }[] }[];
 }
 
 const AssignmentDetailCard: React.FC<AssignmentDetailCardProps> = ({
@@ -16,8 +16,8 @@ const AssignmentDetailCard: React.FC<AssignmentDetailCardProps> = ({
   description,
   deadline,
   isGroupAssignment,
-  submittedEntities,
-  remainingEntities,
+  submittedEntities = [],
+  remainingEntities = [],
 }) => {
   return (
     <div className={styles.courseCards}>
@@ -35,24 +35,26 @@ const AssignmentDetailCard: React.FC<AssignmentDetailCardProps> = ({
           </h3>
           {isGroupAssignment ? (
             <Accordion>
-              {(submittedEntities as { groupID: number; groupName: string; members: { name: string; fileName: string }[] }[]).map((group, index) => (
-                <AccordionItem key={index} aria-label={group.groupName} title={group.groupName}>
-                  {group.members.map((member, i) => (
-                    <div key={i} className={styles.memberItem}>
-                      {member.name} - {member.fileName}
-                    </div>
-                  ))}
+              {(submittedEntities as { groupID: number; groupName: string; members: { studentID: number; name: string; fileName: string }[] }[]).map((group) => (
+                <AccordionItem key={group.groupID} title={group.groupName}>
+                  <Listbox>
+                    {group.members.map((member) => (
+                      <ListboxItem key={member.studentID}>
+                        {member.name}
+                      </ListboxItem>
+                    ))}
+                  </Listbox>
                 </AccordionItem>
               ))}
             </Accordion>
           ) : (
-            <ul>
-              {(submittedEntities as { name: string; fileName: string }[]).map((student, index) => (
-                <li key={index} className={styles.memberItem}>
-                  {student.name} - {student.fileName}
-                </li>
+            <Listbox>
+              {(submittedEntities as { studentID: number; name: string; fileName: string }[]).map((student) => (
+                <ListboxItem key={student.studentID}>
+                  {student.name}
+                </ListboxItem>
               ))}
-            </ul>
+            </Listbox>
           )}
         </div>
         <div>
@@ -61,24 +63,26 @@ const AssignmentDetailCard: React.FC<AssignmentDetailCardProps> = ({
           </h3>
           {isGroupAssignment ? (
             <Accordion>
-              {(remainingEntities as { groupID: number; groupName: string; members: string[] }[]).map((group, index) => (
-                <AccordionItem key={index} aria-label={group.groupName} title={group.groupName}>
-                  {group.members.map((member, i) => (
-                    <div key={i} className={styles.memberItem}>
-                      {member}
-                    </div>
-                  ))}
+              {(remainingEntities as { groupID: number; groupName: string; members: { studentID: number; name: string }[] }[]).map((group) => (
+                <AccordionItem key={group.groupID} title={group.groupName}>
+                  <Listbox>
+                    {group.members.map((member) => (
+                      <ListboxItem key={member.studentID}>
+                        {member.name}
+                      </ListboxItem>
+                    ))}
+                  </Listbox>
                 </AccordionItem>
               ))}
             </Accordion>
           ) : (
-            <ul>
-              {(remainingEntities as string[]).map((student, index) => (
-                <li key={index} className={styles.memberItem}>
-                  {student}
-                </li>
+            <Listbox>
+              {(remainingEntities as { studentID: number; name: string }[]).map((student) => (
+                <ListboxItem key={student.studentID}>
+                  {student.name}
+                </ListboxItem>
               ))}
-            </ul>
+            </Listbox>
           )}
         </div>
       </div>
