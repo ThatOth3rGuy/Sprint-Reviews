@@ -142,11 +142,12 @@ export default function AssignmentDashboard() {
     const fetchFeedback = async () => {
       if (assignmentID && groupDetails) {
         try {
-          const response = await fetch(`/api/groups/getSubmittedFeedback?assignmentID=${assignmentID}&groupID=${groupDetails.groupID}`);
+          const response = await fetch(`/api/groups/getSubmittedFeedback?assignmentID=${assignmentID}&studentID=${studentID}`);
           if (!response.ok) {
             throw new Error('Failed to fetch feedback');
           }
           const data = await response.json();
+          console.log('Feedback:', data);
           setFeedback(data);
         } catch (error) {
           console.error('Error fetching feedback:', error);

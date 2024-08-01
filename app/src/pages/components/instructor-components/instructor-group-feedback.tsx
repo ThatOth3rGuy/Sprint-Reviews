@@ -30,7 +30,7 @@ const InstructorGroupFeedback: React.FC<StudentGroupDetailsProps> = ({ groupID, 
         <h3>Group Members:</h3>
         <ul className={styles.groupList}>
           {students.map(student => {
-            const feedback = feedbacks.find(fb => fb.revieweeID === student.studentID);
+            const feedback = feedbacks.find(fb => fb.reviewerID === student.studentID);
             return (
               <li key={student.studentID} className={styles.groupMemberItem}>
                 <div className={styles.groupMember}>

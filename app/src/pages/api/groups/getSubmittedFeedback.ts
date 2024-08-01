@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { query } from '../../../db'; // Assuming you have a utility function for DB connection
+import { query, getStudentsById } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -7,10 +7,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
-  const { assignmentID, groupID } = req.query;
+  const { assignmentID, studentID } = req.query;
 
-  if (!assignmentID || !groupID) {
-    res.status(400).json({ message: 'Missing assignmentID or groupID' });
+  if (!assignmentID || !studentID) {
+    res.status(400).json({ message: 'Missing assignmentID or studentID' });
     return;
   }
 
@@ -24,11 +24,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
        JOIN user u ON s.userID = u.userID
        JOIN student rs ON gf.revieweeID = rs.studentID
        JOIN user ru ON rs.userID = ru.userID
-       WHERE gf.assignmentID = ? AND gf.revieweeID IN (
-           SELECT studentID FROM course_groups WHERE groupID = ?
-       )`;
+       WHERE gf.assignmentID = ? AND gf.revieweeID = ?`;
 
-    const rows = await query(SQL, [assignmentID, groupID]);
+    // Convert userID to studentID
+    const revieweeID = await getStudentsById(Number(studentID));
+    const rows = await query(SQL, [assignmentID, revieweeID.studentID]);
+
     res.status(200).json(rows);
   } catch (error) {
     console.error('Error fetching feedback:', error);
