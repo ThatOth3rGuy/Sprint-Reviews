@@ -174,80 +174,49 @@ export default function AssignmentDashboard() {
   };
 
   const handleSubmit = async () => {
-    if (uploadedFile && isFileTypeAllowed(uploadedFile) && session?.user?.userID) {
+    if ((uploadedFile && isFileTypeAllowed(uploadedFile)) || (submissionType === 'link' && linkSubmission && isLinkTypeAllowed())) {
       const formData = new FormData();
-      formData.append('file', uploadedFile);
       formData.append('assignmentID', assignment?.assignmentID?.toString() ?? '');
       formData.append('userID', session.user.userID.toString());
-  
+
+      if (uploadedFile) {
+        formData.append('file', uploadedFile);
+      } else if (linkSubmission) {
+        formData.append('link', linkSubmission);
+      }
+
       try {
         const response = await fetch('/api/assignments/submitAssignment', {
           method: 'POST',
           body: formData,
         });
-  
+
         const result = await response.json();
-  
+
         if (response.ok) {
           if (result.success) {
-            toast.success('Assignment submitted successfully!');
+            toast.success(result.message);
             onOpenChange();
             setIsSubmitted(true);
-            setSubmittedFileName(uploadedFile.name);
+            setSubmittedFileName(uploadedFile ? uploadedFile.name : linkSubmission);
             setIsLateSubmission(result.isLate);
             checkSubmissionStatus();
           } else {
-            throw new Error(result.message || 'File upload failed');
+            throw new Error(result.message || 'Submission failed');
           }
         } else {
-          throw new Error('File upload failed');
+          throw new Error('Submission failed');
         }
       } catch (error) {
-        console.error('Error uploading file:', error);
-        setFileError('Failed to upload file. Please try again.');
-        toast.error('Failed to upload file. Please try again.');
-      }
-    } else if (submissionType === 'link' && linkSubmission && isLinkTypeAllowed() && session?.user?.userID) {
-      try {
-        const response = await fetch('/api/assignments/submitAssignment', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            assignmentID: assignment?.assignmentID,
-            userID: session.user.userID,
-            link: linkSubmission,
-          }),
-        });
-  
-        const result = await response.json();
-  
-        if (response.ok && result.success) {
-          toast.success('Link submitted successfully!');
-          onOpenChange();
-          setIsSubmitted(true);
-          setSubmittedFileName(linkSubmission);
-          setIsLateSubmission(result.isLate);
-          checkSubmissionStatus();
-        } else {
-          throw new Error(result.message || 'Link submission failed');
-        }
-      } catch (error) {
-        console.error('Error submitting link:', error);
-        setFileError('Failed to submit link. Please try again.');
-        toast.error('Failed to submit link. Please try again.');
+        console.error('Error submitting assignment:', error);
+        setFileError('Failed to submit. Please try again.');
+        toast.error('Failed to submit. Please try again.');
       }
     } else {
-      console.error('Invalid submission attempt:', { 
-        uploadedFile: !!uploadedFile, 
-        isFileTypeAllowed: isFileTypeAllowed(uploadedFile), 
-        userID: session?.user?.userID 
-      });
-      toast.error('Invalid submission. Please check your file and try again.');
+      console.error('Invalid submission attempt');
+      toast.error('Invalid submission. Please check your file or link and try again.');
     }
   };
-  
 
   if (!assignment || loading) {
     return (
@@ -288,26 +257,29 @@ export default function AssignmentDashboard() {
           {assignment && (
             <StudentAssignmentView
             description={assignment.descr || "No description available"}
-            deadline={assignment.deadline || "No deadline set"}
+            deadline={new Date(assignment.deadline).toLocaleString()|| "No deadline Date"}
             allowedFileTypes={assignment.allowedFileTypes}
-            startDate={assignment.startDate}
-            endDate={assignment.endDate}
+            startDate={new Date(assignment.startDate).toLocaleString()|| "No start Date"}
+            endDate={new Date(assignment.endDate).toLocaleString()|| "No End Date"}
             />
           )}
           {isSubmitted ? (
-      <div>
-        <p className={isLateSubmission ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1" : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"}>
-          {isLateSubmission
-            ? "Assignment Submitted Late"
-            : "Assignment Submitted"}
-        </p>
-        {submittedFileName && <p className="text-left text-small">Submitted file: {submittedFileName}</p>}
-      </div>
-    ) : (
-      isWithinSubmissionPeriod() && ( // Conditionally render the submit button
-        <Button onClick={onOpen}>Submit Assignment</Button>
-      )
-    )}
+          <div>
+            <p className={isLateSubmission ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1" : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"}>
+              {isLateSubmission
+                ? "Assignment Submitted Late"
+                : "Assignment Submitted"}
+            </p>
+            {submittedFileName && <p className="text-left text-small">Submitted: {submittedFileName}</p>}
+            {isWithinSubmissionPeriod() && (
+              <Button onClick={onOpen}>Resubmit Assignment</Button>
+            )}
+          </div>
+        ) : (
+          isWithinSubmissionPeriod() && (
+            <Button onClick={onOpen}>Submit Assignment</Button>
+          )
+        )}
           <Modal
             className="student"
             isOpen={isOpen}
@@ -367,6 +339,9 @@ export default function AssignmentDashboard() {
             </ModalContent>
           </Modal>
           <div className={styles.feedbackSection}>
+            
+            <br />
+            <hr />
             <h2>Feedback</h2>
             {feedbacks.length > 0 ? (
               feedbacks.map((feedback, index) => (

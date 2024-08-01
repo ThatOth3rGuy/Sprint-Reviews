@@ -10,10 +10,8 @@ export const config = {
     bodyParser: false,
   },
 };
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  
-  
-  
   if (req.method !== 'POST') {
     console.error('Method not allowed');
     return res.status(405).json({ message: 'Method not allowed' });
@@ -27,12 +25,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(500).json({ success: false, message: 'Error processing request' });
     }
 
-    console.log('Fields:', fields);
-    console.log('Files:', files);
-    console.log(fields.assignmentID);
-    console.log(fields.userID);
-    console.log(fields.link);
-    
     try {
       const assignmentID = fields.assignmentID;
       const userID = fields.userID;
@@ -58,30 +50,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.log('File submitted successfully');
         return res.status(200).json(result);
       } else if (link) {
-        // Validate link type based on assignment allowedFileTypes
-        const assignmentResult = await query('SELECT allowedFileTypes FROM assignment WHERE assignmentID = ?', [assignmentID]);
-        const allowedFileTypes = assignmentResult[0]?.allowedFileTypes.split(',');
-
-        if (!allowedFileTypes) {
-          console.error('Allowed file types not specified for assignmentID:', assignmentID);
-          return res.status(400).json({ success: false, message: 'Allowed file types not specified' });
-        }
-
-        if (allowedFileTypes.includes('github') && !link.startsWith('https://github.com/')) {
-          console.error('Invalid GitHub link:', link);
-          return res.status(400).json({ success: false, message: 'Only GitHub links are allowed' });
-        }
-        if (allowedFileTypes.includes('googledocs') && !link.startsWith('https://docs.google.com/')) {
-          console.error('Invalid Google Docs link:', link);
-          return res.status(400).json({ success: false, message: 'Only Google Docs links are allowed' });
-        }
-        if (allowedFileTypes.includes('link') && !(link.startsWith('https://github.com/') || link.startsWith('https://docs.google.com/'))) {
-          console.error('Invalid link:', link);
-          return res.status(400).json({ success: false, message: 'Only specific links are allowed' });
-        }
-
         // Handle link submission
-        const result = await submitAssignment(Number(assignmentID), Number(userID), link, null, 'link');
+        const result = await submitAssignment(Number(assignmentID), Number(userID), link, link, 'link');
         console.log('Link submitted successfully');
         return res.status(200).json(result);
       } else {
@@ -95,11 +65,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
 }
 
-async function submitAssignment(assignmentID: number, userID: number, fileName: string, fileContent: Buffer | null, fileType: string) {
+async function submitAssignment(assignmentID: number, userID: number, fileName: string, fileContent: Buffer | string, fileType: string) {
   const studentIdSQL = `SELECT studentID FROM student WHERE userID = ?`;
-  const sql = `
+  const checkExistingSQL = `SELECT submissionID FROM submission WHERE assignmentID = ? AND studentID = ?`;
+  const insertSQL = `
     INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate)
     VALUES (?, ?, ?, ?, ?, NOW())
+  `;
+  const updateSQL = `
+    UPDATE submission
+    SET fileName = ?, fileContent = ?, fileType = ?, submissionDate = NOW()
+    WHERE submissionID = ?
   `;
 
   try {
@@ -110,12 +86,20 @@ async function submitAssignment(assignmentID: number, userID: number, fileName: 
     }
     const studentID = studentIDResult[0].studentID;
 
-    await query(sql, [assignmentID, studentID, fileName, fileContent, fileType]);
+    // Check if a submission already exists
+    const existingSubmission = await query(checkExistingSQL, [assignmentID, studentID]);
 
-    return { success: true, message: 'Assignment submitted successfully' };
+    if (existingSubmission && existingSubmission.length > 0) {
+      // Update existing submission
+      await query(updateSQL, [fileName, fileContent, fileType, existingSubmission[0].submissionID]);
+      return { success: true, message: 'Assignment resubmitted successfully' };
+    } else {
+      // Insert new submission
+      await query(insertSQL, [assignmentID, studentID, fileName, fileContent, fileType]);
+      return { success: true, message: 'Assignment submitted successfully' };
+    }
   } catch (error) {
     console.error('Error in submitAssignment:', error);
     throw error;
   }
 }
-
