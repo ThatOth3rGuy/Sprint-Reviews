@@ -903,15 +903,15 @@ export async function authenticateStudent(email: string, password: string): Prom
 /* UPDATE FUNCTIONS - MAIN HANDLERS */
 
 // Update the assignment options for a given assignmentID
-export async function updateAssignment(assignmentID: number, isGroupAssignment: boolean, allowedFileTypes: string, deadline: Date): Promise<any[]> {
+export async function updateAssignment(assignmentID: number, isGroupAssignment: boolean, allowedFileTypes: string,  startDate: string,endDate: string,dueDate: string): Promise<any[]> {
   const sql = `
     UPDATE assignment
-    SET groupAssignment = ?, allowedFileTypes = ?, deadline = ?
+    SET groupAssignment = ?, allowedFileTypes = ?, startDate = ?, endDate = ?, deadline =?
     WHERE assignmentID = ?
   `;
 
   try {
-    const newAssign = await query(sql, [isGroupAssignment, allowedFileTypes, deadline, assignmentID]);
+    const newAssign = await query(sql, [isGroupAssignment, allowedFileTypes, startDate, endDate, dueDate, assignmentID]);
     return newAssign;
   } catch (error) {
     console.error('Error updating assignment:', error);

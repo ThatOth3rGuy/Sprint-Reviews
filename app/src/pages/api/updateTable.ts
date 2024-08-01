@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         let result;
         switch (table) { // Switch statement to determine which table to update
             case 'assignmentInfo':
-            result = await updateAssignment(data.assignmentID, data.isGroupAssignment, data.allowedFileTypes, data.deadline);
+            result = await updateAssignment(data.assignmentID, data.isGroupAssignment, data.allowedFileTypes, data.startDate, data.endDate, data.dueDate);
             break;
 
             case 'assignmentName':

@@ -15,7 +15,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const Assignment = await getAssignmentById(assignmentID);
 
     if (Assignment) {
-      res.status(200).json(Assignment);
+      const submissions = await getSubmitedAssignmentsById(assignmentID);
+      res.status(200).json({ ...Assignment, submissions });
     } else {
       res.status(404).json({ error: 'Assignment not found' });
     }
@@ -34,4 +35,21 @@ export async function getAssignmentById(assignmentID: string): Promise<any> {
     console.error('Error in getCourse:', error);
     throw error;
   }
+  }
+  async function getSubmitedAssignmentsById(assignmentID: string): Promise<any[]> {
+    const sql = `
+      SELECT s.submissionID, s.studentID, s.fileName, s.fileType, s.submissionDate, s.grade,
+             u.firstName, u.lastName
+      FROM submission s
+      JOIN student st ON s.studentID = st.studentID
+      JOIN user u ON st.userID = u.userID
+      WHERE s.assignmentID = ?
+    `;
+    try {
+      const rows = await query(sql, [assignmentID]);
+      return rows;
+    } catch (error) {
+      console.error('Error in getSubmissionsByAssignmentId:', error);
+      throw error;
+    }
   }
