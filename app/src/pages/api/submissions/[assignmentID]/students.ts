@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 }
 
-async function getSubmittedStudents(assignmentID: number): Promise<{ name: string, fileName: string }[]> {
+async function getSubmittedStudents(assignmentID: number): Promise<{ name: string; fileName: string }[]> {
     const sql = `
         SELECT CONCAT(u.firstName, ' ', u.lastName) AS name, s.fileName 
         FROM submission s 
@@ -31,7 +31,7 @@ async function getSubmittedStudents(assignmentID: number): Promise<{ name: strin
         const rows = await query(sql, [assignmentID]);
         return rows.map((row: any) => ({
             name: row.name,
-            fileName: row.fileName
+            fileName: row.fileName,
         }));
     } catch (error) {
         console.error('Error in getSubmittedStudents:', error);

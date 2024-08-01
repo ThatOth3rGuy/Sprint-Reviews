@@ -1,4 +1,3 @@
-// instructor/group-assignment-dashboard.tsx
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
@@ -16,7 +15,6 @@ interface Assignment {
   descr: string;
   deadline: string;
   courseID: number;
-  groupAssignment: boolean;
 }
 
 interface CourseData {
@@ -25,11 +23,18 @@ interface CourseData {
 }
 
 interface SubmittedEntity {
-  name: string;
-  fileName: string;
+  groupID: number;
+  groupName: string;
+  members: { name: string; fileName: string }[];
 }
 
-const GroupAssignmentDashboard: NextPage = () => {
+interface RemainingEntity {
+  groupID: number;
+  groupName: string;
+  members: string[];
+}
+
+const AssignmentDashboard: NextPage = () => {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [error, setError] = useState('');
@@ -37,7 +42,7 @@ const GroupAssignmentDashboard: NextPage = () => {
   const [assignment, setAssignment] = useState<Assignment | null>(null);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [submittedEntities, setSubmittedEntities] = useState<SubmittedEntity[]>([]);
-  const [remainingEntities, setRemainingEntities] = useState<string[]>([]);
+  const [remainingEntities, setRemainingEntities] = useState<RemainingEntity[]>([]);
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
@@ -61,13 +66,11 @@ const GroupAssignmentDashboard: NextPage = () => {
               }
             }
 
-            const entitiesResponse = await fetch(`/api/submissions/${assignmentID}/group-students`);
-            if (entitiesResponse.ok) {
-              const { submittedEntities, remainingEntities } = await entitiesResponse.json();
+            const groupsResponse = await fetch(`/api/submissions/${assignmentID}/group-students`);
+            if (groupsResponse.ok) {
+              const { submittedEntities, remainingEntities } = await groupsResponse.json();
               setSubmittedEntities(submittedEntities);
-              console.log("Fetched submitted groups: ", submittedEntities);
               setRemainingEntities(remainingEntities);
-              console.log("Fetched remaining groups: ", remainingEntities);
             }
           } else {
             const errorData = await assignmentResponse.json();
@@ -126,9 +129,9 @@ const GroupAssignmentDashboard: NextPage = () => {
             title={assignment.title}
             description={assignment.descr || "No description available"}
             deadline={assignment.deadline || "No deadline set"}
-            isGroupAssignment={assignment.groupAssignment}
-            submittedEntities={submittedEntities || []}
-            remainingEntities={remainingEntities || []}
+            isGroupAssignment={true}
+            submittedEntities={submittedEntities}
+            remainingEntities={remainingEntities}
           />
         </div>
       </div>
@@ -136,4 +139,4 @@ const GroupAssignmentDashboard: NextPage = () => {
   );
 }
 
-export default GroupAssignmentDashboard;
+export default AssignmentDashboard;

@@ -20,41 +20,64 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 }
 
-async function getSubmittedGroups(assignmentID: number): Promise<{ groupName: string, fileName: string }[]> {
+async function getSubmittedGroups(assignmentID: number): Promise<{ groupID: number, groupName: string, members: { name: string, fileName: string }[] }[]> {
     const sql = `
-        SELECT cg.groupID, GROUP_CONCAT(CONCAT(u.firstName, ' ', u.lastName) SEPARATOR ', ') AS groupName, s.fileName 
+        SELECT cg.groupID, s.fileName, CONCAT(u.firstName, ' ', u.lastName) AS name 
         FROM submission s 
         JOIN student st ON s.studentID = st.studentID 
         JOIN user u ON st.userID = u.userID 
         JOIN course_groups cg ON st.studentID = cg.studentID
         WHERE s.assignmentID = ?
-        GROUP BY cg.groupID, s.fileName
+        ORDER BY cg.groupID
     `;
     try {
         const rows = await query(sql, [assignmentID]);
-        return rows.map((row: any) => ({
-            name: row.groupName,
-            fileName: row.fileName
-        }));
+        const groupsMap = new Map<number, { groupID: number, groupName: string, members: { name: string, fileName: string }[] }>();
+
+        rows.forEach((row: any) => {
+            if (!groupsMap.has(row.groupID)) {
+                groupsMap.set(row.groupID, { groupID: row.groupID, groupName: `Group ${row.groupID}`, members: [] });
+            }
+
+            const group = groupsMap.get(row.groupID);
+            if (group) {
+                group.members.push({ name: row.name, fileName: row.fileName });
+            }
+        });
+
+        return Array.from(groupsMap.values());
     } catch (error) {
         console.error('Error in getSubmittedGroups:', error);
         throw error;
     }
 }
 
-async function getRemainingGroups(assignmentID: number): Promise<string[]> {
+async function getRemainingGroups(assignmentID: number): Promise<{ groupID: number, groupName: string, members: string[] }[]> {
     const sql = `
-        SELECT cg.groupID, GROUP_CONCAT(CONCAT(u.firstName, ' ', u.lastName) SEPARATOR ', ') AS groupName 
+        SELECT cg.groupID, CONCAT(u.firstName, ' ', u.lastName) AS name 
         FROM student st
         JOIN user u ON st.userID = u.userID
         JOIN course_groups cg ON st.studentID = cg.studentID
         LEFT JOIN submission s ON st.studentID = s.studentID AND s.assignmentID = ?
         WHERE s.submissionID IS NULL
-        GROUP BY cg.groupID
+        ORDER BY cg.groupID
     `;
     try {
         const rows = await query(sql, [assignmentID]);
-        return rows.map((row: any) => row.groupName);
+        const groupsMap = new Map<number, { groupID: number, groupName: string, members: string[] }>();
+
+        rows.forEach((row: any) => {
+            if (!groupsMap.has(row.groupID)) {
+                groupsMap.set(row.groupID, { groupID: row.groupID, groupName: `Group ${row.groupID}`, members: [] });
+            }
+
+            const group = groupsMap.get(row.groupID);
+            if (group) {
+                group.members.push(row.name);
+            }
+        });
+
+        return Array.from(groupsMap.values());
     } catch (error) {
         console.error('Error in getRemainingGroups:', error);
         throw error;

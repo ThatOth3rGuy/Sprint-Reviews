@@ -22,6 +22,11 @@ interface CourseData {
   courseName: string;
 }
 
+interface SubmittedEntity {
+  name: string;
+  fileName: string;
+}
+
 interface AssignmentDashboardProps {
   courseId: number;
 }
@@ -33,8 +38,8 @@ const AssignmentDashboard: NextPage = () => {
   const router = useRouter();
   const [assignment, setAssignment] = useState<Assignment | null>(null);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
-  const [submittedStudents, setSubmittedStudents] = useState<string[]>([]);
-  const [remainingStudents, setRemainingStudents] = useState<string[]>([]);
+  const [submittedEntities, setSubmittedEntities] = useState<SubmittedEntity[]>([]);
+  const [remainingEntities, setRemainingEntities] = useState<string[]>([]);
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
@@ -61,9 +66,8 @@ const AssignmentDashboard: NextPage = () => {
             const studentsResponse = await fetch(`/api/submissions/${assignmentID}/students`);
             if (studentsResponse.ok) {
               const { submittedStudents, remainingStudents } = await studentsResponse.json();
-              setSubmittedStudents(submittedStudents);
-              console.log("Fetched submitted students: ", submittedStudents);
-              setRemainingStudents(remainingStudents);
+              setSubmittedEntities(submittedStudents);
+              setRemainingEntities(remainingStudents);
             }
           } else {
             const errorData = await assignmentResponse.json();
@@ -122,8 +126,9 @@ const AssignmentDashboard: NextPage = () => {
             title={assignment.title}
             description={assignment.descr || "No description available"}
             deadline={assignment.deadline || "No deadline set"}
-            submittedEntities={submittedStudents}
-            remainingEntities={remainingStudents}
+            isGroupAssignment={false}
+            submittedEntities={submittedEntities}
+            remainingEntities={remainingEntities}
           />
         </div>
       </div>
