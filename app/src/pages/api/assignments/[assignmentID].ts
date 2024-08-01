@@ -38,7 +38,7 @@ export async function getAssignmentById(assignmentID: string): Promise<any> {
   }
   async function getSubmitedAssignmentsById(assignmentID: string): Promise<any[]> {
     const sql = `
-      SELECT s.submissionID, s.studentID, s.fileName, s.fileType, s.submissionDate, s.grade,
+      SELECT s.submissionID, s.studentID, s.fileName, s.fileType, s.fileContent, s.submissionDate, s.grade,
              u.firstName, u.lastName
       FROM submission s
       JOIN student st ON s.studentID = st.studentID
