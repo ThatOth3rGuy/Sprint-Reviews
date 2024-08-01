@@ -379,16 +379,17 @@ export default function Page() {
                 <Divider className="instructor bg-secondary" />
                 <br />
                 <div className={styles.courseCard}>
-                  {peerReviewCards.length > 0 ? (
-                    peerReviewCards.map((assignment) => (
-                      <div key={assignment.assignmentID} className={styles.courseCard}>
-                        <InstructorAssignmentCard
-                          courseID={assignment.assignmentID}
-                          assignmentName={assignment.title}
-                          color="#9fc3cf"
-                          deadline={assignment.deadline}
-                          groupAssignment={assignment.groupAssignment}
-                        />
+                {peerReviewAssignments && peerReviewAssignments.length > 0 ? (
+                peerReviewAssignments.map((assignment) => (
+                  <div
+                    key={assignment.assignmentID}
+                    className={`w-100% ${styles.courseCard}`}
+                  >
+                    <InstructorReviewCard
+                      reviewID={assignment.assignmentID}
+                      linkedAssignmentID={assignment.linkedAssignmentID}
+                      color="#9fc3cf"
+                    />
                       </div>
                     ))
                   ) : (

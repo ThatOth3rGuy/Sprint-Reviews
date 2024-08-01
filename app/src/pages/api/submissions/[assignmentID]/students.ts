@@ -47,11 +47,13 @@ async function getRemainingStudents(assignmentID: number): Promise<{ studentID: 
         SELECT st.studentID, u.userID, CONCAT(u.firstName, ' ', u.lastName) AS name 
         FROM student st
         JOIN user u ON st.userID = u.userID
+        JOIN enrollment e ON st.studentID = e.studentID
+        JOIN assignment a ON e.courseID = a.courseID
         LEFT JOIN submission s ON st.studentID = s.studentID AND s.assignmentID = ?
-        WHERE s.submissionID IS NULL
+        WHERE s.submissionID IS NULL AND a.assignmentID = ?
     `;
     try {
-        const rows = await query(sql, [assignmentID]);
+        const rows = await query(sql, [assignmentID, assignmentID]);
         return rows.map((row: any) => ({
             studentID: row.studentID,
             userID: row.userID,
