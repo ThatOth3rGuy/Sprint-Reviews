@@ -283,7 +283,7 @@ export default function Page() {
                       courseID={assignment.assignmentID}
                       assignmentName={assignment.title}
                       color="#9fc3cf"
-                      deadline={assignment.deadline}
+                      deadline={new Date(assignment.deadline).toLocaleString()}
                     />
                   </div>
                 ))

@@ -58,6 +58,8 @@ CREATE TABLE IF NOT EXISTS assignment (
     title VARCHAR(100),
     descr TEXT,
     rubric TEXT,
+    startDate DATETIME,
+    endDate DATETIME,
     deadline DATETIME,
     groupAssignment BOOLEAN,
     courseID INT NOT NULL,
@@ -197,8 +199,8 @@ VALUES ('COSC 499', false, 876543);
 SET @courseID = LAST_INSERT_ID();
 
 -- Insert a sample assignment
-INSERT INTO assignment (title, descr, rubric, deadline, groupAssignment, courseID, allowedFileTypes)
-VALUES ('Final Project', 'Design a database schema', 'Design, Implementation, Report', '2024-12-01 23:59:59', false, @courseID, 'pdf,docx');
+INSERT INTO assignment (title, descr, rubric, startDate, endDate, deadline, groupAssignment, courseID, allowedFileTypes)
+VALUES ('Final Project', 'Design a database schema', 'Design, Implementation, Report', '2024-11-21 23:59:59', '2024-12-05 23:59:59', '2024-12-01 23:59:59', false, @courseID, 'pdf,docx');
 
 -- Get the assignmentID of the newly inserted assignment
 SET @assignmentID = LAST_INSERT_ID();
@@ -268,8 +270,8 @@ VALUES ('Introduction to Databases', false, 987654);
 SET @newCourseID = LAST_INSERT_ID();
 
 -- Insert a new assignment connected to the new course
-INSERT INTO assignment (title, descr, rubric, deadline, groupAssignment, courseID, allowedFileTypes)
-VALUES ('Database Project', 'Create a relational database', 'Schema, Queries, Report', '2024-11-01 23:59:59', true, @newCourseID, 'sql,docx');
+INSERT INTO assignment (title, descr, rubric, startDate, endDate, deadline, groupAssignment, courseID, allowedFileTypes)
+VALUES ('Database Project', 'Create a relational database', 'Schema, Queries, Report', '2024-10-25 23:59:59', '2024-11-03 23:59:59', '2024-11-01 23:59:59', true, @newCourseID, 'sql,docx');
 
 -- Enroll the 10 additional students into the new course
 INSERT INTO enrollment (studentID, courseID) VALUES

@@ -1,4 +1,3 @@
-import StudentHeader from "../components/student-components/student-header";
 import StudentNavbar from "../components/student-components/student-navbar";
 import { useState } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';

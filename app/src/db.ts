@@ -81,6 +81,8 @@ export async function createInstructor(instructorID: number, userID: number, isA
 export async function addAssignmentToCourse(
   title: string, 
   description: string, 
+  startDate: string,
+  endDate: string,
   dueDate: string, 
   file: string, 
   groupAssignment: boolean, 
@@ -92,8 +94,8 @@ export async function addAssignmentToCourse(
   }
   const allowedFileTypesString = allowedFileTypes.join(',');
   const sql = `
-    INSERT INTO assignment (title, descr, deadline, rubric, groupAssignment, courseID, allowedFileTypes)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO assignment (title, descr, startDate, endDate, deadline, rubric, groupAssignment, courseID, allowedFileTypes)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   try {
@@ -114,7 +116,7 @@ export async function addAssignmentToCourse(
     }
 
     // If the class exists, proceed with the insert
-    const insertResult = await query(sql, [title, description, new Date(dueDate), file, groupAssignment, courseID, allowedFileTypesString]);
+    const insertResult = await query(sql, [title, description, new Date(startDate), new Date(endDate), new Date(dueDate), file, groupAssignment, courseID, allowedFileTypesString]);
     console.log('Insert result:', insertResult);
 
     return insertResult;

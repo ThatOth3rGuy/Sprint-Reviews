@@ -4,13 +4,15 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from "../api/auth/checkSession";
 import StudentAssignmentView from "../components/student-components/student-assignment-details";
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import { Button, Breadcrumbs, BreadcrumbItem, Spinner, Modal, useDisclosure, ModalContent, ModalBody, ModalFooter, ModalHeader } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Spinner, Modal, useDisclosure, ModalContent, ModalBody, ModalFooter, ModalHeader, Input } from "@nextui-org/react";
 import toast from "react-hot-toast";
 
 interface Assignment {
   assignmentID: number;
   title: string;
   descr: string;
+  startDate: string,
+  endDate: string,
   deadline: string;
   allowedFileTypes: string;
   courseID: string; 
@@ -47,7 +49,9 @@ export default function AssignmentDashboard() {
   const [isLateSubmission, setIsLateSubmission] = useState(false);
   const [submittedFileName, setSubmittedFileName] = useState<string | null>(null);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
-  
+  const [submissionType, setSubmissionType] = useState<'file' | 'link'>('file');
+  const [linkSubmission, setLinkSubmission] = useState('');
+
   useSessionValidation("student", setLoading, setSession);
 
   useEffect(() => {
@@ -153,6 +157,18 @@ export default function AssignmentDashboard() {
         type.toLowerCase().trim() === fileExtension
     );
   };
+const handleSubmissionTypeChange = (type: 'file' | 'link') => {
+    setSubmissionType(type);
+    setUploadedFile(null);
+    setLinkSubmission('');
+    setFileError(null);
+  };
+
+  const isLinkTypeAllowed = () => {
+    if (!assignment?.allowedFileTypes) return false;
+    const allowedTypes = assignment.allowedFileTypes.split(",");
+    return allowedTypes.some(type => ['link', 'github', 'googledocs'].includes(type.trim().toLowerCase()));
+  };
 
   const handleSubmit = async () => {
     if (uploadedFile && isFileTypeAllowed(uploadedFile) && session?.user?.userID) {
@@ -188,7 +204,38 @@ export default function AssignmentDashboard() {
         setFileError('Failed to upload file. Please try again.');
         toast.error('Failed to upload file. Please try again.');
       }
-    } else {
+    } else if (submissionType === 'link' && linkSubmission && isLinkTypeAllowed() && session?.user?.userID) {
+      try {
+        const response = await fetch('/api/assignments/submitAssignment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            assignmentID: assignment?.assignmentID,
+            studentID: session.user.userID,
+            link: linkSubmission,
+          }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          toast.success('Link submitted successfully!');
+          onOpenChange();
+          setIsSubmitted(true);
+          setSubmittedFileName(linkSubmission);
+          setIsLateSubmission(result.isLate);
+          checkSubmissionStatus();
+        } else {
+          throw new Error(result.message || 'Link submission failed');
+        }
+      } catch (error) {
+        console.error('Error submitting link:', error);
+        setFileError('Failed to submit link. Please try again.');
+        toast.error('Failed to submit link. Please try again.');
+      }
+    }else {
       console.error('Invalid submission attempt:', { 
         uploadedFile: !!uploadedFile, 
         isFileTypeAllowed: isFileTypeAllowed(uploadedFile), 
@@ -262,13 +309,29 @@ export default function AssignmentDashboard() {
                     Submit Assignment
                   </ModalHeader>
                   <ModalBody>
-                    <input type="file" onChange={handleFileUpload} />
-                    {fileError && <p style={{ color: "red" }}>{fileError}</p>}
-                    {uploadedFile && (
-                      <div>
-                        <p>Selected file: {uploadedFile.name}</p>
-                      </div>
-                    )}
+                  {isLinkTypeAllowed() && (
+                  <div>
+                    <Button onClick={() => handleSubmissionTypeChange('file')}>File Submission</Button>
+                    <Button onClick={() => handleSubmissionTypeChange('link')}>Link Submission</Button>
+                  </div>
+                )}
+                {submissionType === 'file' ? (
+                  <input type="file" onChange={handleFileUpload} />
+                ) : (
+                  <Input
+                    type="url"
+                    label="Submission Link"
+                    placeholder="Enter your submission link"
+                    value={linkSubmission}
+                    onChange={(e) => setLinkSubmission(e.target.value)}
+                  />
+                )}
+                {fileError && <p style={{ color: "red" }}>{fileError}</p>}
+                {uploadedFile && (
+                  <div>
+                    <p>Selected file: {uploadedFile.name}</p>
+                  </div>
+                )}
                   </ModalBody>
                   <ModalFooter>
                     <Button
