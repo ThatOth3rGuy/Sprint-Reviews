@@ -54,9 +54,6 @@ export default function AssignmentDashboard() {
   const { assignmentID, studentID } = router.query;
   const [assignment, setAssignment] = useState<Assignment | null>(null);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [fileError, setFileError] = useState<string | null>(null);
   const [submission, setSubmission] = useState<Submission | null>(null);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
