@@ -1,9 +1,7 @@
-// components/student-components/student-group-details.tsx
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody, Button, Input, Textarea } from "@nextui-org/react";
 import toast from "react-hot-toast";
 import styles from "../../../styles/student-group-details.module.css";
-import { table } from 'console';
 
 interface Student {
   studentID: number;
@@ -61,11 +59,11 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
     }
 
     if (!isFeedbackSubmitted) {
-      submitFeedback();
+      await submitFeedback();
     } else {
-      updateFeedback();
+      await updateFeedback();
     }
-  }
+  };
 
   const submitFeedback = async () => {
     try {
@@ -157,7 +155,7 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
         </ul>
       </CardBody>
       <Button onPress={handleSubmit} className={isFeedbackSubmitted ? "text-primary-900 text-large font-bold bg-success-300 my-2 p-1" : ""}>
-          {isFeedbackSubmitted ? 'Re-Submit Feedback' : 'Submit Feedback'}
+        {isFeedbackSubmitted ? 'Re-Submit Feedback' : 'Submit Feedback'}
       </Button>
     </Card>
   );
