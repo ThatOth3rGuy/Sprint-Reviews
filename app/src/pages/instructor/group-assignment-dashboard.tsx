@@ -127,6 +127,7 @@ const AssignmentDashboard: NextPage = () => {
         </div>
         <div className={styles.assignmentsSection}>
           <AssignmentDetailCard
+            assignmentID={assignment.assignmentID}
             title={assignment.title}
             description={assignment.descr || "No description available"}
             deadline={assignment.deadline || "No deadline set"}

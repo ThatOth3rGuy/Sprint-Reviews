@@ -1,8 +1,10 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { Card, CardBody, Listbox, ListboxItem, Accordion, AccordionItem } from "@nextui-org/react";
 import styles from "../../../styles/AssignmentDetailCard.module.css";
 
 interface AssignmentDetailCardProps {
+  assignmentID: number;
   title: string;
   description: string;
   deadline: string;
@@ -12,6 +14,7 @@ interface AssignmentDetailCardProps {
 }
 
 const AssignmentDetailCard: React.FC<AssignmentDetailCardProps> = ({
+  assignmentID,
   title,
   description,
   deadline,
@@ -19,6 +22,13 @@ const AssignmentDetailCard: React.FC<AssignmentDetailCardProps> = ({
   submittedEntities = [],
   remainingEntities = [],
 }) => {
+  const router = useRouter();
+
+  const handleNavigation = (id: number, isGroup: boolean) => {
+    const page = isGroup ? 'group-submission-feedback' : 'submission-feedback';
+    router.push(`/instructor/${page}/?assignmentID=${assignmentID}&studentID=${id}`);
+  };
+
   return (
     <div className={styles.courseCards}>
       <Card className={styles.assignmentCard}>
@@ -39,7 +49,7 @@ const AssignmentDetailCard: React.FC<AssignmentDetailCardProps> = ({
                 <AccordionItem key={group.groupID} title={group.groupName}>
                   <Listbox>
                     {group.members.map((member) => (
-                      <ListboxItem key={member.studentID}>
+                      <ListboxItem key={member.studentID} onClick={() => handleNavigation(member.studentID, true)}>
                         {member.name}
                       </ListboxItem>
                     ))}
@@ -50,7 +60,7 @@ const AssignmentDetailCard: React.FC<AssignmentDetailCardProps> = ({
           ) : (
             <Listbox>
               {(submittedEntities as { studentID: number; name: string; fileName: string }[]).map((student) => (
-                <ListboxItem key={student.studentID}>
+                <ListboxItem key={student.studentID} onClick={() => handleNavigation(student.studentID, false)}>
                   {student.name}
                 </ListboxItem>
               ))}
@@ -67,7 +77,7 @@ const AssignmentDetailCard: React.FC<AssignmentDetailCardProps> = ({
                 <AccordionItem key={group.groupID} title={group.groupName}>
                   <Listbox>
                     {group.members.map((member) => (
-                      <ListboxItem key={member.studentID}>
+                      <ListboxItem key={member.studentID} onClick={() => handleNavigation(group.groupID, true)}>
                         {member.name}
                       </ListboxItem>
                     ))}
@@ -78,7 +88,7 @@ const AssignmentDetailCard: React.FC<AssignmentDetailCardProps> = ({
           ) : (
             <Listbox>
               {(remainingEntities as { studentID: number; name: string }[]).map((student) => (
-                <ListboxItem key={student.studentID}>
+                <ListboxItem key={student.studentID} onClick={() => handleNavigation(student.studentID, false)}>
                   {student.name}
                 </ListboxItem>
               ))}
