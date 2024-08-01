@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from "../../styles/AssignmentDetailCard.module.css";
 
-import { Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody, Button } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody, Button, Checkbox } from "@nextui-org/react";
 import { randomizePeerReviewGroups } from "../api/addNew/randomizationAlgorithm";
 import toast from "react-hot-toast";
 
@@ -16,6 +16,8 @@ interface Review {
   assignmentName: string;
   isGroupAssignment: boolean;
   allowedFileTypes: string;
+  startDate: string;
+  endDate: string;
   deadline: string;
   reviewCriteria: { criteriaID: number; criterion: string; maxMarks: number }[];
 }
@@ -51,6 +53,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   const [reviewGroups, setReviewGroups] = useState<ReviewGroup[][]>([]);
   const [randomizedReviewGroups, setRandomizedReviewGroups] = useState<ReviewGroup[][]>([]);
   const [courseName, setCourseName] = useState<string>("");
+  const [autoRelease, setAutoRelease] = useState<boolean>(false);
 
   useSessionValidation('instructor', setLoading, setSession);
 
@@ -192,12 +195,37 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
     }
   };
 
+//handle auto-release of assignment on start date
+const handleAutoReleaseChange = async (checked: boolean) => { 
+  setAutoRelease(checked);
+  if (checked) {
+    try {
+      const response = await fetch('/api/scheduleAutoRelease', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ assignmentID: review?.assignmentID, startDate: review?.startDate }),
+      });
+
+      if (response.ok) {
+        toast.success("Auto-release scheduled successfully!");
+      } else {
+        console.error('Failed to schedule auto-release');
+      }
+    } catch (error) {
+      console.error('Error scheduling auto-release:', error);
+    }
+  }
+};
+
+
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
       <div className={styles.container}>
         <div className={styles.header}>
-          <h1>{review.reviewID ? `Review ${review.reviewID} Details` : "Review Details"}</h1>
+          <h1>{review.reviewID ? `Review For ${review.assignmentName}` : "Review Details"}</h1>
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
@@ -242,6 +270,12 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
             ))}
           </div>
           <div className={styles.notificationsSection}>
+          <Checkbox
+          isSelected={autoRelease}
+          onChange={(e) => handleAutoReleaseChange(e.target.checked)}
+        >
+          Auto Release on Start Date
+        </Checkbox>
             <Button color="primary" variant="ghost" onClick={handleRelease}>Release Assignment for Reviews</Button>
           </div>
         </div>

@@ -1127,6 +1127,41 @@ export async function updateReviewCriteria(assignmentID: number, criterion?: str
     throw error;
   }
 }
+
+//Update review
+export async function updateReview(reviewID: number, assignmentID: number, isGroupAssignment: boolean, allowedFileTypes: string, startDate: string, endDate: string, deadline: string, anonymous: boolean): Promise<any[]> {
+  const sql = `
+    UPDATE review
+    SET assignmentID = ?, isGroupAssignment = ?, allowedFileTypes = ?, startDate = ?, endDate = ?, deadline = ?, anonymous = ?
+    WHERE reviewID = ?
+  `;
+
+  try {
+    const updatedReview = await query(sql, [assignmentID, isGroupAssignment, allowedFileTypes, startDate, endDate, deadline, anonymous, reviewID]);
+    return updatedReview;
+  } catch (error) {
+    console.error('Error updating review:', error);
+    throw error;
+  }
+}
+
+//Update isReleased when startDate = NOW() --> for auto-releaseing an assignment
+export async function autoRelease(assignmentID : string) {
+  const sql = `UPDATE review_groups SET isReleased = true WHERE assignmentID = ? AND startDate = NOW()`;
+
+  try {
+    const result = await query(sql, [assignmentID]);
+    if (result.affectedRows === 0) {
+      throw new Error(`No review groups found for assignmentID: ${assignmentID} with startDate matching current date.`);
+    }
+    console.log(`Assignment ${assignmentID} auto-released successfully.`);
+  } catch (error) {
+    console.error(`Error auto-releasing assignment ${assignmentID}:`, error);
+    throw error;
+  }
+}
+
+
 // Update student feedback information in the database (Feedback) - assignmentID is submission and reviewerID is studentID of reviewer
 export async function updateFeedback(assignmentID: string, studentID: string, content: string): Promise<any> {
 

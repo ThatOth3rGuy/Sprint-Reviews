@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { query,
+import { autoRelease, query,
     updateAssignment, updateAssignmentName, updateCourse, updateEnrollment,
-    updateFeedback, updateReviewCriteria, updateReviewer, updateStudent,
+    updateFeedback, updateReview, updateReviewCriteria, updateReviewer, updateStudent,
     updateSubmission, updateUser
  } from '../../db';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -112,6 +112,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             result = await updateUser(data.userID, data.fname, data.lname, data.email, data.password);
             break;
             
+            case 'review':
+                result = await updateReview(data.reviewID, data.assignmentID, data.isGroupAssignment, data.allowedFileTypes, data.startDate, data.endDate, data.deadline, data.anonymous);
+                if (data.autoRelease) {
+                    await autoRelease(data.assignmentID);
+                }
+                break;
+
             default:
             return res.status(400).json({ message: 'Invalid table' });
         }
