@@ -84,6 +84,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (!data.fileName) {
                 data.fileName = undefined; 
             }
+            if (!data.fileContent) {
+                data.fileName = undefined; 
+            }
             if (!data.fileType) {
                 data.fileType = undefined; 
             }
@@ -99,7 +102,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (!data.studentID) {   
                 data.studentID = undefined;
             }
-            result = await updateSubmission(data.submissionID, data.assignmentID, data.studentID, data.fileName, data.fileType, data.subDate, data.grade);
+            result = await updateSubmission(data.submissionID, data.assignmentID, data.studentID, data.fileName, data.fileContent, data.fileType, data.subDate, data.grade);
             break;
             
             case 'user':

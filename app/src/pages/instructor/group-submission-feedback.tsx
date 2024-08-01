@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from "../api/auth/checkSession";
 import InstructorGroupDetails from "../components/instructor-components/instructor-group-feedback";
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import { Button, Breadcrumbs, BreadcrumbItem, Spinner, useDisclosure, Card, CardBody } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Spinner, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Card, CardBody } from "@nextui-org/react";
 import toast from "react-hot-toast";
 
 interface Assignment {
@@ -54,13 +54,14 @@ export default function AssignmentDashboard() {
   const assignmentID = parseInt(router.query.assignmentID as string);
   const [assignment, setAssignment] = useState<Assignment | null>(null);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
   const [submission, setSubmission] = useState<Submission | null>(null);
   const [groupDetails, setGroupDetails] = useState<GroupDetails | null>(null);
   const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false);
   const [feedback, setFeedback] = useState<Feedback[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newGrade, setNewGrade] = useState<number>(0);
 
   useSessionValidation('instructor', setLoading, setSession);
 
@@ -116,6 +117,7 @@ export default function AssignmentDashboard() {
           }
           const data: Submission = await response.json();
           setSubmission(data);
+          setNewGrade(data.grade ?? data.autoGrade);
         } catch (error) {
           console.error('Error checking submission status:', error);
           toast.error('Error checking submission status. Please refresh the page.');
@@ -159,6 +161,42 @@ export default function AssignmentDashboard() {
     checkFeedbackStatus();
     fetchFeedback();
   }, [assignmentID, groupDetails]);
+
+  const handleEditGrade = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleSaveGrade = async (newGrade: number) => {
+    try {
+      const response = await fetch('/api/updateTable', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          table: 'submission',
+          data: {
+            grade: newGrade,
+            submissionID: submission?.submissionID,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update grade');
+      }
+
+      setSubmission((prev) => prev ? { ...prev, grade: newGrade } : null);
+      toast.success('Grade updated successfully');
+    } catch (error) {
+      console.error('Error updating grade:', error);
+      toast.error('Error updating grade. Please try again.');
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   if (!assignment || loading) {
     return (
@@ -216,11 +254,42 @@ export default function AssignmentDashboard() {
               feedbacks={feedback}
             />
           )}
-            <p className="text-primary-900 text-large font-bold bg-primary-100 my-2 p-1">Average Grade: {submission?.grade ?? submission?.autoGrade}
-                <br /><Button className="text-primary-900 text-small font-bold bg-primary-200 my-2 p-0.5">Edit Grade</Button>
+            <p className="text-primary-900 text-large font-bold bg-primary-100 my-2 p-1">
+                    {submission?.grade ? 'Adjusted Grade:' : 'Average Grade:'} {submission?.grade ?? submission?.autoGrade}
+                    <br />
+                    <Button className="text-primary-900 text-small font-bold bg-primary-200 my-2 p-0.5" onClick={handleEditGrade}>Edit Grade</Button>
             </p>
         </div>
       </div>
+      <Modal
+        className='z-20'
+        backdrop="blur"
+        isOpen={isModalOpen}
+        onOpenChange={(open) => setIsModalOpen(open)}
+      >
+        <ModalContent>
+          <ModalHeader>Edit Grade</ModalHeader>
+          <ModalBody>
+            <Input
+              type="number"
+              fullWidth
+              label="New Grade"
+              value={newGrade.toString()}
+              onChange={(e) => setNewGrade(Number(e.target.value))}
+              min={0}
+              max={100}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" variant="light" onPress={closeModal}>
+              Cancel
+            </Button>
+            <Button color="primary" onPress={() => { handleSaveGrade(newGrade); closeModal(); }}>
+              Save
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }
