@@ -243,7 +243,7 @@ export default function AssignmentDashboard() {
               type="number"
               fullWidth
               label="New Grade"
-              value={newGrade.toString()}
+              value={newGrade?.toString()}
               onChange={(e) => setNewGrade(Number(e.target.value))}
               min={0}
               max={100}

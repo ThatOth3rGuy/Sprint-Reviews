@@ -53,9 +53,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         students = JSON.parse(students);
       }
 
+      console.log('userID:', userID);
+
       // Convert userID to studentID
       const studentIDResult = await getStudentsById(parseInt(userID));
       const studentID = studentIDResult.studentID;
+
+      console.log('studentID:', studentID);
 
       // Set studentIDList to either the studentID or the list of student IDs in the group
       const studentIDList = [studentID];

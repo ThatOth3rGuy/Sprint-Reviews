@@ -162,6 +162,7 @@ export default function AssignmentDashboard() {
       formData.append('studentID', session.user.userID.toString());
 
       try {
+        console.log("Form data: ", formData);
         const response = await fetch('/api/assignments/submitAssignment', {
           method: 'POST',
           body: formData,
