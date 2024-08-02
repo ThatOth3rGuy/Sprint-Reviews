@@ -6,6 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { instructorID } = req.query;
     try {
       const courses = await getCoursesByInstructorID(Number(instructorID));
+      console.log('API response:', courses);
       res.status(200).json({ courses });
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch courses' });
@@ -17,13 +18,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 async function getCoursesByInstructorID(instructorID: number) {
   const sql = `
-    SELECT courseID, courseName, userID
+    SELECT courseID, courseName, userID, i.instructorID
     FROM course c join instructor i on c.instructorID=i.instructorID
     WHERE userID = ? AND isArchived = false
   `;
   try {
     const results = await query(sql, [instructorID]);
     return results;
+    //.map((row: any) => ({ courseID: row.courseID, courseName: row.courseName, instructorID: row.userID }));
   } catch (error) {
     console.error('Error in getCoursesByInstructorID:', error);
     throw error;

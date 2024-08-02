@@ -10,9 +10,13 @@ DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS assignment;
 DROP TABLE IF EXISTS submission;
 DROP TABLE IF EXISTS feedback;
+DROP TABLE IF EXISTS group_feedback;
 DROP TABLE IF EXISTS enrollment;
 DROP TABLE IF EXISTS selected_students;
 DROP TABLE IF EXISTS review_criteria;
+DROP TABLE IF EXISTS review;
+DROP TABLE IF EXISTS review_groups;
+DROP TABLE IF EXISTS course_groups;
 
 -- Table for storing users, which are separated into students and instructors
 CREATE TABLE IF NOT EXISTS user (
@@ -75,6 +79,7 @@ CREATE TABLE IF NOT EXISTS submission (
     fileType VARCHAR(100),
     submissionDate DATETIME,
     grade INT,
+    groupID INT,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
@@ -91,11 +96,27 @@ CREATE TABLE IF NOT EXISTS review_criteria (
 -- Table for storing feedback information between students and assignments
 CREATE TABLE IF NOT EXISTS feedback (
     feedbackID INT AUTO_INCREMENT PRIMARY KEY,
+    submissionID INT NOT NULL,
     assignmentID INT NOT NULL,
+    feedbackDetails TEXT,
+    feedbackDate DATETIME,
+    lastUpdated DATETIME,
+    comment TEXT NOT NULL,
+    FOREIGN KEY (submissionID) REFERENCES submission(submissionID) ON DELETE CASCADE,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
+);
+
+-- Table for storing feedback information between students for group assignments
+CREATE TABLE IF NOT EXISTS group_feedback (
+    groupFeedbackID INT AUTO_INCREMENT PRIMARY KEY,
+    assignmentID INT NOT NULL,
+    score INT,
     content TEXT,
     reviewerID INT,
-    FOREIGN KEY (assignmentID) REFERENCES submission(submissionID) ON DELETE CASCADE,
-    FOREIGN KEY (reviewerID) REFERENCES student(studentID) ON DELETE SET NULL
+    revieweeID INT,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
+    FOREIGN KEY (reviewerID) REFERENCES student(studentID) ON DELETE SET NULL,
+    FOREIGN KEY (revieweeID) REFERENCES student(studentID) ON DELETE SET NULL
 );
 
 -- Table for storing enrollment information to connect students to courses
@@ -116,14 +137,18 @@ CREATE TABLE IF NOT EXISTS selected_students (
     FOREIGN KEY (assignmentID) REFERENCES submission(submissionID) ON DELETE CASCADE,
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
+
+-- Table for storing review information for peer review
 CREATE TABLE IF NOT EXISTS review (
     reviewID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT NOT NULL,
     isGroupAssignment BOOLEAN,
     allowedFileTypes VARCHAR(255),
     deadline DATETIME,
+    anonymous BOOLEAN,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
+
 
 -- Table for storing student notification preferences --
 CREATE TABLE IF NOT EXISTS student_notifications (
@@ -136,7 +161,9 @@ CREATE TABLE IF NOT EXISTS student_notifications (
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE CASCADE
 );
 
+
 -- Table for storing connected submissions for students to peer review --
+
 CREATE TABLE IF NOT EXISTS review_groups  (
     studentID INT,
     assignmentID INT,
@@ -149,6 +176,7 @@ CREATE TABLE IF NOT EXISTS review_groups  (
     FOREIGN KEY (courseID) REFERENCES course(courseID),
     FOREIGN KEY (submissionID) REFERENCES submission(submissionID)
 );
+
 
 -- Table for storing course specific groups --
 CREATE TABLE IF NOT EXISTS course_groups (
@@ -216,8 +244,7 @@ INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType
 VALUES (@assignmentID, 123456, 'final_project.pdf', NULL, 'pdf', NOW());
 
 -- Insert a sample feedback
-INSERT INTO feedback (assignmentID, content, reviewerID)
-VALUES (@assignmentID, 'Great job on the project!', 123456);
+
 
 -- Insert a sample review criteria
 INSERT INTO review_criteria (assignmentID, criterion, maxMarks)
