@@ -5,7 +5,7 @@
 ### 07/31/2024
 
 Topics Covered:
-*email notifications and forgot password functionality
+* email notifications and forgot password functionality
 
 My contributions since Friday's log:
 
@@ -23,7 +23,8 @@ I spent some time doing bugfixes a lot of the functionality we wanted to merge a
 ### 08/02/2024
 
 Topics Covered:
-*finishing issues as needed for demo
+
+* finishing issues as needed for demo
 
 My contributions since Wednesday's log:
 
