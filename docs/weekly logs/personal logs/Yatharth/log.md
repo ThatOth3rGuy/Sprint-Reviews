@@ -1,7 +1,80 @@
  # Weekly Logs 
 ------------------------------------
 # Week 11 Summary 
-## Friday (07/31/2024)
+## Friday (08/02/2024)
+### Timesheet Week 10 (07/24/2024- 07/26/2024)
+![image](https://github.com/user-attachments/assets/23f43614-b245-4914-bc07-1d98c52f6042)
+### Current Tasks (Complete by the end of the day)
+- file download and viewer for all users
+
+### Progress Update 
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> File viewer and download 
+        </td>
+        <!-- Status -->
+        <td> In progress/ partial done
+        </td>
+    </tr><tr>
+        <!-- Task/Issue # -->
+        <td> Peer review Dashboard Instructor 
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Link Submissions and Anonymous    
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+   
+  
+ <tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> Email Notifications   
+        </td>
+        <!-- Status -->
+        <td> Partial Done/In Progress
+        </td>
+    </tr> 
+<tr>
+        <!-- Task/Issue # -->
+        <td> Modifying Assignments    
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+     <tr>
+        <!-- Task/Issue # -->
+        <td> Modifying User Details    
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+    
+</table>
+
+### Weekly Goal Review :
+This week was mainly focused on getting the application ready for the demo. The project is progressing well with several tasks already completed. The 'Peer review Dashboard Instructor', 'Link Submissions and Anonymous', 'Modifying Assignments', and 'Modifying User Details' tasks have all been completed. The 'File viewer and download' and 'Email Notifications' tasks are currently in progress, with parts already done. The team is diligently working to complete all tasks and ensure the project's success. 
+### Next Cycle Goals:  
+* Randomizer algorithm and functionality 
+* Adding update features to all pages
+* Group Peer reviews and manual group creation
+## Wenesday (07/31/2024)
 ### Timesheet Week 10 (07/24/2024- 07/26/2024)
 ![image](https://github.com/user-attachments/assets/f0af57b3-cbf0-4555-9676-d77735584a2a)
 
