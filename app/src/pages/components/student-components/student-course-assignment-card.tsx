@@ -1,6 +1,7 @@
+// student-course-assignment-card.tsx
 import React from 'react';
 import { useRouter } from 'next/router';
-import { Card, CardBody, CardFooter, Image } from '@nextui-org/react';
+import { Card, CardBody, CardFooter } from '@nextui-org/react';
 import style from '../../../styles/student-components.module.css';
 
 interface StudentAssignmentCardProps {
@@ -8,13 +9,18 @@ interface StudentAssignmentCardProps {
   assignmentName: string;
   color: string;
   deadline: string;
+  groupAssignment: boolean;
 }
 
-const StudentAssignmentCard: React.FC<StudentAssignmentCardProps> = ({ courseID, assignmentName, color, deadline }) => {
+const StudentAssignmentCard: React.FC<StudentAssignmentCardProps> = ({ courseID, assignmentName, color, deadline, groupAssignment }) => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/student/assignment-dashboard?assignmentID=${courseID}`);
+    if (groupAssignment) {
+      router.push(`/student/group-assignment-dashboard?assignmentID=${courseID}`);
+    } else {
+      router.push(`/student/assignment-dashboard?assignmentID=${courseID}`);
+    }
   };
 
   return (

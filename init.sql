@@ -10,9 +10,13 @@ DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS assignment;
 DROP TABLE IF EXISTS submission;
 DROP TABLE IF EXISTS feedback;
+DROP TABLE IF EXISTS group_feedback;
 DROP TABLE IF EXISTS enrollment;
 DROP TABLE IF EXISTS selected_students;
 DROP TABLE IF EXISTS review_criteria;
+DROP TABLE IF EXISTS review;
+DROP TABLE IF EXISTS review_groups;
+DROP TABLE IF EXISTS course_groups;
 
 -- Table for storing users, which are separated into students and instructors
 CREATE TABLE IF NOT EXISTS user (
@@ -74,7 +78,9 @@ CREATE TABLE IF NOT EXISTS submission (
     fileContent LONGBLOB,
     fileType VARCHAR(100),
     submissionDate DATETIME,
-    grade INT,
+    autoGrade INT DEFAULT 0,
+    grade DECIMAL(5, 2),
+    groupID DECIMAL(5, 2),
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
@@ -97,8 +103,22 @@ CREATE TABLE IF NOT EXISTS feedback (
     feedbackDate DATETIME,
     lastUpdated DATETIME,
     comment TEXT NOT NULL,
+    reviewerID INT,
     FOREIGN KEY (submissionID) REFERENCES submission(submissionID) ON DELETE CASCADE,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
+);
+
+-- Table for storing feedback information between students for group assignments
+CREATE TABLE IF NOT EXISTS group_feedback (
+    groupFeedbackID INT AUTO_INCREMENT PRIMARY KEY,
+    assignmentID INT NOT NULL,
+    score INT,
+    content TEXT,
+    reviewerID INT,
+    revieweeID INT,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
+    FOREIGN KEY (reviewerID) REFERENCES student(studentID) ON DELETE SET NULL,
+    FOREIGN KEY (revieweeID) REFERENCES student(studentID) ON DELETE SET NULL
 );
 
 -- Table for storing enrollment information to connect students to courses
@@ -119,6 +139,8 @@ CREATE TABLE IF NOT EXISTS selected_students (
     FOREIGN KEY (assignmentID) REFERENCES submission(submissionID) ON DELETE CASCADE,
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
+
+-- Table for storing review information for peer review
 CREATE TABLE IF NOT EXISTS review (
     reviewID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT NOT NULL,
@@ -127,6 +149,18 @@ CREATE TABLE IF NOT EXISTS review (
     deadline DATETIME,
     anonymous BOOLEAN,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
+);
+
+
+-- Table for storing student notification preferences --
+CREATE TABLE IF NOT EXISTS student_notifications (
+    studentID INT,
+    assignmentNotification BOOLEAN DEFAULT TRUE,
+    reviewNotification BOOLEAN DEFAULT TRUE,
+    deadlineNotification BOOLEAN DEFAULT TRUE,
+    evaluationNotification BOOLEAN DEFAULT TRUE,
+    gradesNotification BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE CASCADE
 );
 
 

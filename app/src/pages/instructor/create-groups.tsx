@@ -48,8 +48,22 @@ export default function CreateGroup() {
   useEffect(() => {
     if (session && session.user && session.user.userID && courseId) {
       fetchStudentsAndGroups(courseId as string);
+      fetchCourseName(courseId as string);
     }
   }, [session, courseId]);
+
+    // Fetching course name for breadcrumbs
+    const fetchCourseName = async (courseId: string) => {
+      try {
+        const response = await fetch(`/api/courses/${courseId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setCourseName(data.courseName);
+        }
+      } catch (error) {
+        console.error('Error fetching course name:', error);
+      }
+    };
 
   const fetchStudentsAndGroups = async (courseId: string) => {
     try {

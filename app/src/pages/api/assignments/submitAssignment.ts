@@ -1,8 +1,8 @@
 // pages/api/assignments/submitAssignment.ts
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next';
 import multer from 'multer';
 import fs from 'fs/promises';
-import { query } from '../../../db';
+import { query, getStudentsById } from '../../../db';
 
 export const config = {
   api: {
@@ -12,13 +12,10 @@ export const config = {
 
 const upload = multer({ dest: '/tmp' });
 
-async function submitAssignment(assignmentID: number, studentID: number, file: Express.Multer.File) {
-  
-  const studentIdSQL = `SELECT studentID FROM student WHERE userID = ?`;
-
+async function submitAssignment(assignmentID: number, studentID: number, file: Express.Multer.File, groupID?: number | null) {
   const sql = `
-    INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate)
-    VALUES (?, ?, ?, ?, ?, NOW())
+    INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate, groupID)
+    VALUES (?, ?, ?, ?, ?, NOW(), ?)
   `;
 
   try {
@@ -26,14 +23,7 @@ async function submitAssignment(assignmentID: number, studentID: number, file: E
     const fileName = file.originalname;
     const fileType = file.mimetype;
 
-    //Convert userID to studentID
-    const studentIDResult = await query(studentIdSQL, [studentID]);
-    const userID = parseInt(studentIDResult[0].studentID);
-
-    await query(sql, [assignmentID, userID, fileName, fileContent, fileType]);
-
-    // Delete the temporary file after it's been saved to the database
-    await fs.unlink(file.path);
+    await query(sql, [assignmentID, studentID, fileName, fileContent, fileType, groupID]);
 
     return { success: true, message: 'Assignment submitted successfully' };
   } catch (error) {
@@ -55,11 +45,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const file = (req as any).file;
-    const { assignmentID, studentID } = req.body;
+    let { assignmentID, userID, isGroupAssignment, groupID, students } = req.body;
 
     try {
-      const result = await submitAssignment(parseInt(assignmentID), parseInt(studentID), file);
-      res.status(200).json(result);
+      // Parse students if it is a string (assuming it comes as a JSON string)
+      if (typeof students === 'string') {
+        students = JSON.parse(students);
+      }
+
+      // Convert userID to studentID
+      const studentIDResult = await getStudentsById(parseInt(userID));
+      const studentID = studentIDResult.studentID;
+
+      // Set studentIDList to either the studentID or the list of student IDs in the group
+      const studentIDList = [studentID];
+      if (isGroupAssignment === '1' && Array.isArray(students)) {
+        studentIDList.push(...students.map((id: string) => parseInt(id)));
+      }
+
+      const results = await Promise.all(
+        studentIDList.map((id) => submitAssignment(parseInt(assignmentID), id, file, isGroupAssignment === '1' ? parseInt(groupID) : null))
+      );
+
+      // Delete the temporary file after all submissions are complete
+      await fs.unlink(file.path);
+
+      res.status(200).json({ success: true, message: 'Assignment submitted successfully', results });
     } catch (error) {
       console.error('Error submitting assignment:', error);
       res.status(500).json({ message: 'Error submitting assignment' });

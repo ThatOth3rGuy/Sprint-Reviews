@@ -1,6 +1,7 @@
+// student/all-assignments.tsx
 import { useRouter } from "next/router";
 import styles from '../../styles/instructor-course-dashboard.module.css';
-import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Divider, Checkbox, CheckboxGroup, Progress, Spinner } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Spinner } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import StudentNavbar from "../components/student-components/student-navbar";
@@ -9,8 +10,9 @@ import StudentAssignmentCard from "../components/student-components/student-assi
 interface Assignment {
   assignmentID: number;
   title: string;
-  description: string;
+  descr: string;
   deadline: string;
+  groupAssignment: boolean;
   courseName: string;
 }
 
@@ -19,8 +21,10 @@ export default function AssignmentsPage() {
   const [loading, setLoading] = useState(true);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [session, setSession] = useState<any>(null);
-  const [selectedAssignmentType, setSelectedAssignmentType] = useState('all');
+  const [selectedAssignmentTypes, setSelectedAssignmentTypes] = useState<string[]>(['all']);
+
   useSessionValidation('student', setLoading, setSession);
+
   useEffect(() => {
     if (session && session.user && session.user.userID) {
       fetchAssignments(session.user.userID);
@@ -30,7 +34,7 @@ export default function AssignmentsPage() {
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
     return null;
-  };
+  }
 
   const fetchAssignments = async (userID: string) => {
     try {
@@ -45,19 +49,68 @@ export default function AssignmentsPage() {
       console.error('Error fetching assignments:', error);
     }
   };
-  const handleCheckboxChange = (value: string) => {
-    setSelectedAssignmentType(value);
+
+  const handleCheckboxChange = (type: string, isChecked: boolean) => {
+    if (type === 'all') {
+      setSelectedAssignmentTypes(['all']);
+    } else {
+      setSelectedAssignmentTypes(prevTypes => {
+        if (isChecked) {
+          return [...prevTypes.filter(t => t !== 'all'), type];
+        } else {
+          const newTypes = prevTypes.filter(t => t !== type);
+          return newTypes.length > 0 ? newTypes : ['all'];
+        }
+      });
+    }
   };
- 
-  
-if (loading) {
-    return <div className='w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto'>
-                <Spinner color='primary' size="lg" />
-            </div>;
+
+  if (loading) {
+    return (
+      <div className='w-[100vw] h-[100vh] flex justify-center items-center'>
+        <Spinner color='primary' size="lg" />
+      </div>
+    );
   }
+
   const handleHomeClick = async () => {
     router.push('/instructor/dashboard');
   }
+
+  const individualAssignments = assignments.filter(assignment => !assignment.groupAssignment && !assignment.title.toLowerCase().includes('peer review'));
+  const groupAssignments = assignments.filter(assignment => assignment.groupAssignment);
+  const peerReviews = assignments.filter(assignment => assignment.title.toLowerCase().includes('peer review'));
+
+  const renderAssignments = (assignments: Assignment[], title: string, color: string, isGroup: boolean) => (
+    <>
+      <h3 className={styles.innerTitle}>{title}</h3>
+      <br />
+      <Divider className="instructor bg-secondary" />
+      <br />
+      <div className={styles.courseCard}>
+        {assignments.length > 0 ? (
+          assignments.map((assignment) => (
+            <div key={assignment.assignmentID} className={styles.courseCard}>
+              <StudentAssignmentCard
+                courseID={assignment.assignmentID}
+                assignmentName={assignment.title}
+                courseName={assignment.courseName}
+                deadline={assignment.deadline}
+                color={color}
+                groupAssignment={isGroup}
+              />
+            </div>
+          ))
+        ) : (
+          <p>No {title.toLowerCase()} found.</p>
+        )}
+      </div>
+    </>
+  );
+
+  const shouldRenderAssignments = (type: string) => {
+    return selectedAssignmentTypes.includes('all') || selectedAssignmentTypes.includes(type);
+  };
 
   return (
     <>
@@ -68,9 +121,8 @@ if (loading) {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-            <BreadcrumbItem> Assignments </BreadcrumbItem>
+            <BreadcrumbItem>Assignments</BreadcrumbItem>
           </Breadcrumbs>
-          
         </div>
         <div className={styles.mainContent}>
           <div className={styles.assignmentsSection}>
@@ -79,52 +131,44 @@ if (loading) {
               orientation="horizontal"
               color="primary"
               size="sm"
-              className="text-left flex-row mb-2 text-primary-900 "
+              className="text-left flex-row mb-2 text-primary-900"
+              value={selectedAssignmentTypes}
             >
-              <Checkbox value="assignments">All Assignments</Checkbox>
-              <Checkbox value="peerReviews">Peer Reviews</Checkbox>
-              <Checkbox value="peerReviews">Peer Evaluations</Checkbox>
+              <Checkbox 
+                value="all" 
+                onChange={(e) => handleCheckboxChange('all', e.target.checked)}
+                isSelected={selectedAssignmentTypes.includes('all')}
+              >
+                All Assignments
+              </Checkbox>
+              <Checkbox 
+                value="individual" 
+                onChange={(e) => handleCheckboxChange('individual', e.target.checked)}
+                isSelected={selectedAssignmentTypes.includes('individual')}
+              >
+                Individual Assignments
+              </Checkbox>
+              <Checkbox 
+                value="group" 
+                onChange={(e) => handleCheckboxChange('group', e.target.checked)}
+                isSelected={selectedAssignmentTypes.includes('group')}
+              >
+                Group Assignments
+              </Checkbox>
+              <Checkbox 
+                value="peerReviews" 
+                onChange={(e) => handleCheckboxChange('peerReviews', e.target.checked)}
+                isSelected={selectedAssignmentTypes.includes('peerReviews')}
+              >
+                Peer Reviews
+              </Checkbox>
             </CheckboxGroup>
-            
-            <h3 className={styles.innerTitle}>Assignments</h3>
-            <br /> <Divider className="instructor bg-secondary" /> <br />
-            <div className={styles.courseCard}>
-              {assignments.length > 0 ? (
-                assignments.map((assignment) => (
-                  <div key={assignment.assignmentID} className={styles.courseCard}>
-                    <StudentAssignmentCard
-                      courseID={assignment.assignmentID}
-                      assignmentName={assignment.title}
-                      courseName={assignment.courseName}
-                      deadline={assignment.deadline}
-                      color="#b3d0c3"
-                    />
-                  </div>
-                ))
-              ) : (
-                <p>No assignments available.</p>
-              )}
-            </div><h3 className={styles.innerTitle}>Peer Reviews Created</h3>
-            <br /><Divider className="instructor bg-secondary" /><br />
-            <div className={styles.courseCard}>
-              {assignments.length > 0 ? (
-                assignments.map((assignment) => (
-                  <div key={assignment.assignmentID} className={styles.courseCard}>
-                    <StudentAssignmentCard
-                      courseID={45}
-                      assignmentName="Peer review Assignment"
-                      color="#72a98f" 
-                      deadline={""}  
-                      courseName=""                  />
-                  </div>
-                ))
-              ) : (
-                <p>No peer reviews available.</p>
-              )}
-            </div>
-          </div>
 
-          <div className={styles.notificationsSection}>            
+            {shouldRenderAssignments('individual') && renderAssignments(individualAssignments, 'Individual Assignments', '#b3d0c3', false)}
+            {shouldRenderAssignments('group') && renderAssignments(groupAssignments, 'Group Assignments', '#b3d0c3', true)}
+            {shouldRenderAssignments('peerReviews') && renderAssignments(peerReviews, 'Peer Reviews', '#72a98f', false)}
+          </div>
+          <div className={styles.notificationsSection}>
             <hr />
             <h2 className="my-3">Notifications</h2>
             <div className={styles.notificationsContainer}>
@@ -136,5 +180,3 @@ if (loading) {
     </>
   );
 }
-
-
