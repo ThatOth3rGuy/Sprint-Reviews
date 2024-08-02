@@ -269,6 +269,7 @@ export default function AssignmentDashboard() {
     }
   };
 
+  
   const handleBackClick = () => router.push(`/student/course-dashboard?courseId=${courseData?.courseID}`);
 
   const handleHomeClick = () => router.push("/student/dashboard");

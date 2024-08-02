@@ -211,6 +211,12 @@ export default function ReviewDashboard() {
     );
   }
 
+  const checkSubmissionStatus = (submissionDate: string, deadline: string) => {
+    const submission = dayjs(submissionDate);
+    const dueDate = dayjs(deadline);
+    return submission.isBefore(dueDate) ? 'Submitted on time' : 'Submitted late';
+  };
+
   const downloadSubmission = async (assignmentID: number, studentID: number) => {
     try {
       const response = await fetch(`/api/downloadSubmission?assignmentID=${assignmentID}&studentID=${studentID}`);
@@ -283,6 +289,7 @@ export default function ReviewDashboard() {
               <Button onClick={() => downloadSubmission(assignmentID, session.user.userID)}>
           Download Submitted File
         </Button>
+        
               <Card>
                 <CardHeader>Review Criteria</CardHeader>
                 <Divider />
@@ -319,7 +326,7 @@ export default function ReviewDashboard() {
                       Submit All Reviews
                     </Button>
                   )}
-
+ <p>{checkSubmissionStatus(currentSubmission.submissionDate, currentSubmission.deadline)}</p>
                 </CardBody>
               </Card>
             </>
