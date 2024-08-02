@@ -2,17 +2,22 @@
 import { test, expect } from '@playwright/test';
 import path from 'path';
 import fs from 'fs';
+import { time } from 'console';
 
 const baseURL = 'http://localhost:3001';
 
 // Login function to obtain a valid session
+// Login information comes from the database
 async function login(page: any) {
   await page.goto(`${baseURL}/instructor/login`);
+  await page.waitForSelector('input[type="email"]', { state: 'visible' });
   await page.fill('input[type="email"]', 'scott.faz@example.com');
+  await page.waitForSelector('input[type="password"]', { state: 'visible' });
   await page.fill('input[type="password"]', 'password123');
   await page.click('text=Sign In');
   await page.waitForNavigation();
 }
+
 
 test.describe('Manage Students Page', () => {
 
@@ -37,7 +42,7 @@ test.describe('Manage Students Page', () => {
     await page.click('text=Enroll Individual Student');
     
     // Fill the student ID
-    await page.fill('input[type="number"]', '123467');
+    await page.fill('input[type="number"]', '123476');
 
     // Click the correct enroll button within the modal
     await page.getByRole('button', { name: 'Enroll' }).click({ force: true });
@@ -50,15 +55,17 @@ test.describe('Manage Students Page', () => {
     await page.click('text=Remove Student');
 
     // Select the student we just added
-    const studentToRemove = page.getByLabel('Remove Student').getByText('Jack Black', { exact: true });
+    const studentToRemove = page.getByLabel('Remove Student').getByText('Uma Taylor', { exact: true });
     await studentToRemove.click();
 
     // Click the correct remove button within the modal
     await page.getByRole('button', { name: 'Remove' }).click({ force: true });
     
+    await page.waitForTimeout(100); // Adding a delay to allow the student to be removed
+
     // Ensure the student is removed successfully, and success message is displayed
     await expect(page.getByText('Student removed successfully')).toBeVisible();
-    await expect(page.getByText('Jack Black', { exact: true })).not.toBeVisible();
+    await expect(page.getByText('Uma Taylor', { exact: true })).not.toBeVisible();
   });
 
   // Check that enrolling a student that's already enrolled fails

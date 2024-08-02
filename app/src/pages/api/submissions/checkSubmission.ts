@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 }
 
-async function checkSubmission(assignmentID: number, userID: number): Promise<{ isSubmitted: boolean, submissionDate: string | null, submissionID: number | null, fileName: string | null }> {
+async function checkSubmission(assignmentID: number, userID: number): Promise<{ isSubmitted: boolean, submissionDate: string | null, submissionID: number | null, fileName: string | null, isLate: boolean }> {
     const sql = `
         SELECT s.*, st.studentID, st.userID, a.deadline 
         FROM submission s 

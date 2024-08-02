@@ -441,6 +441,22 @@ export async function getFeedback(submissionID: number) {
     throw error;
   }
 }
+// Function to get group feedback details
+export async function getGroupFeedback(assignmentID: number, reviewerID: number, revieweeID: number) {
+  const sql = `
+    SELECT *
+    FROM group_feedback
+    WHERE assignmentID = ? AND reviewerID = ? AND revieweeID = ?
+  `;
+
+  try {
+    const rows = await query(sql, [assignmentID, reviewerID, revieweeID]);
+    return rows[0];
+  } catch (error) {
+    console.error('Error getting group feedback:', error);
+    throw error;
+  }
+}
 // gets student enrollment for a given studentID and courseID (checks if student is enrolled in a course)
 export async function getEnrollment(studentID: number, courseID: number) {
   const sql = `
@@ -1141,6 +1157,29 @@ export async function updateFeedback(assignmentID: string, studentID: string, co
     return update;
   } catch (error) {
     console.error(`Error updating feedback ${assignmentID} for user ${studentID}:`, error);
+    throw error;
+  }
+}
+// Update student feedback information in the database (Feedback) - assignmentID is submission and reviewerID is studentID of reviewer
+export async function updateGroupFeedback(assignmentID: string, content: string, score: string, reviewerID: string, revieweeID: string): Promise<any> {
+
+  const sql = `UPDATE group_feedback SET content = ?, score = ? WHERE assignmentID = ? AND reviewerID = ? AND revieweeID = ?`;
+
+  try {
+    let reviewerStudentID = await getStudentsById(Number(reviewerID));
+    reviewerStudentID = reviewerStudentID.studentID;
+
+    // Check if the user already exists with the given values
+    const existingFeedback = await getGroupFeedback(Number(assignmentID), Number(reviewerStudentID), Number(revieweeID));
+
+    if (!existingFeedback) {
+      throw new Error(`Feedback for submission ${assignmentID} does not exist between user ${reviewerID} and ${revieweeID}.`);
+    }
+    // Proceed with the update
+    const update = await query(sql, [content, Number(score), Number(assignmentID), Number(reviewerStudentID), Number(revieweeID)]);
+    return update;
+  } catch (error) {
+    console.error(`Error updating feedback ${assignmentID} between user ${reviewerID} and ${revieweeID}:`, error);
     throw error;
   }
 }
