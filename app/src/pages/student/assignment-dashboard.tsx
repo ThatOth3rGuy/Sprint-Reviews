@@ -234,6 +234,41 @@ export default function AssignmentDashboard() {
     return currentDate >= startDate && currentDate <= endDate;
   };
 
+  const downloadSubmission = async (assignmentID: number, studentID: number) => {
+    try {
+      const response = await fetch(`/api/downloadSubmission?assignmentID=${assignmentID}&studentID=${studentID}`);
+      
+      if (response.ok) {
+        const contentType = response.headers.get('Content-Type');
+        
+        if (contentType === 'application/json') {
+          // Handle link submission
+          const data = await response.json();
+          window.open(data.link, '_blank');
+        } else {
+          // Handle file submission
+          const blob = await response.blob();
+          const contentDisposition = response.headers.get('Content-Disposition');
+          const fileName = contentDisposition?.split('filename=')[1] || 'downloaded_file';
+          
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', decodeURIComponent(fileName));
+          
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      } else {
+        throw new Error('Failed to download submission');
+      }
+    } catch (error) {
+      console.error('Error downloading submission:', error);
+      toast.error('Error downloading submission. Please try again.');
+    }
+  };
+
   const handleBackClick = () => router.push(`/student/course-dashboard?courseId=${courseData?.courseID}`);
 
   const handleHomeClick = () => router.push("/student/dashboard");
@@ -270,7 +305,9 @@ export default function AssignmentDashboard() {
                 ? "Assignment Submitted Late"
                 : "Assignment Submitted"}
             </p>
-            {submittedFileName && <p className="text-left text-small">Submitted: {submittedFileName}</p>}
+            {submittedFileName && <p className="text-left text-small">Submitted: {submittedFileName} <Button onClick={() => downloadSubmission(assignmentID, session.user.userID)}>
+          Download Submitted File
+        </Button></p>}
             {isWithinSubmissionPeriod() && (
               <Button onClick={onOpen}>Resubmit Assignment</Button>
             )}
@@ -338,6 +375,7 @@ export default function AssignmentDashboard() {
               )}
             </ModalContent>
           </Modal>
+          
           <div className={styles.feedbackSection}>
             
             <br />
