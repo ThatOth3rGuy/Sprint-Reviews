@@ -1,3 +1,4 @@
+// student/course-dashboard.tsx
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
@@ -246,17 +247,16 @@ export default function Page() {
                 <Divider className="instructor bg-secondary" />
                 <br />
                 <div className={styles.courseCard}>
-                  {peerReviewCards.length > 0 ? (
-                    peerReviewCards.map((assignment) => (
-                      <div key={assignment.assignmentID} className={styles.courseCard}>
-                        <StudentAssignmentCard
-                          courseID={assignment.assignmentID}
-                          assignmentName={assignment.title}
-                          color="#b3d0c3"
-                          deadline={assignment.deadline}
-                          groupAssignment={false} // Assuming peer reviews are not group assignments
-                        />
-                      </div>
+                  {peerReviews.length > 0 ? (
+                  peerReviews.map((review) => (
+                    <div key={review.reviewID} className={styles.courseCard}>
+                      <StudentReviewCard
+                        courseID={review.linkedAssignmentID}
+                        courseName={`Review for Assignment - ${review.title}`|| `Review for Assignment ${review.linkedAssignmentID}`}
+                        color="#b3d0c3"
+                        dueDate={new Date(review.deadline).toLocaleString()}
+                      />
+                    </div>
                     ))
                   ) : (
                     <p>No peer reviews found for this course.</p>

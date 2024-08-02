@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { createStudent, createUser } from '../../../db';
+import { addStudentNotification, createStudent, createUser } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -10,6 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // Create the student with the user ID 
       await createStudent(studentID, userID);
+      await addStudentNotification(studentID)
 
       res.status(200).json({ message: 'User added successfully' });
     } catch (error) {

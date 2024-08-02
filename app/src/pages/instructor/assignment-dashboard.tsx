@@ -8,6 +8,7 @@ import styles from "../../styles/AssignmentDetailCard.module.css";
 import { Breadcrumbs,CheckboxGroup, BreadcrumbItem, Spinner, Button, Modal, ModalContent, ModalHeader, ModalBody, Input,  ModalFooter, Textarea, Checkbox, Table, TableHeader, TableBody, TableRow, TableCell, TableColumn } from "@nextui-org/react";
 import type { NextPage } from "next";
 import toast from 'react-hot-toast';
+
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -15,13 +16,23 @@ interface Assignment {
   deadline: string;
   courseID: number;
   submissions: Submission[];
-  
 }
 
 interface CourseData {
   courseID: number;
   courseName: string;
 }
+interface SubmittedEntity {
+  studentID: number;
+  name: string;
+  fileName: string;
+}
+
+interface RemainingEntity {
+  studentID: number;
+  name: string;
+}
+
 interface Submission {
   submissionID: number;
   studentID: number;
@@ -49,6 +60,8 @@ interface Submission {
   const [newAllowedFileTypes, setNewAllowedFileTypes] = useState<string[]>([]);;
   const [newAllowLinks, setNewAllowLinks] = useState(false);
   const [newLinkTypes, setNewLinkTypes] = useState<string[]>([]);
+     const [submittedEntities, setSubmittedEntities] = useState<SubmittedEntity[]>([]);
+  const [remainingEntities, setRemainingEntities] = useState<RemainingEntity[]>([]);
     useSessionValidation('instructor', setLoading, setSession);
   
     useEffect(() => {
@@ -73,23 +86,28 @@ interface Submission {
                   console.log(courseData)
                   setCourseData(courseData);
                 }
+
               }
-            } else {
-              // Handle error response
-              const errorData = await assignmentResponse.json();
-              setError(errorData.message || 'Error fetching assignment data');
-              toast.error(errorData.message);
             }
-          } catch (error) {
-            // Handle network or other errors
-            setError('An error occurred. Please try again.');
-            toast.error("An error occurred. Please try again.")
-          } finally {
-            setLoading(false);
+
+            const studentsResponse = await fetch(`/api/submissions/${assignmentID}/students`);
+            if (studentsResponse.ok) {
+              const { submittedStudents, remainingStudents } = await studentsResponse.json();
+              setSubmittedEntities(submittedStudents);
+              setRemainingEntities(remainingStudents);
+            }
+          } else {
+            const errorData = await assignmentResponse.json();
+            setError(errorData.message || 'Error fetching assignment data');
+            toast.error(errorData.message);
           }
-        } else {
+        } catch (error) {
+          setError('An error occurred. Please try again.');
+          toast.error("An error occurred. Please try again.")
+        } finally {
           setLoading(false);
         }
+
       };
   
       fetchData();
@@ -213,11 +231,14 @@ interface Submission {
           <div className={styles.assignmentsSection}>
           <Button color='primary' variant='ghost' onClick={handleEditAssignmentClick}>Edit Assignment</Button>
             <AssignmentDetailCard
-              title={assignment.title}
-              description={assignment.descr || "No description available"}
-              deadline={new Date(assignment.deadline).toLocaleString() || "No deadline set"}   
-              
-            /> <h2>Submissions</h2>
+            assignmentID={assignment.assignmentID}
+            title={assignment.title}
+            description={assignment.descr || "No description available"}
+            deadline={assignment.deadline || "No deadline set"}
+            isGroupAssignment={false}
+            submittedEntities={submittedEntities}
+            remainingEntities={remainingEntities}
+          /> <h2>Submissions</h2>
             <Table aria-label="Submissions table">
               <TableHeader>
                 <TableColumn>Student Name</TableColumn>

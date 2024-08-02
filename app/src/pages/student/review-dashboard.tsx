@@ -154,7 +154,7 @@ export default function ReviewDashboard() {
     }));
   };
 
-  const submitReviews = async (assignmentID, reviews) => {
+  const submitReviews = async (assignmentID: number | undefined, reviews: { submissionID: number; feedbackDetails: { criteriaID: number; grade: number; }[]; comment: string; }[]) => {
     try {
       const response = await fetch('/api/reviews/submitReviews', {
         method: 'POST',
@@ -164,6 +164,7 @@ export default function ReviewDashboard() {
         body: JSON.stringify({
           assignmentID,
           reviews,
+          userID: session.user?.userID,
         }),
       });
   
@@ -195,11 +196,11 @@ export default function ReviewDashboard() {
       const result = await submitReviews(assignmentID, reviews);
       console.log(result.message); // 'Reviews submitted successfully'
       // Handle successful submission (e.g., show success message, redirect)
-      alert(result.message);
+      toast.success(result.message);
       router.push('/student/dashboard');
     } catch (error) {
       console.error('Failed to submit reviews:', error);
-      alert(`Error submitting reviews: ${error.message}`);
+      toast.error(`Error submitting reviews: ${(error as Error).message}`);
     }
   };
 

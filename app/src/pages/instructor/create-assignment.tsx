@@ -2,14 +2,22 @@ import type { NextPage } from "next";
 import styles from "../../styles/instructor-assignments-creation.module.css";
 import { useRouter } from "next/router";
 
-import { Card, SelectItem, Select, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Spinner } from "@nextui-org/react";
+import { 
+  Card, SelectItem, Select, Listbox, ListboxItem, AutocompleteItem, Autocomplete, 
+  Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, 
+  Progress, Input, Spinner 
+} from "@nextui-org/react";
 import InstructorHeader from "../components/instructor-components/instructor-header";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import toast from "react-hot-toast";
+
 import { start } from "repl";
+
+import { getNotificationsForStudent } from '../utils/getNotificationsForStudent';
+
 
 interface CourseData {
   courseID: string;
@@ -35,6 +43,8 @@ const Assignments: NextPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [allowedFileTypes, setAllowedFileTypes] = useState<string[]>([]);
   const [courseName, setCourseName] = useState<string>("");
+    const [courseData, setCourseData] = useState<CourseData | null>(null);
+
   const [allowLinks, setAllowLinks] = useState(false);
   const [linkTypes, setLinkTypes] = useState<string[]>([]);
 
@@ -45,6 +55,10 @@ const Assignments: NextPage = () => {
   const [courseData, setCourseData] = useState<CourseData | null>(null);
 
   //get course name or assignment page for breadcrumbs
+
+
+  
+
   useEffect(() => {
     const { source, courseId } = router.query;
     if (source === 'course' && courseId) {
@@ -80,17 +94,18 @@ const Assignments: NextPage = () => {
   //   reader.readAsText(selectedFile);
   // }
 
-
   const handleFileTypeChange = (fileType: string, checked: boolean) => {
     setAllowedFileTypes((prev) =>
       checked ? [...prev, fileType] : prev.filter((type) => type !== fileType)
     );
   };
+
   const handleLinkTypeChange = (linkType: string, checked: boolean) => {
     setLinkTypes((prev) =>
       checked ? [...prev, linkType] : prev.filter((type) => type !== linkType)
     );
   };
+
 
   const onCreateAssignmentButtonClick = useCallback(async () => {
     setError(null);
@@ -159,13 +174,48 @@ const Assignments: NextPage = () => {
     });
 
     if (response.ok) {
-      toast.success("Assignment created successfully!")
-      router.push(`/instructor/course-dashboard?courseId=${courseId}`);
+      const assignmentData = await response.json();
+      toast.success("Assignment created successfully!");
 
+      // Fetch course name
+      const courseResponse = await fetch(`/api/courses/${courseId}`);
+      const courseData = await courseResponse.json();
+
+      const studentsResponse = await fetch(`/api/courses/getCourseList?courseID=${courseId}`);
+      if (studentsResponse.ok) {
+        const students = await studentsResponse.json();
+        for (let student of students) {
+          try {
+            const notifications = await getNotificationsForStudent(student.userID);
+            if (notifications.assignmentNotification) {
+              const emailResponse = await fetch('/api/emails/assignmentEmail', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  firstName: student.firstName,
+                  email: student.email,
+                  title: assignmentData.title,
+                  courseName: courseData.courseName,
+                }),
+              });
+              if (!emailResponse.ok) {
+                console.error(`Failed to send email to ${student.email}`);
+              } 
+            }
+          } catch (error) {
+            console.error(`Error processing notifications for student ${student.userID}:`, error);
+          }
+        }
+      }
+
+      router.push(`/instructor/course-dashboard?courseId=${courseId}`);
+      
     } else {
       const errorData = await response.json();
       setError(errorData.message || "An error occurred while creating the assignment");
-      toast.error(errorData.message)
+      toast.error(errorData.message);
     }
   }, [title, description, startDate, endDate, dueDate, courseId, fileContent, groupAssignment, allowedFileTypes, allowLinks, linkTypes, router, session]);
 
@@ -199,10 +249,6 @@ const Assignments: NextPage = () => {
   const handleCreateGroupPeerReviewAssignmentClick = () => {
     router.push('/instructor/create-groups');
   };
-  /**
-   * Handles the action based on the key provided.
-   * @param {any} key - The key representing the action to be performed.
-   */
   const handleAction = (key: any) => {
     switch (key) {
       case "create":
@@ -215,7 +261,6 @@ const Assignments: NextPage = () => {
         handleCreateGroupPeerReviewAssignmentClick();
         break;
       case "delete":
-        // Implement delete course functionality
         console.log("Delete course");
         break;
       default:
@@ -223,7 +268,7 @@ const Assignments: NextPage = () => {
     }
   };
 
-  const handleBackClick = () => { //redirect to course dashboard or all assignments
+  const handleBackClick = () => {
     const { source } = router.query;
     if (source === 'course') {
       router.push(`/instructor/course-dashboard?courseId=${router.query.courseId}`);
@@ -231,11 +276,6 @@ const Assignments: NextPage = () => {
       router.push('/instructor/assignments');
     }
   };
-
-  /**
-     * Renders the instructor course dashboard page.
-     * @returns {JSX.Element} The instructor course dashboard page.
-     */
 
   return (
     <>
@@ -246,7 +286,6 @@ const Assignments: NextPage = () => {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-
             <BreadcrumbItem onClick={handleBackClick}>{router.query.source === 'course' ? (courseName || 'Course Dashboard') : 'Assignments'}</BreadcrumbItem>
             <BreadcrumbItem>Create Assignment</BreadcrumbItem>
           </Breadcrumbs>
@@ -330,7 +369,19 @@ const Assignments: NextPage = () => {
             </div>
 
             <br />
+
             <div className="flex-row align-top items-start justify-start">
+
+            <h3 className={styles.innerTitle}>Group Assignment:</h3>
+            <Checkbox
+              className={styles.innerTitle}
+              isSelected={groupAssignment}
+              onValueChange={setGroupAssignment}
+            >
+              Group Assignment
+            </Checkbox>
+            <br /><div>
+
               <CheckboxGroup
                 size="sm"
                 color="primary"

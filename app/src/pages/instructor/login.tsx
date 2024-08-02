@@ -36,6 +36,10 @@ const InstructorLogin: NextPage = () => {
       handleSignInClick();
     }
   }
+  const handleForgotPasswordClick = async () => {
+    // Redirect to the forgot password page
+    router.push("/forgot-password")
+  }
 
   const handleSignInClick = async () => {
     setError('');
@@ -81,9 +85,9 @@ const InstructorLogin: NextPage = () => {
               Sign In
             </Button>
             <div className="flex-column align-center justify-center text-center">
-              <Button className="bg-white h-fit w-fit my-1 mb-3 text-xs" variant="solid" >
+              <Button className="bg-white h-fit w-fit my-1 mb-3 text-xs" variant="solid" onClick={handleForgotPasswordClick}>
                 Forgot Your Password?
-              </Button><Divider orientation="horizontal" className='bg-primary'/>
+              </Button><Divider orientation="horizontal" className='bg-primary' />
               <p className="mt-3 p-1 text-small">Don't have an account?</p>
               <Button color='primary' className="w-fit h-5 " variant="flat" onClick={handleSignUpClick}>
                 Sign Up

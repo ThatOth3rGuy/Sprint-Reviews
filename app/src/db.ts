@@ -26,12 +26,18 @@ const pool = mysql.createPool(dbConfig);
 
 // main function to query the database with the given SQL query and values from pool
 export async function query(sql: string, values: any[] = [], customPool: mysql.Pool = pool): Promise<any> {
+  let connection: mysql.PoolConnection | undefined;
   try {
-    const [result] = await customPool.execute(sql, values);
+    connection = await customPool.getConnection();
+    const [result] = await connection.execute(sql, values);
     return result;
   } catch (error) {
     console.error('Database query error:', error);
     throw error;
+  } finally {
+    if (connection) {
+      connection.release();
+    }
   }
 }
 
@@ -699,7 +705,7 @@ WHERE u.userID = ?;
 // gets all assignments for an instructor based on the userID via join tables (called by getAllAssignmentsInstructor api)
 export async function getAllAssignmentsInstructor(userID: number) {
   const sql = `
-    SELECT a.*
+    SELECT a.*, c.courseName
 FROM assignment a
 JOIN course c ON a.courseID = c.courseID
 JOIN instructor i ON c.instructorID = i.instructorID
@@ -1069,7 +1075,7 @@ export async function updateCourse(courseID: string, courseName?: string, instru
   }
 }
 // Update student submission information in the database with the given values
-export async function updateSubmission(submissionID: string, assignmentID?: string, studentID?: string, fname?: string, fcontent?: JsonObject, fType?: string, subDate?: string, grade?: string)
+export async function updateSubmission(submissionID: string, assignmentID?: string, studentID?: string, fname?: string, fcontent?: JsonObject, fType?: string, subDate?: string, autoGrade?: string, grade?: string)
 : Promise<any> {
   /**This function might need to be handled differently for several things, such as file uploads, 
   or the fact of storing each submission compared to just updating it as the same submission */
@@ -1083,6 +1089,7 @@ export async function updateSubmission(submissionID: string, assignmentID?: stri
   if (fType !== undefined) { updateFields.push('fileType = ?'); params.push(fType); }
   if (subDate !== undefined) { updateFields.push('submissionDate = ?'); params.push(subDate); }
   if (grade !== undefined) { updateFields.push('grade = ?'); params.push(grade); }
+  if (autoGrade !== undefined) { updateFields.push('autoGrade = ?'); params.push(autoGrade); }
 
   const sql = `UPDATE submission SET ${updateFields.join(', ')} WHERE submissionID = ?`;
 
@@ -1217,6 +1224,23 @@ export async function updateGroupFeedback(assignmentID: string, content: string,
     return update;
   } catch (error) {
     console.error(`Error updating feedback ${assignmentID} between user ${reviewerID} and ${revieweeID}:`, error);
+    throw error;
+  }
+};
+
+export async function addStudentNotification(studentID: number, customPool: mysql.Pool = pool): Promise<any[]> {
+  if (!studentID) {
+    throw new Error('Invalid studentID');
+  }
+  const insertSql = `
+  INSERT INTO student_notifications (studentID)
+  VALUES (?)
+`;
+  try {
+    const rows = await query(insertSql, [studentID], customPool);
+    return rows;
+  } catch (error) {
+    console.error('Error adding student to notifications:', error);
     throw error;
   }
 }

@@ -19,6 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 
 
+
 async function checkSubmission(assignmentID: number, userID: number): Promise<{
   isSubmitted: boolean,
   submissionDate: string | null,
