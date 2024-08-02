@@ -12,6 +12,8 @@ interface Assignment {
   assignmentID: number;
   title: string;
   descr: string;
+  startDate: string;
+  endDate: string;
   deadline: string;
   allowedFileTypes: string;
   courseID: string; 
@@ -116,6 +118,7 @@ export default function AssignmentDashboard() {
 
         setSubmission(data);
         setNewGrade(data.grade ?? data.autoGrade);
+        console.log('Submission data:', data);
       } catch (error) {
         console.error('Error checking submission status:', error);
         toast.error('Error checking submission status. Please refresh the page.');
@@ -191,6 +194,8 @@ export default function AssignmentDashboard() {
           {assignment && (
             <AssignmentDetailCard
                 description={assignment.descr || "No description available"}
+                startDate={assignment.startDate || "No start date set"}
+                endDate={assignment.endDate || "No end date set"}
                 deadline={assignment.deadline || "No deadline set"}
                 allowedFileTypes={assignment.allowedFileTypes}
             />
@@ -243,7 +248,7 @@ export default function AssignmentDashboard() {
               type="number"
               fullWidth
               label="New Grade"
-              value={newGrade.toString()}
+              value={newGrade?.toString()}
               onChange={(e) => setNewGrade(Number(e.target.value))}
               min={0}
               max={100}

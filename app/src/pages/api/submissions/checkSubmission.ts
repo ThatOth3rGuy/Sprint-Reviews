@@ -10,6 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    console.log('Checking submission status for assignment', assignmentID, 'and user', userID);
     const result = await checkSubmission(Number(assignmentID), Number(userID));
     return res.json(result);
   } catch (error) {
@@ -25,18 +26,21 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{
   submissionDate: string | null,
   submissionID: number | null,
   fileName: string | null,
+  studentName: string | null,
   isLate: boolean,
   isLink: boolean
 }> {
   const sql = `
-    SELECT s.*, st.studentID, st.userID, a.deadline 
+    SELECT s.*, st.studentID, st.userID, a.deadline, CONCAT(u.firstName, ' ', u.lastName) as studentName 
     FROM submission s
     JOIN student st ON s.studentID = st.studentID
+    JOIN user u ON st.userID = u.userID
     JOIN assignment a ON s.assignmentID = a.assignmentID
-    WHERE s.assignmentID = ? AND st.userID = ?
+    WHERE s.assignmentID = ? AND st.studentID = ?
   `;
   try {
     const rows = await query(sql, [assignmentID, userID]);
+    console.log(rows);
     if (rows.length > 0) {
       const submissionDate = new Date(rows[0].submissionDate);
       const deadlineDate = new Date(rows[0].deadline);
@@ -47,11 +51,12 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{
         submissionDate: submissionDate.toISOString(),
         submissionID: rows[0].submissionID,
         fileName: rows[0].fileName,
+        studentName: rows[0].studentName,
         isLate,
         isLink
       };
     } else {
-      return { isSubmitted: false, submissionDate: null, submissionID: null, fileName: null, isLate: false, isLink: false };
+      return { isSubmitted: false, submissionDate: null, submissionID: null, fileName: null, studentName: null, isLate: false, isLink: false };
 
 
     }

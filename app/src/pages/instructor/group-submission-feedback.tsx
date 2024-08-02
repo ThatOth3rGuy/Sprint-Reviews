@@ -12,6 +12,8 @@ interface Assignment {
   assignmentID: number;
   title: string;
   descr: string;
+  startDate: string;
+  endDate: string;
   deadline: string;
   allowedFileTypes: string;
   groupAssignment: boolean;
@@ -277,7 +279,7 @@ export default function AssignmentDashboard() {
               type="number"
               fullWidth
               label="New Grade"
-              value={newGrade.toString()}
+              value={newGrade?.toString()}
               onChange={(e) => setNewGrade(Number(e.target.value))}
               min={0}
               max={100}
