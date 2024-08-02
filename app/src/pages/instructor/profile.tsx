@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardBody, Avatar, Button, Spinner, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from "@nextui-org/react";
+import {
+  Card, CardHeader, CardBody, Avatar, Button, Spinner, Modal,
+  ModalContent, ModalHeader, ModalBody, ModalFooter, Input
+} from "@nextui-org/react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/instructor-course-dashboard.module.css';
 import AdminNavbar from '../components/admin-components/admin-navbar';
@@ -22,17 +25,25 @@ export default function Page() {
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
+    console.log('Session:', session);
     if (session?.user?.userID) {
       fetch(`/api/userInfo/instructor-user-details?userID=${session.user.userID}`)
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          console.log('Response:', response);
+          return response.json();
+        })
         .then(data => {
           setUserDetails(data);
           setEditedDetails({
             fname: data.firstName,
             lname: data.lastName,
             email: data.email,
-            instructorID: '',
+            instructorID: data.instructorID || '', // Ensure instructorID is properly handled
           });
+          console.log('User details:', data);
           setLoading(false);
         })
         .catch(error => {
@@ -69,13 +80,14 @@ export default function Page() {
           firstName: editedDetails.fname,
           lastName: editedDetails.lname,
           email: editedDetails.email,
-          instructorID: editedDetails.instructorID // Add this line
+          instructorID: editedDetails.instructorID // Ensure instructorID is included in the PUT request
         }),
       });
-  
+
       if (response.ok) {
         const updatedUser = await response.json();
         setUserDetails(updatedUser);
+        console.log('User details updated successfully', updatedUser);
         setIsEditModalOpen(false);
         router.reload();
       } else {
@@ -98,82 +110,77 @@ export default function Page() {
     console.error('No user found in session');
     return null;
   }
+
   const isAdmin = session.user.role === 'admin';
+
   return (
     <>
-    {isAdmin ? <AdminNavbar profile={{ className: "bg-primary-500" }} /> : <InstructorNavbar profile={{ className: "bg-primary-500" }} />}
+      {isAdmin ? <AdminNavbar profile={{ className: "bg-primary-500" }} /> : <InstructorNavbar profile={{ className: "bg-primary-500" }} />}
 
-    <div className={`instructor text-primary-900 ${styles.container}`}>
-      <div className={styles.header}>
-        <h1>User Profile</h1>
-      </div>
-      <div className={styles.mainContent}>
-        <div className={styles.assignmentsSection}>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardBody className="text-sm font-medium">User Profile</CardBody>
-          </CardHeader>
-          <CardBody className="flex flex-col items-center">
-            <Avatar className="h-24 w-24 mb-4">
-              <Avatar src="/placeholder-user.jpg" />
-            </Avatar>
-            {userDetails && (
-              <>
-                <div className="text-2xl font-bold">{`${userDetails.firstName} ${userDetails.lastName}`}</div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">{userDetails.email}</p>
-                {userDetails.instructorID && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Instructor ID: {userDetails.instructorID}</p>
+      <div className={`instructor text-primary-900 ${styles.container}`}>
+        <div className={styles.header}>
+          <h1>User Profile</h1>
+        </div>
+        <div className={styles.mainContent}>
+          <div className={styles.assignmentsSection}>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CardBody className="text-sm font-medium">User Profile</CardBody>
+              </CardHeader>
+              <CardBody className="flex flex-col items-center">
+                <Avatar className="h-24 w-24 mb-4">
+                  <Avatar src="/placeholder-user.jpg" />
+                </Avatar>
+                {userDetails && (
+                  <>
+                    <div className="text-2xl font-bold">{`${userDetails.firstName} ${userDetails.lastName}`}</div>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{userDetails.email}</p>
+                    {userDetails.instructorID && (
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Instructor ID: {userDetails.instructorID}</p>
+                    )}
+                  </>
                 )}
-              </>
-            )}
-          </CardBody>
-        </Card>
-        <div >
-          <Button color="primary" variant="ghost" className="w-[100%] m-1" onClick={handleEditClick}>Edit Profile</Button>
-          
+              </CardBody>
+            </Card>
+            <div>
+              <Button color="primary" variant="ghost" className="w-[100%] m-1" onClick={handleEditClick}>Edit Profile</Button>
+            </div>
+          </div>
+
+          <Modal className='z-20'
+            backdrop="blur"
+            isOpen={isEditModalOpen}
+            onOpenChange={(open) => setIsEditModalOpen(open)}>
+            <ModalContent>
+              <ModalHeader>Edit Profile</ModalHeader>
+              <ModalBody>
+                <Input
+                  label="First Name"
+                  name="fname"
+                  value={editedDetails.fname}
+                  onChange={handleInputChange}
+                />
+                <Input
+                  label="Last Name"
+                  name="lname"
+                  value={editedDetails.lname}
+                  onChange={handleInputChange}
+                />
+                <Input
+                  label="Email"
+                  name="email"
+                  value={editedDetails.email}
+                  onChange={handleInputChange}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" onClick={handleSaveChanges}>Save Changes</Button>
+                <Button color="danger" variant="light" onClick={handleCloseModal}>Cancel</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </div>
       </div>
-
-      <Modal className='z-20'
-        backdrop="blur"
-        isOpen={isEditModalOpen}
-        onOpenChange={(open) => setIsEditModalOpen(open)}>
-        <ModalContent>
-          <ModalHeader>Edit Profile</ModalHeader>
-          <ModalBody>
-            <Input
-              label="First Name"
-              name="fname"
-              value={editedDetails.fname}
-              onChange={handleInputChange}
-            />
-            <Input
-              label="Last Name"
-              name="lname"
-              value={editedDetails.lname}
-              onChange={handleInputChange}
-            />
-            <Input
-              label="Email"
-              name="email"
-              value={editedDetails.email}
-              onChange={handleInputChange}
-            /><Input
-            label="Instructor ID"
-            name="instructorID"
-            value={editedDetails.instructorID}
-            onChange={handleInputChange}
-          />
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={handleSaveChanges}>Save Changes</Button>
-            <Button color="danger" variant="light" onClick={handleCloseModal}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </div>
-    </div>
     </>
-    
   );
 }
