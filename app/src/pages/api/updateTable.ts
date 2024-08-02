@@ -4,6 +4,7 @@ import { query,
     updateFeedback, updateGroupFeedback, updateReviewCriteria, updateReviewer, 
     updateStudent, updateSubmission, updateUser
  } from '../../db';
+import { calculateAndUpdateAverageGrade } from './groups/submitGroupFeedback';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const { table, data } = req.body;
@@ -51,6 +52,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             result = await Promise.all(data.map((feedback: any) => 
                 updateGroupFeedback(feedback.assignmentID, feedback.content, feedback.score, feedback.reviewerID, feedback.revieweeID)
             ));
+            await Promise.all(data.map((feedback: any) => 
+                calculateAndUpdateAverageGrade(feedback.assignmentID, feedback.revieweeID)
+            ));
             break;
             
             case 'reviewCriteria':
@@ -84,11 +88,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (!data.fileName) {
                 data.fileName = undefined; 
             }
+            if (!data.fileContent) {
+                data.fileName = undefined; 
+            }
             if (!data.fileType) {
                 data.fileType = undefined; 
             }
             if (!data.subDate) {
                 data.subDate = undefined; 
+            }
+            if (!data.autoGrade) {
+                data.autoGrade = undefined; 
             }
             if (!data.grade) {
                 data.grade = undefined; 
@@ -99,7 +109,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (!data.studentID) {   
                 data.studentID = undefined;
             }
-            result = await updateSubmission(data.submissionID, data.assignmentID, data.studentID, data.fileName, data.fileType, data.subDate, data.grade);
+            result = await updateSubmission(data.submissionID, data.assignmentID, data.studentID, data.fileName, data.fileContent, data.fileType, data.subDate, data.autoGrade, data.grade);
             break;
             
             case 'user':

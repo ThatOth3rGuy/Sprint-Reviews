@@ -78,8 +78,9 @@ CREATE TABLE IF NOT EXISTS submission (
     fileContent LONGBLOB,
     fileType VARCHAR(100),
     submissionDate DATETIME,
-    grade INT,
-    groupID INT,
+    autoGrade INT DEFAULT 0,
+    grade DECIMAL(5, 2),
+    groupID DECIMAL(5, 2),
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
@@ -102,6 +103,7 @@ CREATE TABLE IF NOT EXISTS feedback (
     feedbackDate DATETIME,
     lastUpdated DATETIME,
     comment TEXT NOT NULL,
+    reviewerID INT,
     FOREIGN KEY (submissionID) REFERENCES submission(submissionID) ON DELETE CASCADE,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
