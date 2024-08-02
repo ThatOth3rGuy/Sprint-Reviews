@@ -125,15 +125,15 @@ export async function addAssignmentToCourse(
 }
 // Inserts a student into the selected_students table for the defined submission in a course. Adds to the review_groups table 
 // for the selected student and submission (called by releaseRandomizedPeerReview api)
-export async function selectStudentForSubmission(studentID: number, assignmentID: number, courseID: number, submissionID: number): Promise<void> {
+export async function selectStudentForSubmission(studentID: number, assignmentID: number, courseID: number, revieweeID: number): Promise<void> {
 
   const insertSql = `
-    INSERT INTO review_groups (studentID, assignmentID, courseID, submissionID)
+    INSERT INTO review_groups (studentID, assignmentID, courseID, revieweeID)
     VALUES (?, ?, ?, ?)
   `;
 
   try {
-    await query(insertSql, [studentID, assignmentID, courseID, submissionID]);
+    await query(insertSql, [studentID, assignmentID, courseID, revieweeID]);
   } catch (error) {
     const err = error as Error;
     console.error(`Error selecting student ${studentID} for assignment ${assignmentID}:`, err.message);

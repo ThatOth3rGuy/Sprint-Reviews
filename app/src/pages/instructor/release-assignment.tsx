@@ -54,8 +54,6 @@ const ReleaseAssignment: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
-  const dummyassignments = ['Assignment 1', 'Assignment 2', 'Assignment 3'];
-  const [studentSubmissions, setStudentSubmissions] = useState<{ studentID: number; submissionID: number; }[]>([]);
 
   const [course, setCourse] = useState<string>("");
   const [reviewsPerAssignment, setReviewsPerAssignment] = useState<number>(4);
@@ -66,8 +64,6 @@ const ReleaseAssignment: React.FC = () => {
   //   { criterion: 'Criterion 2', maxMarks: 20 },
   //   { criterion: 'Criterion 3', maxMarks: 30 },
   // ];
-
-
 
   // Dummy questions
   const questions = ['Was the work clear and easy to understand?', 'Was the content relevant and meaningful?', 'Was the work well-organized and logically structured?', 'Did the author provide sufficient evidence or examples to support their arguments or points?', 'Improvements: What suggestions do you have for improving the work?'];
@@ -84,13 +80,6 @@ const ReleaseAssignment: React.FC = () => {
       fetchStudents(session.user.userID);
     }
   }, [session]);
-
-  // Debug selectedAssignment state changes
-  useEffect(() => {
-    if (selectedAssignment !== "") {
-      fetchStudentSubmissions(Number(selectedAssignment));
-    }
-  }, [selectedAssignment]);
   
   useEffect(() => {
     
@@ -121,13 +110,6 @@ const ReleaseAssignment: React.FC = () => {
       fetchStudents(session.user.courseID);
     }
   }, [session]);
-
-  // Debug selectedAssignment state changes
-  useEffect(() => {
-    if (selectedAssignment !== "") {
-      fetchStudentSubmissions(Number(selectedAssignment));
-    }
-  }, [selectedAssignment]);
 
 
   // Function to fetch assignments
@@ -169,24 +151,6 @@ const ReleaseAssignment: React.FC = () => {
       }
     } catch (error) {
       console.error("Error fetching students:", error);
-    }
-  };
-
-  const fetchStudentSubmissions = async (assignmentID: number) => {
-    try {
-      const response = await fetch("/api/assignments/getSubmissionList", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ assignmentID }),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setStudentSubmissions(data.formattedSubmissions); // Use the formatted submissions
-      } else {
-        console.error("Failed to fetch student submissions");
-      }
-    } catch (error) {
-      console.error("Failed to fetch student submissions");
     }
   };
 
@@ -261,7 +225,6 @@ const ReleaseAssignment: React.FC = () => {
     try {
       // Ensure submissions are fetched correctly
       const assignmentID = Number(selectedAssignment);
-      await fetchStudentSubmissions(assignmentID);
 
       const responseReleaseAssignment = await fetch("/api/assignments/releaseAssignment", {
         method: "POST",
@@ -273,6 +236,7 @@ const ReleaseAssignment: React.FC = () => {
           allowedFileTypes,
           deadline,
           anonymous,
+          students,
         }),
       });
 
@@ -281,15 +245,13 @@ const ReleaseAssignment: React.FC = () => {
        
       }
 
-      //const reviewGroups = randomizePeerReviewGroups(studentSubmissions, 4); // 4 reviews per assignment
-
       // Second API call to release randomized peer reviews
       const responseReleasePeerReviews = await fetch("/api/addNew/releaseRandomizedPeerReview", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          reviewsPerAssignment, // This number should be changed into an input field
-          studentSubmissions,
+          reviewsPerAssignment,
+          students,
           assignmentID,
         }),
       });
@@ -305,6 +267,7 @@ const ReleaseAssignment: React.FC = () => {
 
 
     } catch (error) {
+      toast.error("Error releasing assignment or peer reviews for review");
       console.error("Error releasing assignment or peer reviews for review:", error);
     }
   };
