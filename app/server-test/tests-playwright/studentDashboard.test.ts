@@ -5,13 +5,16 @@ import path from 'path';
 const baseURL = 'http://localhost:3001';
 
 // Login function to perform login before tests
-async function login(page: Page) {
+async function login(page: any) {
   await page.goto(`${baseURL}/student/login`);
+  await page.waitForSelector('input[type="email"]', { state: 'visible' });
   await page.fill('input[type="email"]', 'john.doe@example.com');
+  await page.waitForSelector('input[type="password"]', { state: 'visible' });
   await page.fill('input[type="password"]', 'password123');
   await page.click('text=Sign In');
   await page.waitForNavigation();
 }
+
 
 test.describe('Student Dashboard Page', () => {
   test.beforeEach(async ({ page }) => {

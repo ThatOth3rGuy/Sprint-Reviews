@@ -11,6 +11,10 @@ DROP TABLE IF EXISTS feedback;
 DROP TABLE IF EXISTS enrollment;
 DROP TABLE IF EXISTS selected_students;
 DROP TABLE IF EXISTS review_criteria;
+DROP TABLE IF EXISTS review;
+DROP TABLE IF EXISTS review_groups;
+DROP TABLE IF EXISTS course_groups;
+
 -- Table for storing users, which are separated into students and instructors
 CREATE TABLE IF NOT EXISTS user (
     userID INT AUTO_INCREMENT PRIMARY KEY,
@@ -67,6 +71,7 @@ CREATE TABLE IF NOT EXISTS submission (
     fileType VARCHAR(100),
     submissionDate DATETIME,
     grade INT,
+    groupID INT,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
@@ -87,6 +92,20 @@ CREATE TABLE IF NOT EXISTS feedback (
     FOREIGN KEY (assignmentID) REFERENCES submission(submissionID) ON DELETE CASCADE,
     FOREIGN KEY (reviewerID) REFERENCES student(studentID) ON DELETE SET NULL
 );
+
+-- Table for storing feedback information between students for group assignments
+CREATE TABLE IF NOT EXISTS group_feedback (
+    groupFeedbackID INT AUTO_INCREMENT PRIMARY KEY,
+    assignmentID INT NOT NULL,
+    score INT,
+    content TEXT,
+    reviewerID INT,
+    revieweeID INT,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
+    FOREIGN KEY (reviewerID) REFERENCES student(studentID) ON DELETE SET NULL,
+    FOREIGN KEY (revieweeID) REFERENCES student(studentID) ON DELETE SET NULL
+);
+
 -- Table for storing enrollment information to connect students to courses
 CREATE TABLE IF NOT EXISTS enrollment (
     studentID INT,
@@ -105,17 +124,7 @@ CREATE TABLE IF NOT EXISTS selected_students (
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
 
--- Table for storing course specific groups --
-CREATE TABLE IF NOT EXISTS course_groups (
-    groupID INT,
-    studentID INT,
-    courseID INT,
-    PRIMARY KEY (groupID, studentID, courseID),
-    FOREIGN KEY (studentID) REFERENCES student(studentID),
-    FOREIGN KEY (courseID) REFERENCES course(courseID)
-);
-
--- Table for storing peer review assignments
+-- Table for storing review information for peer review
 CREATE TABLE IF NOT EXISTS review (
     reviewID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT NOT NULL,
@@ -124,6 +133,8 @@ CREATE TABLE IF NOT EXISTS review (
     deadline DATETIME,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
+
+-- Table for storing connected submissions for students to peer review --
 CREATE TABLE IF NOT EXISTS review_groups  (
     studentID INT,
     assignmentID INT,
@@ -135,6 +146,16 @@ CREATE TABLE IF NOT EXISTS review_groups  (
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID),
     FOREIGN KEY (submissionID) REFERENCES submission(submissionID)
+);
+
+-- Table for storing course specific groups --
+CREATE TABLE IF NOT EXISTS course_groups (
+    groupID INT,
+    studentID INT,
+    courseID INT,
+    PRIMARY KEY (groupID, studentID, courseID),
+    FOREIGN KEY (studentID) REFERENCES student(studentID),
+    FOREIGN KEY (courseID) REFERENCES course(courseID)
 );
 
 -- Insert users
@@ -248,3 +269,20 @@ INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType
 (1, 123474, 'project_123474.sql', NULL, 'sql', NOW()),
 (1, 123475, 'project_123475.sql', NULL, 'sql', NOW()),
 (1, 123476, 'project_123476.sql', NULL, 'sql', NOW());
+
+-- Insert 5 more people into course 2, for testing group feedback
+INSERT INTO enrollment (studentID, courseID) VALUES
+(123467, 2),
+(123468, 2),
+(123469, 2),
+(123470, 2),
+(123471, 2);
+
+-- Insert selected students into course groups
+INSERT INTO course_groups (groupID, studentID, courseID) VALUES
+(1, 123467, 2),
+(1, 123468, 2),
+(1, 123469, 2),
+(2, 123470, 2),
+(2, 123471, 2),
+(2, 1002, 2);

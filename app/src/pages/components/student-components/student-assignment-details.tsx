@@ -19,6 +19,7 @@ const StudentAssignmentView: React.FC<StudentAssignmentViewProps> = ({ descripti
                     <h3>Description:</h3>
                     <p>{description}</p>
                     <br />
+
                     <div className='flex justify-start items-start'>
                         <div className='mr-16'>
                             <h3>Start Date:</h3>
@@ -33,6 +34,8 @@ const StudentAssignmentView: React.FC<StudentAssignmentViewProps> = ({ descripti
                             <p>{endDate}</p>
                         </div>
                     </div>
+
+
                     <br />
                     <h3>Upload Restrictions</h3>
                     <p>{allowedFileTypes}</p>

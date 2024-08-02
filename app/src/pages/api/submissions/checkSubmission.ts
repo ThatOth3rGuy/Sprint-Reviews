@@ -18,6 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
+
 async function checkSubmission(assignmentID: number, userID: number): Promise<{
   isSubmitted: boolean,
   submissionDate: string | null,
@@ -50,6 +51,8 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{
       };
     } else {
       return { isSubmitted: false, submissionDate: null, submissionID: null, fileName: null, isLate: false, isLink: false };
+
+
     }
   } catch (error) {
     console.error('Error in checkSubmission:', error);

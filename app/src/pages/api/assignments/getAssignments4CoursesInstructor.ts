@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 async function getAssignmentByInstructorID(courseID: number) {
   const sql = `
-    SELECT assignmentID, title, deadline, descr
+    SELECT *
     FROM assignment
     WHERE courseID = ? 
   `;
