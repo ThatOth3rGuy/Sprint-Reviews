@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS feedback;
 DROP TABLE IF EXISTS enrollment;
 DROP TABLE IF EXISTS selected_students;
 DROP TABLE IF EXISTS review_criteria;
+
 -- Table for storing users, which are separated into students and instructors
 CREATE TABLE IF NOT EXISTS user (
     userID INT AUTO_INCREMENT PRIMARY KEY,
@@ -20,6 +21,7 @@ CREATE TABLE IF NOT EXISTS user (
     pwd VARCHAR(100),
     userRole VARCHAR(20) CHECK (userRole IN ('student', 'instructor'))
 );
+
 -- Table for storing student, connected to the user table
 CREATE TABLE IF NOT EXISTS student (
     studentID INT PRIMARY KEY,
@@ -29,6 +31,7 @@ CREATE TABLE IF NOT EXISTS student (
     dateOfBirth DATE,
     FOREIGN KEY (userID) REFERENCES user(userID) ON DELETE CASCADE
 );
+
 -- Table for storing instructor information, connected to the user table
 CREATE TABLE IF NOT EXISTS instructor (
     instructorID INT PRIMARY KEY,
@@ -37,6 +40,7 @@ CREATE TABLE IF NOT EXISTS instructor (
     departments VARCHAR(255),
     FOREIGN KEY (userID) REFERENCES user(userID) ON DELETE CASCADE
 );
+
 -- Table for storing courses
 CREATE TABLE IF NOT EXISTS course (
     courseID INT AUTO_INCREMENT PRIMARY KEY,
@@ -45,6 +49,7 @@ CREATE TABLE IF NOT EXISTS course (
     instructorID INT,
     FOREIGN KEY (instructorID) REFERENCES instructor(instructorID) ON DELETE SET NULL
 );
+
 -- Table for storing assignment information
 CREATE TABLE IF NOT EXISTS assignment (
     assignmentID INT AUTO_INCREMENT PRIMARY KEY,
@@ -57,6 +62,7 @@ CREATE TABLE IF NOT EXISTS assignment (
     allowedFileTypes VARCHAR(255),
     FOREIGN KEY (courseID) REFERENCES course(courseID) ON DELETE CASCADE
 );
+
 -- Table for storing submission information between students and assignments
 CREATE TABLE IF NOT EXISTS submission (
     submissionID INT AUTO_INCREMENT PRIMARY KEY,
@@ -70,6 +76,7 @@ CREATE TABLE IF NOT EXISTS submission (
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
+
 -- Review creation table for instructor
 CREATE TABLE IF NOT EXISTS review_criteria (
     criteriaID INT AUTO_INCREMENT PRIMARY KEY,
@@ -78,15 +85,20 @@ CREATE TABLE IF NOT EXISTS review_criteria (
     maxMarks INT,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
+
 -- Table for storing feedback information between students and assignments
 CREATE TABLE IF NOT EXISTS feedback (
     feedbackID INT AUTO_INCREMENT PRIMARY KEY,
+    submissionID INT NOT NULL,
     assignmentID INT NOT NULL,
-    content TEXT,
-    reviewerID INT,
-    FOREIGN KEY (assignmentID) REFERENCES submission(submissionID) ON DELETE CASCADE,
-    FOREIGN KEY (reviewerID) REFERENCES student(studentID) ON DELETE SET NULL
+    feedbackDetails TEXT,
+    feedbackDate DATETIME,
+    lastUpdated DATETIME,
+    comment TEXT NOT NULL,
+    FOREIGN KEY (submissionID) REFERENCES submission(submissionID) ON DELETE CASCADE,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
+
 -- Table for storing enrollment information to connect students to courses
 CREATE TABLE IF NOT EXISTS enrollment (
     studentID INT,
@@ -95,6 +107,7 @@ CREATE TABLE IF NOT EXISTS enrollment (
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE CASCADE,
     FOREIGN KEY (courseID) REFERENCES course(courseID) ON DELETE CASCADE
 );
+
 -- Table for storing selected students for a group assignment
 CREATE TABLE IF NOT EXISTS selected_students (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -104,6 +117,32 @@ CREATE TABLE IF NOT EXISTS selected_students (
     FOREIGN KEY (assignmentID) REFERENCES submission(submissionID) ON DELETE CASCADE,
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
+CREATE TABLE IF NOT EXISTS review (
+    reviewID INT AUTO_INCREMENT PRIMARY KEY,
+    assignmentID INT NOT NULL,
+    isGroupAssignment BOOLEAN,
+    allowedFileTypes VARCHAR(255),
+    deadline DATETIME,
+    anonymous BOOLEAN,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
+);
+
+
+-- Table for storing connected submissions for students to peer review --
+
+CREATE TABLE IF NOT EXISTS review_groups  (
+    studentID INT,
+    assignmentID INT,
+    courseID INT,
+    revieweeID INT,
+    isReleased BOOLEAN DEFAULT false,
+    PRIMARY KEY (studentID, revieweeID),
+    FOREIGN KEY (studentID) REFERENCES student(studentID),
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
+    FOREIGN KEY (courseID) REFERENCES course(courseID),
+    FOREIGN KEY (revieweeID) REFERENCES student(studentID)
+);
+
 
 -- Table for storing course specific groups --
 CREATE TABLE IF NOT EXISTS course_groups (
@@ -113,28 +152,6 @@ CREATE TABLE IF NOT EXISTS course_groups (
     PRIMARY KEY (groupID, studentID, courseID),
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID)
-);
-
--- Table for storing peer review assignments
-CREATE TABLE IF NOT EXISTS review (
-    reviewID INT AUTO_INCREMENT PRIMARY KEY,
-    assignmentID INT NOT NULL,
-    isGroupAssignment BOOLEAN,
-    allowedFileTypes VARCHAR(255),
-    deadline DATETIME,
-    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
-);
-CREATE TABLE IF NOT EXISTS review_groups  (
-    studentID INT,
-    assignmentID INT,
-    courseID INT,
-    submissionID INT,
-    isReleased BOOLEAN DEFAULT false,
-    PRIMARY KEY (studentID, submissionID),
-    FOREIGN KEY (studentID) REFERENCES student(studentID),
-    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
-    FOREIGN KEY (courseID) REFERENCES course(courseID),
-    FOREIGN KEY (submissionID) REFERENCES submission(submissionID)
 );
 
 -- Insert users
@@ -172,9 +189,9 @@ INSERT INTO review_criteria (assignmentID, criterion, maxMarks) VALUES
 (2, 'Criterion 1', 15),
 (2, 'Criterion 2', 25);
 -- Insert feedback
-INSERT INTO feedback (assignmentID, content, reviewerID) VALUES
-(1, 'Great work!', 1002),
-(2, 'Needs improvement.', 1001);
+INSERT INTO feedback (submissionID, assignmentID, comment) VALUES
+(1, 1, 'Great work!'),
+(2, 2, 'Needs improvement.');
 -- Insert enrollment
 INSERT INTO enrollment (studentID, courseID) VALUES
 (1001, 1),
