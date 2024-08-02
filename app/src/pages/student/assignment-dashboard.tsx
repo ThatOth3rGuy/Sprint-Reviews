@@ -53,89 +53,57 @@ export default function AssignmentDashboard() {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [submissionType, setSubmissionType] = useState<'file' | 'link'>('file');
   const [linkSubmission, setLinkSubmission] = useState('');
-  const [currentDate, setCurrentDate] = useState(new Date());
 
   useSessionValidation("student", setLoading, setSession);
 
   useEffect(() => {
-    if (!router.isReady || !session) return;
-
-    const { assignmentID } = router.query;
-
     const fetchData = async () => {
-      if (assignmentID && session?.user?.userID) {
-        try {
-          const assignmentResponse = await fetch(`/api/assignments/${assignmentID}`);
+      if (!router.isReady || !session?.user?.userID || !assignmentID) return;
 
-          if (assignmentResponse.ok) {
-            const assignmentData: Assignment = await assignmentResponse.json();
-            setAssignment(assignmentData);
+      try {
+        const assignmentResponse = await fetch(`/api/assignments/${assignmentID}`);
+        if (assignmentResponse.ok) {
+          const assignmentData: Assignment = await assignmentResponse.json();
+          setAssignment(assignmentData);
 
-            if (assignmentData.courseID) {
-              const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
-              if (courseResponse.ok) {
-                const courseData: CourseData = await courseResponse.json();
-                setCourseData(courseData);
-              }
+          if (assignmentData.courseID) {
+            const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
+            if (courseResponse.ok) {
+              const courseData: CourseData = await courseResponse.json();
+              setCourseData(courseData);
             }
-
-            // Fetch feedbacks for this assignment and student
-            const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${session.user.userID}`);
-            if (feedbacksResponse.ok) {
-              const feedbacksData: Feedback[] = await feedbacksResponse.json();
-              setFeedbacks(feedbacksData);
-            }
-          } else {
-            console.error('Error fetching assignment data');
           }
-        } catch (error) {
-          console.error('Error:', error);
-        } finally {
-          setLoading(false);
+
+          const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${session.user.userID}`);
+          if (feedbacksResponse.ok) {
+            const feedbacksData: Feedback[] = await feedbacksResponse.json();
+            setFeedbacks(feedbacksData);
+          }
+
+          await checkSubmissionStatus();
+        } else {
+          console.error('Error fetching assignment data');
         }
-      } else {
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [router.isReady, session, router.query]);
-
-  useEffect(() => {
-    if (assignmentID && session?.user?.userID) {
-      fetch(`/api/assignments/${assignmentID}`)
-        .then((response) => response.json())
-        .then((data: Assignment) => {
-          setAssignment(data);
-          return fetch(`/api/courses/${data.courseID}`);
-        })
-        .then((response) => response.json())
-        .then((data: CourseData) => {
-          setCourseData(data);
-          checkSubmissionStatus();
-        })
-        .catch((error) => console.error("Error fetching data:", error));
-    }
-  }, [assignmentID, session]);
+  }, [router.isReady, session, assignmentID]);
 
   const checkSubmissionStatus = async () => {
     if (assignmentID && session?.user?.userID) {
       try {
         const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`);
-        if (!response.ok) {
-          throw new Error('Failed to check submission status');
-        }
-        const data = await response.json();
+        if (!response.ok) throw new Error('Failed to check submission status');
         
-        if (data.isSubmitted) {
-          setIsSubmitted(true);
-          setSubmittedFileName(data.fileName);
-          setIsLateSubmission(data.isLate);
-        } else {
-          setIsSubmitted(false);
-          setIsLateSubmission(false);
-          setSubmittedFileName(null);
-        }
+        const data = await response.json();
+        setIsSubmitted(data.isSubmitted);
+        setSubmittedFileName(data.fileName);
+        setIsLateSubmission(data.isLate);
       } catch (error) {
         console.error('Error checking submission status:', error);
         toast.error('Error checking submission status. Please refresh the page.');
@@ -193,19 +161,15 @@ export default function AssignmentDashboard() {
 
         const result = await response.json();
 
-        if (response.ok) {
-          if (result.success) {
-            toast.success(result.message);
-            onOpenChange();
-            setIsSubmitted(true);
-            setSubmittedFileName(uploadedFile ? uploadedFile.name : linkSubmission);
-            setIsLateSubmission(result.isLate);
-            checkSubmissionStatus();
-          } else {
-            throw new Error(result.message || 'Submission failed');
-          }
+        if (response.ok && result.success) {
+          toast.success(result.message);
+          onOpenChange();
+          setIsSubmitted(true);
+          setSubmittedFileName(uploadedFile ? uploadedFile.name : linkSubmission);
+          setIsLateSubmission(result.isLate);
+          checkSubmissionStatus();
         } else {
-          throw new Error('Submission failed');
+          throw new Error(result.message || 'Submission failed');
         }
       } catch (error) {
         console.error('Error submitting assignment:', error);
@@ -213,7 +177,6 @@ export default function AssignmentDashboard() {
         toast.error('Failed to submit. Please try again.');
       }
     } else {
-      console.error('Invalid submission attempt');
       toast.error('Invalid submission. Please check your file or link and try again.');
     }
   };
@@ -242,11 +205,9 @@ export default function AssignmentDashboard() {
         const contentType = response.headers.get('Content-Type');
         
         if (contentType === 'application/json') {
-          // Handle link submission
           const data = await response.json();
           window.open(data.link, '_blank');
         } else {
-          // Handle file submission
           const blob = await response.blob();
           const contentDisposition = response.headers.get('Content-Disposition');
           const fileName = contentDisposition?.split('filename=')[1] || 'downloaded_file';
@@ -269,7 +230,6 @@ export default function AssignmentDashboard() {
     }
   };
 
-  
   const handleBackClick = () => router.push(`/student/course-dashboard?courseId=${courseData?.courseID}`);
 
   const handleHomeClick = () => router.push("/student/dashboard");
@@ -284,40 +244,30 @@ export default function AssignmentDashboard() {
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
             <BreadcrumbItem onClick={handleBackClick}>{courseData?.courseName}</BreadcrumbItem>
-            <BreadcrumbItem>
-              {assignment.title || "Assignment Name"}
-            </BreadcrumbItem>
+            <BreadcrumbItem>{assignment.title || "Assignment Name"}</BreadcrumbItem>
           </Breadcrumbs>
         </div>
         <div className={styles.assignmentsSection}>
           {assignment && (
             <StudentAssignmentView
-            description={assignment.descr || "No description available"}
-            deadline={new Date(assignment.deadline).toLocaleString()|| "No deadline Date"}
-            allowedFileTypes={assignment.allowedFileTypes}
-            startDate={new Date(assignment.startDate).toLocaleString()|| "No start Date"}
-            endDate={new Date(assignment.endDate).toLocaleString()|| "No End Date"}
+              description={assignment.descr || "No description available"}
+              deadline={new Date(assignment.deadline).toLocaleString() || "No deadline Date"}
+              allowedFileTypes={assignment.allowedFileTypes}
+              startDate={new Date(assignment.startDate).toLocaleString() || "No start Date"}
+              endDate={new Date(assignment.endDate).toLocaleString() || "No End Date"}
             />
           )}
           {isSubmitted ? (
-          <div>
-            <p className={isLateSubmission ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1" : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"}>
-              {isLateSubmission
-                ? "Assignment Submitted Late"
-                : "Assignment Submitted"}
-            </p>
-            {submittedFileName && <p className="text-left text-small">Submitted: {submittedFileName} <Button onClick={() => downloadSubmission(assignmentID, session.user.userID)}>
-          Download Submitted File
-        </Button></p>}
-            {isWithinSubmissionPeriod() && (
-              <Button onClick={onOpen}>Resubmit Assignment</Button>
-            )}
-          </div>
-        ) : (
-          isWithinSubmissionPeriod() && (
-            <Button onClick={onOpen}>Submit Assignment</Button>
-          )
-        )}
+            <div>
+              <p className={isLateSubmission ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1" : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"}>
+                {isLateSubmission ? "Assignment Submitted Late" : "Assignment Submitted"}
+              </p>
+              {submittedFileName && <p className="text-left text-small">Submitted: {submittedFileName} <Button onClick={() => downloadSubmission(Number(assignmentID), session.user.userID)}>Download Submitted File</Button></p>}
+              {isWithinSubmissionPeriod() && <Button onClick={onOpen}>Resubmit Assignment</Button>}
+            </div>
+          ) : (
+            isWithinSubmissionPeriod() && <Button onClick={onOpen}>Submit Assignment</Button>
+          )}
           <Modal
             className="student"
             isOpen={isOpen}
@@ -328,57 +278,41 @@ export default function AssignmentDashboard() {
             <ModalContent>
               {(onClose) => (
                 <>
-                  <ModalHeader className="flex flex-col gap-1">
-                    Submit Assignment
-                  </ModalHeader>
+                  <ModalHeader className="flex flex-col gap-1">Submit Assignment</ModalHeader>
                   <ModalBody>
-                  {isLinkTypeAllowed() && (
-                  <div>
-                    <Button onClick={() => handleSubmissionTypeChange('file')}>File Submission</Button>
-                    <Button onClick={() => handleSubmissionTypeChange('link')}>Link Submission</Button>
-                  </div>
-                )}
-                {submissionType === 'file' ? (
-                  <input type="file" onChange={handleFileUpload} />
-                ) : (
-                  <Input
-                    type="url"
-                    label="Submission Link"
-                    placeholder="Enter your submission link"
-                    value={linkSubmission}
-                    onChange={(e) => setLinkSubmission(e.target.value)}
-                  />
-                )}
-                {fileError && <p style={{ color: "red" }}>{fileError}</p>}
-                {uploadedFile && (
-                  <div>
-                    <p>Selected file: {uploadedFile.name}</p>
-                  </div>
-                )}
+                    {isLinkTypeAllowed() && (
+                      <div>
+                        <Button onClick={() => handleSubmissionTypeChange('file')}>File Submission</Button>
+                        <Button onClick={() => handleSubmissionTypeChange('link')}>Link Submission</Button>
+                      </div>
+                    )}
+                    {submissionType === 'file' ? (
+                      <input type="file" onChange={handleFileUpload} />
+                    ) : (
+                      <Input
+                        type="url"
+                        label="Submission Link"
+                        placeholder="Enter your submission link"
+                        value={linkSubmission}
+                        onChange={(e) => setLinkSubmission(e.target.value)}
+                      />
+                    )}
+                    {fileError && <p style={{ color: "red" }}>{fileError}</p>}
+                    {uploadedFile && <p>Selected file: {uploadedFile.name}</p>}
                   </ModalBody>
                   <ModalFooter>
-                    <Button
-                      color="danger"
-                      variant="light"
-                      onPress={() => {
-                        setUploadedFile(null);
-                        setFileError(null);
-                        onClose();
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button color="primary" onPress={handleSubmit}>
-                      Submit
-                    </Button>
+                    <Button color="danger" variant="light" onPress={() => {
+                      setUploadedFile(null);
+                      setFileError(null);
+                      onClose();
+                    }}>Cancel</Button>
+                    <Button color="primary" onPress={handleSubmit}>Submit</Button>
                   </ModalFooter>
                 </>
               )}
             </ModalContent>
           </Modal>
-          
           <div className={styles.feedbackSection}>
-            
             <br />
             <hr />
             <h2>Feedback</h2>
