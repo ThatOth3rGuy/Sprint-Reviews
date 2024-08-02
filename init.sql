@@ -150,6 +150,18 @@ CREATE TABLE IF NOT EXISTS review (
 );
 
 
+-- Table for storing student notification preferences --
+CREATE TABLE IF NOT EXISTS student_notifications (
+    studentID INT,
+    assignmentNotification BOOLEAN DEFAULT TRUE,
+    reviewNotification BOOLEAN DEFAULT TRUE,
+    deadlineNotification BOOLEAN DEFAULT TRUE,
+    evaluationNotification BOOLEAN DEFAULT TRUE,
+    gradesNotification BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE CASCADE
+);
+
+
 -- Table for storing connected submissions for students to peer review --
 
 CREATE TABLE IF NOT EXISTS review_groups  (

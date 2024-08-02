@@ -16,15 +16,18 @@ const SignUp: NextPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [instructorID, setinstructorID] = useState('');
   const router = useRouter();
-  const [errors, setErrors] = useState({ firstName: '', lastName: '', instructorID: '', email: '', password: '' });
-
+  const [errors, setErrors] = useState({
+    firstName: '', lastName: '',
+    instructorID: '', email: '', password: ''
+  });
+  const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
   const validateEmail = (email: string) => {
     // Regex for validating email
     const regex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
     return regex.test(email);
   };
   const validatePassword = (password: string) => {
-    // Regex for validating password: minimum 8 characters, one capital, one lowercase, and one special character
+    // Regex for validating password: minimum 8 characters, one capital, one lowercase,one number, and one special character
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return regex.test(password);
   };
@@ -76,6 +79,15 @@ const SignUp: NextPage = () => {
         });
 
         if (response.ok) {
+          // Send email
+          await fetch('/api/emails/sendEmailConfirmation', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ firstName, lastName, email })
+          });
+
           router.push('/instructor/login');
           toast.success("Account created! Please sign in to continue.")
         } else {
@@ -100,10 +112,10 @@ const SignUp: NextPage = () => {
   return (
     <>
       <div className='instructor flex justify-center w-[100vw] h-[100vh] items-center bg-gradient-to-r from-[#404982] to-[#9094af]'>
-        <div className="flex-col justify-evenly text-center bg-white min-w-min m-[5vw] p-[2vw] flex border-solid border-2 border-primary">
-          <div className="justify-self-center p-4 bg-[#c7d3f7] text-primary flex text-center items-center">
-          <img src="/Images/Instructor/Back.png" alt="Back" className="absolute object-cover cursor-pointer w-[2vw] h-[2vw]" onClick={handleBackClick} aria-label='Back to Landing Page'/>
-          <h2 className='text-center mx-auto' >Create Account</h2>
+        <div className="flex-col justify-evenly text-center bg-white min-w-min m-[5vw] p-[2vw] flex border-solid border-2 border-primary rounded-lg">
+          <div className="justify-self-center p-4 bg-[#c7d3f7] text-primary flex text-center items-center rounded-md">
+            <img src="/Images/Instructor/Back.png" alt="Back" className="absolute object-cover cursor-pointer w-[2vw] h-[2vw]" onClick={handleBackClick} aria-label='Back to Landing Page' />
+            <h2 className='text-center mx-auto' >Create Account</h2>
           </div>
           <br />
           <div className='instructor max-h-[45vh] p-2 pt-0 overflow-y-auto'>
@@ -130,22 +142,24 @@ const SignUp: NextPage = () => {
             </div>
             <div className='flex'>
               <Input size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Password" value={password}
-                onChange={(e) => setPassword(e.target.value)} />
+                onChange={(e) => setPassword(e.target.value)}  onFocus={() => setShowPasswordRequirements(true)}
+                onBlur={() => setShowPasswordRequirements(false)}/>
               <Input size='sm' className="my-1 p-2" type="password" labelPlacement="inside" label="Confirm Password" value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)} />
             </div>
             <p className='text-danger-300 font-bold my-2'>{errors.password}</p>
-            <div className='text-sm  text-left border-3 border-solid border-danger-50 p-1'>
-              <p >
-                Password must contain the following:
-              </p>
-              <ul className='text-xs list-decimal px-6'>
-                <li>Minimum 8 characters</li>
-                <li>One uppercase</li>
-                <li>One lowercase</li>
-                <li>A special character</li>
-              </ul>
-            </div>
+            {showPasswordRequirements && (
+  <div className='text-xs text-left m-0 ml-2 text-warning-500'>
+    <p>Password must contain the following:</p>
+    <ul className='text-xs list-decimal px-6'>
+      <li>Minimum 8 characters</li>
+      <li>One uppercase</li>
+      <li>One lowercase</li>
+      <li>A special character</li>
+      <li>A number</li>
+    </ul>
+  </div>
+)}
 
             <Button color='primary' className='w-full mt-2' variant="solid" onClick={handleSignUpClick}>
               Sign Up

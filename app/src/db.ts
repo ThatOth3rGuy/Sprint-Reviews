@@ -1182,6 +1182,23 @@ export async function updateGroupFeedback(assignmentID: string, content: string,
     console.error(`Error updating feedback ${assignmentID} between user ${reviewerID} and ${revieweeID}:`, error);
     throw error;
   }
+};
+
+export async function addStudentNotification(studentID: number, customPool: mysql.Pool = pool): Promise<any[]> {
+  if (!studentID) {
+    throw new Error('Invalid studentID');
+  }
+  const insertSql = `
+  INSERT INTO student_notifications (studentID)
+  VALUES (?)
+`;
+  try {
+    const rows = await query(insertSql, [studentID], customPool);
+    return rows;
+  } catch (error) {
+    console.error('Error adding student to notifications:', error);
+    throw error;
+  }
 }
 
 
