@@ -112,11 +112,14 @@ Since we have the final user testing event next Friday, the plan for this split 
 
 ### Cycle Review
 
--
+This is supposed to be the final split of actually coding. We didn't end up finishing all the features by Wednesday like we planned, so we still have to finish some things before the Testing day Friday. My main tasks during this split are to finish the instructor-side for the feedback/submissions that I finished earlier this week. Then I'll need to refactor how the randomizer works because right now it relies on all students having submitted the assignment before a peer-review can be made.
 
 ### Current Tasks
-  * 1: -
-  * 2: -
+  * 1: Instructor feedback view
+  * 2: Auto-calculating grades
+  * 3: Instructor editing grades
+  * 4: Refactoring randomizer algorithm
+  * 5: Instructor manually editing feedback groups
 
 ### Progress Update: Wed-Fri
 <table>
@@ -128,19 +131,44 @@ Since we have the final user testing event next Friday, the plan for this split 
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> -
+        <td> Instructor feedback view
         </td>
         <!-- Status -->
-        <td> -
+        <td> Complete
         </td>
     </tr>
-        <tr>
+    <tr>
         <!-- Task/Issue # -->
-        <td> -
+        <td> Auto-calculating grades
         </td>
         <!-- Status -->
-        <td> -
+        <td> Complete
         </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Instructor editing grades
+        </td>
+        <!-- Status -->
+        <td> Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Refactoring randomizer algorithm
+        </td>
+        <!-- Status -->
+        <td> In Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Instructor manually editing feedback groups
+        </td>
+        <!-- Status -->
+        <td> To-Do
+        </td>
+    </tr>
 </table>
 
 # Week 11
