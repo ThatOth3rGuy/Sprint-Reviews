@@ -24,17 +24,10 @@ import {
   Input,
 } from "@nextui-org/react";
 import InstructorReviewCard from "../components/instructor-components/instructor-PR-card";
-import { enrollStudent } from "@/db";
 
 interface CourseData {
   courseID: string;
   courseName: string;
-}
-
-interface Review {
-  assignmentID: number;
-  linkedAssignmentID: number;
-  deadline: string;
 }
 
 interface Assignment {
@@ -247,12 +240,6 @@ export default function Page() {
     }
   };
 
-  if (!courseData || loading) {
-    return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
-      <Spinner color='primary' size="lg" />
-    </div>;
-  }
-
   if (!session || !session.user || !session.user.userID) {
     console.error("No user found in session");
     return null;
@@ -320,35 +307,6 @@ export default function Page() {
               </Checkbox>
             </CheckboxGroup>
 
-            <h3 className={styles.innerTitle}>Assignments Created</h3>
-            <br /> <Divider className="instructor bg-secondary" /> <br />
-            <div className={styles.courseCard}>
-              {assignments.length > 0 ? (
-                assignments.map((assignment) => (
-                  <div
-                    key={assignment.assignmentID}
-                    className={styles.courseCard}
-                  >
-                    <InstructorAssignmentCard 
-                      courseID={assignment.assignmentID}
-                      assignmentName={assignment.title}
-                      color="#9fc3cf"
-                      deadline={new Date(assignment.deadline).toLocaleString()}
-                    />
-                  </div>
-                ))
-              ) : (
-                <p>No assignments found for this course.</p>
-              )}
-            </div>
-            <h3 className={styles.innerTitle}>Peer Reviews Created</h3>
-            <br />
-            <Divider className="instructor bg-secondary" />
-            <br />
-            <div className={`w-100% ${styles.courseCard}`}>
-              {peerReviewAssignments && peerReviewAssignments.length > 0 ? (
-
-
             {shouldRenderAssignments('individual') && (
               <>
                 <h3 className={styles.innerTitle}>Individual Assignments</h3>
@@ -408,18 +366,14 @@ export default function Page() {
                 <Divider className="instructor bg-secondary" />
                 <br />
                 <div className={styles.courseCard}>
-                {peerReviewAssignments && peerReviewAssignments.length > 0 ? (
-
-                peerReviewAssignments.map((assignment) => (
-                  <div
-                    key={assignment.assignmentID}
-                    className={`w-100% ${styles.courseCard}`}
-                  >
-                    <InstructorReviewCard
-                      reviewID={assignment.assignmentID}
-                      linkedAssignmentID={assignment.linkedAssignmentID}
-                      color="#9fc3cf"
-                    />
+                  {peerReviewAssignments.length > 0 ? (
+                    peerReviewAssignments.map((assignment) => (
+                      <div key={assignment.assignmentID} className={`w-100% ${styles.courseCard}`}>
+                        <InstructorReviewCard
+                          reviewID={assignment.assignmentID}
+                          linkedAssignmentID={assignment.linkedAssignmentID}
+                          color="#9fc3cf"
+                        />
                       </div>
                     ))
                   ) : (
@@ -437,12 +391,7 @@ export default function Page() {
                 <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
                 <ListboxItem key="group-review"> Create Student Groups</ListboxItem>
                 <ListboxItem key="manage-students">Manage Students</ListboxItem>
-                <ListboxItem 
-                key="edit-course"
-                color="primary"
-                > 
-                Edit Course Name
-                </ListboxItem>
+                <ListboxItem key="edit-course" color="primary">Edit Course Name</ListboxItem>
                 {isAdmin && (
                   <ListboxItem key="archive" className="text-danger" color="danger">
                     Archive Course

@@ -13,11 +13,7 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import toast from "react-hot-toast";
-
-import { start } from "repl";
-
 import { getNotificationsForStudent } from '../utils/getNotificationsForStudent';
-
 
 interface CourseData {
   courseID: string;
@@ -43,26 +39,13 @@ const Assignments: NextPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [allowedFileTypes, setAllowedFileTypes] = useState<string[]>([]);
   const [courseName, setCourseName] = useState<string>("");
-    const [courseData, setCourseData] = useState<CourseData | null>(null);
-
+  const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [allowLinks, setAllowLinks] = useState(false);
   const [linkTypes, setLinkTypes] = useState<string[]>([]);
-
-  // Declare the groups and students variables here
-  const groups = ["Group A", "Group B", "Group C"];
-  const students = ["Student 1", "Student 2", "Student 3", "Student 4"];
-
-  const [courseData, setCourseData] = useState<CourseData | null>(null);
-
-  //get course name or assignment page for breadcrumbs
-
-
-  
 
   useEffect(() => {
     const { source, courseId } = router.query;
     if (source === 'course' && courseId) {
-      // Fetch course name
       fetchCourseName(courseId as string);
     }
   }, [router.query]);
@@ -79,21 +62,6 @@ const Assignments: NextPage = () => {
     }
   };
 
-  // async function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
-  //   if (!event.target.files || event.target.files.length === 0) {
-  //     return;
-  //   }
-  //   const selectedFile = event.target.files[0];
-  //   setFile(selectedFile);
-  //   const reader = new FileReader();
-  //   reader.onload = function (e) {
-  //     if (e.target) {
-  //       setFileContent(e.target.result as string);
-  //     }
-  //   };
-  //   reader.readAsText(selectedFile);
-  // }
-
   const handleFileTypeChange = (fileType: string, checked: boolean) => {
     setAllowedFileTypes((prev) =>
       checked ? [...prev, fileType] : prev.filter((type) => type !== fileType)
@@ -105,7 +73,6 @@ const Assignments: NextPage = () => {
       checked ? [...prev, linkType] : prev.filter((type) => type !== linkType)
     );
   };
-
 
   const onCreateAssignmentButtonClick = useCallback(async () => {
     setError(null);
@@ -177,7 +144,6 @@ const Assignments: NextPage = () => {
       const assignmentData = await response.json();
       toast.success("Assignment created successfully!");
 
-      // Fetch course name
       const courseResponse = await fetch(`/api/courses/${courseId}`);
       const courseData = await courseResponse.json();
 
@@ -219,8 +185,6 @@ const Assignments: NextPage = () => {
     }
   }, [title, description, startDate, endDate, dueDate, courseId, fileContent, groupAssignment, allowedFileTypes, allowLinks, linkTypes, router, session]);
 
-
-
   if (loading) {
     return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
       <Spinner color='primary' size="lg" />
@@ -240,6 +204,7 @@ const Assignments: NextPage = () => {
   function handleCourseDashboardClick(): void {
     router.push(`/instructor/course-dashboard?courseId=${courseId}`);
   }
+
   const handleCreateAssignmentClick = () => {
     router.push('/instructor/create-assignment');
   };
@@ -353,12 +318,10 @@ const Assignments: NextPage = () => {
                   min={new Date().toISOString().slice(0, 16)}
                 />
               </div>
-
             </div>
             <br />
             <div className="flex">
               <h3 className={styles.innerTitle}>Group Assignment:</h3>
-
               <Checkbox
                 className={styles.innerTitle}
                 isSelected={groupAssignment}
@@ -367,21 +330,8 @@ const Assignments: NextPage = () => {
                 Group Assignment
               </Checkbox>
             </div>
-
             <br />
-
             <div className="flex-row align-top items-start justify-start">
-
-            <h3 className={styles.innerTitle}>Group Assignment:</h3>
-            <Checkbox
-              className={styles.innerTitle}
-              isSelected={groupAssignment}
-              onValueChange={setGroupAssignment}
-            >
-              Group Assignment
-            </Checkbox>
-            <br /><div>
-
               <CheckboxGroup
                 size="sm"
                 color="primary"
@@ -394,17 +344,15 @@ const Assignments: NextPage = () => {
                 <Checkbox value="pdf">PDF (.pdf)</Checkbox>
                 <Checkbox value="docx">Word (.docx)</Checkbox>
                 <Checkbox value="zip">ZIP (.zip)</Checkbox>
-                <div className="flex-col">
-                  <Checkbox
-                    isSelected={allowLinks}
-                    onValueChange={setAllowLinks}
-                  >
-                    Allow link submissions
-                  </Checkbox>
-                
-                <br />
-                </div>
-              </CheckboxGroup>{allowLinks && (
+              </CheckboxGroup>
+              <div className="flex-col">
+                <Checkbox
+                  isSelected={allowLinks}
+                  onValueChange={setAllowLinks}
+                >
+                  Allow link submissions
+                </Checkbox>
+                {allowLinks && (
                   <div>
                     <br />
                     <CheckboxGroup
@@ -421,6 +369,7 @@ const Assignments: NextPage = () => {
                     </CheckboxGroup>
                   </div>
                 )}
+              </div>
             </div>
             <Button color="success" variant="solid" className="cursor-pointer m-2 mx-auto p-4 text-white w-[100%]" onClick={onCreateAssignmentButtonClick}>Create Assignment</Button>
           </div>
