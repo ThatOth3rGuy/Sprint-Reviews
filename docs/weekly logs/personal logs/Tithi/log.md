@@ -34,8 +34,8 @@ I worked on getting the assignment and peer reviews to take an two more paramete
 | ------- | ------- | ------- |
 | Email Notifications | 08/05/2024 | Two pages left that need notifications sent |
 | File viewer bug fixes | 08/05/2024 | WIP |
-| Auto-release assignment bug fixes | 07/31/2024 | WIP |
-| Work on fixing issues that came up from the testing session | 08/01/2024 | Complete |
+| Auto-release assignment bug fixes | 08/05/2024 | WIP |
+| Work on fixing issues that came up from the testing session | 08/05/2024 | WIP |
 
 #### Cycle Review and Goals
 
