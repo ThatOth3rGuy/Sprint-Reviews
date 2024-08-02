@@ -331,7 +331,7 @@ export default function CreateGroup() {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-            <BreadcrumbItem onClick={handleBackClick}>{router.query.source === 'course' ? courseName : 'Course Dashboard'}</BreadcrumbItem> 
+            <BreadcrumbItem onClick={handleBackClick}>{courseName ? courseName : 'Course Dashboard'}</BreadcrumbItem> 
             <BreadcrumbItem>Create Student Groups</BreadcrumbItem>
           </Breadcrumbs>
         </div>
