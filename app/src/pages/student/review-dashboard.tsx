@@ -12,6 +12,8 @@ interface Assignment {
   assignmentID: number;
   title: string;
   descr: string;
+  startDate: string;
+  endDate: string;
   deadline: string;
   allowedFileTypes: string;
   courseID: string; 
