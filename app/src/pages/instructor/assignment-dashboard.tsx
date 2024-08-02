@@ -205,7 +205,7 @@ const AssignmentDashboard: NextPage = () => {
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
-      <div className={styles.container}>
+      <div className={`instructor ${styles.container}`}>
         <div className={styles.header}>
           <h1>{assignment.title || "Assignment Name- Details"}</h1>
           <br />
@@ -218,7 +218,7 @@ const AssignmentDashboard: NextPage = () => {
           </Breadcrumbs>
         </div>
         <div className={styles.assignmentsSection}>
-          <Button color='primary' variant='ghost' onClick={handleEditAssignmentClick}>Edit Assignment</Button>
+          <Button color='primary' variant='ghost' onClick={handleEditAssignmentClick} className="p-5">Edit Assignment</Button>
           <AssignmentDetailCard
             assignmentID={assignment.assignmentID}
             title={assignment.title}
@@ -228,6 +228,9 @@ const AssignmentDashboard: NextPage = () => {
             submittedEntities={submittedEntities}
             remainingEntities={remainingEntities}
           />
+          <br />
+
+          
           <h2>Submissions</h2>
           <Table aria-label="Submissions table">
             <TableHeader>
