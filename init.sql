@@ -103,6 +103,7 @@ CREATE TABLE IF NOT EXISTS feedback (
     feedbackDate DATETIME,
     lastUpdated DATETIME,
     comment TEXT NOT NULL,
+    reviewerID INT,
     FOREIGN KEY (submissionID) REFERENCES submission(submissionID) ON DELETE CASCADE,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
