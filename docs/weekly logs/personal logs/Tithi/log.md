@@ -14,11 +14,33 @@ I spent some time doing bugfixes a lot of the functionality we wanted to merge a
 | Task | Due By | Status |
 | ------- | ------- | ------- |
 | Email Notifications | 07/31/2024 | Two pages left that need notifications sent |
-| File viewer | 07/31/2024 | WIP |
-| Auto-release assignment | 07/31/2024 | WIP |
-| Assignment due date fixes | 08/01/2024 | WIP |
+| File viewer | 07/31/2024 | Has bugs |
+| Auto-release assignment | 07/31/2024 | Complete with some bugs |
+| Assignment due date fixes | 08/01/2024 | Complete |
 
 ![week 12 time tracking](img/week12.png)
+
+### 08/02/2024
+
+Topics Covered:
+*finishing issues as needed for demo
+
+My contributions since Wednesday's log:
+
+I worked on getting the assignment and peer reviews to take an two more parameters: start date and end date. The instructor selects these dates and students can only submit assignments while in the date range. I also worked on getting the auto release peer review set up. I have all of the code written for it, but there are some issues with it and it is not entirely tested as of yet. I also started working on the file viewer, mostly making it so that the assignment is downloadable by the student and the instructor. This is not entirely functional as it is not able to read the file from the database but it has some functionality to it. 
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Email Notifications | 08/05/2024 | Two pages left that need notifications sent |
+| File viewer bug fixes | 08/05/2024 | WIP |
+| Auto-release assignment bug fixes | 07/31/2024 | WIP |
+| Work on fixing issues that came up from the testing session | 08/01/2024 | Complete |
+
+#### Cycle Review and Goals
+
+This was a busy cycle, we all did our best to get as many of the last few issues complete. We got major functionality complete, with the assignment dates, modifying assignments, auto grading, and group submissions. Over the coming days, we are going to work on getting all of the major bugs in the system fixed. We are also aiming to have all of the requirements tested and ready to present to Parsa for Wednesday. There are only a few issues left so I am hopeful that we will have everything complete by Monday.
+
+![week 12 time tracking](img/week12.2.png)
 
 ## Personal Log For Week 11
 
