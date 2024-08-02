@@ -458,7 +458,7 @@ export async function getEnrollment(studentID: number, courseID: number) {
   }
 }
 // Get review groups for a student based on the provided parameters (called by group(s)/[assignmentID] api)
-export async function getReviewGroups(studentID?: number, assignmentID?: number, submissionID?: number, groupBy?: string) {
+export async function getReviewGroups(studentID?: number, assignmentID?: number, revieweeID?: number, groupBy?: string) {
   const conditions = [];
   const params = [];
 
@@ -472,64 +472,58 @@ export async function getReviewGroups(studentID?: number, assignmentID?: number,
     params.push(assignmentID);
   }
 
-  if (submissionID !== undefined) {
-    conditions.push('submissionID = ?');
-    params.push(submissionID);
+  if (revieweeID !== undefined) {
+    conditions.push('revieweeID = ?');
+    params.push(revieweeID);
   }
 
   const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
-
   const groupByClause = groupBy ? `GROUP BY ${groupBy}` : '';
 
   const sql = `
-    SELECT *
+    SELECT revieweeID, GROUP_CONCAT(studentID) AS reviewerIDs
     FROM review_groups
     ${whereClause}
     ${groupByClause}
   `;
-
+  
   try {
-    //console.log('Fetching review groups:', sql, params);
     const rows = await query(sql, params);
-    //console.log('Fetched review groups:', rows);
-    return rows;
+    return rows.map((row: { revieweeID: any; reviewerIDs: string; }) => ({
+      revieweeID: row.revieweeID,
+      reviewerIDs: row.reviewerIDs ? row.reviewerIDs.split(',').map(Number) : []
+    }));
   } catch (error) {
     console.error('Error fetching review groups:', error);
     throw error;
   }
 }
-// gets review group details?
-export async function getGroupDetails(groups: any[]) {
-  if (groups.length === 0) {
-    return [];
-  }
+// gets student details to be displayed in their review groups
+export async function getStudentDetails(studentIDs: number[]) {
+  // Create placeholders for each studentID
+  const placeholders = studentIDs.map(() => '?').join(',');
 
-  const groupDetails = [];
+  const sql = `
+    SELECT student.studentID, firstName, lastName
+    FROM student
+    JOIN user ON student.userID = user.userID
+    WHERE student.studentID IN (${placeholders})
+  `;
 
-  for (const group of groups) {
-    const sql = `
-      SELECT 
-        sg.*,
-        stu.firstName AS studentFirstName,
-        stu.lastName AS studentLastName,
-        subu.firstName AS submissionFirstName,
-        subu.lastName AS submissionLastName
-      FROM review_groups sg
-      JOIN student st ON sg.studentID = st.studentID
-      JOIN user stu ON st.userID = stu.userID
-      JOIN submission s ON sg.submissionID = s.submissionID
-      JOIN student sub ON s.studentID = sub.studentID
-      JOIN user subu ON sub.userID = subu.userID
-      WHERE sg.studentID = ? AND sg.assignmentID = ? AND sg.submissionID = ?
-    `;
+  const students = await query(sql, studentIDs);
 
-    const params = [group.studentID, group.assignmentID, group.submissionID];
-    const rows = await query(sql, params);
-    groupDetails.push(...rows);
-  }
-
-  return groupDetails;
+  // Transform the result into an object with student IDs as keys for easy lookup
+  const studentDetails: { [key: number]: { studentID: number, firstName: string, lastName: string } } = {};
+  students.forEach((student: { studentID: number, firstName: string, lastName: string }) => {
+    studentDetails[student.studentID] = {
+      studentID: student.studentID,
+      firstName: student.firstName,
+      lastName: student.lastName
+    };
+  });
+  return studentDetails;
 }
+
 
 /* GET ALL IN TABLE FUNCTIONS - NO PARAMS */
 
