@@ -1,5 +1,65 @@
 # Project 3: Peer Review System - Team 3 (SprintRunners)
 
+# Week 10 summary (Test-ORAMA week)
+ ## July 31st (Wed) - August 2nd (Fri)
+ ### Features in the Project Plan Cycle: 
+1. User's modifying personal details
+2. Instructors leaving feedback on assignments
+3. Auto-Calculate Average student Grade for Reviewed Assignment
+4. Resubmit Assignment
+5. Instructors extending deadlines 
+6. Modifying assignments
+7. Forgot password page
+
+
+
+###  Tasks from the Project Board:
+![week11Kanban2](./Images/Week11Kanban.png)
+
+
+
+### Tasks for Next Cycle:
+
+![week11ToDo2](./Images/Week11Todo.png)
+
+
+
+### Burn-up Chart (Velocity):
+![week11Burnup2](./Images/Week11BurnUp.png)
+
+
+
+### Times for Team/Individual:
+
+
+Clockify Times:
+
+![week11Clokify2](./Images/Week11Clockify.png)
+
+
+
+
+
+### Completed Tasks:
+![week11Done](https://github.com/user-attachments/assets/3b931bdb-d4e3-450e-98e3-1f4301a11c6a)
+
+
+### In Progress Tasks/ To do:
+![week11InProgress](./Images/Week11InProgress.png)
+
+
+### Test Results 
+Playwright :
+
+![Playwright test report](https://github.com/user-attachments/assets/48cab5d3-b273-4dfd-9ce7-1a0603ad88ae)
+Jest : 
+
+![image](https://github.com/user-attachments/assets/b43f7ede-a023-4497-98fe-cb88ad5e881f)
+
+
+### Overview:
+This week's cycle was slower, yet significant progress was made in the group formation and student view of the dashboard. More work is needed over the weekend to prepare the prototype for testing. Currently, we have some tests ready, and more are in the process of being written.
+
 # Weekly Team Logs
 # Week 11 Summary
  ## July 24th (Wed) - July 31st (Wed)
