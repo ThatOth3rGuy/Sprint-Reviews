@@ -60,8 +60,10 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   const [newEndDate, setNewEndDate] = useState("");
   const [newAnonymous, setNewAnonymous] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [isRandomizeModalOpen, setIsRandomizeModalOpen] = useState(false);
   const [reviewsPerAssignment, setReviewsPerAssignment] = useState(4);
+
 
 
   useSessionValidation('instructor', setLoading, setSession);
@@ -278,7 +280,10 @@ const handleAssignmentsUpdate = async () => {
             reviewID: reviewID,            
             startDate: newStartDate,
             endDate: newEndDate,
+
             deadline: newDueDate,
+
+
             
           }
         })
@@ -418,6 +423,7 @@ const handleAssignmentsUpdate = async () => {
               </ModalFooter>
             </ModalContent>
           </Modal>
+
           <Modal
   className='z-20'
   backdrop="blur"
@@ -446,6 +452,7 @@ const handleAssignmentsUpdate = async () => {
     </ModalFooter>
   </ModalContent>
 </Modal>
+
         </div>
       </div>
     </>

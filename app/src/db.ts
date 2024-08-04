@@ -205,12 +205,14 @@ export async function createReview(
   assignmentID: number, 
   isGroupAssignment: boolean, 
   allowedFileTypes: string, 
+  startDate: Date,
+  endDate : Date,
   deadline: Date,
   anonymous: boolean
 ): Promise<void> {
   const result = await query(
-    'INSERT INTO review (assignmentID, isGroupAssignment, allowedFileTypes, deadline, anonymous) VALUES (?, ?, ?, ?, ?)',
-    [assignmentID, isGroupAssignment, allowedFileTypes, deadline, anonymous]
+    'INSERT INTO review (assignmentID, isGroupAssignment, allowedFileTypes,startDate, endDate, deadline, anonymous) VALUES (?, ?, ?, ?, ?)',
+    [assignmentID, isGroupAssignment, allowedFileTypes,startDate,endDate, deadline, anonymous]
   );
   
   if (result.affectedRows === 0) {
@@ -1195,6 +1197,21 @@ export async function updateReview(reviewID: number, assignmentID: number, isGro
     return updatedReview;
   } catch (error) {
     console.error('Error updating review:', error);
+    throw error;
+  }
+}
+export async function updateReviewDates(reviewID: number, startDate: string, endDate: string, deadline: string): Promise<any> {
+  const sql = `
+    UPDATE review
+    SET startDate = ?, endDate = ?, deadline = ?
+    WHERE reviewID = ?
+  `;
+
+  try {
+    const result = await query(sql, [startDate, endDate, deadline, reviewID]);
+    return result;
+  } catch (error) {
+    console.error('Error updating review dates:', error);
     throw error;
   }
 }

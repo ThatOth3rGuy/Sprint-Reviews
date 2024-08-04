@@ -344,14 +344,16 @@ const Assignments: NextPage = () => {
                 <Checkbox value="pdf">PDF (.pdf)</Checkbox>
                 <Checkbox value="docx">Word (.docx)</Checkbox>
                 <Checkbox value="zip">ZIP (.zip)</Checkbox>
-              </CheckboxGroup>
-              <div className="flex-col">
                 <Checkbox
                   isSelected={allowLinks}
                   onValueChange={setAllowLinks}
                 >
                   Allow link submissions
                 </Checkbox>
+
+              </CheckboxGroup>
+              <div className="flex-col">
+                
                 {allowLinks && (
                   <div>
                     <br />
