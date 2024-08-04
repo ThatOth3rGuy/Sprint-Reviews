@@ -1200,15 +1200,15 @@ export async function updateReview(reviewID: number, assignmentID: number, isGro
     throw error;
   }
 }
-export async function updateReviewDates(reviewID: number, startDate: string, endDate: string, deadline: string): Promise<any> {
+export async function updateReviewDates(reviewID: number, startDate: string, endDate: string, deadline: string, anonymous: Boolean): Promise<any> {
   const sql = `
     UPDATE review
-    SET startDate = ?, endDate = ?, deadline = ?
+    SET startDate = ?, endDate = ?, deadline = ?, anonymous = ?
     WHERE reviewID = ?
   `;
 
   try {
-    const result = await query(sql, [startDate, endDate, deadline, reviewID]);
+    const result = await query(sql, [startDate, endDate, deadline, anonymous, reviewID]);
     return result;
   } catch (error) {
     console.error('Error updating review dates:', error);

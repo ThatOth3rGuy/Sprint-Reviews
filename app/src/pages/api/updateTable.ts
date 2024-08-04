@@ -139,7 +139,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     break;
 
             case 'reviewDates':
-                result = await updateReviewDates(data.reviewID, data.startDate, data.endDate, data.deadline);
+                result = await updateReviewDates(data.reviewID, data.startDate, data.endDate, data.deadline, data.anonymous);
             break;
 
             case 'review':
@@ -163,6 +163,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }
                 if(!data.deadline){
                     data.deadline = undefined;
+                }
+                if(!data.anonymous){
+                    data.anonymous = undefined;
                 }
                 result = await updateReview(data.reviewID, data.assignmentID, data.isGroupAssignment, data.allowedFileTypes, data.startDate, data.endDate, data.deadline, data.anonymous);
                 if (data.autoRelease) {

@@ -283,8 +283,7 @@ const handleAssignmentsUpdate = async () => {
 
             deadline: newDueDate,
 
-
-            
+            anonymous: newAnonymous,
           }
         })
       }); if (response.ok) {
