@@ -3,7 +3,7 @@ import { autoRelease, query,
     updateAssignment, updateAssignmentName, updateCourse, updateEnrollment,
 
     updateFeedback, updateReview, updateReviewCriteria, updateReviewer, updateStudent,
-    updateSubmission, updateUser
+    updateSubmission, updateUser,updateReviewDates
 
  } from '../../db';
 import { calculateAndUpdateAverageGrade } from './groups/submitGroupFeedback';
@@ -129,8 +129,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
             result = await updateUser(data.userID, data.fname, data.lname, data.email, data.password);
             break;
-            
+            case 'reviewDates':
+                result = await updateReviewDates(data.reviewID, data.startDate, data.endDate, data.deadline);
+            break;
             case 'review':
+                if(!data.reviewID){
+                    data.reviewID = undefined;
+                }
+                if(!data.assignmentID){
+                    data.assignmentID = undefined;
+                }
+                if(!data.isGroupAssignment){
+                    data.isGroupAssignment = undefined;
+                }
+                if(!data.allowedFileTypes){
+                    data.allowedFileTypes = undefined;
+                }
+                if(!data.startDate){
+                    data.startDate = undefined;
+                }
+                if(!data.endDate){
+                    data.endDate = undefined;
+                }
+                if(!data.deadline){
+                    data.deadline = undefined;
+                }
                 result = await updateReview(data.reviewID, data.assignmentID, data.isGroupAssignment, data.allowedFileTypes, data.startDate, data.endDate, data.deadline, data.anonymous);
                 if (data.autoRelease) {
                     await autoRelease(data.assignmentID);

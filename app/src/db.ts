@@ -1163,6 +1163,21 @@ export async function updateReview(reviewID: number, assignmentID: number, isGro
     throw error;
   }
 }
+export async function updateReviewDates(reviewID: number, startDate: string, endDate: string, deadline: string): Promise<any> {
+  const sql = `
+    UPDATE review
+    SET startDate = ?, endDate = ?, deadline = ?
+    WHERE reviewID = ?
+  `;
+
+  try {
+    const result = await query(sql, [startDate, endDate, deadline, reviewID]);
+    return result;
+  } catch (error) {
+    console.error('Error updating review dates:', error);
+    throw error;
+  }
+}
 
 //Update isReleased when startDate = NOW() --> for auto-releaseing an assignment
 export async function autoRelease(assignmentID : string) {

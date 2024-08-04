@@ -237,16 +237,13 @@ const handleAssignmentsUpdate = async () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          table: 'review',
+          table: 'reviewDates',
           data: {
-            reviewID: reviewID,
-            assignmentID: review?.assignmentID,
-            isGroupAssignment:review?.isGroupAssignment,
-            allowedFileTypes : review?.allowedFileTypes,
+            reviewID: reviewID,            
             startDate: newStartDate,
             endDate: newEndDate,
             dueDate: newDueDate,
-            anonymous: newAnonymous,
+            
           }
         })
       }); if (response.ok) {
