@@ -19,31 +19,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       for (const review of reviews) {
-        const { submissionID, feedbackDetails, comment } = review;
+        const { revieweeID, feedbackDetails, comment } = review;
 
-        if (!submissionID || !feedbackDetails || !comment) {
-          throw new Error('Invalid review data: missing submissionID, feedbackDetails, or comment');
+        if (!revieweeID || !feedbackDetails || !comment) {
+          throw new Error('Invalid review data: missing revieweeID, feedbackDetails, or comment');
         }
 
         const existingFeedback = await query(
-          'SELECT feedbackID FROM feedback WHERE submissionID = ? AND assignmentID = ? AND reviewerID = ?',
-          [submissionID, assignmentID, reviewerID.studentID]
+          'SELECT feedbackID FROM feedback WHERE revieweeID = ? AND assignmentID = ? AND reviewerID = ?',
+          [revieweeID, assignmentID, reviewerID.studentID]
         );
 
         if (existingFeedback.length > 0) {
           await query(
-            'UPDATE feedback SET feedbackDetails = ?, comment = ?, lastUpdated = NOW() WHERE submissionID = ? AND assignmentID = ? AND reviewerID = ?',
-            [JSON.stringify(feedbackDetails), comment, submissionID, assignmentID, reviewerID.studentID]
+            'UPDATE feedback SET feedbackDetails = ?, comment = ?, lastUpdated = NOW() WHERE revieweeID = ? AND assignmentID = ? AND reviewerID = ?',
+            [JSON.stringify(feedbackDetails), comment, revieweeID, assignmentID, reviewerID.studentID]
           );
         } else {
           await query(
-            'INSERT INTO feedback (submissionID, assignmentID, feedbackDetails, comment, reviewerID, feedbackDate, lastUpdated) VALUES (?, ?, ?, ?, ?, NOW(), NOW())',
-            [submissionID, assignmentID, JSON.stringify(feedbackDetails), comment, reviewerID.studentID]
+            'INSERT INTO feedback (revieweeID, assignmentID, feedbackDetails, comment, reviewerID, feedbackDate, lastUpdated) VALUES (?, ?, ?, ?, ?, NOW(), NOW())',
+            [revieweeID, assignmentID, JSON.stringify(feedbackDetails), comment, reviewerID.studentID]
           );
         }
 
         // Calculate and update average grade for the submission
-        await calculateAndUpdateAverageGrade(submissionID, assignmentID);
+        await calculateAndUpdateAverageGrade(revieweeID, assignmentID);
       }
 
       res.status(200).json({ message: 'Reviews submitted successfully' });
@@ -56,12 +56,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
-async function calculateAndUpdateAverageGrade(submissionID: number, assignmentID: number) {
+async function calculateAndUpdateAverageGrade(revieweeID: number, assignmentID: number) {
   try {
-    // Fetch all feedback details for the given submissionID and assignmentID
+    // Fetch all feedback details for the given revieweeID and assignmentID
     const feedbacks = await query(
-      'SELECT feedbackDetails FROM feedback WHERE submissionID = ? AND assignmentID = ?',
-      [submissionID, assignmentID]
+      'SELECT feedbackDetails FROM feedback WHERE revieweeID = ? AND assignmentID = ?',
+      [revieweeID, assignmentID]
     );
 
     // Fetch all criteria maxMarks for the given assignmentID
@@ -89,7 +89,13 @@ async function calculateAndUpdateAverageGrade(submissionID: number, assignmentID
 
     const averageGrade = totalMaxMarks > 0 ? ((totalGrades / totalMaxMarks) * 100) : 0;
 
-    await updateSubmission(submissionID.toString(), undefined, undefined, undefined, undefined, undefined, undefined, averageGrade.toString(), undefined);
+    // Fetch submissionID for the given revieweeID and assignmentID
+    const submission = await query(
+      'SELECT submissionID FROM submission WHERE studentID = ? AND assignmentID = ?',
+      [revieweeID, assignmentID]
+    );
+
+    await updateSubmission(submission[0].submissionID, undefined, undefined, undefined, undefined, undefined, undefined, averageGrade.toString(), undefined);
 
   } catch (error) {
     console.error('Error calculating and updating average grade:', error);

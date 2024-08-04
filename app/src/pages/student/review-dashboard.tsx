@@ -31,7 +31,7 @@ interface ReviewCriterion {
 }
 
 interface Submission {
-  submissionID: number;
+  revieweeID: number;
   assignmentID: number;
   studentID: number;
   fileName: string;
@@ -85,6 +85,8 @@ export default function ReviewDashboard() {
           setReviewCriteria(reviewData.reviewCriteria);
           setSubmissionsToReview(reviewData.submissions);
 
+          console.log('reviewData:', reviewData);
+
           if (assignmentData.courseID) {
             const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
             if (courseResponse.ok) {
@@ -96,13 +98,13 @@ export default function ReviewDashboard() {
 
           // Initialize reviewGrades and reviewComments state
           const initialGrades = reviewData.submissions.reduce((acc: any, submission: Submission) => {
-            acc[submission.submissionID] = {};
+            acc[submission.revieweeID] = {};
             return acc;
           }, {});
           setReviewGrades(initialGrades);
 
           const initialComments = reviewData.submissions.reduce((acc: any, submission: Submission) => {
-            acc[submission.submissionID] = '';
+            acc[submission.revieweeID] = '';
             return acc;
           }, {});
           setReviewComments(initialComments);
@@ -110,7 +112,6 @@ export default function ReviewDashboard() {
           // Check if deadline has passed
           const assignmentDeadline = currentSubmission ? dayjs(currentSubmission.deadline) : null;
           const currentDate = dayjs();
-          //const assignmentDeadline = dayjs(currentSubmission.deadline);
           setDeadlinePassed(currentDate.isAfter(assignmentDeadline));
 
         } else {
@@ -137,24 +138,24 @@ export default function ReviewDashboard() {
     }
   };
 
-  const handleGradeChange = (submissionID: number, criteriaID: number, value: string) => {
+  const handleGradeChange = (revieweeID: number, criteriaID: number, value: string) => {
     setReviewGrades(prev => ({
       ...prev,
-      [submissionID]: {
-        ...prev[submissionID],
+      [revieweeID]: {
+        ...prev[revieweeID],
         [criteriaID]: value
       }
     }));
   };
 
-  const handleCommentChange = (submissionID: number, value: string) => {
+  const handleCommentChange = (revieweeID: number, value: string) => {
     setReviewComments(prev => ({
       ...prev,
-      [submissionID]: value
+      [revieweeID]: value
     }));
   };
 
-  const submitReviews = async (assignmentID: number | undefined, reviews: { submissionID: number; feedbackDetails: { criteriaID: number; grade: number; }[]; comment: string; }[]) => {
+  const submitReviews = async (assignmentID: number | undefined, reviews: { revieweeID: number; feedbackDetails: { criteriaID: number; grade: number; }[]; comment: string; }[]) => {
     try {
       const response = await fetch('/api/reviews/submitReviews', {
         method: 'POST',
@@ -180,22 +181,20 @@ export default function ReviewDashboard() {
     }
   };
   
-  // Usage in your component
   const handleSubmitAllReviews = async () => {
     const assignmentID = assignment?.assignmentID;
     const reviews = submissionsToReview.map(submission => ({
-      submissionID: submission.submissionID,
+      revieweeID: submission.studentID,
       feedbackDetails: reviewCriteria.map(criterion => ({
         criteriaID: criterion.criteriaID,
-        grade: Number(reviewGrades[submission.submissionID][criterion.criteriaID])
+        grade: Number(reviewGrades[submission.revieweeID][criterion.criteriaID])
       })),
-      comment: reviewComments[submission.submissionID]
+      comment: reviewComments[submission.revieweeID]
     }));
   
     try {
       const result = await submitReviews(assignmentID, reviews);
-      console.log(result.message); // 'Reviews submitted successfully'
-      // Handle successful submission (e.g., show success message, redirect)
+      console.log(result.message);
       toast.success(result.message);
       router.push('/student/dashboard');
     } catch (error) {
@@ -226,11 +225,9 @@ export default function ReviewDashboard() {
         const contentType = response.headers.get('Content-Type');
         
         if (contentType === 'application/json') {
-          // Handle link submission
           const data = await response.json();
           window.open(data.link, '_blank');
         } else {
-          // Handle file submission
           const blob = await response.blob();
           const contentDisposition = response.headers.get('Content-Disposition');
           const fileName = contentDisposition?.split('filename=')[1] || 'downloaded_file';
@@ -278,7 +275,7 @@ export default function ReviewDashboard() {
           {currentSubmission && (
             <>
               <Card className="mb-4">
-                <CardHeader>Submission {currentSubmission.submissionID}</CardHeader>
+                <CardHeader>Reviewee {currentSubmission.revieweeID}</CardHeader>
                 <Divider />
                 <CardBody>
                   <p>File Name: {currentSubmission.fileName}</p>
@@ -288,9 +285,8 @@ export default function ReviewDashboard() {
                 </CardBody>
               </Card>
               <Button onClick={() => downloadSubmission(Number(assignmentID), Number(session.user.userID))}>
-          Download Submitted File
-        </Button>
-        
+                Download Submitted File
+              </Button>
               <Card>
                 <CardHeader>Review Criteria</CardHeader>
                 <Divider />
@@ -305,8 +301,8 @@ export default function ReviewDashboard() {
                         type="number"
                         label={`Grade for ${criterion.criterion}`}
                         placeholder="Enter grade"
-                        value={reviewGrades[currentSubmission.submissionID]?.[criterion.criteriaID] || ''}
-                        onChange={(e) => handleGradeChange(currentSubmission.submissionID, criterion.criteriaID, e.target.value)}
+                        value={reviewGrades[currentSubmission.revieweeID]?.[criterion.criteriaID] || ''}
+                        onChange={(e) => handleGradeChange(currentSubmission.revieweeID, criterion.criteriaID, e.target.value)}
                         max={criterion.maxMarks}
                         min={0}
                       />
@@ -317,8 +313,8 @@ export default function ReviewDashboard() {
                       type="text"
                       label="Comments"
                       placeholder="Enter your comments"
-                      value={reviewComments[currentSubmission.submissionID] || ''}
-                      onChange={(e) => handleCommentChange(currentSubmission.submissionID, e.target.value)}
+                      value={reviewComments[currentSubmission.revieweeID] || ''}
+                      onChange={(e) => handleCommentChange(currentSubmission.revieweeID, e.target.value)}
                       required={reviewCriteria.some(criterion => criterion.maxMarks === 0)}
                     />
                   </div>
@@ -327,7 +323,7 @@ export default function ReviewDashboard() {
                       Submit All Reviews
                     </Button>
                   )}
- <p>{checkSubmissionStatus(currentSubmission.submissionDate, currentSubmission.deadline)}</p>
+                  <p>{checkSubmissionStatus(currentSubmission.submissionDate, currentSubmission.deadline)}</p>
                 </CardBody>
               </Card>
             </>
