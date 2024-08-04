@@ -163,6 +163,24 @@ export default function ReviewDashboard() {
     }));
   };
 
+  const validateAllSubmissions = () => {
+    for (const submission of submissionsToReview) {
+      if (submission.isSubmitted) {
+        const grades = reviewGrades[submission.studentID];
+        const comment = reviewComments[submission.studentID];
+        if (!grades || !comment) {
+          return false;
+        }
+        for (const criterion of reviewCriteria) {
+          if (!grades[criterion.criteriaID]) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  };
+
   const submitReviews = async (assignmentID: number | undefined, reviews: { revieweeID: number; feedbackDetails: { criteriaID: number; grade: number; }[]; comment: string; }[]) => {
     try {
       const response = await fetch('/api/reviews/submitReviews', {
@@ -190,6 +208,11 @@ export default function ReviewDashboard() {
   };
 
   const handleSubmitAllReviews = async () => {
+    if (!validateAllSubmissions()) {
+      toast.error("Please fill out all grades and comments for submitted assignments before submitting reviews.");
+      return;
+    }
+
     const assignmentID = assignment?.assignmentID;
     const reviews = submissionsToReview
       .filter(submission => submission.isSubmitted)
