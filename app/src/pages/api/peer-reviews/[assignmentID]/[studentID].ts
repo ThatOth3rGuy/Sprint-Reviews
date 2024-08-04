@@ -6,18 +6,20 @@ import { query, getStudentsById } from '../../../../db'; // Import your database
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { assignmentID, studentID } = req.query;
 
+  console.log("Fetching feedbacks for assignment", assignmentID, "for student", studentID);
+
   if (typeof assignmentID !== 'string' || typeof studentID !== 'string') {
     res.status(400).json({ error: 'Invalid assignmentID or studentID' });
     return;
   }
 
   try {
-    const studentIDResponse = await getStudentsById(Number(studentID));
-    const student = studentIDResponse.studentID;
+    // const studentIDResponse = await getStudentsById(Number(studentID));
+    // const student = studentIDResponse.studentID;
 
-    console.log("Fetching feedbacks for assignment", assignmentID, "for student", student);
+    console.log("Fetching feedbacks for assignment", assignmentID, "for student", studentID);
 
-    const feedbacks = await getFeedbacksForAssignment(assignmentID, student);
+    const feedbacks = await getFeedbacksForAssignment(assignmentID, studentID);
     console.log(feedbacks);
     res.status(200).json(feedbacks);
   } catch (error) {

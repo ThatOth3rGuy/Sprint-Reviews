@@ -31,20 +31,21 @@ const Assignments: NextPage = () => {
   const [file, setFile] = useState<File | null>(null);
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [dueDate, setDueDate] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [groupAssignment, setGroupAssignment] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [allowedFileTypes, setAllowedFileTypes] = useState<string[]>([]);
   const [courseName, setCourseName] = useState<string>("");
-
   const [courseData, setCourseData] = useState<CourseData | null>(null);
+  const [allowLinks, setAllowLinks] = useState(false);
+  const [linkTypes, setLinkTypes] = useState<string[]>([]);
 
   useEffect(() => {
     const { source, courseId } = router.query;
-
     if (source === 'course' && courseId) {
-      // Fetch course name
       fetchCourseName(courseId as string);
     }
   }, [router.query]);
@@ -61,24 +62,15 @@ const Assignments: NextPage = () => {
     }
   };
 
-  async function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
-    if (!event.target.files || event.target.files.length === 0) {
-      return;
-    }
-    const selectedFile = event.target.files[0];
-    setFile(selectedFile);
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      if (e.target) {
-        setFileContent(e.target.result as string);
-      }
-    };
-    reader.readAsText(selectedFile);
-  }
-
   const handleFileTypeChange = (fileType: string, checked: boolean) => {
     setAllowedFileTypes((prev) =>
       checked ? [...prev, fileType] : prev.filter((type) => type !== fileType)
+    );
+  };
+
+  const handleLinkTypeChange = (linkType: string, checked: boolean) => {
+    setLinkTypes((prev) =>
+      checked ? [...prev, linkType] : prev.filter((type) => type !== linkType)
     );
   };
 
@@ -87,6 +79,14 @@ const Assignments: NextPage = () => {
 
     if (!title.trim()) {
       setError("Please enter the assignment title.");
+      return;
+    }
+    if (!startDate.trim()) {
+      setError("Please select a start date.");
+      return;
+    }
+    if (!endDate.trim()) {
+      setError("Please select an end date.");
       return;
     }
     if (!dueDate.trim()) {
@@ -102,13 +102,25 @@ const Assignments: NextPage = () => {
       return;
     }
     const selectedDueDate = new Date(dueDate);
+    const selectedEndDate = new Date(endDate);
+    const selectedStartDate = new Date(startDate)
     const now = new Date();
-    if (selectedDueDate <= now) {
-      setError("Due date cannot be in the past. Please select a future date and time.");
+    if (selectedDueDate <= now || selectedEndDate <= now || selectedStartDate >= selectedDueDate || selectedStartDate >= selectedEndDate || selectedEndDate < selectedDueDate) {
+      setError("Due date or end date cannot be in the past. Please select a future date and time.");
       return;
     }
     const isoDate = new Date(dueDate).toISOString();
+    const isoStart = new Date(startDate).toISOString(); //converts start date into ISO string
+    const isoEnd = new Date(endDate).toISOString(); //converts end date into ISO string
 
+    let finalAllowedTypes = [...allowedFileTypes];
+    if (allowLinks) {
+      if (linkTypes.length === 0) {
+        finalAllowedTypes.push('link');
+      } else {
+        finalAllowedTypes = [...finalAllowedTypes, ...linkTypes];
+      }
+    }
     const response = await fetch("/api/addNew/createAssignment", {
       method: "POST",
       headers: {
@@ -117,11 +129,13 @@ const Assignments: NextPage = () => {
       body: JSON.stringify({
         title,
         description,
+        startDate: isoStart,
+        endDate: isoEnd,
         dueDate: isoDate,
         courseID: Number(courseId),
         file: fileContent,
         groupAssignment,
-        allowedFileTypes,
+        allowedFileTypes: finalAllowedTypes,
         instructorID: session.user.userID,
       }),
     });
@@ -130,7 +144,6 @@ const Assignments: NextPage = () => {
       const assignmentData = await response.json();
       toast.success("Assignment created successfully!");
 
-      // Fetch course name
       const courseResponse = await fetch(`/api/courses/${courseId}`);
       const courseData = await courseResponse.json();
 
@@ -170,7 +183,7 @@ const Assignments: NextPage = () => {
       setError(errorData.message || "An error occurred while creating the assignment");
       toast.error(errorData.message);
     }
-  }, [title, description, dueDate, courseId, fileContent, groupAssignment, allowedFileTypes, router, session]);
+  }, [title, description, startDate, endDate, dueDate, courseId, fileContent, groupAssignment, allowedFileTypes, allowLinks, linkTypes, router, session]);
 
   if (loading) {
     return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
@@ -191,6 +204,7 @@ const Assignments: NextPage = () => {
   function handleCourseDashboardClick(): void {
     router.push(`/instructor/course-dashboard?courseId=${courseId}`);
   }
+
   const handleCreateAssignmentClick = () => {
     router.push('/instructor/create-assignment');
   };
@@ -246,6 +260,8 @@ const Assignments: NextPage = () => {
             <h2>Create Assignment For Student Submission</h2>
             {error && <p style={{ color: "red" }}>{error}</p>}
             <Input
+              color="primary"
+              variant="underlined"
               size="sm"
               type="text"
               label="Title"
@@ -255,35 +271,73 @@ const Assignments: NextPage = () => {
             />
             <Textarea
               size="sm"
+              color="primary"
+              variant="underlined"
               placeholder="Assignment Description"
               className={styles.textbox}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
-            <h3 className={styles.innerTitle}>Select Due Date:</h3>
-            <Input
-              size="sm"
-              type="datetime-local"
-              className={styles.textbox}
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-              min={new Date().toISOString().slice(0, 16)}
-            />
+            <div className="flex justify-evenly m-1">
+              <div className="text-left w-1/3 p-2 pt-0">
+                <h3>Select Start Date:</h3>
+                <Input
+                  color="success"
+                  variant="underlined"
+                  size="sm"
+                  type="datetime-local"
+                  className={styles.textbox}
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  min={new Date().toISOString().slice(0, 16)}
+                />
+              </div>
+              <div className="text-left w-1/3 p-2 pt-0">
+                <h3>Select Due Date:</h3>
+                <Input
+                  color="warning"
+                  variant="underlined"
+                  size="sm"
+                  type="datetime-local"
+                  className={styles.textbox}
+                  value={dueDate}
+                  onChange={(e) => setDueDate(e.target.value)}
+                  min={new Date().toISOString().slice(0, 16)}
+                />
+              </div>
+              <div className="text-left w-1/3 p-2 pt-0">
+                <h3>Select End Date:</h3>
+                <Input
+                  color="danger"
+                  variant="underlined"
+                  size="sm"
+                  type="datetime-local"
+                  className={styles.textbox}
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  min={new Date().toISOString().slice(0, 16)}
+                />
+              </div>
+            </div>
             <br />
-            <h3 className={styles.innerTitle}>Group Assignment:</h3>
-            <Checkbox
-              className={styles.innerTitle}
-              isSelected={groupAssignment}
-              onValueChange={setGroupAssignment}
-            >
-              Group Assignment
-            </Checkbox>
-            <br /><div>
+            <div className="flex">
+              <h3 className={styles.innerTitle}>Group Assignment:</h3>
+              <Checkbox
+                className={styles.innerTitle}
+                isSelected={groupAssignment}
+                onValueChange={setGroupAssignment}
+              >
+                Group Assignment
+              </Checkbox>
+            </div>
+            <br />
+            <div className="flex-row align-top items-start justify-start">
               <CheckboxGroup
                 size="sm"
                 color="primary"
                 value={allowedFileTypes}
                 onValueChange={setAllowedFileTypes}
+                orientation="horizontal"
               >
                 <h3 className={styles.innerTitle}>Allowed file types:</h3>
                 <Checkbox value="txt">Text (.txt)</Checkbox>
@@ -291,6 +345,31 @@ const Assignments: NextPage = () => {
                 <Checkbox value="docx">Word (.docx)</Checkbox>
                 <Checkbox value="zip">ZIP (.zip)</Checkbox>
               </CheckboxGroup>
+              <div className="flex-col">
+                <Checkbox
+                  isSelected={allowLinks}
+                  onValueChange={setAllowLinks}
+                >
+                  Allow link submissions
+                </Checkbox>
+                {allowLinks && (
+                  <div>
+                    <br />
+                    <CheckboxGroup
+                      size="sm"
+                      color="primary"
+                      value={linkTypes}
+                      onValueChange={setLinkTypes}
+                      orientation="vertical"
+                    >
+                      <h3 className={styles.innerTitle}>Allowed link types:</h3>
+                      <Checkbox value="github">GitHub</Checkbox>
+                      <Checkbox value="googledocs">Google Docs</Checkbox>
+                      <Checkbox value="link">Any link</Checkbox>
+                    </CheckboxGroup>
+                  </div>
+                )}
+              </div>
             </div>
             <Button color="success" variant="solid" className="cursor-pointer m-2 mx-auto p-4 text-white w-[100%]" onClick={onCreateAssignmentButtonClick}>Create Assignment</Button>
           </div>

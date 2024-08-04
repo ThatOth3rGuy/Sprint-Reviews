@@ -1,8 +1,9 @@
 // pages/api/assignments/submitAssignment.ts
+
 import type { NextApiRequest, NextApiResponse } from 'next';
-import multer from 'multer';
+import { query } from '../../../db';
+import formidable from 'formidable';
 import fs from 'fs/promises';
-import { query, getStudentsById } from '../../../db';
 
 export const config = {
   api: {
@@ -10,70 +11,95 @@ export const config = {
   },
 };
 
-const upload = multer({ dest: '/tmp' });
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    console.error('Method not allowed');
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
 
-async function submitAssignment(assignmentID: number, studentID: number, file: Express.Multer.File, groupID?: number | null) {
-  const sql = `
-    INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate, groupID)
-    VALUES (?, ?, ?, ?, ?, NOW(), ?)
+  const form = formidable();
+
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      console.error('Error parsing form:', err);
+      return res.status(500).json({ success: false, message: 'Error processing request' });
+    }
+
+    try {
+      const assignmentID = fields.assignmentID;
+      const userID = fields.userID;
+      const link = fields.link;
+
+      if (!assignmentID || !userID) {
+        console.error('Missing required fields:', { assignmentID, userID });
+        return res.status(400).json({ success: false, message: 'Missing required fields' });
+      }
+
+      if (files.file) {
+        // Handle file submission
+        const file = files.file[0];
+        const fileContent = await fs.readFile(file.filepath);
+        const fileName = file.originalFilename || 'unnamed_file';
+        const fileType = file.mimetype || 'application/octet-stream';
+
+        const result = await submitAssignment(Number(assignmentID), Number(userID), fileName, fileContent, fileType);
+
+        // Delete the temporary file after it's been saved to the database
+        await fs.unlink(file.filepath);
+
+        console.log('File submitted successfully');
+        return res.status(200).json(result);
+      } else if (link) {
+        // Handle link submission
+        const result = await submitAssignment(Number(assignmentID), Number(userID), link, link, 'link');
+        console.log('Link submitted successfully');
+        return res.status(200).json(result);
+      } else {
+        console.error('No file or link provided');
+        return res.status(400).json({ success: false, message: 'No file or link provided' });
+      }
+    } catch (error) {
+      console.error('Error submitting assignment:', error);
+      return res.status(500).json({ success: false, message: 'Error submitting assignment' });
+    }
+  });
+}
+
+async function submitAssignment(assignmentID: number, userID: number, fileName: string, fileContent: Buffer | string, fileType: string) {
+  const studentIdSQL = `SELECT studentID FROM student WHERE userID = ?`;
+  const checkExistingSQL = `SELECT submissionID FROM submission WHERE assignmentID = ? AND studentID = ?`;
+  const insertSQL = `
+    INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate)
+    VALUES (?, ?, ?, ?, ?, NOW())
+  `;
+  const updateSQL = `
+    UPDATE submission
+    SET fileName = ?, fileContent = ?, fileType = ?, submissionDate = NOW()
+    WHERE submissionID = ?
   `;
 
   try {
-    const fileContent = await fs.readFile(file.path);
-    const fileName = file.originalname;
-    const fileType = file.mimetype;
+    // Convert userID to studentID
+    const studentIDResult = await query(studentIdSQL, [userID]);
+    if (!studentIDResult || studentIDResult.length === 0) {
+      throw new Error('User not found');
+    }
+    const studentID = studentIDResult[0].studentID;
 
-    await query(sql, [assignmentID, studentID, fileName, fileContent, fileType, groupID]);
+    // Check if a submission already exists
+    const existingSubmission = await query(checkExistingSQL, [assignmentID, studentID]);
 
-    return { success: true, message: 'Assignment submitted successfully' };
+    if (existingSubmission && existingSubmission.length > 0) {
+      // Update existing submission
+      await query(updateSQL, [fileName, fileContent, fileType, existingSubmission[0].submissionID]);
+      return { success: true, message: 'Assignment resubmitted successfully' };
+    } else {
+      // Insert new submission
+      await query(insertSQL, [assignmentID, studentID, fileName, fileContent, fileType]);
+      return { success: true, message: 'Assignment submitted successfully' };
+    }
   } catch (error) {
     console.error('Error in submitAssignment:', error);
     throw error;
   }
-}
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
-
-  const multerMiddleware = upload.single('file');
-
-  multerMiddleware(req as any, res as any, async (err) => {
-    if (err) {
-      return res.status(500).json({ message: 'Error uploading file' });
-    }
-
-    const file = (req as any).file;
-    let { assignmentID, userID, isGroupAssignment, groupID, students } = req.body;
-
-    try {
-      // Parse students if it is a string (assuming it comes as a JSON string)
-      if (typeof students === 'string') {
-        students = JSON.parse(students);
-      }
-
-      // Convert userID to studentID
-      const studentIDResult = await getStudentsById(parseInt(userID));
-      const studentID = studentIDResult.studentID;
-
-      // Set studentIDList to either the studentID or the list of student IDs in the group
-      const studentIDList = [studentID];
-      if (isGroupAssignment === '1' && Array.isArray(students)) {
-        studentIDList.push(...students.map((id: string) => parseInt(id)));
-      }
-
-      const results = await Promise.all(
-        studentIDList.map((id) => submitAssignment(parseInt(assignmentID), id, file, isGroupAssignment === '1' ? parseInt(groupID) : null))
-      );
-
-      // Delete the temporary file after all submissions are complete
-      await fs.unlink(file.path);
-
-      res.status(200).json({ success: true, message: 'Assignment submitted successfully', results });
-    } catch (error) {
-      console.error('Error submitting assignment:', error);
-      res.status(500).json({ message: 'Error submitting assignment' });
-    }
-  });
 }

@@ -1,3 +1,4 @@
+//pages/isntructor/release-assignment.tsx
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSessionValidation } from '../api/auth/checkSession';
@@ -13,14 +14,9 @@ import {
   ModalBody, ModalFooter, useDisclosure,
   Spinner
 } from "@nextui-org/react";
-import { getSession, updateSession } from "@/lib";
 import { randomizePeerReviewGroups } from "../api/addNew/randomizationAlgorithm";
 import toast from "react-hot-toast";
 
-interface CourseData {
-  courseID: string;
-  courseName: string;
-}
 // Define the structure for assignment and Rubric items
 interface Assignment {
   assignmentID: number;
@@ -54,20 +50,11 @@ const ReleaseAssignment: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
-
-  const [course, setCourse] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
   const [reviewsPerAssignment, setReviewsPerAssignment] = useState<number>(4);
   const [anonymous, setAnonymous] = useState(false);
-  // // Dummy rubric
-  // const dummyrubric = [
-  //   { criterion: 'Criterion 1', maxMarks: 10 },
-  //   { criterion: 'Criterion 2', maxMarks: 20 },
-  //   { criterion: 'Criterion 3', maxMarks: 30 },
-  // ];
-
-  // Dummy questions
-  const questions = ['Was the work clear and easy to understand?', 'Was the content relevant and meaningful?', 'Was the work well-organized and logically structured?', 'Did the author provide sufficient evidence or examples to support their arguments or points?', 'Improvements: What suggestions do you have for improving the work?'];
-
+  
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -76,19 +63,10 @@ const ReleaseAssignment: React.FC = () => {
   useEffect(() => {
     if (session && session.user) {
       fetchAssignments(session.user.userID);
-      fetchCourse(session.user.userID);
       fetchStudents(session.user.userID);
-    }
-  }, [session]);
-  
-  useEffect(() => {
-    
-
-    if (source === 'course' && courseId) {
-      // Fetch course name
       fetchCourseName(courseId as string);
     }
-  }, [router.query]);
+  }, [session]);
 
   const fetchCourseName = async (courseId: string) => {
     try {
@@ -102,18 +80,7 @@ const ReleaseAssignment: React.FC = () => {
     }
   };
 
-
-  // Fetch assignments and students in the course when the component mounts
-  useEffect(() => {
-    if (session && session.user) {
-      fetchAssignments(session.user.userID);
-      fetchStudents(session.user.courseID);
-    }
-  }, [session]);
-
-
   // Function to fetch assignments
- 
   const fetchAssignments = async (userID: string) => {
     try {
       const response = await fetch(`/api/getAllAssignmentsInstructor?userID=${userID}`);
@@ -127,17 +94,6 @@ const ReleaseAssignment: React.FC = () => {
       console.error('Error fetching assignments:', error);
     }
   };
-  const fetchCourse = async (userID: string) => {
-    try {
-      const res = await fetch(`/api/getCourse4Instructor?instructorID=${userID}`);
-      if (res.ok) {
-        const cid = await res.json();
-        setCourse(cid.courses[0].courseID);
-      }
-    } catch (error) {
-      console.error('Error fetching course:', error);
-    }
-  }
   // Function to fetch students in the course
   const fetchStudents = async (courseID: string) => {
     try {
@@ -234,6 +190,8 @@ const ReleaseAssignment: React.FC = () => {
           rubric,
           isGroupAssignment,
           allowedFileTypes,
+          startDate,
+          endDate,
           deadline,
           anonymous,
           students,
@@ -242,7 +200,7 @@ const ReleaseAssignment: React.FC = () => {
 
       if (!responseReleaseAssignment.ok) {
         throw new Error("Failed to release assignment for review");
-       
+
       }
 
       // Second API call to release randomized peer reviews
@@ -289,11 +247,11 @@ const ReleaseAssignment: React.FC = () => {
       <Spinner color='primary' size="lg" />
     </div>;
   }
-  
+
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");
   }
-  
+
   function handleAssignmentClick(): void {
     router.push("/instructor/assignments");
   }
@@ -317,7 +275,6 @@ const ReleaseAssignment: React.FC = () => {
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
             <BreadcrumbItem onClick={handleBackClick}>{router.query.source === 'course' ? (courseName || 'Course Dashboard') : 'Assignments'}</BreadcrumbItem>
-
             <BreadcrumbItem>Release Peer Review</BreadcrumbItem>
           </Breadcrumbs>
         </div>
@@ -411,16 +368,43 @@ const ReleaseAssignment: React.FC = () => {
                 required
               />
               <br />
-              <label>Enter Due Date:</label>
-              <br />
-              <Input
-                variant="bordered"
-                type="datetime-local"
-                value={deadline}
-                onChange={(e) => setDeadline(e.target.value)}
-                color="primary"
-                required
-              />
+              <div className="flex justify-evenly m-1">
+                <div className="text-left w-1/3 p-2 pt-0">
+                  <h3>Enter a Start Date</h3>
+                  <Input
+                    variant="underlined"
+                    type="datetime-local"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    color="success"
+                    required
+                  />
+                </div>
+                <div className="text-left w-1/3 p-2 pt-0">
+                  <h3>Enter a Due Date:</h3>
+                  <Input
+                    variant="underlined"
+                    type="datetime-local"
+                    value={deadline}
+                    onChange={(e) => setDeadline(e.target.value)}
+                    color="warning"
+                    required
+                  />
+                </div>
+                
+                <div className="text-left w-1/3 p-2 pt-0">
+                  <h3>Enter an end Date</h3>
+                  <Input
+                    variant="underlined"
+                    type="datetime-local"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    color="danger"
+                    required
+                  />
+                </div>
+              </div>
+
               <Button onClick={handleSubmit} color="primary" variant="solid" className="float-right m-4" size="sm">
                 <b>Draft Release</b>
               </Button>
@@ -484,7 +468,6 @@ const ReleaseAssignment: React.FC = () => {
                     </>
                   )}
                 </ModalContent>
-
               </Modal>
               <br />
             </form>
