@@ -54,7 +54,7 @@ const ReleaseAssignment: React.FC = () => {
   const [endDate, setEndDate] = useState<string>("");
   const [reviewsPerAssignment, setReviewsPerAssignment] = useState<number>(4);
   const [anonymous, setAnonymous] = useState(false);
-  
+  const [autoRelease, setAutoRelease] = useState(false);
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -63,7 +63,7 @@ const ReleaseAssignment: React.FC = () => {
   useEffect(() => {
     if (session && session.user) {
       fetchAssignments(session.user.userID);
-      fetchStudents(session.user.userID);
+      fetchStudents(courseId as string);
       fetchCourseName(courseId as string);
     }
   }, [session]);
@@ -175,9 +175,22 @@ const ReleaseAssignment: React.FC = () => {
     const updatedRubric = rubric.filter((_, i) => i !== index);
     setRubric(updatedRubric);
   };
-
+ const isValidFormData = () => {
+    // Add your validation logic here. For example:
+    if (!selectedAssignment ||  !startDate || !endDate || !deadline || !students) {
+      return false;
+    }
+    // If all fields are filled
+    return true;
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+     // Validate form data
+  if (!isValidFormData()) {
+    toast.error("Error: Invalid form data");
+    return;
+  }
     try {
       // Ensure submissions are fetched correctly
       const assignmentID = Number(selectedAssignment);
@@ -229,7 +242,8 @@ const ReleaseAssignment: React.FC = () => {
       console.error("Error releasing assignment or peer reviews for review:", error);
     }
   };
-
+ 
+  
   const options = students.map((student) => ({
     value: student.id,
     label: student.name,
@@ -281,6 +295,7 @@ const ReleaseAssignment: React.FC = () => {
         <div className={styles.mainContent}>
           <div className="flex-col w-[85%] bg-white p-[1.5%] pt-[1%] shadow-sm overflow-auto m-auto mr-[1%] text-left ">
             <h2>Release Assignment for Peer Review</h2>
+            
             <br />
             <form onSubmit={handleSubmit}>
               <Select
@@ -327,6 +342,7 @@ const ReleaseAssignment: React.FC = () => {
                           handleRubricChange(index, "maxMarks", e.target.value)
                         }
                         required
+                        min = {1}
                       />
                       <Button
                         size="sm"
@@ -378,6 +394,7 @@ const ReleaseAssignment: React.FC = () => {
                     onChange={(e) => setStartDate(e.target.value)}
                     color="success"
                     required
+                    min={new Date().toISOString().slice(0, 16)}
                   />
                 </div>
                 <div className="text-left w-1/3 p-2 pt-0">
@@ -389,6 +406,7 @@ const ReleaseAssignment: React.FC = () => {
                     onChange={(e) => setDeadline(e.target.value)}
                     color="warning"
                     required
+                    min={new Date().toISOString().slice(0, 16)}
                   />
                 </div>
                 
@@ -401,6 +419,7 @@ const ReleaseAssignment: React.FC = () => {
                     onChange={(e) => setEndDate(e.target.value)}
                     color="danger"
                     required
+                    min={new Date().toISOString().slice(0, 16)}
                   />
                 </div>
               </div>
@@ -457,6 +476,7 @@ const ReleaseAssignment: React.FC = () => {
                               value={uniqueDueDate}
                               onChange={(e) => setUniqueDueDate(e.target.value)}
                               required
+                              min={new Date().toISOString().slice(0, 16)}
                             />
                             <br />
                             <Button variant="ghost" type="submit" color="primary">

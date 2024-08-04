@@ -3,12 +3,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { query } from '../../../db';
 
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { assignmentID } = req.body;
+  const { assignmentID, releaseDate } = req.body;
 
   if (!assignmentID) {
     return res.status(400).json({ error: 'Assignment ID is required' });

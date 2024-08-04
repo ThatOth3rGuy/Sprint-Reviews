@@ -57,7 +57,7 @@ export default function ReviewDashboard() {
   const { assignmentID } = router.query;
   const [error, setError] = useState<string | null>(null);
   const [deadlinePassed, setDeadlinePassed] = useState<boolean>(false);
-
+  const [autoRelease, setAutoRelease] = useState(false);
   useSessionValidation('student', setLoading, setSession);
 
   useEffect(() => {
