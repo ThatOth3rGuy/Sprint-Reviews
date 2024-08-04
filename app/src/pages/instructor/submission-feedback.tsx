@@ -1,4 +1,3 @@
-// instructor/submission-feedback.tsx
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import { useEffect, useState } from "react";
@@ -33,7 +32,7 @@ interface Feedback {
   lastUpdated: string;
   comment: string;
   grade: number | null;
-  feedbackType: 'peer' | 'instructor';
+  feedbackType: 'instructor';
 }
 
 interface Submission {
@@ -60,6 +59,9 @@ export default function AssignmentDashboard() {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newGrade, setNewGrade] = useState<number>(0);
+  const [newFeedback, setNewFeedback] = useState<string>("");
+  const [newComment, setNewComment] = useState<string>("");
+  const [editFeedbackID, setEditFeedbackID] = useState<number | null>(null);
 
   useSessionValidation("instructor", setLoading, setSession);
 
@@ -86,10 +88,10 @@ export default function AssignmentDashboard() {
             }
 
             // Fetch feedbacks for this assignment and student
-            const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${studentID}`);
+            const feedbacksResponse = await fetch(`/api/instructor-feedback/${assignmentID}/${studentID}`);
             if (feedbacksResponse.ok) {
               const feedbacksData: Feedback[] = await feedbacksResponse.json();
-              setFeedbacks(feedbacksData);
+              setFeedbacks(feedbacksData.filter(feedback => feedback.feedbackType === 'instructor'));
             }
           } else {
             console.error('Error fetching assignment data');
@@ -158,6 +160,75 @@ export default function AssignmentDashboard() {
     }
   };
 
+  const handleAddFeedback = async () => {
+    try {
+      const response = await fetch('/api/addNew/addFeedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'add',
+          assignmentID: submission?.assignmentID,
+          courseID: courseData?.courseID,
+          studentID: submission?.studentID,
+          reviewerID: session.user.userID,
+          feedbackDetails: newFeedback,
+          grade: newGrade,
+          comment: newComment,
+        }),
+      });
+        console.log(response)
+      if (!response.ok) {
+        throw new Error('Failed to add feedback');
+        console.log(response)
+      }
+
+      const newFeedbackData: Feedback = await response.json();
+      setFeedbacks((prev) => [...prev, newFeedbackData]);
+      setNewFeedback('');
+      setNewComment('');
+      toast.success('Feedback added successfully');
+    } catch (error) {
+      console.error('Error adding feedback:', error);
+      toast.error('Error adding feedback. Please try again.');
+    }
+  };
+
+  const handleEditFeedback = async (feedbackID: number, updatedFeedback: string, updatedGrade: number, updatedComment: string) => {
+    try {
+      const response = await fetch('/api/addNew/addFeedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'update',
+          feedbackID,
+          feedbackDetails: updatedFeedback,
+          grade: updatedGrade,
+          comment: updatedComment,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update feedback');
+      }
+
+      setFeedbacks((prev) =>
+        prev.map((feedback) =>
+          feedback.feedbackID === feedbackID
+            ? { ...feedback, feedbackDetails: updatedFeedback, grade: updatedGrade, comment: updatedComment }
+            : feedback
+        )
+      );
+      toast.success('Feedback updated successfully');
+    } catch (error) {
+      console.error('Error updating feedback:', error);
+      toast.error('Error updating feedback. Please try again.');
+    }
+  };
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -222,11 +293,36 @@ export default function AssignmentDashboard() {
                   <p><strong>Comment:</strong> {feedback.comment}</p>
                   <p><strong>Date:</strong> {new Date(feedback.feedbackDate).toLocaleString()}</p>
                   <p><strong>Grade:</strong> {feedback.grade !== null ? feedback.grade : "Not graded yet"}</p>
+                  <Button onPress={() => {
+                    setEditFeedbackID(feedback.feedbackID);
+                    setNewFeedback(feedback.feedbackDetails);
+                    setNewGrade(feedback.grade ?? 0);
+                    setNewComment(feedback.comment);
+                    setIsModalOpen(true);
+                  }}>Edit Feedback</Button>
                 </div>
               ))
             ) : (
               <p>No feedback available yet.</p>
             )}
+          </div>
+          <div className={styles.feedbackSection}>
+            <h2>Add Feedback</h2>
+            <Input
+              type="text"
+              fullWidth
+              label="New Feedback"
+              value={newFeedback}
+              onChange={(e) => setNewFeedback(e.target.value)}
+            />
+            <Input
+              type="text"
+              fullWidth
+              label="Comment"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            />
+            <Button color="primary" onPress={handleAddFeedback}>Add Feedback</Button>
           </div>
           <p className="text-primary-900 text-large font-bold bg-primary-100 my-2 p-1">
             {submission?.grade ? 'Adjusted Grade:' : 'Average Grade:'} {submission?.grade ?? submission?.autoGrade}

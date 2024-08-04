@@ -1,5 +1,4 @@
 // pages/student/assignment-dashboard.tsx
-
 import { useRouter } from "next/router";
 import StudentNavbar from "../components/student-components/student-navbar";
 import { useEffect, useState } from "react";
@@ -34,7 +33,7 @@ interface Feedback {
   lastUpdated: string;
   comment: string;
   grade: number | null;
-  feedbackType: 'peer' | 'instructor';
+  feedbackType: 'instructor';
 }
 
 export default function AssignmentDashboard() {
@@ -74,10 +73,10 @@ export default function AssignmentDashboard() {
             }
           }
 
-          const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${session.user.userID}`);
+          const feedbacksResponse = await fetch(`/api/instructor-feedback/${assignmentID}/${session.user.userID}`);
           if (feedbacksResponse.ok) {
             const feedbacksData: Feedback[] = await feedbacksResponse.json();
-            setFeedbacks(feedbacksData);
+            setFeedbacks(feedbacksData.filter(feedback => feedback.feedbackType === 'instructor'));
           }
 
           await checkSubmissionStatus();
@@ -315,7 +314,7 @@ export default function AssignmentDashboard() {
           <div className={styles.feedbackSection}>
             <br />
             <hr />
-            <h2>Feedback</h2>
+            <h2>Instructor Feedback</h2>
             {feedbacks.length > 0 ? (
               feedbacks.map((feedback, index) => (
                 <div key={feedback.feedbackID} className={styles.assignmentsSection}>
@@ -323,7 +322,7 @@ export default function AssignmentDashboard() {
                   <p><strong>Details:</strong> {feedback.feedbackDetails}</p>
                   <p><strong>Comment:</strong> {feedback.comment}</p>
                   <p><strong>Date:</strong> {new Date(feedback.feedbackDate).toLocaleString()}</p>
-                  <p><strong>Grade:</strong> 0</p> {/* Placeholder grade */}
+                  <p><strong>Grade:</strong> {feedback.grade ?? 'Not graded yet'}</p>
                 </div>
               ))
             ) : (
