@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from "../../styles/AssignmentDetailCard.module.css";
 
-import { Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody, Button, Checkbox } from "@nextui-org/react";
+import { Breadcrumbs,Input,ModalFooter, BreadcrumbItem,ModalContent, Spinner, Card, CardBody, Button, Checkbox, Modal, ModalBody, ModalHeader } from "@nextui-org/react";
 import { randomizePeerReviewGroups } from "../api/addNew/randomizationAlgorithm";
 import toast from "react-hot-toast";
 
@@ -58,6 +58,8 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   const [newDueDate, setNewDueDate] = useState("");
   const [newStartDate, setNewStartDate] = useState("");
   const [newEndDate, setNewEndDate] = useState("");
+  const [newAnonymous, setNewAnonymous] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
@@ -223,6 +225,45 @@ const handleAutoReleaseChange = async (checked: boolean) => {
 };
 
 
+const handleEditAssignmentClick = () => {
+  setIsModalOpen(true);
+}
+
+const handleAssignmentsUpdate = async () => {
+    try {
+      const response = await fetch(`/api/updateTable`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          table: 'review',
+          data: {
+            reviewID: reviewID,
+            assignmentID: review?.assignmentID,
+            isGroupAssignment:review?.isGroupAssignment,
+            allowedFileTypes : review?.allowedFileTypes,
+            startDate: newStartDate,
+            endDate: newEndDate,
+            dueDate: newDueDate,
+            anonymous: newAnonymous,
+          }
+        })
+      }); if (response.ok) {
+        console.log("Assignment updated successfully");
+        toast.success("Assignment updated successfully");
+        setIsModalOpen(false);
+        router.reload();
+      } else {
+        console.error("Failed to update assignment");
+        toast.error("Failed to update assignment");
+      }
+    } catch (error) {
+      console.error("Error updating assignment:", error);
+      toast.error("Error updating assignment");
+    }
+  };
+
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -236,8 +277,10 @@ const handleAutoReleaseChange = async (checked: boolean) => {
             <BreadcrumbItem>{review.reviewID ? `Review ${review.assignmentName}` : "Review"}</BreadcrumbItem>
           </Breadcrumbs>
         </div>
+
         <div className={styles.assignmentsSection}>
           <Button color="secondary" variant="ghost" onClick={handleRandomizeClick}>Randomize Review Groups</Button>
+        <Button color='primary' variant='ghost' onClick={handleEditAssignmentClick} >Edit Review Dates</Button>
 
           {review && (
             <ReviewDetailCard
@@ -283,6 +326,65 @@ const handleAutoReleaseChange = async (checked: boolean) => {
         </Checkbox>
             <Button color="primary" variant="ghost" onClick={handleRelease}>Release Assignment for Reviews</Button>
           </div>
+          <Modal
+            className='z-20'
+            backdrop="blur"
+            isOpen={isModalOpen}
+            onOpenChange={(open) => setIsModalOpen(open)}
+          >
+            <ModalContent>
+            <ModalHeader>Edit Assignment Details</ModalHeader>
+              <ModalBody>
+              <h3>Select New Start Date:</h3>
+                <Input
+                  color="success"
+                  variant="underlined"
+                  size="sm"
+                  type="datetime-local"
+                  className={styles.textbox}
+                  value={newStartDate}
+                  onChange={(e) => setNewStartDate(e.target.value)}
+                  min={new Date().toISOString().slice(0, 16)}
+                />
+                <h3>Select New Due Date:</h3>
+                <Input
+                  color="warning"
+                  variant="underlined"
+                  size="sm"
+                  type="datetime-local"
+                  className={styles.textbox}
+                  value={newDueDate}
+                  onChange={(e) => setNewDueDate(e.target.value)}
+                  min={new Date().toISOString().slice(0, 16)}
+                />
+                <h3>Select New End Date:</h3>
+                <Input
+                  color="danger"
+                  variant="underlined"
+                  size="sm"
+                  type="datetime-local"
+                  className={styles.textbox}
+                  value={newEndDate}
+                  onChange={(e) => setNewEndDate(e.target.value)}
+                  min={new Date().toISOString().slice(0, 16)}
+                />
+                <Checkbox
+          isSelected={newAnonymous}
+          onChange={(e) => setNewAnonymous(e.target.checked)}
+        >
+          Anonymous
+        </Checkbox>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" variant="light" onPress={() => setIsModalOpen(false)}>
+                  Close
+                </Button>
+                <Button color="primary" onPress={handleAssignmentsUpdate}>
+                  Update
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </div>
       </div>
     </>
