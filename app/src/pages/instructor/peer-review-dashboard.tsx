@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from "../../styles/AssignmentDetailCard.module.css";
 
-import { Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody, Button, Checkbox } from "@nextui-org/react";
+import { Breadcrumbs,Input,ModalFooter, BreadcrumbItem,ModalContent, Spinner, Card, CardBody, Button, Checkbox, Modal, ModalBody, ModalHeader } from "@nextui-org/react";
 import { randomizePeerReviewGroups } from "../api/addNew/randomizationAlgorithm";
 import toast from "react-hot-toast";
 
@@ -55,6 +55,14 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   const [randomizedReviewGroups, setRandomizedReviewGroups] = useState<ReviewGroup[][]>([]);
   const [courseName, setCourseName] = useState<string>("");
   const [autoRelease, setAutoRelease] = useState<boolean>(false);
+  const [newDueDate, setNewDueDate] = useState("");
+  const [newStartDate, setNewStartDate] = useState("");
+  const [newEndDate, setNewEndDate] = useState("");
+  const [newAnonymous, setNewAnonymous] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRandomizeModalOpen, setIsRandomizeModalOpen] = useState(false);
+  const [reviewsPerAssignment, setReviewsPerAssignment] = useState(4);
+
 
   useSessionValidation('instructor', setLoading, setSession);
 
@@ -149,31 +157,63 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
       router.push('/instructor/dashboard');
     }
   };
-
+  const fetchStudents = async (courseID: string) => {
+    try {
+      //courseID = '3';
+      const response = await fetch(`/api/courses/getCourseList?courseID=${courseID}`);
+      if (response.ok) {
+        const students = await response.json();
+        setStudents(students);
+      } else {
+        console.error("Failed to fetch students");
+      }
+    } catch (error) {
+      console.error("Error fetching students:", error);
+    }
+  };
   const handleHomeClick = () => {
     router.push("/instructor/dashboard");
   };
 
-  const handleRandomizeClick = async () => {
-        // // TODO: Call the randomizer API and update the reviewGroups state with the randomized data
-    // try {
-    //   // Fetch all student submissions
-    //   const response = await fetch(`/api/assignments/getSubmissionsList`);
-    //   if (!response.ok) {
-    //     throw new Error("Failed to fetch student submissions");
-    //   }
-    //   const studentSubmissions = await response.json();
-  
-    //   // Randomize the student submissions
-    //   const reviewGroups = randomizePeerReviewGroups(studentSubmissions, 4); // 4 reviews per assignment
-  
-    //   // Set the randomized review groups state
-    //   setRandomizedReviewGroups(reviewGroups);
-    // } catch (error) {
-    //   console.error("Error randomizing review groups:", error);
-    // }
-    console.log("Randomize button clicked");
+  const handleRandomizeClick = () => {
+    setIsRandomizeModalOpen(true);
   };
+  
+  const handleReRandomize = async () => {
+    try {
+        const response = await fetch('/api/updateTable', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                table: 'reviewGroups',
+                data: {
+                    assignmentID: review.assignmentID,
+                    courseID: 2,
+                    reviewsPerAssignment: reviewsPerAssignment,
+                },
+            }),
+        });
+
+        if (response.ok) {
+            toast.success("Review groups re-randomized successfully!");
+            // Fetch the new review groups and update the state
+            const newGroupsResponse = await fetch(`/api/groups/${review.assignmentID}`);
+            const newGroupsData = await newGroupsResponse.json();
+            if (newGroupsData.groups && Array.isArray(newGroupsData.groups)) {
+                setReviewGroups(newGroupsData.groups);
+            }
+            setIsRandomizeModalOpen(false);
+        } else {
+            toast.error("Failed to re-randomize review groups");
+        }
+    } catch (error) {
+        console.error("Error re-randomizing review groups:", error);
+        toast.error("Error re-randomizing review groups");
+    }
+};
+
 
   const handleRelease = async () => {
     try {
@@ -201,7 +241,7 @@ const handleAutoReleaseChange = async (checked: boolean) => {
   setAutoRelease(checked);
   if (checked) {
     try {
-      const response = await fetch('/api/scheduleAutoRelease', {
+      const response = await fetch('/api/reviews/scheduleAutoRelease', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -221,6 +261,42 @@ const handleAutoReleaseChange = async (checked: boolean) => {
 };
 
 
+const handleEditAssignmentClick = () => {
+  setIsModalOpen(true);
+}
+
+const handleAssignmentsUpdate = async () => {
+    try {
+      const response = await fetch(`/api/updateTable`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          table: 'reviewDates',
+          data: {
+            reviewID: reviewID,            
+            startDate: newStartDate,
+            endDate: newEndDate,
+            deadline: newDueDate,
+            
+          }
+        })
+      }); if (response.ok) {
+        console.log("Assignment updated successfully");
+        toast.success("Assignment updated successfully");
+        setIsModalOpen(false);
+        router.reload();
+      } else {
+        console.error("Failed to update assignment");
+        toast.error("Failed to update assignment");
+      }
+    } catch (error) {
+      console.error("Error updating assignment:", error);
+      toast.error("Error updating assignment");
+    }
+  };
+
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -234,14 +310,18 @@ const handleAutoReleaseChange = async (checked: boolean) => {
             <BreadcrumbItem>{review.reviewID ? `Review ${review.assignmentName}` : "Review"}</BreadcrumbItem>
           </Breadcrumbs>
         </div>
+
         <div className={styles.assignmentsSection}>
           <Button color="secondary" variant="ghost" onClick={handleRandomizeClick}>Randomize Review Groups</Button>
+        <Button color='primary' variant='ghost' onClick={handleEditAssignmentClick} >Edit Review Dates</Button>
 
           {review && (
             <ReviewDetailCard
               title={`Review ${review.assignmentName}`}
               description={`Assignment: ${review.assignmentName}`}
               deadline={review.deadline}
+              startDate={review.startDate}
+              endDate = {review.endDate}
             />
           )}
           <div className={styles.assignmentsSection}>
@@ -271,14 +351,101 @@ const handleAutoReleaseChange = async (checked: boolean) => {
             ))}
           </div>
           <div className={styles.notificationsSection}>
-          {/* <Checkbox
+          <Checkbox
           isSelected={autoRelease}
           onChange={(e) => handleAutoReleaseChange(e.target.checked)}
         >
           Auto Release on Start Date
-        </Checkbox> */}
+        </Checkbox>
             <Button color="primary" variant="ghost" onClick={handleRelease}>Release Assignment for Reviews</Button>
           </div>
+          <Modal
+            className='z-20'
+            backdrop="blur"
+            isOpen={isModalOpen}
+            onOpenChange={(open) => setIsModalOpen(open)}
+          >
+            <ModalContent>
+            <ModalHeader>Edit Assignment Details</ModalHeader>
+              <ModalBody>
+              <h3>Select New Start Date:</h3>
+                <Input
+                  color="success"
+                  variant="underlined"
+                  size="sm"
+                  type="datetime-local"
+                  className={styles.textbox}
+                  value={newStartDate}
+                  onChange={(e) => setNewStartDate(e.target.value)}
+                  min={new Date().toISOString().slice(0, 16)}
+                />
+                <h3>Select New Due Date:</h3>
+                <Input
+                  color="warning"
+                  variant="underlined"
+                  size="sm"
+                  type="datetime-local"
+                  className={styles.textbox}
+                  value={newDueDate}
+                  onChange={(e) => setNewDueDate(e.target.value)}
+                  min={new Date().toISOString().slice(0, 16)}
+                />
+                <h3>Select New End Date:</h3>
+                <Input
+                  color="danger"
+                  variant="underlined"
+                  size="sm"
+                  type="datetime-local"
+                  className={styles.textbox}
+                  value={newEndDate}
+                  onChange={(e) => setNewEndDate(e.target.value)}
+                  min={new Date().toISOString().slice(0, 16)}
+                />
+                <Checkbox
+          isSelected={newAnonymous}
+          onChange={(e) => setNewAnonymous(e.target.checked)}
+        >
+          Anonymous
+        </Checkbox>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" variant="light" onPress={() => setIsModalOpen(false)}>
+                  Close
+                </Button>
+                <Button color="primary" onPress={handleAssignmentsUpdate}>
+                  Update
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+          <Modal
+  className='z-20'
+  backdrop="blur"
+  isOpen={isRandomizeModalOpen}
+  onOpenChange={(open) => setIsRandomizeModalOpen(open)}
+>
+  <ModalContent>
+    <ModalHeader>Re-randomize Review Groups</ModalHeader>
+    <ModalBody>
+      <h3>Select number of reviews per assignment:</h3>
+      <Input
+        type="number"
+        min="1"
+        max="10"
+        value={reviewsPerAssignment.toString()}
+        onChange={(e) => setReviewsPerAssignment(Number(e.target.value))}
+      />
+    </ModalBody>
+    <ModalFooter>
+      <Button color="primary" variant="light" onPress={() => setIsRandomizeModalOpen(false)}>
+        Cancel
+      </Button>
+      <Button color="primary" onPress={handleReRandomize}>
+        Re-randomize
+      </Button>
+    </ModalFooter>
+  </ModalContent>
+</Modal>
         </div>
       </div>
     </>
