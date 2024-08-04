@@ -261,7 +261,7 @@ export default function AssignmentDashboard() {
           {assignment && (
             <StudentAssignmentView
               description={assignment.descr || "No description available"}
-              deadline={assignment.deadline || "No deadline set"}
+              deadline={new Date(assignment.deadline).toLocaleString() || "No deadline set"}
               allowedFileTypes={assignment.allowedFileTypes}
             />
           )}
