@@ -27,6 +27,8 @@ interface Assignment {
   allowedFileTypes: string;
   groupAssignment: boolean;
   courseID: string;
+  startDate: string;
+  endDate: string;
 }
 
 interface CourseData {
@@ -54,12 +56,30 @@ export default function AssignmentDashboard() {
   const [submittedFileName, setSubmittedFileName] = useState<string | null>(null);
   const [groupDetails, setGroupDetails] = useState<GroupDetails | null>(null);
   const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false);
+  const [studentID, setStudentID] = useState<number | null>(null);
 
   useSessionValidation("student", setLoading, setSession);
 
   useEffect(() => {
+    const fetchStudentID = async () => {
+      if (session?.user?.userID) {
+        try {
+          const response = await fetch(`/api/userInfo/student-user-details?userID=${session.user.userID}`);
+          if (response.ok) {
+            const data = await response.json();
+            setStudentID(data.studentID);
+          } else {
+            throw new Error("Failed to fetch student details");
+          }
+        } catch (error) {
+          console.error("Error fetching student details:", error);
+          toast.error("Error fetching student details. Please refresh the page.");
+        }
+      }
+    };
+
     const fetchData = async () => {
-      if (assignmentID && session) {
+      if (assignmentID && studentID) {
         try {
           const assignmentResponse = await fetch(`/api/assignments/${assignmentID}`);
           if (assignmentResponse.ok) {
@@ -74,24 +94,21 @@ export default function AssignmentDashboard() {
               }
             }
 
-            console.log(assignmentData);
-
-            if (assignmentData.groupAssignment && session.user?.userID) {
+            if (assignmentData.groupAssignment) {
               const groupResponse = await fetch(
                 `/api/groups/getGroupDetails?courseID=${assignmentData.courseID}&userID=${session.user.userID}`
               );
               if (groupResponse.ok) {
                 const groupData: GroupDetails = await groupResponse.json();
                 setGroupDetails(groupData);
-                console.log(groupData);
               }
             }
           } else {
-            console.error('Error fetching assignment data');
+            console.error("Error fetching assignment data");
           }
 
           const submissionResponse = await fetch(
-            `/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`
+            `/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${studentID}`
           );
           if (submissionResponse.ok) {
             const submissionData = await submissionResponse.json();
@@ -99,7 +116,7 @@ export default function AssignmentDashboard() {
             setSubmittedFileName(submissionData.fileName);
             setIsLateSubmission(submissionData.isLate);
           } else {
-            console.error('Error checking submission status');
+            console.error("Error checking submission status");
           }
 
           const feedbackResponse = await fetch(
@@ -109,11 +126,11 @@ export default function AssignmentDashboard() {
             const feedbackData = await feedbackResponse.json();
             setIsFeedbackSubmitted(feedbackData.isFeedbackSubmitted);
           } else {
-            console.error('Error checking feedback status');
+            console.error("Error checking feedback status");
           }
         } catch (error) {
-          console.error('Error:', error);
-          toast.error('An error occurred while fetching data.');
+          console.error("Error:", error);
+          toast.error("An error occurred while fetching data.");
         } finally {
           setLoading(false);
         }
@@ -123,9 +140,13 @@ export default function AssignmentDashboard() {
     };
 
     if (router.isReady && session) {
+      fetchStudentID();
+    }
+
+    if (studentID) {
       fetchData();
     }
-  }, [router.isReady, router.query, session, assignmentID]);
+  }, [router.isReady, session, assignmentID, studentID]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -174,7 +195,7 @@ export default function AssignmentDashboard() {
 
           // Re-fetch submission status
           const submissionResponse = await fetch(
-            `/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`
+            `/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${studentID}`
           );
           const submissionData = await submissionResponse.json();
           setIsSubmitted(submissionData.isSubmitted);
@@ -224,6 +245,8 @@ export default function AssignmentDashboard() {
               description={assignment.descr || "No description available"}
               deadline={new Date(assignment.deadline).toLocaleString() || "No deadline set"}
               allowedFileTypes={assignment.allowedFileTypes}
+              startDate={new Date(assignment.startDate).toLocaleString() || "No start date set"}
+              endDate={new Date(assignment.endDate).toLocaleString() || "No end date set"}
             />
           )}
           {isSubmitted ? (
