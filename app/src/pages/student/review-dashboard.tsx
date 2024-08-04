@@ -1,6 +1,6 @@
 import StudentNavbar from "../components/student-components/student-navbar";
 import styles from '../../styles/instructor-course-dashboard.module.css';
-import { Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody, CardHeader, Divider, Button, Input, Pagination } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody, Divider, Button, Input, Pagination, CardHeader } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useSessionValidation } from "../api/auth/checkSession";
@@ -16,7 +16,7 @@ interface Assignment {
   endDate: string;
   deadline: string;
   allowedFileTypes: string;
-  courseID: string; 
+  courseID: string;
 }
 
 interface CourseData {
@@ -51,8 +51,8 @@ export default function ReviewDashboard() {
   const [reviewCriteria, setReviewCriteria] = useState<ReviewCriterion[]>([]);
   const [submissionsToReview, setSubmissionsToReview] = useState<Submission[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [reviewGrades, setReviewGrades] = useState<{ [key: number]: { [key: number]: string } }>({});
-  const [reviewComments, setReviewComments] = useState<{ [key: number]: string }>({});
+  const [reviewGrades, setReviewGrades] = useState<{ [studentID: number]: { [criteriaID: number]: string } }>({});
+  const [reviewComments, setReviewComments] = useState<{ [studentID: number]: string }>({});
   const router = useRouter();
   const { assignmentID } = router.query;
   const [error, setError] = useState<string | null>(null);
@@ -105,13 +105,13 @@ export default function ReviewDashboard() {
 
           // Initialize reviewGrades and reviewComments state
           const initialGrades = reviewSubmissions.reduce((acc: any, submission: Submission) => {
-            acc[submission.studentID] = {};
+            acc[submission.studentID] = reviewGrades[submission.studentID] || {};
             return acc;
           }, {});
           setReviewGrades(initialGrades);
 
           const initialComments = reviewSubmissions.reduce((acc: any, submission: Submission) => {
-            acc[submission.studentID] = '';
+            acc[submission.studentID] = reviewComments[submission.studentID] || '';
             return acc;
           }, {});
           setReviewComments(initialComments);
@@ -176,11 +176,11 @@ export default function ReviewDashboard() {
           userID: session.user?.userID,
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to submit reviews');
       }
-  
+
       const data = await response.json();
       return data;
     } catch (error) {
@@ -188,7 +188,7 @@ export default function ReviewDashboard() {
       throw error;
     }
   };
-  
+
   const handleSubmitAllReviews = async () => {
     const assignmentID = assignment?.assignmentID;
     const reviews = submissionsToReview
@@ -201,7 +201,7 @@ export default function ReviewDashboard() {
         })),
         comment: reviewComments[submission.studentID]
       }));
-  
+
     try {
       const result = await submitReviews(assignmentID, reviews);
       console.log(result.message);
@@ -230,10 +230,10 @@ export default function ReviewDashboard() {
   const downloadSubmission = async (assignmentID: number, studentID: number) => {
     try {
       const response = await fetch(`/api/downloadSubmission?assignmentID=${assignmentID}&studentID=${studentID}`);
-      
+
       if (response.ok) {
         const contentType = response.headers.get('Content-Type');
-        
+
         if (contentType === 'application/json') {
           const data = await response.json();
           window.open(data.link, '_blank');
@@ -241,12 +241,12 @@ export default function ReviewDashboard() {
           const blob = await response.blob();
           const contentDisposition = response.headers.get('Content-Disposition');
           const fileName = contentDisposition?.split('filename=')[1] || 'downloaded_file';
-          
+
           const url = window.URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.href = url;
           link.setAttribute('download', decodeURIComponent(fileName));
-          
+
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
@@ -285,13 +285,10 @@ export default function ReviewDashboard() {
           {currentSubmission && (
             <>
               <Card className="mb-4">
-                <CardHeader>Reviewee {currentSubmission.studentID}</CardHeader>
-                <Divider />
                 <CardBody>
-                  <p>File Name: {currentSubmission.fileName || 'N/A'}</p>
-                  <p>File Type: {currentSubmission.fileType || 'N/A'}</p>
+                  <p>{currentSubmission.studentName ? `Student Name: ${currentSubmission.studentName}` : 'Student has not submitted the assignment yet'}</p>
+                  <p>File Submission: {currentSubmission.fileName || 'N/A'}</p>
                   <p>Submission Deadline: {new Date(currentSubmission.deadline).toLocaleString()}</p>
-                  <p>Student Name: {currentSubmission.studentName || 'Student has not submitted the assignment yet'}</p>
                 </CardBody>
               </Card>
               {currentSubmission.fileName && (
