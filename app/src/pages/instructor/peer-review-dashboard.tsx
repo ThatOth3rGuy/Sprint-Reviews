@@ -60,6 +60,12 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   const [newEndDate, setNewEndDate] = useState("");
   const [newAnonymous, setNewAnonymous] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [isRandomizeModalOpen, setIsRandomizeModalOpen] = useState(false);
+  const [reviewsPerAssignment, setReviewsPerAssignment] = useState(4);
+
+
+
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
@@ -153,31 +159,63 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
       router.push('/instructor/dashboard');
     }
   };
-
+  const fetchStudents = async (courseID: string) => {
+    try {
+      //courseID = '3';
+      const response = await fetch(`/api/courses/getCourseList?courseID=${courseID}`);
+      if (response.ok) {
+        const students = await response.json();
+        setStudents(students);
+      } else {
+        console.error("Failed to fetch students");
+      }
+    } catch (error) {
+      console.error("Error fetching students:", error);
+    }
+  };
   const handleHomeClick = () => {
     router.push("/instructor/dashboard");
   };
 
-  const handleRandomizeClick = async () => {
-        // // TODO: Call the randomizer API and update the reviewGroups state with the randomized data
-    // try {
-    //   // Fetch all student submissions
-    //   const response = await fetch(`/api/assignments/getSubmissionsList`);
-    //   if (!response.ok) {
-    //     throw new Error("Failed to fetch student submissions");
-    //   }
-    //   const studentSubmissions = await response.json();
-  
-    //   // Randomize the student submissions
-    //   const reviewGroups = randomizePeerReviewGroups(studentSubmissions, 4); // 4 reviews per assignment
-  
-    //   // Set the randomized review groups state
-    //   setRandomizedReviewGroups(reviewGroups);
-    // } catch (error) {
-    //   console.error("Error randomizing review groups:", error);
-    // }
-    console.log("Randomize button clicked");
+  const handleRandomizeClick = () => {
+    setIsRandomizeModalOpen(true);
   };
+  
+  const handleReRandomize = async () => {
+    try {
+        const response = await fetch('/api/updateTable', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                table: 'reviewGroups',
+                data: {
+                    assignmentID: review.assignmentID,
+                    courseID: 2,
+                    reviewsPerAssignment: reviewsPerAssignment,
+                },
+            }),
+        });
+
+        if (response.ok) {
+            toast.success("Review groups re-randomized successfully!");
+            // Fetch the new review groups and update the state
+            const newGroupsResponse = await fetch(`/api/groups/${review.assignmentID}`);
+            const newGroupsData = await newGroupsResponse.json();
+            if (newGroupsData.groups && Array.isArray(newGroupsData.groups)) {
+                setReviewGroups(newGroupsData.groups);
+            }
+            setIsRandomizeModalOpen(false);
+        } else {
+            toast.error("Failed to re-randomize review groups");
+        }
+    } catch (error) {
+        console.error("Error re-randomizing review groups:", error);
+        toast.error("Error re-randomizing review groups");
+    }
+};
+
 
   const handleRelease = async () => {
     try {
@@ -242,7 +280,10 @@ const handleAssignmentsUpdate = async () => {
             reviewID: reviewID,            
             startDate: newStartDate,
             endDate: newEndDate,
-            dueDate: newDueDate,
+
+            deadline: newDueDate,
+
+
             
           }
         })
@@ -382,6 +423,36 @@ const handleAssignmentsUpdate = async () => {
               </ModalFooter>
             </ModalContent>
           </Modal>
+
+          <Modal
+  className='z-20'
+  backdrop="blur"
+  isOpen={isRandomizeModalOpen}
+  onOpenChange={(open) => setIsRandomizeModalOpen(open)}
+>
+  <ModalContent>
+    <ModalHeader>Re-randomize Review Groups</ModalHeader>
+    <ModalBody>
+      <h3>Select number of reviews per assignment:</h3>
+      <Input
+        type="number"
+        min="1"
+        max="10"
+        value={reviewsPerAssignment.toString()}
+        onChange={(e) => setReviewsPerAssignment(Number(e.target.value))}
+      />
+    </ModalBody>
+    <ModalFooter>
+      <Button color="primary" variant="light" onPress={() => setIsRandomizeModalOpen(false)}>
+        Cancel
+      </Button>
+      <Button color="primary" onPress={handleReRandomize}>
+        Re-randomize
+      </Button>
+    </ModalFooter>
+  </ModalContent>
+</Modal>
+
         </div>
       </div>
     </>

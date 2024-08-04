@@ -3,9 +3,13 @@ import { autoRelease, query,
     updateAssignment, updateAssignmentName, updateCourse, updateEnrollment,
 
     updateFeedback, updateReview, updateReviewCriteria, updateReviewer, updateStudent,
-    updateSubmission, updateUser,updateReviewDates
+
+    updateSubmission, updateUser, updateReviewGroups
+,updateReviewDates
 
  } from '../../db';
+
+ import { randomizePeerReviewGroups } from '../addNew/randomizationAlgorithm';
 import { calculateAndUpdateAverageGrade } from './groups/submitGroupFeedback';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
@@ -70,8 +74,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             break;
             
             case 'reviewer':
-            result = await updateReviewer(data.studentID, data.assignmentID, data.submissionID);
-            break;
+                    result = await updateReviewer(data.studentID, data.assignmentID, data.submissionID);
+                    break;
            
             case 'student':
             if (!data.phoneNumber) {
@@ -129,9 +133,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
             result = await updateUser(data.userID, data.fname, data.lname, data.email, data.password);
             break;
+
+            case 'reviewGroups':
+                    result = await updateReviewGroups(data.assignmentID, data.courseID, data.reviewsPerAssignment);
+                    break;
+
             case 'reviewDates':
                 result = await updateReviewDates(data.reviewID, data.startDate, data.endDate, data.deadline);
             break;
+
             case 'review':
                 if(!data.reviewID){
                     data.reviewID = undefined;
