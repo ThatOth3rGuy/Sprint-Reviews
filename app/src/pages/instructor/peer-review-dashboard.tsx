@@ -55,7 +55,9 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   const [randomizedReviewGroups, setRandomizedReviewGroups] = useState<ReviewGroup[][]>([]);
   const [courseName, setCourseName] = useState<string>("");
   const [autoRelease, setAutoRelease] = useState<boolean>(false);
-
+  const [newDueDate, setNewDueDate] = useState("");
+  const [newStartDate, setNewStartDate] = useState("");
+  const [newEndDate, setNewEndDate] = useState("");
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
@@ -201,7 +203,7 @@ const handleAutoReleaseChange = async (checked: boolean) => {
   setAutoRelease(checked);
   if (checked) {
     try {
-      const response = await fetch('/api/scheduleAutoRelease', {
+      const response = await fetch('/api/reviews/scheduleAutoRelease', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -242,6 +244,8 @@ const handleAutoReleaseChange = async (checked: boolean) => {
               title={`Review ${review.assignmentName}`}
               description={`Assignment: ${review.assignmentName}`}
               deadline={review.deadline}
+              startDate={review.startDate}
+              endDate = {review.endDate}
             />
           )}
           <div className={styles.assignmentsSection}>
@@ -271,12 +275,12 @@ const handleAutoReleaseChange = async (checked: boolean) => {
             ))}
           </div>
           <div className={styles.notificationsSection}>
-          {/* <Checkbox
+          <Checkbox
           isSelected={autoRelease}
           onChange={(e) => handleAutoReleaseChange(e.target.checked)}
         >
           Auto Release on Start Date
-        </Checkbox> */}
+        </Checkbox>
             <Button color="primary" variant="ghost" onClick={handleRelease}>Release Assignment for Reviews</Button>
           </div>
         </div>

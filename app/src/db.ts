@@ -204,12 +204,14 @@ export async function createReview(
   assignmentID: number, 
   isGroupAssignment: boolean, 
   allowedFileTypes: string, 
+  startDate: Date,
+  endDate : Date,
   deadline: Date,
   anonymous: boolean
 ): Promise<void> {
   const result = await query(
-    'INSERT INTO review (assignmentID, isGroupAssignment, allowedFileTypes, deadline, anonymous) VALUES (?, ?, ?, ?, ?)',
-    [assignmentID, isGroupAssignment, allowedFileTypes, deadline, anonymous]
+    'INSERT INTO review (assignmentID, isGroupAssignment, allowedFileTypes,startDate, endDate, deadline, anonymous) VALUES (?, ?, ?, ?, ?)',
+    [assignmentID, isGroupAssignment, allowedFileTypes,startDate,endDate, deadline, anonymous]
   );
   
   if (result.affectedRows === 0) {
