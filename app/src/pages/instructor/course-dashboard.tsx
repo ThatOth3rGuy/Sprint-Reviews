@@ -6,23 +6,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useSessionValidation } from "../api/auth/checkSession";
 import styles from "../../styles/instructor-course-dashboard.module.css";
 import InstructorAssignmentCard from "../components/instructor-components/instructor-course-assignment-card";
-import {
-  Button,
-  Breadcrumbs,
-  BreadcrumbItem,
-  Listbox,
-  ListboxItem,
-  Divider,
-  Checkbox,
-  CheckboxGroup,
-  Spinner,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Input,
-} from "@nextui-org/react";
+import {  Button,  Breadcrumbs,  BreadcrumbItem,  Listbox,  ListboxItem,  Divider,  Checkbox,  CheckboxGroup,  Spinner,  Modal,  ModalContent,  ModalHeader,  ModalBody, ModalFooter,  Input} from "@nextui-org/react";
 import InstructorReviewCard from "../components/instructor-components/instructor-PR-card";
 
 interface CourseData {
@@ -321,7 +305,7 @@ export default function Page() {
                           courseID={assignment.assignmentID}
                           assignmentName={assignment.title}
                           color="#9fc3cf"
-                          deadline={assignment.deadline}
+                          deadline={new Date(assignment.deadline).toLocaleString()}
                           groupAssignment={assignment.groupAssignment}
                         />
                       </div>
@@ -347,7 +331,7 @@ export default function Page() {
                           courseID={assignment.assignmentID}
                           assignmentName={assignment.title}
                           color="#9fc3cf"
-                          deadline={assignment.deadline}
+                          deadline={new Date(assignment.deadline).toLocaleString()}
                           groupAssignment={assignment.groupAssignment}
                         />
                       </div>

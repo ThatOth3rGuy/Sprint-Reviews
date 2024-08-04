@@ -187,6 +187,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
 
       if (response.ok) {
         toast.success("Review Released successfully!");
+        router.back();
       } else {
         console.error('Failed to release assignment for reviews');
       }
@@ -270,12 +271,12 @@ const handleAutoReleaseChange = async (checked: boolean) => {
             ))}
           </div>
           <div className={styles.notificationsSection}>
-          <Checkbox
+          {/* <Checkbox
           isSelected={autoRelease}
           onChange={(e) => handleAutoReleaseChange(e.target.checked)}
         >
           Auto Release on Start Date
-        </Checkbox>
+        </Checkbox> */}
             <Button color="primary" variant="ghost" onClick={handleRelease}>Release Assignment for Reviews</Button>
           </div>
         </div>

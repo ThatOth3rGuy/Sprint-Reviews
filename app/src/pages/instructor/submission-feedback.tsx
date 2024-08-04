@@ -186,7 +186,7 @@ export default function AssignmentDashboard() {
             <BreadcrumbItem onClick={handleCourseClick}>{courseData?.courseName}</BreadcrumbItem>
             <BreadcrumbItem onClick={handleAssignmentClick}>{assignment.title}</BreadcrumbItem>
             <BreadcrumbItem>
-              {submission?.studentName || "Assignment Name"}
+              {submission?.studentName || "Submission details"}
             </BreadcrumbItem>
           </Breadcrumbs>
         </div>
@@ -194,9 +194,9 @@ export default function AssignmentDashboard() {
           {assignment && (
             <AssignmentDetailCard
                 description={assignment.descr || "No description available"}
-                startDate={assignment.startDate || "No start date set"}
-                endDate={assignment.endDate || "No end date set"}
-                deadline={assignment.deadline || "No deadline set"}
+                startDate={new Date(assignment.startDate).toLocaleString() || "No start date set"}
+                endDate={new Date(assignment.endDate).toLocaleString() || "No end date set"}
+                deadline={new Date(assignment.deadline).toLocaleString() || "No deadline set"}
                 allowedFileTypes={assignment.allowedFileTypes}
             />
           )}

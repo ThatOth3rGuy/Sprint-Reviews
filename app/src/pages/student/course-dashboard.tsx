@@ -202,7 +202,7 @@ export default function Page() {
                           courseID={assignment.assignmentID}
                           assignmentName={assignment.title}
                           color="#b3d0c3"
-                          deadline={assignment.deadline}
+                          deadline={new Date(assignment.deadline).toLocaleString()}
                           groupAssignment={assignment.groupAssignment}
                         />
                       </div>
@@ -228,7 +228,7 @@ export default function Page() {
                           courseID={assignment.assignmentID}
                           assignmentName={assignment.title}
                           color="#b3d0c3"
-                          deadline={assignment.deadline}
+                          deadline={new Date(assignment.deadline).toLocaleString()}
                           groupAssignment={assignment.groupAssignment}
                         />
                       </div>

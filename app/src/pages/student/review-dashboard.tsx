@@ -220,7 +220,7 @@ export default function ReviewDashboard() {
 
   const downloadSubmission = async (assignmentID: number, studentID: number) => {
     try {
-      const response = await fetch(`/api/downloadSubmission?assignmentID=${assignmentID}&studentID=${studentID}`);
+      const response = await fetch(`/api/assignments/downloadSubmission?assignmentID=${assignmentID}&studentID=${studentID}`);
       
       if (response.ok) {
         const contentType = response.headers.get('Content-Type');
