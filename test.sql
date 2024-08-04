@@ -79,9 +79,9 @@ CREATE TABLE IF NOT EXISTS submission (
     fileContent LONGBLOB,
     fileType VARCHAR(100),
     submissionDate DATETIME,
-    autoGrade INT DEFAULT 0,
+    autoGrade DECIMAL(5, 2) DEFAULT 0,
     grade DECIMAL(5, 2),
-    groupID DECIMAL(5, 2),
+    groupID INT,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
