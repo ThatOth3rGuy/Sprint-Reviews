@@ -223,7 +223,7 @@ const AssignmentDashboard: NextPage = () => {
             assignmentID={assignment.assignmentID}
             title={assignment.title}
             description={assignment.descr || "No description available"}
-            deadline={assignment.deadline || "No deadline set"}
+            deadline={new Date(assignment.deadline).toLocaleString() || "No deadline set"}
             isGroupAssignment={false}
             submittedEntities={submittedEntities}
             remainingEntities={remainingEntities}

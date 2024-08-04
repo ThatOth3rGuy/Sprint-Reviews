@@ -408,8 +408,8 @@ const ReleaseAssignment: React.FC = () => {
               <Button onClick={handleSubmit} color="primary" variant="solid" className="float-right m-4" size="sm">
                 <b>Draft Release</b>
               </Button>
-              <Button variant="bordered" onPress={onOpen} color="primary" className="float-left m-4 ml-0" size="sm">
-                Advanced Options</Button>
+              {/* <Button variant="bordered" onPress={onOpen} color="primary" className="float-left m-4 ml-0" size="sm">
+                Advanced Options</Button> */}
               <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="instructor">
                 <ModalContent>
                   {(onClose) => (

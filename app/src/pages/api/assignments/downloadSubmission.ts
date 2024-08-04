@@ -1,17 +1,18 @@
 // pages/api/downloadSubmission.ts
 import { NextApiRequest, NextApiResponse } from 'next';
-import { query } from '../../../db';
+import { query,getStudentsById } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { assignmentID, studentID } = req.query;
 
+  const studentid = getStudentsById(Number(studentID));
   if (!assignmentID || !studentID) {
     return res.status(400).json({ error: 'Missing required parameters' });
   }
 
   try {
     // Retrieve the file data from the database
-    const fileData = await query('SELECT fileName, fileContent, fileType FROM submission WHERE assignmentID = ? AND studentID = ?', [assignmentID, studentID]);
+    const fileData = await query('SELECT fileName, fileContent, fileType FROM submission WHERE assignmentID = ? AND studentID = ?', [assignmentID, studentid]);
 
     if (fileData.length === 0) {
       return res.status(404).json({ error: 'File not found' });
