@@ -287,7 +287,7 @@ export default function ReviewDashboard() {
                   <p>Student Name: {currentSubmission.studentName}</p>
                 </CardBody>
               </Card>
-              <Button onClick={() => downloadSubmission(assignmentID, session.user.userID)}>
+              <Button onClick={() => downloadSubmission(Number(assignmentID), Number(session.user.userID))}>
           Download Submitted File
         </Button>
         
