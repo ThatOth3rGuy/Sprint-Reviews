@@ -7,7 +7,7 @@ import AssignmentDetailCard from "../components/student-components/student-assig
 import styles from "../../styles/AssignmentDetailCard.module.css";
 import { Button, Breadcrumbs, BreadcrumbItem, Spinner, useDisclosure, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from "@nextui-org/react";
 import toast from "react-hot-toast";
-
+import DownloadSubmission from "../components/student-components/download-submission";
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -187,11 +187,13 @@ export default function AssignmentDashboard() {
             <BreadcrumbItem onClick={handleAssignmentClick}>{assignment.title}</BreadcrumbItem>
             <BreadcrumbItem>
               {submission?.studentName || "Submission details"}
+              
             </BreadcrumbItem>
           </Breadcrumbs>
         </div>
         <div className={styles.assignmentsSection}>
           {assignment && (
+            <>
             <AssignmentDetailCard
                 description={assignment.descr || "No description available"}
                 startDate={new Date(assignment.startDate).toLocaleString() || "No start date set"}
@@ -199,6 +201,9 @@ export default function AssignmentDashboard() {
                 deadline={new Date(assignment.deadline).toLocaleString() || "No deadline set"}
                 allowedFileTypes={assignment.allowedFileTypes}
             />
+            <p>Download: <DownloadSubmission assignmentID={assignment.assignmentID} studentID={Number(studentID)}></DownloadSubmission></p>
+            </>
+            
           )}
           {submission && submission.isSubmitted ? (
             <div>

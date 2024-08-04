@@ -7,6 +7,7 @@ import { useSessionValidation } from "../api/auth/checkSession";
 import submitReviews from "../api/reviews/submitReviews";
 import dayjs from "dayjs";
 import toast from "react-hot-toast";
+import DownloadSubmission from "../components/student-components/download-submission";
 
 interface Assignment {
   assignmentID: number;
@@ -310,6 +311,7 @@ export default function ReviewDashboard() {
                 <CardBody>
                   <p>{currentSubmission.studentName ? `Student Name: ${currentSubmission.studentName}` : 'Student has not submitted the assignment yet'}</p>
                   <p>File Submission: {currentSubmission.fileName || 'N/A'}</p>
+                  <p>File: <DownloadSubmission assignmentID={currentSubmission.assignmentID} studentID={currentSubmission.studentID}></DownloadSubmission></p>
                   <p>Submission Deadline: {new Date(currentSubmission.deadline).toLocaleString()}</p>
                 </CardBody>
               </Card>
