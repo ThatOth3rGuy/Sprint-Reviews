@@ -21,6 +21,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       for (const review of reviews) {
         const { revieweeID, feedbackDetails, comment } = review;
 
+        console.log('Submitting review for reviewee', revieweeID, 'by reviewer', reviewerID.studentID);
+        console.log('Feedback details:', feedbackDetails);
+        console.log('Comment:', comment);
+
         if (!revieweeID || !feedbackDetails || !comment) {
           throw new Error('Invalid review data: missing revieweeID, feedbackDetails, or comment');
         }

@@ -38,7 +38,8 @@ interface Submission {
   fileType: string;
   submissionDate: string;
   studentName?: string;
-  deadline:string;
+  deadline: string;
+  isSubmitted: boolean;
 }
 
 export default function ReviewDashboard() {
@@ -83,9 +84,15 @@ export default function ReviewDashboard() {
 
           setAssignment(assignmentData);
           setReviewCriteria(reviewData.reviewCriteria);
-          setSubmissionsToReview(reviewData.submissions);
-
-          console.log('reviewData:', reviewData);
+          const reviewSubmissions = await Promise.all(reviewData.submissions.map(async (submission: Submission) => {
+            const submissionResponse = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${submission.studentID}`);
+            const submissionData = await submissionResponse.json();
+            return {
+              ...submission,
+              ...submissionData,
+            };
+          }));
+          setSubmissionsToReview(reviewSubmissions);
 
           if (assignmentData.courseID) {
             const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
@@ -97,19 +104,20 @@ export default function ReviewDashboard() {
           }
 
           // Initialize reviewGrades and reviewComments state
-          const initialGrades = reviewData.submissions.reduce((acc: any, submission: Submission) => {
-            acc[submission.revieweeID] = {};
+          const initialGrades = reviewSubmissions.reduce((acc: any, submission: Submission) => {
+            acc[submission.studentID] = {};
             return acc;
           }, {});
           setReviewGrades(initialGrades);
 
-          const initialComments = reviewData.submissions.reduce((acc: any, submission: Submission) => {
-            acc[submission.revieweeID] = '';
+          const initialComments = reviewSubmissions.reduce((acc: any, submission: Submission) => {
+            acc[submission.studentID] = '';
             return acc;
           }, {});
           setReviewComments(initialComments);
 
           // Check if deadline has passed
+          const currentSubmission = reviewSubmissions[currentPage - 1];
           const assignmentDeadline = currentSubmission ? dayjs(currentSubmission.deadline) : null;
           const currentDate = dayjs();
           setDeadlinePassed(currentDate.isAfter(assignmentDeadline));
@@ -125,7 +133,7 @@ export default function ReviewDashboard() {
     };
 
     fetchData();
-  }, [router.isReady, session, assignmentID]);
+  }, [router.isReady, session, assignmentID, currentPage]);
 
   const handleHomeClick = () => router.push("/student/dashboard");
 
@@ -183,14 +191,16 @@ export default function ReviewDashboard() {
   
   const handleSubmitAllReviews = async () => {
     const assignmentID = assignment?.assignmentID;
-    const reviews = submissionsToReview.map(submission => ({
-      revieweeID: submission.studentID,
-      feedbackDetails: reviewCriteria.map(criterion => ({
-        criteriaID: criterion.criteriaID,
-        grade: Number(reviewGrades[submission.revieweeID][criterion.criteriaID])
-      })),
-      comment: reviewComments[submission.revieweeID]
-    }));
+    const reviews = submissionsToReview
+      .filter(submission => submission.isSubmitted)
+      .map(submission => ({
+        revieweeID: submission.studentID,
+        feedbackDetails: reviewCriteria.map(criterion => ({
+          criteriaID: criterion.criteriaID,
+          grade: Number(reviewGrades[submission.studentID][criterion.criteriaID])
+        })),
+        comment: reviewComments[submission.studentID]
+      }));
   
     try {
       const result = await submitReviews(assignmentID, reviews);
@@ -275,55 +285,65 @@ export default function ReviewDashboard() {
           {currentSubmission && (
             <>
               <Card className="mb-4">
-                <CardHeader>Reviewee {currentSubmission.revieweeID}</CardHeader>
+                <CardHeader>Reviewee {currentSubmission.studentID}</CardHeader>
                 <Divider />
                 <CardBody>
-                  <p>File Name: {currentSubmission.fileName}</p>
-                  <p>File Type: {currentSubmission.fileType}</p>
+                  <p>File Name: {currentSubmission.fileName || 'N/A'}</p>
+                  <p>File Type: {currentSubmission.fileType || 'N/A'}</p>
                   <p>Submission Deadline: {new Date(currentSubmission.deadline).toLocaleString()}</p>
-                  <p>Student Name: {currentSubmission.studentName}</p>
+                  <p>Student Name: {currentSubmission.studentName || 'Student has not submitted the assignment yet'}</p>
                 </CardBody>
               </Card>
-              <Button onClick={() => downloadSubmission(Number(assignmentID), Number(session.user.userID))}>
-                Download Submitted File
-              </Button>
+              {currentSubmission.fileName && (
+                <Button onClick={() => downloadSubmission(Number(assignmentID), Number(session.user.userID))}>
+                  Download Submitted File
+                </Button>
+              )}
               <Card>
                 <CardHeader>Review Criteria</CardHeader>
                 <Divider />
                 <CardBody>
-                  {reviewCriteria.map((criterion) => (
-                    <div key={criterion.criteriaID} className="flex flex-col mb-4">
-                      <div className="flex justify-between mb-2">
-                        <span>{criterion.criterion}</span>
-                        <span>Max marks: {criterion.maxMarks}</span>
+                  {currentSubmission.isSubmitted ? (
+                    <>
+                      {reviewCriteria.map((criterion) => (
+                        <div key={criterion.criteriaID} className="flex flex-col mb-4">
+                          <div className="flex justify-between mb-2">
+                            <span>{criterion.criterion}</span>
+                            <span>Max marks: {criterion.maxMarks}</span>
+                          </div>
+                          <Input
+                            type="number"
+                            label={`Grade for ${criterion.criterion}`}
+                            placeholder="Enter grade"
+                            value={reviewGrades[currentSubmission.studentID]?.[criterion.criteriaID] || ''}
+                            onChange={(e) => handleGradeChange(currentSubmission.studentID, criterion.criteriaID, e.target.value)}
+                            max={criterion.maxMarks}
+                            min={0}
+                          />
+                        </div>
+                      ))}
+                      <div className="flex flex-col mb-4">
+                        <Input
+                          type="text"
+                          label="Comments"
+                          placeholder="Enter your comments"
+                          value={reviewComments[currentSubmission.studentID] || ''}
+                          onChange={(e) => handleCommentChange(currentSubmission.studentID, e.target.value)}
+                          required={reviewCriteria.some(criterion => criterion.maxMarks === 0)}
+                        />
                       </div>
-                      <Input
-                        type="number"
-                        label={`Grade for ${criterion.criterion}`}
-                        placeholder="Enter grade"
-                        value={reviewGrades[currentSubmission.revieweeID]?.[criterion.criteriaID] || ''}
-                        onChange={(e) => handleGradeChange(currentSubmission.revieweeID, criterion.criteriaID, e.target.value)}
-                        max={criterion.maxMarks}
-                        min={0}
-                      />
-                    </div>
-                  ))}
-                  <div className="flex flex-col mb-4">
-                    <Input
-                      type="text"
-                      label="Comments"
-                      placeholder="Enter your comments"
-                      value={reviewComments[currentSubmission.revieweeID] || ''}
-                      onChange={(e) => handleCommentChange(currentSubmission.revieweeID, e.target.value)}
-                      required={reviewCriteria.some(criterion => criterion.maxMarks === 0)}
-                    />
-                  </div>
-                  {!deadlinePassed && (
+                    </>
+                  ) : (
+                    <p>Student has not submitted the assignment yet</p>
+                  )}
+                  {!deadlinePassed && currentSubmission.isSubmitted && (
                     <Button className={"color=primary"} onClick={handleSubmitAllReviews}>
                       Submit All Reviews
                     </Button>
                   )}
-                  <p>{checkSubmissionStatus(currentSubmission.submissionDate, currentSubmission.deadline)}</p>
+                  {currentSubmission.isSubmitted && (
+                    <p>{checkSubmissionStatus(currentSubmission.submissionDate, currentSubmission.deadline)}</p>
+                  )}
                 </CardBody>
               </Card>
             </>
