@@ -87,6 +87,8 @@ export async function createInstructor(instructorID: number, userID: number, isA
 export async function addAssignmentToCourse(
   title: string, 
   description: string, 
+  startDate: string,
+  endDate: string,
   dueDate: string, 
   file: string, 
   groupAssignment: boolean, 
@@ -98,8 +100,8 @@ export async function addAssignmentToCourse(
   }
   const allowedFileTypesString = allowedFileTypes.join(',');
   const sql = `
-    INSERT INTO assignment (title, descr, deadline, rubric, groupAssignment, courseID, allowedFileTypes)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO assignment (title, descr, startDate, endDate, deadline, rubric, groupAssignment, courseID, allowedFileTypes)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   try {
@@ -120,7 +122,7 @@ export async function addAssignmentToCourse(
     }
 
     // If the class exists, proceed with the insert
-    const insertResult = await query(sql, [title, description, new Date(dueDate), file, groupAssignment, courseID, allowedFileTypesString]);
+    const insertResult = await query(sql, [title, description, new Date(startDate), new Date(endDate), new Date(dueDate), file, groupAssignment, courseID, allowedFileTypesString]);
     console.log('Insert result:', insertResult);
 
     return insertResult;
@@ -923,15 +925,15 @@ export async function authenticateStudent(email: string, password: string): Prom
 /* UPDATE FUNCTIONS - MAIN HANDLERS */
 
 // Update the assignment options for a given assignmentID
-export async function updateAssignment(assignmentID: number, isGroupAssignment: boolean, allowedFileTypes: string, deadline: Date): Promise<any[]> {
+export async function updateAssignment(assignmentID: number, isGroupAssignment: boolean, allowedFileTypes: string,  startDate: string,endDate: string,dueDate: string): Promise<any[]> {
   const sql = `
     UPDATE assignment
-    SET groupAssignment = ?, allowedFileTypes = ?, deadline = ?
+    SET groupAssignment = ?, allowedFileTypes = ?, startDate = ?, endDate = ?, deadline =?
     WHERE assignmentID = ?
   `;
 
   try {
-    const newAssign = await query(sql, [isGroupAssignment, allowedFileTypes, deadline, assignmentID]);
+    const newAssign = await query(sql, [isGroupAssignment, allowedFileTypes, startDate, endDate, dueDate, assignmentID]);
     return newAssign;
   } catch (error) {
     console.error('Error updating assignment:', error);
@@ -1148,6 +1150,41 @@ export async function updateReviewCriteria(assignmentID: number, criterion?: str
     throw error;
   }
 }
+
+//Update review
+export async function updateReview(reviewID: number, assignmentID: number, isGroupAssignment: boolean, allowedFileTypes: string, startDate: string, endDate: string, deadline: string, anonymous: boolean): Promise<any[]> {
+  const sql = `
+    UPDATE review
+    SET assignmentID = ?, isGroupAssignment = ?, allowedFileTypes = ?, startDate = ?, endDate = ?, deadline = ?, anonymous = ?
+    WHERE reviewID = ?
+  `;
+
+  try {
+    const updatedReview = await query(sql, [assignmentID, isGroupAssignment, allowedFileTypes, startDate, endDate, deadline, anonymous, reviewID]);
+    return updatedReview;
+  } catch (error) {
+    console.error('Error updating review:', error);
+    throw error;
+  }
+}
+
+//Update isReleased when startDate = NOW() --> for auto-releaseing an assignment
+export async function autoRelease(assignmentID : string) {
+  const sql = `UPDATE review_groups SET isReleased = true WHERE assignmentID = ? AND startDate = NOW()`;
+
+  try {
+    const result = await query(sql, [assignmentID]);
+    if (result.affectedRows === 0) {
+      throw new Error(`No review groups found for assignmentID: ${assignmentID} with startDate matching current date.`);
+    }
+    console.log(`Assignment ${assignmentID} auto-released successfully.`);
+  } catch (error) {
+    console.error(`Error auto-releasing assignment ${assignmentID}:`, error);
+    throw error;
+  }
+}
+
+
 // Update student feedback information in the database (Feedback) - assignmentID is submission and reviewerID is studentID of reviewer
 export async function updateFeedback(assignmentID: string, studentID: string, content: string): Promise<any> {
 

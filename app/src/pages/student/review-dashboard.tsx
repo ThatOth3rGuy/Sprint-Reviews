@@ -12,6 +12,8 @@ interface Assignment {
   assignmentID: number;
   title: string;
   descr: string;
+  startDate: string;
+  endDate: string;
   deadline: string;
   allowedFileTypes: string;
   courseID: string; 
@@ -210,6 +212,47 @@ export default function ReviewDashboard() {
     );
   }
 
+  const checkSubmissionStatus = (submissionDate: string, deadline: string) => {
+    const submission = dayjs(submissionDate);
+    const dueDate = dayjs(deadline);
+    return submission.isBefore(dueDate) ? 'Submitted on time' : 'Submitted late';
+  };
+
+  const downloadSubmission = async (assignmentID: number, studentID: number) => {
+    try {
+      const response = await fetch(`/api/downloadSubmission?assignmentID=${assignmentID}&studentID=${studentID}`);
+      
+      if (response.ok) {
+        const contentType = response.headers.get('Content-Type');
+        
+        if (contentType === 'application/json') {
+          // Handle link submission
+          const data = await response.json();
+          window.open(data.link, '_blank');
+        } else {
+          // Handle file submission
+          const blob = await response.blob();
+          const contentDisposition = response.headers.get('Content-Disposition');
+          const fileName = contentDisposition?.split('filename=')[1] || 'downloaded_file';
+          
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', decodeURIComponent(fileName));
+          
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      } else {
+        throw new Error('Failed to download submission');
+      }
+    } catch (error) {
+      console.error('Error downloading submission:', error);
+      toast.error('Error downloading submission. Please try again.');
+    }
+  };
+
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -244,6 +287,10 @@ export default function ReviewDashboard() {
                   <p>Student Name: {currentSubmission.studentName}</p>
                 </CardBody>
               </Card>
+              <Button onClick={() => downloadSubmission(assignmentID, session.user.userID)}>
+          Download Submitted File
+        </Button>
+        
               <Card>
                 <CardHeader>Review Criteria</CardHeader>
                 <Divider />
@@ -280,7 +327,7 @@ export default function ReviewDashboard() {
                       Submit All Reviews
                     </Button>
                   )}
-
+ <p>{checkSubmissionStatus(currentSubmission.submissionDate, currentSubmission.deadline)}</p>
                 </CardBody>
               </Card>
             </>

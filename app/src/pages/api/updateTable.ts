@@ -1,8 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { query,
+import { autoRelease, query,
     updateAssignment, updateAssignmentName, updateCourse, updateEnrollment,
-    updateFeedback, updateGroupFeedback, updateReviewCriteria, updateReviewer, 
-    updateStudent, updateSubmission, updateUser
+
+    updateFeedback, updateReview, updateReviewCriteria, updateReviewer, updateStudent,
+    updateSubmission, updateUser
+
  } from '../../db';
 import { calculateAndUpdateAverageGrade } from './groups/submitGroupFeedback';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -17,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         let result;
         switch (table) { // Switch statement to determine which table to update
             case 'assignmentInfo':
-            result = await updateAssignment(data.assignmentID, data.isGroupAssignment, data.allowedFileTypes, data.deadline);
+            result = await updateAssignment(data.assignmentID, data.isGroupAssignment, data.allowedFileTypes, data.startDate, data.endDate, data.dueDate);
             break;
 
             case 'assignmentName':
@@ -128,6 +130,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             result = await updateUser(data.userID, data.fname, data.lname, data.email, data.password);
             break;
             
+            case 'review':
+                result = await updateReview(data.reviewID, data.assignmentID, data.isGroupAssignment, data.allowedFileTypes, data.startDate, data.endDate, data.deadline, data.anonymous);
+                if (data.autoRelease) {
+                    await autoRelease(data.assignmentID);
+                }
+                break;
+
             default:
             return res.status(400).json({ message: 'Invalid table' });
         }
