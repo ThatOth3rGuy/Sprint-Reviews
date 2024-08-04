@@ -109,23 +109,6 @@ export default function AssignmentDashboard() {
       }
     };
 
-    const checkSubmissionStatus = async () => {
-      if (assignmentID && session?.user?.userID && studentID) {
-        try {
-          const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${studentID}`);
-          if (!response.ok) throw new Error('Failed to check submission status');
-
-          const data = await response.json();
-          setIsSubmitted(data.isSubmitted);
-          setSubmittedFileName(data.fileName);
-          setIsLateSubmission(data.isLate);
-        } catch (error) {
-          console.error('Error checking submission status:', error);
-          toast.error('Error checking submission status. Please refresh the page.');
-        }
-      }
-    };
-
     if (router.isReady && session && !studentID) {
       fetchStudentID();
     }
@@ -191,7 +174,6 @@ export default function AssignmentDashboard() {
           setIsSubmitted(true);
           setSubmittedFileName(uploadedFile ? uploadedFile.name : linkSubmission);
           setIsLateSubmission(result.isLate);
-          checkSubmissionStatus();
         } else {
           throw new Error(result.message || 'Submission failed');
         }

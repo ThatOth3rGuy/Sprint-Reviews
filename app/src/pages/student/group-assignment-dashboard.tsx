@@ -16,6 +16,7 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
+  Input,
 } from "@nextui-org/react";
 import toast from "react-hot-toast";
 
@@ -57,6 +58,8 @@ export default function AssignmentDashboard() {
   const [groupDetails, setGroupDetails] = useState<GroupDetails | null>(null);
   const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false);
   const [studentID, setStudentID] = useState<number | null>(null);
+  const [linkSubmission, setLinkSubmission] = useState('');
+  const [submissionType, setSubmissionType] = useState<'file' | 'link'>('file');
 
   useSessionValidation("student", setLoading, setSession);
 
@@ -165,14 +168,25 @@ export default function AssignmentDashboard() {
     );
   };
 
+  const isLinkTypeAllowed = () => {
+    if (!assignment?.allowedFileTypes) return false;
+    const allowedTypes = assignment.allowedFileTypes.split(",");
+    console.log(allowedTypes.some(type => ['link', 'github', 'googledocs'].includes(type.trim().toLowerCase())));
+    return allowedTypes.some(type => ['link', 'github', 'googledocs'].includes(type.trim().toLowerCase()));
+  };
+
   const handleSubmit = async () => {
-    if (uploadedFile && isFileTypeAllowed(uploadedFile) && session?.user?.userID) {
+    if ((uploadedFile && isFileTypeAllowed(uploadedFile)) || (submissionType === 'link' && linkSubmission && isLinkTypeAllowed())) {
       const formData = new FormData();
-      formData.append("file", uploadedFile);
       formData.append("assignmentID", assignment?.assignmentID?.toString() ?? "");
       formData.append("userID", session.user.userID.toString());
       formData.append("isGroupAssignment", String(assignment?.groupAssignment ?? false));
       formData.append("groupID", groupDetails?.groupID?.toString() ?? "");
+      if (uploadedFile) {
+        formData.append("file", uploadedFile);
+      } else if (linkSubmission) {
+        formData.append("link", linkSubmission);
+      }
       if (assignment?.groupAssignment) {
         const studentList = groupDetails?.students?.map((student) => student.studentID);
         formData.append("students", JSON.stringify(studentList));
@@ -190,27 +204,66 @@ export default function AssignmentDashboard() {
           toast.success("Assignment submitted successfully!");
           onOpenChange();
           setIsSubmitted(true);
-          setSubmittedFileName(uploadedFile.name);
+          setSubmittedFileName(uploadedFile ? uploadedFile.name : linkSubmission);
           setIsLateSubmission(result.isLate);
-
-          // Re-fetch submission status
-          const submissionResponse = await fetch(
-            `/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${studentID}`
-          );
-          const submissionData = await submissionResponse.json();
-          setIsSubmitted(submissionData.isSubmitted);
-          setSubmittedFileName(submissionData.fileName);
-          setIsLateSubmission(submissionData.isLate);
         } else {
-          throw new Error(result.message || "File upload failed");
+          throw new Error(result.message || 'Submission failed');
         }
       } catch (error) {
-        console.error("Error uploading file:", error);
-        setFileError("Failed to upload file. Please try again.");
-        toast.error("Failed to upload file. Please try again.");
+        console.error('Error submitting assignment:', error);
+        setFileError('Failed to submit. Please try again.');
+        toast.error('Failed to submit. Please try again.');
       }
     } else {
-      toast.error("Invalid submission. Please check your file and try again.");
+      toast.error('Invalid submission. Please check your file or link and try again.');
+    }
+  };
+
+  const handleSubmissionTypeChange = (type: 'file' | 'link') => {
+    setSubmissionType(type);
+    setUploadedFile(null);
+    setLinkSubmission('');
+    setFileError(null);
+  };
+
+  const isWithinSubmissionPeriod = () => {
+    if (!assignment) return false;
+    const currentDate = new Date();
+    const startDate = new Date(assignment.startDate);
+    const endDate = new Date(assignment.endDate);
+    return currentDate >= startDate && currentDate <= endDate;
+  };
+
+  const downloadSubmission = async (assignmentID: number, studentID: number) => {
+    try {
+      const response = await fetch(`/api/assignments/downloadSubmission?assignmentID=${assignmentID}&studentID=${studentID}`);
+
+      if (response.ok) {
+        const contentType = response.headers.get('Content-Type');
+
+        if (contentType === 'application/json') {
+          const data = await response.json();
+          window.open(data.link, '_blank');
+        } else {
+          const blob = await response.blob();
+          const contentDisposition = response.headers.get('Content-Disposition');
+          const fileName = contentDisposition?.split('filename=')[1] || 'downloaded_file';
+
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', decodeURIComponent(fileName));
+
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      } else {
+        throw new Error('Failed to download submission');
+      }
+    } catch (error) {
+      console.error('Error downloading submission:', error);
+      toast.error('Error downloading submission. Please try again.');
     }
   };
 
@@ -251,19 +304,14 @@ export default function AssignmentDashboard() {
           )}
           {isSubmitted ? (
             <div>
-              <p
-                className={
-                  isLateSubmission
-                    ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1"
-                    : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"
-                }
-              >
+              <p className={isLateSubmission ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1" : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"}>
                 {isLateSubmission ? "Assignment Submitted Late" : "Assignment Submitted"}
               </p>
-              {submittedFileName && <p className="text-left text-small">Submitted file: {submittedFileName}</p>}
+              {submittedFileName && <p className="text-left text-small">Submitted: {submittedFileName} <Button onClick={() => downloadSubmission(Number(assignmentID), session.user.userID)}>Download Submitted File</Button></p>}
+              {isWithinSubmissionPeriod() && <Button onClick={onOpen}>Resubmit Assignment</Button>}
             </div>
           ) : (
-            <Button onClick={onOpen}>Submit Assignment</Button>
+            isWithinSubmissionPeriod() && <Button onClick={onOpen}>Submit Assignment</Button>
           )}
           <br />
           <br />
@@ -288,29 +336,33 @@ export default function AssignmentDashboard() {
                 <>
                   <ModalHeader className="flex flex-col gap-1">Submit Assignment</ModalHeader>
                   <ModalBody>
-                    <input type="file" onChange={handleFileUpload} />
-                    {fileError && <p style={{ color: "red" }}>{fileError}</p>}
-                    {uploadedFile && (
+                    {isLinkTypeAllowed() && (
                       <div>
-                        <p>Selected file: {uploadedFile.name}</p>
+                        <Button onClick={() => handleSubmissionTypeChange('file')}>File Submission</Button>
+                        <Button onClick={() => handleSubmissionTypeChange('link')}>Link Submission</Button>
                       </div>
                     )}
+                    {submissionType === 'file' ? (
+                      <input type="file" onChange={handleFileUpload} />
+                    ) : (
+                      <Input
+                        type="url"
+                        label="Submission Link"
+                        placeholder="Enter your submission link"
+                        value={linkSubmission}
+                        onChange={(e) => setLinkSubmission(e.target.value)}
+                      />
+                    )}
+                    {fileError && <p style={{ color: "red" }}>{fileError}</p>}
+                    {uploadedFile && <p>Selected file: {uploadedFile.name}</p>}
                   </ModalBody>
                   <ModalFooter>
-                    <Button
-                      color="danger"
-                      variant="light"
-                      onPress={() => {
-                        setUploadedFile(null);
-                        setFileError(null);
-                        onClose();
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button color="primary" onPress={handleSubmit}>
-                      Submit
-                    </Button>
+                    <Button color="danger" variant="light" onPress={() => {
+                      setUploadedFile(null);
+                      setFileError(null);
+                      onClose();
+                    }}>Cancel</Button>
+                    <Button color="primary" onPress={handleSubmit}>Submit</Button>
                   </ModalFooter>
                 </>
               )}
