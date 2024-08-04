@@ -14,14 +14,9 @@ import {
   ModalBody, ModalFooter, useDisclosure,
   Spinner
 } from "@nextui-org/react";
-import { getSession, updateSession } from "@/lib";
 import { randomizePeerReviewGroups } from "../api/addNew/randomizationAlgorithm";
 import toast from "react-hot-toast";
 
-interface CourseData {
-  courseID: string;
-  courseName: string;
-}
 // Define the structure for assignment and Rubric items
 interface Assignment {
   assignmentID: number;
@@ -55,25 +50,11 @@ const ReleaseAssignment: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
-  const dummyassignments = ['Assignment 1', 'Assignment 2', 'Assignment 3'];
-  const [studentSubmissions, setStudentSubmissions] = useState<{ studentID: number; submissionID: number; }[]>([]);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
-  const [course, setCourse] = useState<string>("");
   const [reviewsPerAssignment, setReviewsPerAssignment] = useState<number>(4);
   const [anonymous, setAnonymous] = useState(false);
-  // // Dummy rubric
-  // const dummyrubric = [
-  //   { criterion: 'Criterion 1', maxMarks: 10 },
-  //   { criterion: 'Criterion 2', maxMarks: 20 },
-  //   { criterion: 'Criterion 3', maxMarks: 30 },
-  // ];
-
-
-
-  // Dummy questions
-  const questions = ['Was the work clear and easy to understand?', 'Was the content relevant and meaningful?', 'Was the work well-organized and logically structured?', 'Did the author provide sufficient evidence or examples to support their arguments or points?', 'Improvements: What suggestions do you have for improving the work?'];
-
+  
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -82,26 +63,10 @@ const ReleaseAssignment: React.FC = () => {
   useEffect(() => {
     if (session && session.user) {
       fetchAssignments(session.user.userID);
-      fetchCourse(session.user.userID);
       fetchStudents(session.user.userID);
-    }
-  }, [session]);
-
-  // Debug selectedAssignment state changes
-  useEffect(() => {
-    if (selectedAssignment !== "") {
-      fetchStudentSubmissions(Number(selectedAssignment));
-    }
-  }, [selectedAssignment]);
-
-  useEffect(() => {
-
-
-    if (source === 'course' && courseId) {
-      // Fetch course name
       fetchCourseName(courseId as string);
     }
-  }, [router.query]);
+  }, [session]);
 
   const fetchCourseName = async (courseId: string) => {
     try {
@@ -115,25 +80,7 @@ const ReleaseAssignment: React.FC = () => {
     }
   };
 
-
-  // Fetch assignments and students in the course when the component mounts
-  useEffect(() => {
-    if (session && session.user) {
-      fetchAssignments(session.user.userID);
-      fetchStudents(session.user.courseID);
-    }
-  }, [session]);
-
-  // Debug selectedAssignment state changes
-  useEffect(() => {
-    if (selectedAssignment !== "") {
-      fetchStudentSubmissions(Number(selectedAssignment));
-    }
-  }, [selectedAssignment]);
-
-
   // Function to fetch assignments
-
   const fetchAssignments = async (userID: string) => {
     try {
       const response = await fetch(`/api/getAllAssignmentsInstructor?userID=${userID}`);
@@ -147,17 +94,6 @@ const ReleaseAssignment: React.FC = () => {
       console.error('Error fetching assignments:', error);
     }
   };
-  const fetchCourse = async (userID: string) => {
-    try {
-      const res = await fetch(`/api/getCourse4Instructor?instructorID=${userID}`);
-      if (res.ok) {
-        const cid = await res.json();
-        setCourse(cid.courses[0].courseID);
-      }
-    } catch (error) {
-      console.error('Error fetching course:', error);
-    }
-  }
   // Function to fetch students in the course
   const fetchStudents = async (courseID: string) => {
     try {
@@ -171,24 +107,6 @@ const ReleaseAssignment: React.FC = () => {
       }
     } catch (error) {
       console.error("Error fetching students:", error);
-    }
-  };
-
-  const fetchStudentSubmissions = async (assignmentID: number) => {
-    try {
-      const response = await fetch("/api/assignments/getSubmissionList", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ assignmentID }),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setStudentSubmissions(data.formattedSubmissions); // Use the formatted submissions
-      } else {
-        console.error("Failed to fetch student submissions");
-      }
-    } catch (error) {
-      console.error("Failed to fetch student submissions");
     }
   };
 
@@ -263,7 +181,6 @@ const ReleaseAssignment: React.FC = () => {
     try {
       // Ensure submissions are fetched correctly
       const assignmentID = Number(selectedAssignment);
-      await fetchStudentSubmissions(assignmentID);
 
       const responseReleaseAssignment = await fetch("/api/assignments/releaseAssignment", {
         method: "POST",
@@ -277,6 +194,7 @@ const ReleaseAssignment: React.FC = () => {
           endDate,
           deadline,
           anonymous,
+          students,
         }),
       });
 
@@ -290,8 +208,8 @@ const ReleaseAssignment: React.FC = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          reviewsPerAssignment, // This number should be changed into an input field
-          studentSubmissions,
+          reviewsPerAssignment,
+          students,
           assignmentID,
         }),
       });
@@ -307,6 +225,7 @@ const ReleaseAssignment: React.FC = () => {
 
 
     } catch (error) {
+      toast.error("Error releasing assignment or peer reviews for review");
       console.error("Error releasing assignment or peer reviews for review:", error);
     }
   };

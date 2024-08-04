@@ -3,7 +3,7 @@ import { selectStudentForSubmission, query } from '../../../db';
 import { randomizePeerReviewGroups } from './randomizationAlgorithm';
 
 type ReviewGroup = {
-  submissionID: number;
+  revieweeID: number;
   reviewers: number[];
 };
 
@@ -12,7 +12,7 @@ type ReviewGroup = {
 const processPeerReviewGroups = async (peerReviewGroups: ReviewGroup[], assignmentID: number, courseID: number) => {
   for (const group of peerReviewGroups) {
     for (const student of group.reviewers) {
-      await selectStudentForSubmission(student, assignmentID, courseID, group.submissionID);
+      await selectStudentForSubmission(student, assignmentID, courseID, group.revieweeID);
     }
   }
 };
@@ -22,9 +22,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { reviewsPerAssignment, studentSubmissions, assignmentID } = req.body;
+  const { reviewsPerAssignment, students, assignmentID } = req.body;
 
-  if (!reviewsPerAssignment || !assignmentID || !Array.isArray(studentSubmissions) || studentSubmissions.length === 0) {
+  if (!reviewsPerAssignment || !assignmentID || !Array.isArray(students) || students.length === 0) {
     return res.status(400).json({ error: 'Invalid input' });
   }
 
@@ -38,15 +38,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const courseID = result[0].courseID;
 
-    let peerReviewGroups: ReviewGroup[] = [];
+    console.log('Students:', students);
 
     // Call the randomizePeerReviewGroups function to create the peer review groups
-    try {
-      peerReviewGroups = randomizePeerReviewGroups(studentSubmissions, reviewsPerAssignment);
-    } catch (error) {
-      return res.status(400).json({ error: 'Invalid input, reviews per assignment cannot be greater than number of students' });
-    }
-    
+    const peerReviewGroups = randomizePeerReviewGroups(students, reviewsPerAssignment);
+
+    console.log('Peer review groups:', peerReviewGroups);
+
     // Process the peer review groups
     await processPeerReviewGroups(peerReviewGroups, assignmentID, courseID);
 

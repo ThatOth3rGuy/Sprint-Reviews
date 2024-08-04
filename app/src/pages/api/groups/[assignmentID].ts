@@ -1,42 +1,34 @@
-
 // pages/api/groups/[assignmentID].ts
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getReviewGroups, getStudentSubmissions, getGroupDetails } from '../../../db';
+import { getReviewGroups, getStudentDetails } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { assignmentID } = req.query;
 
   try {
-    const submissions = await getStudentSubmissions(Number(assignmentID));
+    // Fetch all review groups for the assignment
+    const reviewGroups = await getReviewGroups(undefined, Number(assignmentID), undefined, 'revieweeID');
 
-    let allGroups = [];
-    for (const sub of submissions) {
-      const groups = await getReviewGroups(sub.studentID, Number(assignmentID), undefined, undefined);
-      if (groups.length > 0) {
-        allGroups.push(groups);
-      }
-    }
+    if (reviewGroups.length > 0) {
+      // Extract all unique student IDs
+      const studentIDs = new Set<number>();
+      reviewGroups.forEach((group: any) => {
+        studentIDs.add(group.revieweeID);
+        group.reviewerIDs.forEach((id: number) => studentIDs.add(id));
+      });
 
-    if (allGroups.length > 0) {
+      const studentDetails = await getStudentDetails(Array.from(studentIDs));
 
-      // Flatten the array of groups into a single array for details fetching
-      const flattenedGroups = allGroups.flat();
-      console.log('flattenedGroups:', flattenedGroups);
-      const detailedGroups = await getGroupDetails(flattenedGroups);
-      console.log('detailedGroups:', detailedGroups);
+      // Enhance the review groups with student names
+      const enhancedReviewGroups = reviewGroups.map((group: any) => {
+        return {
+          reviewee: studentDetails[group.revieweeID],
+          reviewers: group.reviewerIDs.map((id: number) => studentDetails[id])
+        };
+      });
 
-      // Reconstruct the groups back to the original nested structure
-      let groupedDetails = [];
-      for (let group of allGroups) {
-        let groupDetails = detailedGroups.filter(detail =>
-          group.some((g: any) => g.studentID === detail.studentID && g.submissionID === detail.submissionID)
-        );
-        groupedDetails.push(groupDetails);
-      }
-
-      res.status(200).json({ groups: groupedDetails });
-
+      res.status(200).json({ groups: enhancedReviewGroups });
     } else {
       res.status(404).json({ error: 'No review groups found' });
     }
@@ -44,6 +36,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error('Error in API route:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-
 }
-

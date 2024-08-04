@@ -31,14 +31,15 @@ interface ReviewDashboardProps {
   courseId: string;
 }
 
-interface ReviewGroup {
+interface StudentDetails {
   studentID: number;
-  studentFirstName: string;
-  studentLastName: string;
-  submissionID: number;
-  submissionFirstName: string;
-  submissionLastName: string;
-  assignedSubmissionId: number;
+  firstName: string;
+  lastName: string;
+}
+
+interface ReviewGroup {
+  reviewee?: StudentDetails;
+  reviewers: StudentDetails[];
   groupData: any; // You may want to define a more specific type based on the actual data structure
 }
 
@@ -117,7 +118,6 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
         .then((data) => {
           if (data.groups && Array.isArray(data.groups)) {
             setReviewGroups(data.groups);
-            console.log(data.groups);
           } else {
             console.error('Unexpected data structure:', data);
           }
@@ -250,17 +250,17 @@ const handleAutoReleaseChange = async (checked: boolean) => {
               <div key={groupIndex} className={styles.courseCards}>
                 <Card className={styles.assignmentCard}>
                   <CardBody>
-                    {group[0] ? (
+                    {group.reviewee ? (
                       <>
-                        <h3 className={styles.assignmentTitle}>{`Student: ${group[0].studentFirstName} ${group[0].studentLastName}`}</h3>
+                        <h3 className={styles.assignmentTitle}>{`Student: ${group.reviewee.firstName} ${group.reviewee.lastName}`}</h3>
                         <div className={styles.assignmentDescription}>
-                          {group.map((student, studentIndex) => (
-                            <p key={studentIndex}>
-                              Assigned submission for: {student.submissionFirstName} {student.submissionLastName}, ({student.submissionID})
+                          {group.reviewers.map((reviewer, reviewerIndex) => (
+                            <p key={reviewerIndex}>
+                              Assigned submission for: {reviewer.firstName} {reviewer.lastName}, ({reviewer.studentID})
                             </p>
                           ))}
                         </div>
-                        <p>Total students in this group: {group.length}</p>
+                        <p>Total students in this group: {group.reviewers.length}</p>
                       </>
                     ) : (
                       <p>Group data is not available.</p>

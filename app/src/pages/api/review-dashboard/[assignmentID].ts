@@ -19,24 +19,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const studentID = student.studentID;
 
       const reviewGroups = await getReviewGroups(Number(assignmentID), studentID);
-      console.log(reviewGroups)
       const reviewCriteria = await getReviewCriteria(Number(assignmentID));
 
       const submissions = await Promise.all(
-        reviewGroups.map(async (reviewGroup: {
-          deadline: any; submissionID: number; anonymous: boolean; 
-}) => {
-          const submission = await getSubmission(reviewGroup.submissionID);
+        reviewGroups.map(async (reviewGroup: { deadline: any; revieweeID: number; anonymous: boolean }) => {
           let studentName = "Anonymous";
 
           if (!reviewGroup.anonymous) {
-            const student = await getStudent(submission[0].studentID);
+            const student = await getStudent(reviewGroup.revieweeID);
             if (student) {
               studentName = student.firstName + ' ' + student.lastName;
             }
           }
 
-          return { ...submission[0], studentName, deadline: reviewGroup.deadline };
+          return { studentID: reviewGroup.revieweeID, studentName, deadline: reviewGroup.deadline };
         })
       );
 
@@ -79,22 +75,6 @@ async function getReviewGroups(assignmentID: number, studentID: number) {
     return reviewGroups;
   } catch (error) {
     console.error('Error fetching review groups:', error);
-    throw error;
-  }
-}
-
-async function getSubmission(submissionID: number) {
-  const sql = `
-    SELECT s.*, s.studentID
-    FROM submission s
-    WHERE s.submissionID = ?
-  `;
-
-  try {
-    const submission = await query(sql, [submissionID]);
-    return submission;
-  } catch (error) {
-    console.error('Error fetching submission:', error);
     throw error;
   }
 }
