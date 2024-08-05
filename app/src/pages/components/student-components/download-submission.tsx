@@ -8,7 +8,7 @@ interface DownloadSubmissionProps {
 }
 
 const DownloadSubmission: React.FC<DownloadSubmissionProps> = ({ studentID, assignmentID }) => {
-  const [links, setLinks] = useState<string[]>([]);
+  const [link, setLink] = useState<string | null>(null);
   const [fileData, setFileData] = useState<{ uri: string; fileType: string; fileName: string } | null>(null);
   const [isViewerOpen, setIsViewerOpen] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -16,7 +16,7 @@ const DownloadSubmission: React.FC<DownloadSubmissionProps> = ({ studentID, assi
   const handleSubmission = async () => {
     if (isViewerOpen) {
       // Close the viewer if it's already open
-      setLinks([]);
+      setLink(null);
       setFileData(null);
       setIsViewerOpen(false);
       return;
@@ -28,11 +28,10 @@ const DownloadSubmission: React.FC<DownloadSubmissionProps> = ({ studentID, assi
       });
 
       const data = response.data;
-      console.log('Submission data:', data);
 
-      if (data.links) {
-        // It's an array of links
-        setLinks(data.links);
+      if (typeof data.link === 'string') {
+        // It's a link
+        setLink(data.link);
       } else {
         // It's a file
         const fileResponse = await axios.get(`/api/review-dashboard/downloadSubmission?assignmentID=${assignmentID}&studentID=${studentID}`, {
@@ -80,14 +79,10 @@ const DownloadSubmission: React.FC<DownloadSubmissionProps> = ({ studentID, assi
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {isViewerOpen && (
         <>
-          {links.length > 0 && (
+          {link && (
             <div>
-              <p>Submission Links:</p>
-              {links.map((link, index) => (
-                <div key={index}>
-                  <a href={ensureAbsoluteUrl(link)} target="_blank" rel="noopener noreferrer">{link}</a>
-                </div>
-              ))}
+              <p>Submission Link:</p>
+              <a href={ensureAbsoluteUrl(link)} target="_blank" rel="noopener noreferrer">{link}</a>
             </div>
           )}
           {fileData && (

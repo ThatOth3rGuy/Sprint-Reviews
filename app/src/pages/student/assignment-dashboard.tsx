@@ -60,103 +60,84 @@ export default function AssignmentDashboard() {
   const [submissionType, setSubmissionType] = useState<'file' | 'link'>('file');
   const [linkSubmission, setLinkSubmission] = useState('');
   const [studentID, setStudentID] = useState<number | null>(null);
-
   const [comments, setComments] = useState<Comment[]>([]);
-
-  const [studentID, setStudentID] = useState<number | null>(null);
-
 
   useSessionValidation("student", setLoading, setSession);
 
   useEffect(() => {
-    const fetchStudentID = async () => {
-      if (session?.user?.userID) {
-        try {
-          const response = await fetch(`/api/userInfo/student-user-details?userID=${session.user.userID}`);
-          if (response.ok) {
-            const data = await response.json();
-            setStudentID(data.studentID);
-          } else {
-            throw new Error("Failed to fetch student details");
-          }
-        } catch (error) {
-          console.error("Error fetching student details:", error);
-          toast.error("Error fetching student details. Please refresh the page.");
+    const fetchStudentID = async (userID: number) => {
+      try {
+        const response = await fetch(`/api/getStudentByID?userID=${userID}`);
+        if (response.ok) {
+          const data = await response.json();
+          return data.student.studentID;
+        } else {
+          throw new Error("Failed to fetch student ID");
         }
+      } catch (error) {
+        console.error("Error fetching student ID:", error);
+        return null;
       }
     };
 
     const fetchData = async () => {
-      if (!router.isReady || !session?.user?.userID || !assignmentID || !studentID) return;
+      if (!router.isReady || !session?.user?.userID || !assignmentID) return;
 
       try {
         const fetchedStudentID = await fetchStudentID(session.user.userID);
         if (fetchedStudentID) {
           setStudentID(fetchedStudentID);
-        } else {
-          console.error('Failed to set studentID');
-        }
-  
 
-        const assignmentResponse = await fetch(`/api/assignments/${assignmentID}`);
-        if (assignmentResponse.ok) {
-          const assignmentData: Assignment = await assignmentResponse.json();
-          setAssignment(assignmentData);
+          const assignmentResponse = await fetch(`/api/assignments/${assignmentID}`);
+          if (assignmentResponse.ok) {
+            const assignmentData: Assignment = await assignmentResponse.json();
+            setAssignment(assignmentData);
 
-          if (assignmentData.courseID) {
-            const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
-            if (courseResponse.ok) {
-              const courseData: CourseData = await courseResponse.json();
-              setCourseData(courseData);
+            if (assignmentData.courseID) {
+              const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
+              if (courseResponse.ok) {
+                const courseData: CourseData = await courseResponse.json();
+                setCourseData(courseData);
+              }
             }
+
+            const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${fetchedStudentID}`);
+            if (feedbacksResponse.ok) {
+              const feedbacksData: Feedback[] = await feedbacksResponse.json();
+              setFeedbacks(feedbacksData);
+            }
+
+            const commentsResponse = await fetch(`/api/studentComments/${assignmentID}/${session.user.userID}`);
+            if (commentsResponse.ok) {
+              const commentsData: Comment[] = await commentsResponse.json();
+              setComments(commentsData);
+            }
+
+            await checkSubmissionStatus();
+          } else {
+            console.error("Error fetching assignment data");
           }
-
-
-          const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${studentID}`);
-          if (feedbacksResponse.ok) {
-            const feedbacksData: Feedback[] = await feedbacksResponse.json();
-            setFeedbacks(feedbacksData);
-          }
-
-          await checkSubmissionStatus();
         } else {
-          console.error('Error fetching assignment data');
+          console.error("Failed to set studentID");
         }
       } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
       } finally {
         setLoading(false);
       }
     };
-    const fetchComments = async () => {
-      if (assignmentID && session?.user?.userID) {
-        try {
-          const response = await fetch(`/api/studentComments/${assignmentID}/${session.user.userID}`);
-          if (response.ok) {
-            const commentsData: Comment[] = await response.json();
-            setComments(commentsData);
-            console.log(commentsData)
-          } else {
-            console.error('Error fetching comments');
-          }
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      }
-    };
 
-
-    fetchComments();
     fetchData();
   }, [router.isReady, session, assignmentID]);
 
   const checkSubmissionStatus = async () => {
     if (assignmentID && session?.user?.userID) {
-      
       try {
-        const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`);
-        if (!response.ok) throw new Error('Failed to check submission status');
-        
+        const response = await fetch(
+          `/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`
+        );
+        if (!response.ok) throw new Error("Failed to check submission status");
+
         const data = await response.json();
         setIsSubmitted(data.isSubmitted);
         setSubmittedFileName(data.fileName);
@@ -165,29 +146,6 @@ export default function AssignmentDashboard() {
         console.error('Error checking submission status:', error);
         toast.error('Error checking submission status. Please refresh the page.');
       }
-
-    if (router.isReady && session && !studentID) {
-      fetchStudentID();
-    }
-
-    if (studentID) {
-      fetchData();
-
-    }
-  }, [router.isReady, session, assignmentID, studentID]);
-
-  const fetchStudentID = async (userID: number) => {
-    try {
-      const response = await fetch(`/api/getStudentByID?userID=${userID}`);
-      if (response.ok) {
-        const data = await response.json();
-        return data.student.studentID; // Return studentID directly
-      } else {
-        throw new Error('Failed to fetch student ID');
-      }
-    } catch (error) {
-      console.error('Error fetching student ID:', error);
-      return null;
     }
   };
 
@@ -260,23 +218,6 @@ export default function AssignmentDashboard() {
     }
   };
 
-  const checkSubmissionStatus = async () => {
-    if (assignmentID && session?.user?.userID && studentID) {
-      try {
-        const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${studentID}`);
-        if (!response.ok) throw new Error('Failed to check submission status');
-
-        const data = await response.json();
-        setIsSubmitted(data.isSubmitted);
-        setSubmittedFileName(data.fileName);
-        setIsLateSubmission(data.isLate);
-      } catch (error) {
-        console.error('Error checking submission status:', error);
-        toast.error('Error checking submission status. Please refresh the page.');
-      }
-    }
-  };
-
   const isWithinSubmissionPeriod = () => {
     if (!assignment) return false;
     const currentDate = new Date();
@@ -284,7 +225,6 @@ export default function AssignmentDashboard() {
     const endDate = new Date(assignment.endDate);
     return currentDate >= startDate && currentDate <= endDate;
   };
-
 
   const handleBackClick = () => router.push(`/student/course-dashboard?courseId=${courseData?.courseID}`);
 
@@ -323,15 +263,22 @@ export default function AssignmentDashboard() {
           )}
           {isSubmitted ? (
             <div>
-              <p className={isLateSubmission ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1" : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"}>
+              <p
+                className={
+                  isLateSubmission
+                    ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1"
+                    : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"
+                }
+              >
                 {isLateSubmission ? "Assignment Submitted Late" : "Assignment Submitted"}
               </p>
-              {submittedFileName && <p className="text-left text-small">{studentID && (
-  <DownloadSubmission 
-    assignmentID={assignment.assignmentID} 
-    studentID={studentID}
-  />
-)}</p>}
+              {submittedFileName && (
+                <p className="text-left text-small">
+                  {studentID && (
+                    <DownloadSubmission assignmentID={assignment.assignmentID} studentID={studentID} />
+                  )}
+                </p>
+              )}
               {isWithinSubmissionPeriod() && <Button onClick={onOpen}>Resubmit Assignment</Button>}
             </div>
           ) : (
@@ -370,12 +317,20 @@ export default function AssignmentDashboard() {
                     {uploadedFile && <p>Selected file: {uploadedFile.name}</p>}
                   </ModalBody>
                   <ModalFooter>
-                    <Button color="danger" variant="light" onPress={() => {
-                      setUploadedFile(null);
-                      setFileError(null);
-                      onClose();
-                    }}>Cancel</Button>
-                    <Button color="primary" onPress={handleSubmit}>Submit</Button>
+                    <Button
+                      color="danger"
+                      variant="light"
+                      onPress={() => {
+                        setUploadedFile(null);
+                        setFileError(null);
+                        onClose();
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button color="primary" onPress={handleSubmit}>
+                      Submit
+                    </Button>
                   </ModalFooter>
                 </>
               )}
@@ -402,18 +357,18 @@ export default function AssignmentDashboard() {
             )}
           </div>
           <div className={styles.commentsSection}>
-          <h2>Comments</h2>
-          {comments.length > 0 ? (
-            comments.map((comment) => (
-              <div key={comment.feedbackID} className={styles.comment}>
-                <p>{comment.comment}</p>
-                <p>Date: {new Date(comment.feedbackDate).toLocaleString()}</p>
-              </div>
-            ))
-          ) : (
-            <p>No comments available yet.</p>
-          )}
-        </div>
+            <h2>Comments</h2>
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <div key={comment.feedbackID} className={styles.comment}>
+                  <p>{comment.comment}</p>
+                  <p>Date: {new Date(comment.feedbackDate).toLocaleString()}</p>
+                </div>
+              ))
+            ) : (
+              <p>No comments available yet.</p>
+            )}
+          </div>
         </div>
       </div>
     </>
