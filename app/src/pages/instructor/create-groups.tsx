@@ -59,7 +59,7 @@ export default function CreateGroup() {
         const response = await fetch(`/api/courses/${courseId}`);
         if (response.ok) {
           const data = await response.json();
-          console.log('data:', data);
+          setCourseName(data.courseName);
         }
       } catch (error) {
         console.error('Error fetching course name:', error);
