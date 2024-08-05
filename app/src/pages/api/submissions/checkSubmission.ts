@@ -49,7 +49,7 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{
       studentID = studentIDResult.studentID;
     }
 
-    const rows = await query(sql, [assignmentID, userID]);
+    const rows = await query(sql, [assignmentID, studentID]);
     console.log(rows);
     if (rows.length > 0) {
       const submissionDate = new Date(rows[0].submissionDate);
