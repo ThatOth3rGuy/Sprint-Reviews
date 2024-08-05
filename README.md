@@ -88,4 +88,29 @@ docker kill $(docker ps -aq) && docker rm $(docker ps -aq)
 
 # Free space
 docker system prune -af --volumes
+
+
 ```
+### Below is used to handle changes in the init.sql
+The volume name `team-3-capstone-sprint-runners_db_data` is the one Docker has created for your database. This is the volume you need to remove. 
+
+You can remove this volume with the following command:
+
+```bash
+docker volume ls \\ this should give you the name of the volume remove that 
+
+```
+
+```bash
+docker volume rm team-3-capstone-sprint-runners_db_data
+```
+
+Please remember that this operation will delete all data in the MySQL database. Make sure to backup any important data before you proceed.
+
+After removing the volume, you can recreate the Docker containers with the updated `init.sql` file using the following command:
+
+```bash
+docker compose -f dev.yml up db 
+```
+
+This command will force Docker to recreate your containers, including the `db` container with the updated `init.sql` file. If everything is set up correctly, your changes should now take effect. If you continue to face issues, please provide more details about the error messages you're seeing, and I'll do my best to assist you further.
