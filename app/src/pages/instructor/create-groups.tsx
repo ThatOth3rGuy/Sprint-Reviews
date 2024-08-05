@@ -1,3 +1,4 @@
+// create-groups.tsx
 import { useRouter } from "next/router";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";

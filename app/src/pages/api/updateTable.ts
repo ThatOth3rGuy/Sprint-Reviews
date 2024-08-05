@@ -5,11 +5,10 @@ import { autoRelease, query,
     updateFeedback, updateReview, updateReviewCriteria, updateReviewer, updateStudent,
 
     updateSubmission, updateUser, updateReviewGroups
-,updateReviewDates
+,updateReviewDates, updateGroupFeedback
 
  } from '../../db';
 
- import { randomizePeerReviewGroups } from '../addNew/randomizationAlgorithm';
 import { calculateAndUpdateAverageGrade } from './groups/submitGroupFeedback';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
@@ -135,8 +134,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             break;
 
             case 'reviewGroups':
-                    result = await updateReviewGroups(data.assignmentID, data.courseID, data.reviewsPerAssignment);
-                    break;
+                result = await updateReviewGroups(data.assignmentID, data.courseID, data.groups, data.reviewsPerAssignment, data.randomize);
+                break;
 
             case 'reviewDates':
                 result = await updateReviewDates(data.reviewID, data.startDate, data.endDate, data.deadline, data.anonymous);
