@@ -23,13 +23,27 @@ interface Feedback {
   content: string;
 }
 
-const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, students, assignmentID, userID, isFeedbackSubmitted: initialIsFeedbackSubmitted }) => {
-  const [feedbacks, setFeedbacks] = useState<Feedback[]>(students.map(student => ({
-    revieweeID: student.studentID,
-    score: '',
-    content: ''
-  })));
-  const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(initialIsFeedbackSubmitted);
+const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({
+  groupID,
+  students,
+  assignmentID,
+  userID,
+  isFeedbackSubmitted: initialIsFeedbackSubmitted,
+}) => {
+  const [feedbacks, setFeedbacks] = useState<Feedback[]>(
+    students.map((student) => ({
+      revieweeID: student.studentID,
+      score: '',
+      content: '',
+    }))
+  );
+  const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(
+    initialIsFeedbackSubmitted
+  );
+
+  useEffect(() => {
+    setIsFeedbackSubmitted(initialIsFeedbackSubmitted);
+  }, [initialIsFeedbackSubmitted]);
 
   const handleInputChange = (revieweeID: number, field: string, value: string) => {
     let validatedValue = value;
@@ -42,8 +56,8 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
         validatedValue = '10';
       }
     }
-    setFeedbacks(prevFeedbacks =>
-      prevFeedbacks.map(feedback =>
+    setFeedbacks((prevFeedbacks) =>
+      prevFeedbacks.map((feedback) =>
         feedback.revieweeID === revieweeID
           ? { ...feedback, [field]: validatedValue }
           : feedback
@@ -75,7 +89,7 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
         body: JSON.stringify({
           assignmentID,
           reviewerID: userID,
-          feedbacks
+          feedbacks,
         }),
       });
 
@@ -101,7 +115,7 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
         },
         body: JSON.stringify({
           table: 'groupFeedback',
-          data: feedbacks.map(feedback => ({
+          data: feedbacks.map((feedback) => ({
             assignmentID,
             content: feedback.content,
             score: feedback.score,
@@ -130,11 +144,11 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({ groupID, stud
         <br />
         <h3>Group Members:</h3>
         <ul className={styles.groupList}>
-          {students.map(student => (
+          {students.map((student) => (
             <li key={student.studentID} className={styles.groupMemberItem}>
               <div className={styles.groupMember}>
-                <span>{student.firstName} {student.lastName}</span>
-                <Input
+                  <span>{student.firstName} {student.lastName}</span>
+                  <Input
                   type="number"
                   placeholder="Score"
                   className={styles.scoreInput}
