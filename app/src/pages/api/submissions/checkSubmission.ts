@@ -25,8 +25,10 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{
   isSubmitted: boolean,
   submissionDate: string | null,
   submissionID: number | null,
+  assignmentID: number | null,
   fileName: string | null,
   studentName: string | null,
+  studentID: number | null,
   isLate: boolean,
   isLink: boolean
 }> {
@@ -50,13 +52,15 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{
         isSubmitted: true,
         submissionDate: submissionDate.toISOString(),
         submissionID: rows[0].submissionID,
+        assignmentID: rows[0].assignmentID,
         fileName: rows[0].fileName,
         studentName: rows[0].studentName,
+        studentID: rows[0].studentID,
         isLate,
         isLink
       };
     } else {
-      return { isSubmitted: false, submissionDate: null, submissionID: null, fileName: null, studentName: null, isLate: false, isLink: false };
+      return { isSubmitted: false, submissionDate: null, submissionID: null, assignmentID: null, fileName: null, studentName: null, studentID: null, isLate: false, isLink: false };
 
 
     }

@@ -8,6 +8,7 @@ import styles from "../../styles/AssignmentDetailCard.module.css";
 import { Button, Breadcrumbs, BreadcrumbItem, Spinner, useDisclosure, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from "@nextui-org/react";
 import toast from "react-hot-toast";
 import DownloadSubmission from "../components/student-components/download-submission";
+
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -49,7 +50,12 @@ interface Submission {
   isLate: boolean;
   isSubmitted: boolean;
 }
-
+interface Comment {
+  feedbackID: number;
+  comment: string;
+  feedbackDate: string;
+  lastUpdated: string;
+}
 export default function AssignmentDashboard() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
@@ -61,7 +67,10 @@ export default function AssignmentDashboard() {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newGrade, setNewGrade] = useState<number>(0);
-
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState<string>("");
+  const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+  const [editedComment, setEditedComment] = useState<string>("");
   useSessionValidation("instructor", setLoading, setSession);
 
   useEffect(() => {
@@ -103,8 +112,23 @@ export default function AssignmentDashboard() {
       } else {
         setLoading(false);
       }
+    }; 
+    const fetchComments = async () => {
+      if (assignmentID && studentID) {
+        try {
+          const response = await fetch(`/api/instructorComments/${assignmentID}/${studentID}`);
+          if (response.ok) {
+            const commentsData: Comment[] = await response.json();
+            setComments(commentsData);
+          } else {
+            console.error('Error fetching comments');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
     };
-
+    fetchComments();
     fetchData();
   }, [router.isReady, studentID, assignmentID]);
 
@@ -162,7 +186,77 @@ export default function AssignmentDashboard() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  const handleAddComment = async () => {
+    try {
+      const response = await fetch('/api/instructorComments/addFeedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'add',
+          assignmentID: assignment?.assignmentID,
+          courseID: courseData?.courseID,
+          studentID: submission?.studentID,
+          comment: newComment,
+        }),
+      });
 
+      if (!response.ok) {
+        throw new Error('Failed to add comment');
+      }
+
+      const newCommentData: Comment = await response.json();
+      setComments((prev) => [...prev, newCommentData]);
+      setNewComment('');
+      toast.success('Comment added successfully');
+      router.reload();
+    } catch (error) {
+      console.error('Error adding comment:', error);
+      toast.error('Error adding comment. Please try again.');
+    }
+  };
+
+  const handleEditComment = (commentId: number, currentComment: string) => {
+    setEditingCommentId(commentId);
+    setEditedComment(currentComment);
+    
+  };
+
+  const handleSaveEditedComment = async () => {
+    try {
+      const response = await fetch('/api/instructorComments/addFeedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'update',
+          feedbackID: editingCommentId,
+          comment: editedComment,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update comment');
+      }
+
+      setComments((prev) =>
+        prev.map((comment) =>
+          comment.feedbackID === editingCommentId
+            ? { ...comment, comment: editedComment, lastUpdated: new Date().toISOString() }
+            : comment
+        )
+      );
+      setEditingCommentId(null);
+      setEditedComment('');
+      toast.success('Comment updated successfully');
+    } catch (error) {
+      console.error('Error updating comment:', error);
+      toast.error('Error updating comment. Please try again.');
+    }
+  };
+  
   if (!assignment || loading) {
     return (
       <div className="w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto">
@@ -204,6 +298,7 @@ export default function AssignmentDashboard() {
             />
             <div className="flex justify-between items-center my-2">
               <p><DownloadSubmission assignmentID={assignment.assignmentID} studentID={Number(studentID)}></DownloadSubmission></p>
+
             <div className="flex items-center">
               <p className="text-primary-900 text-large font-bold my-2 mx-3 p-1">
             {submission?.grade ? 'Adjusted Grade:' : 'Average Grade:'} {submission?.grade ?? submission?.autoGrade}
@@ -243,9 +338,51 @@ export default function AssignmentDashboard() {
               <p>No feedback available yet.</p>
             )}
           </div>
-          
+
+          <div className={styles.commentsSection}>
+          <h2>Comments</h2>
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              <div key={comment.feedbackID} className={styles.comment}>
+                {editingCommentId === comment.feedbackID ? (
+                  <>
+                    <Input
+                      type="text"
+                      fullWidth
+                      value={editedComment}
+                      onChange={(e) => setEditedComment(e.target.value)}
+                    />
+                    <Button color="primary" onPress={handleSaveEditedComment}>Save</Button>
+                    <Button color="secondary" onPress={() => setEditingCommentId(null)}>Cancel</Button>
+                  </>
+                ) : (
+                  <>
+                    <p>{comment.comment}</p>
+                    <p>Date: {new Date(comment.feedbackDate).toLocaleString()}</p>
+                    {comment.lastUpdated && <p>Last Updated: {new Date(comment.lastUpdated).toLocaleString()}</p>}
+                    <Button color="primary" onPress={() => handleEditComment(comment.feedbackID, comment.comment)}>Edit</Button>
+                  </>
+                )}
+              </div>
+            ))
+          ) : (
+            <p>No comments available yet.</p>
+          )}
+        </div>
+        <div className={styles.addCommentSection}>
+          <h2>Add Comment</h2>
+          <Input
+            type="text"
+            fullWidth
+            label="New Comment"
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+          />
+          <Button color="primary" onPress={handleAddComment}>Add Comment</Button>
+        </div>
         </div>
       </div>
+            
       <Modal
         className='z-20'
         backdrop="blur"

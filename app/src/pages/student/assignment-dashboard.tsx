@@ -34,7 +34,13 @@ interface Feedback {
   lastUpdated: string;
   comment: string;
   grade: number | null;
-  feedbackType: 'peer' | 'instructor';
+  feedbackType: 'instructor';
+}
+interface Comment {
+  feedbackID: number;
+  comment: string;
+  feedbackDate: string;
+  lastUpdated: string;
 }
 
 export default function AssignmentDashboard() {
@@ -55,11 +61,33 @@ export default function AssignmentDashboard() {
   const [linkSubmission, setLinkSubmission] = useState('');
   const [studentID, setStudentID] = useState<number | null>(null);
 
+  const [comments, setComments] = useState<Comment[]>([]);
+
+  const [studentID, setStudentID] = useState<number | null>(null);
+
+
   useSessionValidation("student", setLoading, setSession);
 
   useEffect(() => {
+    const fetchStudentID = async () => {
+      if (session?.user?.userID) {
+        try {
+          const response = await fetch(`/api/userInfo/student-user-details?userID=${session.user.userID}`);
+          if (response.ok) {
+            const data = await response.json();
+            setStudentID(data.studentID);
+          } else {
+            throw new Error("Failed to fetch student details");
+          }
+        } catch (error) {
+          console.error("Error fetching student details:", error);
+          toast.error("Error fetching student details. Please refresh the page.");
+        }
+      }
+    };
+
     const fetchData = async () => {
-      if (!router.isReady || !session?.user?.userID || !assignmentID) return;
+      if (!router.isReady || !session?.user?.userID || !assignmentID || !studentID) return;
 
       try {
         const fetchedStudentID = await fetchStudentID(session.user.userID);
@@ -83,7 +111,8 @@ export default function AssignmentDashboard() {
             }
           }
 
-          const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${session.user.userID}`);
+
+          const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${studentID}`);
           if (feedbacksResponse.ok) {
             const feedbacksData: Feedback[] = await feedbacksResponse.json();
             setFeedbacks(feedbacksData);
@@ -99,12 +128,31 @@ export default function AssignmentDashboard() {
         setLoading(false);
       }
     };
+    const fetchComments = async () => {
+      if (assignmentID && session?.user?.userID) {
+        try {
+          const response = await fetch(`/api/studentComments/${assignmentID}/${session.user.userID}`);
+          if (response.ok) {
+            const commentsData: Comment[] = await response.json();
+            setComments(commentsData);
+            console.log(commentsData)
+          } else {
+            console.error('Error fetching comments');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+    };
 
+
+    fetchComments();
     fetchData();
   }, [router.isReady, session, assignmentID]);
 
   const checkSubmissionStatus = async () => {
     if (assignmentID && session?.user?.userID) {
+      
       try {
         const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`);
         if (!response.ok) throw new Error('Failed to check submission status');
@@ -117,8 +165,16 @@ export default function AssignmentDashboard() {
         console.error('Error checking submission status:', error);
         toast.error('Error checking submission status. Please refresh the page.');
       }
+
+    if (router.isReady && session && !studentID) {
+      fetchStudentID();
     }
-  };
+
+    if (studentID) {
+      fetchData();
+
+    }
+  }, [router.isReady, session, assignmentID, studentID]);
 
   const fetchStudentID = async (userID: number) => {
     try {
@@ -191,7 +247,6 @@ export default function AssignmentDashboard() {
           setIsSubmitted(true);
           setSubmittedFileName(uploadedFile ? uploadedFile.name : linkSubmission);
           setIsLateSubmission(result.isLate);
-          checkSubmissionStatus();
         } else {
           throw new Error(result.message || 'Submission failed');
         }
@@ -205,13 +260,22 @@ export default function AssignmentDashboard() {
     }
   };
 
-  if (!assignment || loading) {
-    return (
-      <div className="w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto">
-        <Spinner color="primary" size="lg" />
-      </div>
-    );
-  }
+  const checkSubmissionStatus = async () => {
+    if (assignmentID && session?.user?.userID && studentID) {
+      try {
+        const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${studentID}`);
+        if (!response.ok) throw new Error('Failed to check submission status');
+
+        const data = await response.json();
+        setIsSubmitted(data.isSubmitted);
+        setSubmittedFileName(data.fileName);
+        setIsLateSubmission(data.isLate);
+      } catch (error) {
+        console.error('Error checking submission status:', error);
+        toast.error('Error checking submission status. Please refresh the page.');
+      }
+    }
+  };
 
   const isWithinSubmissionPeriod = () => {
     if (!assignment) return false;
@@ -221,11 +285,18 @@ export default function AssignmentDashboard() {
     return currentDate >= startDate && currentDate <= endDate;
   };
 
-  
 
   const handleBackClick = () => router.push(`/student/course-dashboard?courseId=${courseData?.courseID}`);
 
   const handleHomeClick = () => router.push("/student/dashboard");
+
+  if (!assignment || loading) {
+    return (
+      <div className="w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto">
+        <Spinner color="primary" size="lg" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -313,8 +384,9 @@ export default function AssignmentDashboard() {
           <div className={styles.feedbackSection}>
             <br />
             <hr />
+
             <h2>Feedback</h2>
-            
+
             {feedbacks.length > 0 ? (
               feedbacks.map((feedback, index) => (
                 <div key={feedback.feedbackID} className={styles.assignmentsSection}>
@@ -322,13 +394,26 @@ export default function AssignmentDashboard() {
                   <p><strong>Details:</strong> {feedback.feedbackDetails}</p>
                   <p><strong>Comment:</strong> {feedback.comment}</p>
                   <p><strong>Date:</strong> {new Date(feedback.feedbackDate).toLocaleString()}</p>
-                  <p><strong>Grade:</strong> 0</p> {/* Placeholder grade */}
+                  <p><strong>Grade:</strong> {feedback.grade ?? 'Not graded yet'}</p>
                 </div>
               ))
             ) : (
               <p>No feedback available yet.</p>
             )}
           </div>
+          <div className={styles.commentsSection}>
+          <h2>Comments</h2>
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              <div key={comment.feedbackID} className={styles.comment}>
+                <p>{comment.comment}</p>
+                <p>Date: {new Date(comment.feedbackDate).toLocaleString()}</p>
+              </div>
+            ))
+          ) : (
+            <p>No comments available yet.</p>
+          )}
+        </div>
         </div>
       </div>
     </>

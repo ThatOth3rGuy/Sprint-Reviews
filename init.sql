@@ -17,6 +17,7 @@ DROP TABLE IF EXISTS review_criteria;
 DROP TABLE IF EXISTS review;
 DROP TABLE IF EXISTS review_groups;
 DROP TABLE IF EXISTS course_groups;
+DROP TABLE IF EXISTS instructor_feedback;
 
 -- Table for storing users, which are separated into students and instructors
 CREATE TABLE IF NOT EXISTS user (
@@ -80,9 +81,9 @@ CREATE TABLE IF NOT EXISTS submission (
     fileContent LONGBLOB,
     fileType VARCHAR(100),
     submissionDate DATETIME,
-    autoGrade INT DEFAULT 0,
+    autoGrade DECIMAL(5, 2) DEFAULT 0,
     grade DECIMAL(5, 2),
-    groupID DECIMAL(5, 2),
+    groupID INT,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
@@ -193,6 +194,20 @@ CREATE TABLE IF NOT EXISTS course_groups (
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID)
 );
+CREATE TABLE IF NOT EXISTS instructor_feedback (
+    feedbackID INT AUTO_INCREMENT PRIMARY KEY,
+    assignmentID INT NOT NULL,
+    courseID INT NOT NULL,
+    studentID INT NOT NULL,        
+    feedbackDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    lastUpdated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    comment TEXT,    
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
+    FOREIGN KEY (courseID) REFERENCES course(courseID),
+    FOREIGN KEY (studentID) REFERENCES student(studentID));
+
+
+
 
 -- Insert a sample user (student) into the user table
 INSERT INTO user (firstName, lastName, email, pwd, userRole)

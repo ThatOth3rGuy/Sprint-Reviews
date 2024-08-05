@@ -79,9 +79,9 @@ CREATE TABLE IF NOT EXISTS submission (
     fileContent LONGBLOB,
     fileType VARCHAR(100),
     submissionDate DATETIME,
-    autoGrade INT DEFAULT 0,
+    autoGrade DECIMAL(5, 2) DEFAULT 0,
     grade DECIMAL(5, 2),
-    groupID DECIMAL(5, 2),
+    groupID INT,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE,
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE SET NULL
 );
@@ -98,14 +98,14 @@ CREATE TABLE IF NOT EXISTS review_criteria (
 -- Table for storing feedback information between students and assignments
 CREATE TABLE IF NOT EXISTS feedback (
     feedbackID INT AUTO_INCREMENT PRIMARY KEY,
-    submissionID INT NOT NULL,
+    revieweeID INT NOT NULL,
     assignmentID INT NOT NULL,
     feedbackDetails TEXT,
     feedbackDate DATETIME,
     lastUpdated DATETIME,
     comment TEXT NOT NULL,
     reviewerID INT,
-    FOREIGN KEY (submissionID) REFERENCES submission(submissionID) ON DELETE CASCADE,
+    FOREIGN KEY (revieweeID) REFERENCES student(studentID) ON DELETE CASCADE,
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
 
@@ -173,13 +173,15 @@ CREATE TABLE IF NOT EXISTS review_groups  (
     studentID INT,
     assignmentID INT,
     courseID INT,
-    submissionID INT,
+    revieweeID INT,
     isReleased BOOLEAN DEFAULT false,
+
     PRIMARY KEY (studentID, submissionID, assignmentID),
+
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID),
-    FOREIGN KEY (submissionID) REFERENCES submission(submissionID)
+    FOREIGN KEY (revieweeID) REFERENCES student(studentID)
 );
 
 
