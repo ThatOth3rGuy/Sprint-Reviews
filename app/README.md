@@ -36,6 +36,67 @@ Installation:
  `npm install @nextui-org/react framer-motion`
 
 Check out [NextUI Documentation](https://nextui.org/) for more details.
+
+## List of required Dependencies 
+Based on the `package.json` file, here are the dependencies you need to install for your Next.js application to work, ideally the building part of it will include these dependencies, in case of any missing this will help you guide trough any missing dependencies. :
+
+**Dependencies:**
+- @cyntler/react-doc-viewer
+- @nextui-org/react
+- @prisma/client
+- @react-oauth/google
+- @types/formidable
+- @types/multer
+- @types/react
+- @types/react-select
+- axios
+- babel-eslint
+- cookie
+- csv-parse
+- csv-parser
+- dayjs
+- dotenv
+- eslint
+- formidable
+- formik
+- framer-motion
+- jose
+- jwt-decode
+- multer
+- mysql2
+- net-browserify
+- next
+- next-themes
+- node-cron
+- node-schedule
+- nodemailer
+- pdf-parse
+- react
+- react-datepicker
+- react-doc-viewer
+- react-dom
+- react-hot-toast
+- react-modal
+- react-select
+- react-tsparticles
+- tsparticles
+
+**Dev Dependencies:**
+- @types/cookie
+- @types/formidable
+- @types/jest
+- @types/multer
+- @types/node
+- @types/react-dom
+- @types/react-modal
+- eslint-config-next
+- postcss
+- prisma
+- tailwindcss
+- ts-node
+- typescript
+
+Please ensure that all these dependencies are installed to ensure the smooth functioning of your Next.js application. You can install them using the command `npm install` in your project directory. If you're using yarn, you can use the command `yarn install`.
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
