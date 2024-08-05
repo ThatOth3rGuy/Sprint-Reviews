@@ -1,5 +1,4 @@
 // pages/student/assignment-dashboard.tsx
-
 import { useRouter } from "next/router";
 import StudentNavbar from "../components/student-components/student-navbar";
 import { useEffect, useState } from "react";
@@ -8,6 +7,7 @@ import StudentAssignmentView from "../components/student-components/student-assi
 import styles from "../../styles/AssignmentDetailCard.module.css";
 import { Button, Breadcrumbs, BreadcrumbItem, Spinner, Modal, useDisclosure, ModalContent, ModalBody, ModalFooter, ModalHeader, Input } from "@nextui-org/react";
 import toast from "react-hot-toast";
+import DownloadSubmission from "../components/student-components/download-submission";
 
 interface Assignment {
   assignmentID: number;
@@ -53,6 +53,7 @@ export default function AssignmentDashboard() {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [submissionType, setSubmissionType] = useState<'file' | 'link'>('file');
   const [linkSubmission, setLinkSubmission] = useState('');
+  const [studentID, setStudentID] = useState<number | null>(null);
 
   useSessionValidation("student", setLoading, setSession);
 
@@ -61,6 +62,14 @@ export default function AssignmentDashboard() {
       if (!router.isReady || !session?.user?.userID || !assignmentID) return;
 
       try {
+        const fetchedStudentID = await fetchStudentID(session.user.userID);
+        if (fetchedStudentID) {
+          setStudentID(fetchedStudentID);
+        } else {
+          console.error('Failed to set studentID');
+        }
+  
+
         const assignmentResponse = await fetch(`/api/assignments/${assignmentID}`);
         if (assignmentResponse.ok) {
           const assignmentData: Assignment = await assignmentResponse.json();
@@ -108,6 +117,21 @@ export default function AssignmentDashboard() {
         console.error('Error checking submission status:', error);
         toast.error('Error checking submission status. Please refresh the page.');
       }
+    }
+  };
+
+  const fetchStudentID = async (userID: number) => {
+    try {
+      const response = await fetch(`/api/getStudentByID?userID=${userID}`);
+      if (response.ok) {
+        const data = await response.json();
+        return data.student.studentID; // Return studentID directly
+      } else {
+        throw new Error('Failed to fetch student ID');
+      }
+    } catch (error) {
+      console.error('Error fetching student ID:', error);
+      return null;
     }
   };
 
@@ -197,38 +221,7 @@ export default function AssignmentDashboard() {
     return currentDate >= startDate && currentDate <= endDate;
   };
 
-  const downloadSubmission = async (assignmentID: number, studentID: number) => {
-    try {
-      const response = await fetch(`/api/assignments/downloadSubmission?assignmentID=${assignmentID}&studentID=${studentID}`);
-      
-      if (response.ok) {
-        const contentType = response.headers.get('Content-Type');
-        
-        if (contentType === 'application/json') {
-          const data = await response.json();
-          window.open(data.link, '_blank');
-        } else {
-          const blob = await response.blob();
-          const contentDisposition = response.headers.get('Content-Disposition');
-          const fileName = contentDisposition?.split('filename=')[1] || 'downloaded_file';
-          
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', decodeURIComponent(fileName));
-          
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
-      } else {
-        throw new Error('Failed to download submission');
-      }
-    } catch (error) {
-      console.error('Error downloading submission:', error);
-      toast.error('Error downloading submission. Please try again.');
-    }
-  };
+  
 
   const handleBackClick = () => router.push(`/student/course-dashboard?courseId=${courseData?.courseID}`);
 
@@ -262,7 +255,12 @@ export default function AssignmentDashboard() {
               <p className={isLateSubmission ? "text-primary-900 text-large font-bold bg-danger-200 my-2 p-1" : "text-primary-900 text-large font-bold bg-success-300 my-2 p-1"}>
                 {isLateSubmission ? "Assignment Submitted Late" : "Assignment Submitted"}
               </p>
-              {submittedFileName && <p className="text-left text-small">Submitted: {submittedFileName} <Button onClick={() => downloadSubmission(Number(assignmentID), session.user.userID)}>Download Submitted File</Button></p>}
+              {submittedFileName && <p className="text-left text-small">{studentID && (
+  <DownloadSubmission 
+    assignmentID={assignment.assignmentID} 
+    studentID={studentID}
+  />
+)}</p>}
               {isWithinSubmissionPeriod() && <Button onClick={onOpen}>Resubmit Assignment</Button>}
             </div>
           ) : (
@@ -316,6 +314,7 @@ export default function AssignmentDashboard() {
             <br />
             <hr />
             <h2>Feedback</h2>
+            
             {feedbacks.length > 0 ? (
               feedbacks.map((feedback, index) => (
                 <div key={feedback.feedbackID} className={styles.assignmentsSection}>
