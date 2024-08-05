@@ -175,8 +175,6 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
       reviewers: group.reviewers.map(reviewer => reviewer.studentID)
     }));
   
-    console.log('Updating review groups:', dataToSend);
-  
     try {
       const response = await fetch('/api/updateTable', {
         method: 'POST',

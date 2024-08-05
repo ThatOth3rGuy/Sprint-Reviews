@@ -134,7 +134,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             break;
 
             case 'reviewGroups':
-                console.log(data.groups);
                 result = await updateReviewGroups(data.assignmentID, data.courseID, data.groups, data.reviewsPerAssignment, data.randomize);
                 break;
 
