@@ -6,8 +6,7 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from "../../styles/AssignmentDetailCard.module.css";
 
-import { Breadcrumbs,Input,ModalFooter, BreadcrumbItem,ModalContent, Spinner, Card, CardBody, Button, Checkbox, Modal, ModalBody, ModalHeader } from "@nextui-org/react";
-import { randomizePeerReviewGroups } from "../api/addNew/randomizationAlgorithm";
+import { Breadcrumbs, Input, ModalFooter, BreadcrumbItem, ModalContent, Spinner, Card, CardBody, Button, Checkbox, Modal, ModalBody, ModalHeader } from "@nextui-org/react";
 import toast from "react-hot-toast";
 
 interface Review {
@@ -51,8 +50,8 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
 
   const [review, setReview] = useState<Review | null>(null);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
-  const [reviewGroups, setReviewGroups] = useState<ReviewGroup[][]>([]);
-  const [randomizedReviewGroups, setRandomizedReviewGroups] = useState<ReviewGroup[][]>([]);
+  const [reviewGroups, setReviewGroups] = useState<ReviewGroup[]>([]);
+  const [randomizedReviewGroups, setRandomizedReviewGroups] = useState<ReviewGroup[]>([]);
   const [courseName, setCourseName] = useState<string>("");
   const [autoRelease, setAutoRelease] = useState<boolean>(false);
   const [newDueDate, setNewDueDate] = useState("");
@@ -64,6 +63,10 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   const [isRandomizeModalOpen, setIsRandomizeModalOpen] = useState(false);
   const [reviewsPerAssignment, setReviewsPerAssignment] = useState(4);
 
+  // New state variables for editing groups
+  const [isEditGroupsModalOpen, setIsEditGroupsModalOpen] = useState(false);
+  const [editableGroups, setEditableGroups] = useState<ReviewGroup[]>([]);
+  const [selectedStudents, setSelectedStudents] = useState<{ student: StudentDetails, groupID: number }[]>([]);
 
 
   useSessionValidation('instructor', setLoading, setSession);
@@ -159,20 +162,6 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
       router.push('/instructor/dashboard');
     }
   };
-  const fetchStudents = async (courseID: string) => {
-    try {
-      //courseID = '3';
-      const response = await fetch(`/api/courses/getCourseList?courseID=${courseID}`);
-      if (response.ok) {
-        const students = await response.json();
-        setStudents(students);
-      } else {
-        console.error("Failed to fetch students");
-      }
-    } catch (error) {
-      console.error("Error fetching students:", error);
-    }
-  };
   const handleHomeClick = () => {
     router.push("/instructor/dashboard");
   };
@@ -181,62 +170,65 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
     setIsRandomizeModalOpen(true);
   };
   
-  const handleReRandomize = async () => {
+  const handleUpdateGroups = async (randomize = false) => {
+    console.log('Updating review groups:', editableGroups);
     try {
-        const response = await fetch('/api/updateTable', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                table: 'reviewGroups',
-                data: {
-                    assignmentID: review.assignmentID,
-                    courseID: 2,
-                    reviewsPerAssignment: reviewsPerAssignment,
-                },
-            }),
-        });
-
-        if (response.ok) {
-            toast.success("Review groups re-randomized successfully!");
-            // Fetch the new review groups and update the state
-            const newGroupsResponse = await fetch(`/api/groups/${review.assignmentID}`);
-            const newGroupsData = await newGroupsResponse.json();
-            if (newGroupsData.groups && Array.isArray(newGroupsData.groups)) {
-                setReviewGroups(newGroupsData.groups);
-            }
-            setIsRandomizeModalOpen(false);
-        } else {
-            toast.error("Failed to re-randomize review groups");
-        }
-    } catch (error) {
-        console.error("Error re-randomizing review groups:", error);
-        toast.error("Error re-randomizing review groups");
-    }
-};
-
-
-  const handleRelease = async () => {
-    try {
-      const response = await fetch('/api/reviews/releaseReviews', {
+      const response = await fetch('/api/updateTable', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ assignmentID: review?.assignmentID }),
+        body: JSON.stringify({
+          table: 'reviewGroups',
+          data: {
+            assignmentID: review.assignmentID,
+            courseID: 2,
+            groups: editableGroups,
+            reviewsPerAssignment,
+            randomize,
+          },
+        }),
       });
 
       if (response.ok) {
-        toast.success("Review Released successfully!");
-        router.back();
+        toast.success("Review groups updated successfully!");
+        // Fetch the new review groups and update the state
+        const newGroupsResponse = await fetch(`/api/groups/${review.assignmentID}`);
+        const newGroupsData = await newGroupsResponse.json();
+        if (newGroupsData.groups && Array.isArray(newGroupsData.groups)) {
+          setReviewGroups(newGroupsData.groups);
+        }
+        setIsRandomizeModalOpen(false);
+        setIsEditGroupsModalOpen(false);
       } else {
-        console.error('Failed to release assignment for reviews');
+        toast.error("Failed to update review groups");
       }
     } catch (error) {
-      console.error('Error releasing assignment for reviews:', error);
+      console.error("Error updating review groups:", error);
+      toast.error("Error updating review groups");
     }
   };
+
+const handleRelease = async () => {
+  try {
+    const response = await fetch('/api/reviews/releaseReviews', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ assignmentID: review?.assignmentID }),
+    });
+
+    if (response.ok) {
+      toast.success("Review Released successfully!");
+      router.back();
+    } else {
+      console.error('Failed to release assignment for reviews');
+    }
+  } catch (error) {
+    console.error('Error releasing assignment for reviews:', error);
+  }
+};
 
 //handle auto-release of assignment on start date
 const handleAutoReleaseChange = async (checked: boolean) => { 
@@ -301,6 +293,98 @@ const handleAssignmentsUpdate = async () => {
     }
   };
 
+  // Handle group editing modal open
+  const handleEditGroups = () => {
+    setEditableGroups([...reviewGroups]);
+    setIsEditGroupsModalOpen(true); // Open the modal to edit groups
+  };
+
+  const handleMemberClick = (student: StudentDetails, groupID: number, reviewerIndex: number) => {
+    if (!student) return;
+  
+    if (selectedStudents.length === 0) {
+      setSelectedStudents([{ student, groupID, reviewerIndex }]);
+    } else if (selectedStudents.length === 1) {
+      const [firstSelection] = selectedStudents;
+      const targetGroup = editableGroups[groupID];
+      const firstSelectionGroup = editableGroups[firstSelection.groupID];
+  
+      // Check if the students are already in the target groups
+      const studentInTargetGroup = targetGroup.reviewers.some(reviewer => reviewer.studentID === firstSelection.student.studentID);
+      const firstSelectionInCurrentGroup = firstSelectionGroup.reviewers.some(reviewer => reviewer.studentID === student.studentID);
+  
+      if (firstSelection.student.studentID === student.studentID) {
+        // Same student clicked, clear the selection
+        setSelectedStudents([]);
+      } else if (studentInTargetGroup || firstSelectionInCurrentGroup) {
+        // One of the students is already in the target group
+        toast.error("One of the students is already in the target group.");
+      } else {
+        // Swap the groups of the two selected students if they are in different groups
+        swapStudentGroups(firstSelection.student, student, firstSelection.groupID, groupID, firstSelection.reviewerIndex, reviewerIndex);
+      }
+    }
+  };
+
+  const handleEmptyGroupClick = (groupID: number, reviewerIndex: number) => {
+    if (selectedStudents.length === 1) {
+      const [firstSelection] = selectedStudents;
+      // Move the student to the new group and remove from the old group
+      if (firstSelection.groupID !== groupID || firstSelection.reviewerIndex !== reviewerIndex) {
+        moveStudentToGroup(firstSelection.student, firstSelection.groupID, groupID, firstSelection.reviewerIndex, reviewerIndex);
+      }
+    }
+  };
+
+  // Modified function for swapping students
+  const swapStudentGroups = (student1: StudentDetails, student2: StudentDetails, group1ID: number, group2ID: number, reviewerIndex1: number, reviewerIndex2: number) => {
+    setEditableGroups(prevGroups => {
+      const newGroups = prevGroups.map((group, index) => {
+        if (index === group1ID || index === group2ID) {
+          const reviewers = group.reviewers.slice();
+          if (index === group1ID) {
+            reviewers[reviewerIndex1] = student2;
+          } else {
+            reviewers[reviewerIndex2] = student1;
+          }
+          return { ...group, reviewers };
+        }
+        return group;
+      });
+      return newGroups;
+    });
+
+    setSelectedStudents([]);
+  };
+
+  const moveStudentToGroup = (student: StudentDetails, fromGroupID: number, toGroupID: number, fromReviewerIndex: number, toReviewerIndex: number) => {
+    setEditableGroups(prevGroups => {
+      const newGroups = prevGroups.map((group, index) => {
+        if (index === fromGroupID) {
+          const reviewers = group.reviewers.slice();
+          reviewers.splice(fromReviewerIndex, 1);
+          return { ...group, reviewers };
+        } else if (index === toGroupID) {
+          const reviewers = group.reviewers.slice();
+          reviewers[toReviewerIndex] = student;
+          return { ...group, reviewers };
+        }
+        return group;
+      });
+      return newGroups;
+    });
+
+    setSelectedStudents([]);
+  };
+
+  const handleSaveGroups = () => {
+    handleUpdateGroups();
+  };
+
+  const handleReRandomizeGroups = () => {
+    handleUpdateGroups(true);
+  };
+
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -318,6 +402,7 @@ const handleAssignmentsUpdate = async () => {
         <div className={styles.assignmentsSection}>
           <Button color="secondary" variant="ghost" onClick={handleRandomizeClick}>Randomize Review Groups</Button>
         <Button color='primary' variant='ghost' onClick={handleEditAssignmentClick} >Edit Review Dates</Button>
+        <Button color='primary' variant='ghost' onClick={handleEditGroups} >Edit Groups</Button>
 
           {review && (
             <ReviewDetailCard
@@ -424,33 +509,80 @@ const handleAssignmentsUpdate = async () => {
           </Modal>
 
           <Modal
-  className='z-20'
-  backdrop="blur"
-  isOpen={isRandomizeModalOpen}
-  onOpenChange={(open) => setIsRandomizeModalOpen(open)}
->
-  <ModalContent>
-    <ModalHeader>Re-randomize Review Groups</ModalHeader>
-    <ModalBody>
-      <h3>Select number of reviews per assignment:</h3>
-      <Input
-        type="number"
-        min="1"
-        max="10"
-        value={reviewsPerAssignment.toString()}
-        onChange={(e) => setReviewsPerAssignment(Number(e.target.value))}
-      />
-    </ModalBody>
-    <ModalFooter>
-      <Button color="primary" variant="light" onPress={() => setIsRandomizeModalOpen(false)}>
-        Cancel
-      </Button>
-      <Button color="primary" onPress={handleReRandomize}>
-        Re-randomize
-      </Button>
-    </ModalFooter>
-  </ModalContent>
-</Modal>
+          className='z-20'
+          backdrop="blur"
+          isOpen={isRandomizeModalOpen}
+          onOpenChange={(open) => setIsRandomizeModalOpen(open)}
+        >
+          <ModalContent>
+            <ModalHeader>Re-randomize Review Groups</ModalHeader>
+            <ModalBody>
+              <h3>Select number of reviews per assignment:</h3>
+              <Input
+                type="number"
+                min="1"
+                max="10"
+                value={reviewsPerAssignment.toString()}
+                onChange={(e) => setReviewsPerAssignment(Number(e.target.value))}
+              />
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" variant="light" onPress={() => setIsRandomizeModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button color="primary" onPress={handleReRandomizeGroups}>
+                Re-randomize
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+          <Modal
+            className='z-20'
+            backdrop="blur"
+            isOpen={isEditGroupsModalOpen}
+            onOpenChange={(open) => setIsEditGroupsModalOpen(open)}
+          >
+            <ModalContent style={{ maxHeight: '90%', overflow: 'auto' }}>
+              <ModalHeader>Edit Groups</ModalHeader>
+              <ModalBody>
+                {editableGroups.map((group, index) => (
+                  <div key={index} style={{ marginBottom: '20px' }}>
+                    <h3>{`Group ${index + 1}: ${group.reviewee?.firstName} ${group.reviewee?.lastName}`}</h3>
+                    {group.reviewers.map((reviewer, reviewerIndex) => (
+                      <Button
+                        key={reviewer.studentID}
+                        onPress={() => handleMemberClick(reviewer, index, reviewerIndex)}
+                        style={{
+                          margin: '5px',
+                          backgroundColor: selectedStudents.find(s => s.student.studentID === reviewer.studentID) ? 'lightblue' : undefined
+                        }}
+                      >
+                        {`${reviewer.firstName} ${reviewer.lastName}`}
+                      </Button>
+                    ))}
+                    <Button
+                      onPress={() => handleEmptyGroupClick(index, group.reviewers.length)}
+                      style={{
+                        margin: '5px',
+                        backgroundColor: 'lightgreen'
+                      }}
+                    >
+                      Move Here
+                    </Button>
+                  </div>
+                ))}
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" variant="light" onPress={() => setIsEditGroupsModalOpen(false)}>
+                  Close
+                </Button>
+                <Button color="primary" onPress={handleSaveGroups}>
+                  Save
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
 
         </div>
       </div>

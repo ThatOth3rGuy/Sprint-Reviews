@@ -21,6 +21,16 @@ interface Group {
   groupNumber: number;
   studentIDs: number[];
 }
+export interface StudentDetails {
+  studentID: number;
+  firstName: string;
+  lastName: string;
+}
+
+export interface ReviewGroup {
+  reviewee?: StudentDetails;
+  reviewers: StudentDetails[];
+}
 
 // Use the production configuration if the NODE_ENV environment variable is set to 'production' but development config by default
 const pool = mysql.createPool(dbConfig);
@@ -993,23 +1003,22 @@ export async function updateReviewer(studentID: number, assignmentID: number, su
     throw err;
   }
 }
-export async function updateReviewGroups(assignmentID: number, courseID: number, reviewsPerAssignment: number) {
-  // Fetch all students in the course
-  const studentsResult = await getStudentsInCourse(courseID);
+export async function updateReviewGroups(assignmentID: number, courseID: number, groups: ReviewGroup[], reviewsPerAssignment: number, randomize: boolean) {
+  if (randomize) {
+    // Fetch all students in the course
+    const studentsResult = await getStudentsInCourse(courseID);
 
-  if (studentsResult.length === 0) {
+    if (studentsResult.length === 0) {
       throw new Error('No students found for the course');
-  }
+    }
 
-  const students = studentsResult.map((row) => ({
+    const students = studentsResult.map((row) => ({
       studentID: row.studentID,
-  }));
+    }));
 
-  // Check if students array is populated correctly
-  console.log('Students:', students);
-
-  // Randomize review groups
-  const reviewGroups = randomizePeerReviewGroups(students, reviewsPerAssignment);
+    // Randomize review groups
+    groups = randomizePeerReviewGroups(students, reviewsPerAssignment);
+  }
 
   // Clear existing review groups for the assignment
   const deleteQuery = 'DELETE FROM review_groups WHERE assignmentID = ?';
@@ -1017,14 +1026,16 @@ export async function updateReviewGroups(assignmentID: number, courseID: number,
 
   // Insert new review groups into the database
   const insertQuery = `
-      INSERT INTO review_groups (studentID, assignmentID, courseID, revieweeID, isReleased)
-      VALUES (?, ?, ?, ?, false)
+    INSERT INTO review_groups (studentID, assignmentID, courseID, revieweeID, isReleased)
+    VALUES (?, ?, ?, ?, false)
   `;
 
-  for (const group of reviewGroups) {
-      for (const reviewerID of group.reviewers) {
-          await query(insertQuery, [reviewerID, assignmentID, courseID, group.revieweeID]);
-      }
+  console.log('Updating review groups:', groups);
+
+  for (const group of groups) {
+    for (const reviewer of group.reviewers) {
+      await query(insertQuery, [reviewer, assignmentID, courseID, group.revieweeID]);
+    }
   }
 
   return { message: 'Review groups updated successfully' };

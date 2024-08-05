@@ -1,3 +1,4 @@
+// create-groups.tsx
 import { useRouter } from "next/router";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
@@ -58,7 +59,7 @@ export default function CreateGroup() {
         const response = await fetch(`/api/courses/${courseId}`);
         if (response.ok) {
           const data = await response.json();
-          setCourseName(data.courseName);
+          console.log('data:', data);
         }
       } catch (error) {
         console.error('Error fetching course name:', error);
