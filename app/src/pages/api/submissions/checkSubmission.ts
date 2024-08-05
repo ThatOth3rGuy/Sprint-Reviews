@@ -38,7 +38,7 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{
     JOIN student st ON s.studentID = st.studentID
     JOIN user u ON st.userID = u.userID
     JOIN assignment a ON s.assignmentID = a.assignmentID
-    WHERE s.assignmentID = ? AND st.studentID = ?
+    WHERE s.assignmentID = ? AND st.userID = ?
   `;
   try {
     const rows = await query(sql, [assignmentID, userID]);

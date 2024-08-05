@@ -7,7 +7,8 @@ import AssignmentDetailCard from "../components/student-components/student-assig
 import styles from "../../styles/AssignmentDetailCard.module.css";
 import { Button, Breadcrumbs, BreadcrumbItem, Spinner, useDisclosure, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from "@nextui-org/react";
 import toast from "react-hot-toast";
-//import DownloadSubmission from "../components/student-components/download-submission";
+import DownloadSubmission from "../components/student-components/download-submission";
+
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -296,7 +297,8 @@ export default function AssignmentDashboard() {
                 allowedFileTypes={assignment.allowedFileTypes}
             />
             <div className="flex justify-between items-center my-2">
-              {/* <p><DownloadSubmission assignmentID={assignment.assignmentID} studentID={Number(studentID)}></DownloadSubmission></p> */}
+              <p><DownloadSubmission assignmentID={assignment.assignmentID} studentID={Number(studentID)}></DownloadSubmission></p>
+
             <div className="flex items-center">
               <p className="text-primary-900 text-large font-bold my-2 mx-3 p-1">
             {submission?.grade ? 'Adjusted Grade:' : 'Average Grade:'} {submission?.grade ?? submission?.autoGrade}
@@ -336,6 +338,7 @@ export default function AssignmentDashboard() {
               <p>No feedback available yet.</p>
             )}
           </div>
+
           <div className={styles.commentsSection}>
           <h2>Comments</h2>
           {comments.length > 0 ? (

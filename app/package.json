@@ -17,6 +17,7 @@
     "@types/multer": "^1.4.11",
     "@types/react": "^18.3.3",
     "@types/react-select": "^5.0.1",
+    "axios": "^1.7.3",
     "babel-eslint": "^10.1.0",
     "cookie": "^0.6.0",
     "csv-parse": "^5.5.6",
@@ -34,14 +35,13 @@
     "net-browserify": "^0.1.4",
     "next": "^14.2.5",
     "next-themes": "^0.3.0",
-
     "node-cron": "^3.0.3",
-
+    "node-schedule": "^2.1.1",
     "nodemailer": "^6.9.14",
-
     "pdf-parse": "^1.1.1",
     "react": "^18",
     "react-datepicker": "^7.3.0",
+    "react-doc-viewer": "^0.1.14",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
     "react-modal": "^3.16.1",
@@ -55,7 +55,6 @@
     "@types/jest": "^29.5.12",
     "@types/multer": "^1.4.11",
     "@types/node": "20.14.10",
-
     "@types/react-dom": "^18",
     "@types/react-modal": "^3.16.3",
     "eslint-config-next": "^14.2.5",

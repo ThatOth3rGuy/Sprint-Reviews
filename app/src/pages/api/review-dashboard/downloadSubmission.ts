@@ -1,18 +1,17 @@
-// pages/api/downloadSubmission.ts
+// pages/api/review-dashboard/downloadSubmission.ts
 import { NextApiRequest, NextApiResponse } from 'next';
-import { query,getStudentsById } from '../../../db';
+import { query } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { assignmentID, studentID } = req.query;
 
-  const studentid = getStudentsById(Number(studentID));
   if (!assignmentID || !studentID) {
     return res.status(400).json({ error: 'Missing required parameters' });
   }
 
   try {
     // Retrieve the file data from the database
-    const fileData = await query('SELECT fileName, fileContent, fileType FROM submission WHERE assignmentID = ? AND studentID = ?', [assignmentID, studentid]);
+    const fileData = await query('SELECT fileName, fileContent, fileType FROM submission WHERE assignmentID = ? AND studentID = ?', [assignmentID, studentID]);
 
     if (fileData.length === 0) {
       return res.status(404).json({ error: 'File not found' });
@@ -22,7 +21,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Check if the submission is a link
     if (fileType === 'link') {
-      return res.status(200).json({ link: fileContent });
+      // Parse the links if they are stored as a JSON array
+      const links = JSON.parse(fileContent);
+      return res.status(200).json({ links });
     }
 
     // For file submissions, send the file to the client

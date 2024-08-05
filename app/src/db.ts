@@ -3,6 +3,7 @@ import mysql from 'mysql2/promise';
 import fs from 'fs/promises';
 import config from './dbConfig'; // Import the database configuration from dbConfig.ts
 import { JsonObject } from '@prisma/client/runtime/library';
+import { randomizePeerReviewGroups } from './pages/api/addNew/randomizationAlgorithm';
 
 let dbConfig;
 
@@ -204,12 +205,14 @@ export async function createReview(
   assignmentID: number, 
   isGroupAssignment: boolean, 
   allowedFileTypes: string, 
+  startDate: Date,
+  endDate : Date,
   deadline: Date,
   anonymous: boolean
 ): Promise<void> {
   const result = await query(
-    'INSERT INTO review (assignmentID, isGroupAssignment, allowedFileTypes, deadline, anonymous) VALUES (?, ?, ?, ?, ?)',
-    [assignmentID, isGroupAssignment, allowedFileTypes, deadline, anonymous]
+    'INSERT INTO review (assignmentID, isGroupAssignment, allowedFileTypes,startDate, endDate, deadline, anonymous) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    [assignmentID, isGroupAssignment, allowedFileTypes,startDate,endDate, deadline, anonymous]
   );
   
   if (result.affectedRows === 0) {
@@ -990,6 +993,42 @@ export async function updateReviewer(studentID: number, assignmentID: number, su
     throw err;
   }
 }
+export async function updateReviewGroups(assignmentID: number, courseID: number, reviewsPerAssignment: number) {
+  // Fetch all students in the course
+  const studentsResult = await getStudentsInCourse(courseID);
+
+  if (studentsResult.length === 0) {
+      throw new Error('No students found for the course');
+  }
+
+  const students = studentsResult.map((row) => ({
+      studentID: row.studentID,
+  }));
+
+  // Check if students array is populated correctly
+  console.log('Students:', students);
+
+  // Randomize review groups
+  const reviewGroups = randomizePeerReviewGroups(students, reviewsPerAssignment);
+
+  // Clear existing review groups for the assignment
+  const deleteQuery = 'DELETE FROM review_groups WHERE assignmentID = ?';
+  await query(deleteQuery, [assignmentID]);
+
+  // Insert new review groups into the database
+  const insertQuery = `
+      INSERT INTO review_groups (studentID, assignmentID, courseID, revieweeID, isReleased)
+      VALUES (?, ?, ?, ?, false)
+  `;
+
+  for (const group of reviewGroups) {
+      for (const reviewerID of group.reviewers) {
+          await query(insertQuery, [reviewerID, assignmentID, courseID, group.revieweeID]);
+      }
+  }
+
+  return { message: 'Review groups updated successfully' };
+}
 /*
 UPDATE USER QUERIES FOR EACH TABLE (Instructor unnecessary)
 */
@@ -1158,6 +1197,21 @@ export async function updateReview(reviewID: number, assignmentID: number, isGro
     return updatedReview;
   } catch (error) {
     console.error('Error updating review:', error);
+    throw error;
+  }
+}
+export async function updateReviewDates(reviewID: number, startDate: string, endDate: string, deadline: string, anonymous: Boolean): Promise<any> {
+  const sql = `
+    UPDATE review
+    SET startDate = ?, endDate = ?, deadline = ?, anonymous = ?
+    WHERE reviewID = ?
+  `;
+
+  try {
+    const result = await query(sql, [startDate, endDate, deadline, anonymous, reviewID]);
+    return result;
+  } catch (error) {
+    console.error('Error updating review dates:', error);
     throw error;
   }
 }
