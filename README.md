@@ -1,3 +1,4 @@
+
 # SprintReviews a Peer Review and Evaluation System by Sprint Runners
 
 This file will provide all information regarding the setup process to build and run the SprintReviews application
@@ -119,5 +120,8 @@ After removing the volume, you can recreate the Docker containers with the updat
 ```bash
 docker compose -f dev.yml up db 
 ```
+<hr>
+About us:
+![image](https://github.com/user-attachments/assets/1e22a1fd-d8af-4463-b886-de392d1c8d93)
 
-This command will force Docker to recreate your containers, including the `db` container with the updated `init.sql` file. If everything is set up correctly, your changes should now take effect. If you continue to face issues, please provide more details about the error messages you're seeing, and I'll do my best to assist you further.
+
