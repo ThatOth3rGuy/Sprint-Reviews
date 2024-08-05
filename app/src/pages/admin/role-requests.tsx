@@ -1,3 +1,9 @@
+/* 
+  As mentioned in the previous file, this page is not active in the final version of the application. The page was intended to be part of the admin functionality on the admin portal.
+  The page was intended to allow admins to review and accept or reject role requests from instructors. The page was not implemented in the final version of the application due to time constraints.
+  The portal-home is the main admin page and this is not being called by it currently. The page remains as it can be added in future versions of the application.
+*/
+
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import { useState } from 'react';
