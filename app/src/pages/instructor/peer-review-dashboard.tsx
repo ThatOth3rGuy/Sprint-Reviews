@@ -66,8 +66,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   // New state variables for editing groups
   const [isEditGroupsModalOpen, setIsEditGroupsModalOpen] = useState(false);
   const [editableGroups, setEditableGroups] = useState<ReviewGroup[]>([]);
-  const [selectedStudents, setSelectedStudents] = useState<{ student: StudentDetails, groupID: number }[]>([]);
-
+  const [selectedStudents, setSelectedStudents] = useState<{ student: StudentDetails, groupID: number, reviewerIndex: number }[]>([]);
 
   useSessionValidation('instructor', setLoading, setSession);
 
@@ -171,7 +170,13 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   };
   
   const handleUpdateGroups = async (randomize = false) => {
-    console.log('Updating review groups:', editableGroups);
+    const dataToSend = randomize ? null : editableGroups.map(group => ({
+      revieweeID: group.reviewee?.studentID,
+      reviewers: group.reviewers.map(reviewer => reviewer.studentID)
+    }));
+  
+    console.log('Updating review groups:', dataToSend);
+  
     try {
       const response = await fetch('/api/updateTable', {
         method: 'POST',
@@ -183,13 +188,13 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
           data: {
             assignmentID: review.assignmentID,
             courseID: 2,
-            groups: editableGroups,
+            groups: dataToSend,
             reviewsPerAssignment,
             randomize,
           },
         }),
       });
-
+  
       if (response.ok) {
         toast.success("Review groups updated successfully!");
         // Fetch the new review groups and update the state

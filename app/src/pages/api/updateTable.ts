@@ -9,7 +9,6 @@ import { autoRelease, query,
 
  } from '../../db';
 
- import { randomizePeerReviewGroups } from '../addNew/randomizationAlgorithm';
 import { calculateAndUpdateAverageGrade } from './groups/submitGroupFeedback';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {

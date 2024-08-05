@@ -21,15 +21,10 @@ interface Group {
   groupNumber: number;
   studentIDs: number[];
 }
-export interface StudentDetails {
-  studentID: number;
-  firstName: string;
-  lastName: string;
-}
 
 export interface ReviewGroup {
-  reviewee?: StudentDetails;
-  reviewers: StudentDetails[];
+  reviewee?: number;
+  reviewers: number[];
 }
 
 // Use the production configuration if the NODE_ENV environment variable is set to 'production' but development config by default
@@ -1030,11 +1025,9 @@ export async function updateReviewGroups(assignmentID: number, courseID: number,
     VALUES (?, ?, ?, ?, false)
   `;
 
-  console.log('Updating review groups:', groups);
-
   for (const group of groups) {
     for (const reviewer of group.reviewers) {
-      await query(insertQuery, [reviewer, assignmentID, courseID, group.revieweeID]);
+      await query(insertQuery, [reviewer, assignmentID, courseID, group.revieweeID ?? null]);
     }
   }
 
