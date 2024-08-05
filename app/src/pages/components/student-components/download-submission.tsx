@@ -63,9 +63,18 @@ const DownloadSubmission: React.FC<DownloadSubmissionProps> = ({ studentID, assi
     }
   };
 
+  const ensureAbsoluteUrl = (url: string) => {
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      return `http://${url}`;
+    }
+    return url;
+  };
+
   return (
     <div>
-      <Button onClick={handleSubmission} variant='light' color={isViewerOpen? "danger" : 'success'}>{isViewerOpen ? 'Close Viewer' : 'View Submission'}</Button>
+      <Button onClick={handleSubmission} variant='light' color={isViewerOpen ? "danger" : 'success'}>
+        {isViewerOpen ? 'Close Viewer' : 'View Submission'}
+      </Button>
       {isViewerOpen && (
         <>
           {links.length > 0 && (
@@ -73,7 +82,7 @@ const DownloadSubmission: React.FC<DownloadSubmissionProps> = ({ studentID, assi
               <p>Submission Links:</p>
               {links.map((link, index) => (
                 <div key={index}>
-                  <a href={link} target="_blank" rel="noopener noreferrer">{link}</a>
+                  <a href={ensureAbsoluteUrl(link)} target="_blank" rel="noopener noreferrer">{link}</a>
                 </div>
               ))}
             </div>
