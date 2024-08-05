@@ -21,9 +21,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Check if the submission is a link
     if (fileType === 'link') {
-      // Parse the links if they are stored as a JSON array
-      const links = JSON.parse(fileContent);
-      return res.status(200).json({ links });
+      // Return the link content as a string
+      return res.status(200).json({ link: fileContent.toString() });
     }
 
     // For file submissions, send the file to the client
