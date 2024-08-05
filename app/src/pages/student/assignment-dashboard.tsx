@@ -35,6 +35,12 @@ interface Feedback {
   grade: number | null;
   feedbackType: 'instructor';
 }
+interface Comment {
+  feedbackID: number;
+  comment: string;
+  feedbackDate: string;
+  lastUpdated: string;
+}
 
 export default function AssignmentDashboard() {
   const [loading, setLoading] = useState(true);
@@ -52,7 +58,7 @@ export default function AssignmentDashboard() {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [submissionType, setSubmissionType] = useState<'file' | 'link'>('file');
   const [linkSubmission, setLinkSubmission] = useState('');
-
+  const [comments, setComments] = useState<Comment[]>([]);
   useSessionValidation("student", setLoading, setSession);
 
   useEffect(() => {
@@ -73,11 +79,7 @@ export default function AssignmentDashboard() {
             }
           }
 
-          const feedbacksResponse = await fetch(`/api/instructor-feedback/${assignmentID}/${session.user.userID}`);
-          if (feedbacksResponse.ok) {
-            const feedbacksData: Feedback[] = await feedbacksResponse.json();
-            setFeedbacks(feedbacksData.filter(feedback => feedback.feedbackType === 'instructor'));
-          }
+         
 
           await checkSubmissionStatus();
         } else {
@@ -89,12 +91,30 @@ export default function AssignmentDashboard() {
         setLoading(false);
       }
     };
+    const fetchComments = async () => {
+      if (assignmentID && session?.user?.userID) {
+        try {
+          const response = await fetch(`/api/studentComments/${assignmentID}/${session.user.userID}`);
+          if (response.ok) {
+            const commentsData: Comment[] = await response.json();
+            setComments(commentsData);
+            console.log(commentsData)
+          } else {
+            console.error('Error fetching comments');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+    };
 
+    fetchComments();
     fetchData();
   }, [router.isReady, session, assignmentID]);
 
   const checkSubmissionStatus = async () => {
     if (assignmentID && session?.user?.userID) {
+      
       try {
         const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`);
         if (!response.ok) throw new Error('Failed to check submission status');
@@ -314,7 +334,7 @@ export default function AssignmentDashboard() {
           <div className={styles.feedbackSection}>
             <br />
             <hr />
-            <h2>Instructor Feedback</h2>
+            <h2> Feedback</h2>
             {feedbacks.length > 0 ? (
               feedbacks.map((feedback, index) => (
                 <div key={feedback.feedbackID} className={styles.assignmentsSection}>
@@ -329,6 +349,19 @@ export default function AssignmentDashboard() {
               <p>No feedback available yet.</p>
             )}
           </div>
+          <div className={styles.commentsSection}>
+          <h2>Comments</h2>
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              <div key={comment.feedbackID} className={styles.comment}>
+                <p>{comment.comment}</p>
+                <p>Date: {new Date(comment.feedbackDate).toLocaleString()}</p>
+              </div>
+            ))
+          ) : (
+            <p>No comments available yet.</p>
+          )}
+        </div>
         </div>
       </div>
     </>

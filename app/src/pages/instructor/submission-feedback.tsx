@@ -1,3 +1,4 @@
+// instructor/submission-feedback.tsx
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import { useEffect, useState } from "react";
@@ -6,7 +7,7 @@ import AssignmentDetailCard from "../components/student-components/student-assig
 import styles from "../../styles/AssignmentDetailCard.module.css";
 import { Button, Breadcrumbs, BreadcrumbItem, Spinner, useDisclosure, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from "@nextui-org/react";
 import toast from "react-hot-toast";
-
+//import DownloadSubmission from "../components/student-components/download-submission";
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -32,7 +33,7 @@ interface Feedback {
   lastUpdated: string;
   comment: string;
   grade: number | null;
-  feedbackType: 'instructor';
+  feedbackType: 'peer' | 'instructor';
 }
 
 interface Submission {
@@ -40,14 +41,20 @@ interface Submission {
   submissionID: number;
   assignmentID: number;
   studentID: number;
-  fileName: string;
+  fileNames: string[];
+  links: string[];
   submissionDate: string;
   autoGrade: number;
   grade: number;
   isLate: boolean;
   isSubmitted: boolean;
 }
-
+interface Comment {
+  feedbackID: number;
+  comment: string;
+  feedbackDate: string;
+  lastUpdated: string;
+}
 export default function AssignmentDashboard() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
@@ -59,10 +66,10 @@ export default function AssignmentDashboard() {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newGrade, setNewGrade] = useState<number>(0);
-  const [newFeedback, setNewFeedback] = useState<string>("");
+  const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
-  const [editFeedbackID, setEditFeedbackID] = useState<number | null>(null);
-
+  const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+  const [editedComment, setEditedComment] = useState<string>("");
   useSessionValidation("instructor", setLoading, setSession);
 
   useEffect(() => {
@@ -88,10 +95,10 @@ export default function AssignmentDashboard() {
             }
 
             // Fetch feedbacks for this assignment and student
-            const feedbacksResponse = await fetch(`/api/instructor-feedback/${assignmentID}/${studentID}`);
+            const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${studentID}`);
             if (feedbacksResponse.ok) {
               const feedbacksData: Feedback[] = await feedbacksResponse.json();
-              setFeedbacks(feedbacksData.filter(feedback => feedback.feedbackType === 'instructor'));
+              setFeedbacks(feedbacksData);
             }
           } else {
             console.error('Error fetching assignment data');
@@ -104,8 +111,23 @@ export default function AssignmentDashboard() {
       } else {
         setLoading(false);
       }
+    }; 
+    const fetchComments = async () => {
+      if (assignmentID && studentID) {
+        try {
+          const response = await fetch(`/api/instructorComments/${assignmentID}/${studentID}`);
+          if (response.ok) {
+            const commentsData: Comment[] = await response.json();
+            setComments(commentsData);
+          } else {
+            console.error('Error fetching comments');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
     };
-
+    fetchComments();
     fetchData();
   }, [router.isReady, studentID, assignmentID]);
 
@@ -160,79 +182,80 @@ export default function AssignmentDashboard() {
     }
   };
 
-  const handleAddFeedback = async () => {
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  const handleAddComment = async () => {
     try {
-      const response = await fetch('/api/addNew/addFeedback', {
+      const response = await fetch('/api/instructorComments/addFeedback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           action: 'add',
-          assignmentID: submission?.assignmentID,
+          assignmentID: assignment?.assignmentID,
           courseID: courseData?.courseID,
           studentID: submission?.studentID,
-          reviewerID: session.user.userID,
-          feedbackDetails: newFeedback,
-          grade: newGrade,
           comment: newComment,
         }),
       });
-        console.log(response)
+
       if (!response.ok) {
-        throw new Error('Failed to add feedback');
-        console.log(response)
+        throw new Error('Failed to add comment');
       }
 
-      const newFeedbackData: Feedback = await response.json();
-      setFeedbacks((prev) => [...prev, newFeedbackData]);
-      setNewFeedback('');
+      const newCommentData: Comment = await response.json();
+      setComments((prev) => [...prev, newCommentData]);
       setNewComment('');
-      toast.success('Feedback added successfully');
+      toast.success('Comment added successfully');
+      router.reload();
     } catch (error) {
-      console.error('Error adding feedback:', error);
-      toast.error('Error adding feedback. Please try again.');
+      console.error('Error adding comment:', error);
+      toast.error('Error adding comment. Please try again.');
     }
   };
 
-  const handleEditFeedback = async (feedbackID: number, updatedFeedback: string, updatedGrade: number, updatedComment: string) => {
+  const handleEditComment = (commentId: number, currentComment: string) => {
+    setEditingCommentId(commentId);
+    setEditedComment(currentComment);
+    
+  };
+
+  const handleSaveEditedComment = async () => {
     try {
-      const response = await fetch('/api/addNew/addFeedback', {
+      const response = await fetch('/api/instructorComments/addFeedback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           action: 'update',
-          feedbackID,
-          feedbackDetails: updatedFeedback,
-          grade: updatedGrade,
-          comment: updatedComment,
+          feedbackID: editingCommentId,
+          comment: editedComment,
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update feedback');
+        throw new Error('Failed to update comment');
       }
 
-      setFeedbacks((prev) =>
-        prev.map((feedback) =>
-          feedback.feedbackID === feedbackID
-            ? { ...feedback, feedbackDetails: updatedFeedback, grade: updatedGrade, comment: updatedComment }
-            : feedback
+      setComments((prev) =>
+        prev.map((comment) =>
+          comment.feedbackID === editingCommentId
+            ? { ...comment, comment: editedComment, lastUpdated: new Date().toISOString() }
+            : comment
         )
       );
-      toast.success('Feedback updated successfully');
+      setEditingCommentId(null);
+      setEditedComment('');
+      toast.success('Comment updated successfully');
     } catch (error) {
-      console.error('Error updating feedback:', error);
-      toast.error('Error updating feedback. Please try again.');
+      console.error('Error updating comment:', error);
+      toast.error('Error updating comment. Please try again.');
     }
   };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
+  
   if (!assignment || loading) {
     return (
       <div className="w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto">
@@ -258,11 +281,13 @@ export default function AssignmentDashboard() {
             <BreadcrumbItem onClick={handleAssignmentClick}>{assignment.title}</BreadcrumbItem>
             <BreadcrumbItem>
               {submission?.studentName || "Submission details"}
+              
             </BreadcrumbItem>
           </Breadcrumbs>
         </div>
         <div className={styles.assignmentsSection}>
           {assignment && (
+            <>
             <AssignmentDetailCard
                 description={assignment.descr || "No description available"}
                 startDate={new Date(assignment.startDate).toLocaleString() || "No start date set"}
@@ -270,6 +295,18 @@ export default function AssignmentDashboard() {
                 deadline={new Date(assignment.deadline).toLocaleString() || "No deadline set"}
                 allowedFileTypes={assignment.allowedFileTypes}
             />
+            <div className="flex justify-between items-center my-2">
+              {/* <p><DownloadSubmission assignmentID={assignment.assignmentID} studentID={Number(studentID)}></DownloadSubmission></p> */}
+            <div className="flex items-center">
+              <p className="text-primary-900 text-large font-bold my-2 mx-3 p-1">
+            {submission?.grade ? 'Adjusted Grade:' : 'Average Grade:'} {submission?.grade ?? submission?.autoGrade}
+          </p><Button variant="flat" color="warning" onClick={handleEditGrade}>Edit Grade</Button>
+            </div>
+            
+            </div>
+            
+            </>
+            
           )}
           {submission && submission.isSubmitted ? (
             <div>
@@ -278,7 +315,7 @@ export default function AssignmentDashboard() {
                   ? `${submission?.studentName} - Assignment Submitted Late`
                   : `${submission?.studentName} - Assignment Submitted`}
               </p>
-              {submission.fileName && <p className="text-left text-small">Submitted file: {submission.fileName}</p>}
+              {/* {submission.fileName && <p className="text-left text-small">Submitted file: {submission.fileName}</p>} */}
             </div>
           ) : (
             <p className="text-primary-900 text-large font-bold bg-danger-500 my-2 p-1">{submission?.studentName} - Assignment Not Submitted</p>
@@ -293,44 +330,56 @@ export default function AssignmentDashboard() {
                   <p><strong>Comment:</strong> {feedback.comment}</p>
                   <p><strong>Date:</strong> {new Date(feedback.feedbackDate).toLocaleString()}</p>
                   <p><strong>Grade:</strong> {feedback.grade !== null ? feedback.grade : "Not graded yet"}</p>
-                  <Button onPress={() => {
-                    setEditFeedbackID(feedback.feedbackID);
-                    setNewFeedback(feedback.feedbackDetails);
-                    setNewGrade(feedback.grade ?? 0);
-                    setNewComment(feedback.comment);
-                    setIsModalOpen(true);
-                  }}>Edit Feedback</Button>
                 </div>
               ))
             ) : (
               <p>No feedback available yet.</p>
             )}
           </div>
-          <div className={styles.feedbackSection}>
-            <h2>Add Feedback</h2>
-            <Input
-              type="text"
-              fullWidth
-              label="New Feedback"
-              value={newFeedback}
-              onChange={(e) => setNewFeedback(e.target.value)}
-            />
-            <Input
-              type="text"
-              fullWidth
-              label="Comment"
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-            />
-            <Button color="primary" onPress={handleAddFeedback}>Add Feedback</Button>
-          </div>
-          <p className="text-primary-900 text-large font-bold bg-primary-100 my-2 p-1">
-            {submission?.grade ? 'Adjusted Grade:' : 'Average Grade:'} {submission?.grade ?? submission?.autoGrade}
-            <br />
-            <Button className="text-primary-900 text-small font-bold bg-primary-200 my-2 p-0.5" onClick={handleEditGrade}>Edit Grade</Button>
-          </p>
+          <div className={styles.commentsSection}>
+          <h2>Comments</h2>
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              <div key={comment.feedbackID} className={styles.comment}>
+                {editingCommentId === comment.feedbackID ? (
+                  <>
+                    <Input
+                      type="text"
+                      fullWidth
+                      value={editedComment}
+                      onChange={(e) => setEditedComment(e.target.value)}
+                    />
+                    <Button color="primary" onPress={handleSaveEditedComment}>Save</Button>
+                    <Button color="secondary" onPress={() => setEditingCommentId(null)}>Cancel</Button>
+                  </>
+                ) : (
+                  <>
+                    <p>{comment.comment}</p>
+                    <p>Date: {new Date(comment.feedbackDate).toLocaleString()}</p>
+                    {comment.lastUpdated && <p>Last Updated: {new Date(comment.lastUpdated).toLocaleString()}</p>}
+                    <Button color="primary" onPress={() => handleEditComment(comment.feedbackID, comment.comment)}>Edit</Button>
+                  </>
+                )}
+              </div>
+            ))
+          ) : (
+            <p>No comments available yet.</p>
+          )}
+        </div>
+        <div className={styles.addCommentSection}>
+          <h2>Add Comment</h2>
+          <Input
+            type="text"
+            fullWidth
+            label="New Comment"
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+          />
+          <Button color="primary" onPress={handleAddComment}>Add Comment</Button>
+        </div>
         </div>
       </div>
+            
       <Modal
         className='z-20'
         backdrop="blur"

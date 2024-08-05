@@ -198,18 +198,13 @@ CREATE TABLE IF NOT EXISTS instructor_feedback (
     feedbackID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT NOT NULL,
     courseID INT NOT NULL,
-    studentID INT NOT NULL,
-    reviewerID INT NOT NULL,
-    feedbackDetails TEXT NOT NULL,
+    studentID INT NOT NULL,        
     feedbackDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     lastUpdated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    comment TEXT,
-    grade INT,
+    comment TEXT,    
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID),
-    FOREIGN KEY (studentID) REFERENCES student(studentID),
-    FOREIGN KEY (reviewerID) REFERENCES instructor(instructorID)
-);
+    FOREIGN KEY (studentID) REFERENCES student(studentID));
 
 
 
