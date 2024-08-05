@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { Button } from '@nextui-org/react';
 
 interface DownloadSubmissionProps {
@@ -12,6 +11,7 @@ const DownloadSubmission: React.FC<DownloadSubmissionProps> = ({ studentID, assi
   const [links, setLinks] = useState<string[]>([]);
   const [fileData, setFileData] = useState<{ uri: string; fileType: string; fileName: string } | null>(null);
   const [isViewerOpen, setIsViewerOpen] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmission = async () => {
     if (isViewerOpen) {
@@ -47,8 +47,10 @@ const DownloadSubmission: React.FC<DownloadSubmissionProps> = ({ studentID, assi
 
       // Open the viewer
       setIsViewerOpen(true);
+      setError(null); // Reset error state
     } catch (error) {
       console.error('Error handling the submission', error);
+      setError('Failed to fetch the document. Please try again.');
     }
   };
 
@@ -75,6 +77,7 @@ const DownloadSubmission: React.FC<DownloadSubmissionProps> = ({ studentID, assi
       <Button onClick={handleSubmission} variant='light' color={isViewerOpen ? "danger" : 'success'}>
         {isViewerOpen ? 'Close Viewer' : 'View Submission'}
       </Button>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       {isViewerOpen && (
         <>
           {links.length > 0 && (
@@ -93,10 +96,10 @@ const DownloadSubmission: React.FC<DownloadSubmissionProps> = ({ studentID, assi
                 <iframe src={fileData.uri} width="100%" height="600px"></iframe>
               )}
               {fileData.fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' && (
-                <DocViewer
-                  documents={[{ uri: fileData.uri, fileType: fileData.fileType }]}
-                  pluginRenderers={DocViewerRenderers}
-                />
+                <div className='flex items-center'>
+                  <p className='mr-5'>Click the button below to download and view submission:</p>
+                  <Button onClick={handleDownload} variant='flat'>Download</Button>
+                </div>
               )}
               {fileData.fileType === 'text/plain' && (
                 <iframe src={fileData.uri} width="100%" height="600px"></iframe>
