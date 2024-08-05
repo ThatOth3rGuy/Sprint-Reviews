@@ -5,7 +5,7 @@ import { autoRelease, query,
     updateFeedback, updateReview, updateReviewCriteria, updateReviewer, updateStudent,
 
     updateSubmission, updateUser, updateReviewGroups
-,updateReviewDates
+,updateReviewDates, updateGroupFeedback
 
  } from '../../db';
 
