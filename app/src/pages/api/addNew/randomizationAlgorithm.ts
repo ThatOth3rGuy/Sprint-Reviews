@@ -1,3 +1,6 @@
+// Purpose: Contains the randomizePeerReviewGroups function which takes in a list of students and the number of reviews per assignment and returns a list of review groups.
+// The function assigns reviewers to each student randomly, ensuring that each student receives the required number of reviews and that no student reviews themselves, and that no student reviews another student more than once.
+
 type ReviewGroup = {
   revieweeID: number;
   reviewers: number[];
