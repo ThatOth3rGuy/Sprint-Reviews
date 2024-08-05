@@ -122,6 +122,7 @@ docker compose -f dev.yml up db
 ```
 <hr>
 About us:
+
 ![image](https://github.com/user-attachments/assets/1e22a1fd-d8af-4463-b886-de392d1c8d93)
 
 
