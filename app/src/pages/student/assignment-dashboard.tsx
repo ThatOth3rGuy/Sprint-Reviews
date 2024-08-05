@@ -53,12 +53,30 @@ export default function AssignmentDashboard() {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [submissionType, setSubmissionType] = useState<'file' | 'link'>('file');
   const [linkSubmission, setLinkSubmission] = useState('');
+  const [studentID, setStudentID] = useState<number | null>(null);
 
   useSessionValidation("student", setLoading, setSession);
 
   useEffect(() => {
+    const fetchStudentID = async () => {
+      if (session?.user?.userID) {
+        try {
+          const response = await fetch(`/api/userInfo/student-user-details?userID=${session.user.userID}`);
+          if (response.ok) {
+            const data = await response.json();
+            setStudentID(data.studentID);
+          } else {
+            throw new Error("Failed to fetch student details");
+          }
+        } catch (error) {
+          console.error("Error fetching student details:", error);
+          toast.error("Error fetching student details. Please refresh the page.");
+        }
+      }
+    };
+
     const fetchData = async () => {
-      if (!router.isReady || !session?.user?.userID || !assignmentID) return;
+      if (!router.isReady || !session?.user?.userID || !assignmentID || !studentID) return;
 
       try {
         const assignmentResponse = await fetch(`/api/assignments/${assignmentID}`);
@@ -74,7 +92,7 @@ export default function AssignmentDashboard() {
             }
           }
 
-          const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${session.user.userID}`);
+          const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${studentID}`);
           if (feedbacksResponse.ok) {
             const feedbacksData: Feedback[] = await feedbacksResponse.json();
             setFeedbacks(feedbacksData);
@@ -91,25 +109,14 @@ export default function AssignmentDashboard() {
       }
     };
 
-    fetchData();
-  }, [router.isReady, session, assignmentID]);
-
-  const checkSubmissionStatus = async () => {
-    if (assignmentID && session?.user?.userID) {
-      try {
-        const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`);
-        if (!response.ok) throw new Error('Failed to check submission status');
-        
-        const data = await response.json();
-        setIsSubmitted(data.isSubmitted);
-        setSubmittedFileName(data.fileName);
-        setIsLateSubmission(data.isLate);
-      } catch (error) {
-        console.error('Error checking submission status:', error);
-        toast.error('Error checking submission status. Please refresh the page.');
-      }
+    if (router.isReady && session && !studentID) {
+      fetchStudentID();
     }
-  };
+
+    if (studentID) {
+      fetchData();
+    }
+  }, [router.isReady, session, assignmentID, studentID]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -167,7 +174,6 @@ export default function AssignmentDashboard() {
           setIsSubmitted(true);
           setSubmittedFileName(uploadedFile ? uploadedFile.name : linkSubmission);
           setIsLateSubmission(result.isLate);
-          checkSubmissionStatus();
         } else {
           throw new Error(result.message || 'Submission failed');
         }
@@ -181,13 +187,22 @@ export default function AssignmentDashboard() {
     }
   };
 
-  if (!assignment || loading) {
-    return (
-      <div className="w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto">
-        <Spinner color="primary" size="lg" />
-      </div>
-    );
-  }
+  const checkSubmissionStatus = async () => {
+    if (assignmentID && session?.user?.userID && studentID) {
+      try {
+        const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${studentID}`);
+        if (!response.ok) throw new Error('Failed to check submission status');
+
+        const data = await response.json();
+        setIsSubmitted(data.isSubmitted);
+        setSubmittedFileName(data.fileName);
+        setIsLateSubmission(data.isLate);
+      } catch (error) {
+        console.error('Error checking submission status:', error);
+        toast.error('Error checking submission status. Please refresh the page.');
+      }
+    }
+  };
 
   const isWithinSubmissionPeriod = () => {
     if (!assignment) return false;
@@ -200,10 +215,10 @@ export default function AssignmentDashboard() {
   const downloadSubmission = async (assignmentID: number, studentID: number) => {
     try {
       const response = await fetch(`/api/assignments/downloadSubmission?assignmentID=${assignmentID}&studentID=${studentID}`);
-      
+
       if (response.ok) {
         const contentType = response.headers.get('Content-Type');
-        
+
         if (contentType === 'application/json') {
           const data = await response.json();
           window.open(data.link, '_blank');
@@ -211,12 +226,12 @@ export default function AssignmentDashboard() {
           const blob = await response.blob();
           const contentDisposition = response.headers.get('Content-Disposition');
           const fileName = contentDisposition?.split('filename=')[1] || 'downloaded_file';
-          
+
           const url = window.URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.href = url;
           link.setAttribute('download', decodeURIComponent(fileName));
-          
+
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
@@ -233,6 +248,14 @@ export default function AssignmentDashboard() {
   const handleBackClick = () => router.push(`/student/course-dashboard?courseId=${courseData?.courseID}`);
 
   const handleHomeClick = () => router.push("/student/dashboard");
+
+  if (!assignment || loading) {
+    return (
+      <div className="w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto">
+        <Spinner color="primary" size="lg" />
+      </div>
+    );
+  }
 
   return (
     <>
