@@ -1,19 +1,26 @@
-# With Docker Compose
+# SprintReviews a Peer Review and Evaluation System by Sprint Runners
 
-This example contains everything needed to get a Next.js development and production environment up and running with Docker Compose.
-
-## Benefits of Docker Compose
-
-- Develop locally without Node.js or TypeScript installed ✨
-- Easy to run, consistent development environment across macOS, Windows, and Linux teams
-- Run multiple Next.js apps, databases, and other microservices in a single deployment
-- Multistage builds combined with [Output Standalone](https://nextjs.org/docs/advanced-features/output-file-tracing#automatically-copying-traced-files) outputs up to 85% smaller apps (Approximately 110 MB compared to 1 GB with create-next-app)
-- Easy configuration with YAML files 
+This file will provide all information regarding the setup process to build and run the SprintReviews application
 
 ## How to use 
 ## Prerequisites
 
-Install [Docker Desktop](https://docs.docker.com/get-docker) for Mac, Windows, or Linux. Docker Desktop includes Docker Compose as part of the installation.
+- Install [Docker Desktop](https://docs.docker.com/get-docker) for Mac, Windows, or Linux. Docker Desktop includes Docker Compose as part of the installation.
+Sure, here are the prerequisites for a Next.js, Node.js, MySQL application:
+
+**Environment Setup:**
+1. [Node.js](https://nodejs.org/en/download/prebuilt-installer/current) : You need to have Node.js installed on your system. The recommended version is 18 or later.
+2. [Git](https://git-scm.com/downloads) : Git is essential for version control. Make sure it is installed¹.
+
+**Project Setup:**
+1. [**Next.js**](https://nextjs.org/docs/getting-started/installation): You'll be using Next.js as the React framework for building the user interface.
+2. [**MySQL**](https://dev.mysql.com/downloads/): MySQL is the database used for storing data.
+3. [**mysql2**](https://www.npmjs.com/package/mysql2): mysql2 is a database client library specific to MySQL. It's the underlying connector library used by Sequelize for MySQL.
+
+**Installation:**
+1. Clone your project repository to your local system using Git.
+2. Navigate to your project directory.
+3. Install the required packages for your application using `npm install` or `yarn install` command.
 
 ## Development
 This is to be used for local server development. For Docker Deployed Server use **Production**
