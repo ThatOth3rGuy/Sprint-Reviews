@@ -1,5 +1,4 @@
 // pages/student/assignment-dashboard.tsx
-
 import { useRouter } from "next/router";
 import StudentNavbar from "../components/student-components/student-navbar";
 import { useEffect, useState } from "react";
@@ -34,7 +33,13 @@ interface Feedback {
   lastUpdated: string;
   comment: string;
   grade: number | null;
-  feedbackType: 'peer' | 'instructor';
+  feedbackType: 'instructor';
+}
+interface Comment {
+  feedbackID: number;
+  comment: string;
+  feedbackDate: string;
+  lastUpdated: string;
 }
 
 export default function AssignmentDashboard() {
@@ -53,7 +58,11 @@ export default function AssignmentDashboard() {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [submissionType, setSubmissionType] = useState<'file' | 'link'>('file');
   const [linkSubmission, setLinkSubmission] = useState('');
+
+  const [comments, setComments] = useState<Comment[]>([]);
+
   const [studentID, setStudentID] = useState<number | null>(null);
+
 
   useSessionValidation("student", setLoading, setSession);
 
@@ -92,6 +101,7 @@ export default function AssignmentDashboard() {
             }
           }
 
+
           const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${studentID}`);
           if (feedbacksResponse.ok) {
             const feedbacksData: Feedback[] = await feedbacksResponse.json();
@@ -108,6 +118,43 @@ export default function AssignmentDashboard() {
         setLoading(false);
       }
     };
+    const fetchComments = async () => {
+      if (assignmentID && session?.user?.userID) {
+        try {
+          const response = await fetch(`/api/studentComments/${assignmentID}/${session.user.userID}`);
+          if (response.ok) {
+            const commentsData: Comment[] = await response.json();
+            setComments(commentsData);
+            console.log(commentsData)
+          } else {
+            console.error('Error fetching comments');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+    };
+
+
+    fetchComments();
+    fetchData();
+  }, [router.isReady, session, assignmentID]);
+
+  const checkSubmissionStatus = async () => {
+    if (assignmentID && session?.user?.userID) {
+      
+      try {
+        const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`);
+        if (!response.ok) throw new Error('Failed to check submission status');
+        
+        const data = await response.json();
+        setIsSubmitted(data.isSubmitted);
+        setSubmittedFileName(data.fileName);
+        setIsLateSubmission(data.isLate);
+      } catch (error) {
+        console.error('Error checking submission status:', error);
+        toast.error('Error checking submission status. Please refresh the page.');
+      }
 
     if (router.isReady && session && !studentID) {
       fetchStudentID();
@@ -115,6 +162,7 @@ export default function AssignmentDashboard() {
 
     if (studentID) {
       fetchData();
+
     }
   }, [router.isReady, session, assignmentID, studentID]);
 
@@ -338,7 +386,7 @@ export default function AssignmentDashboard() {
           <div className={styles.feedbackSection}>
             <br />
             <hr />
-            <h2>Feedback</h2>
+            <h2> Feedback</h2>
             {feedbacks.length > 0 ? (
               feedbacks.map((feedback, index) => (
                 <div key={feedback.feedbackID} className={styles.assignmentsSection}>
@@ -346,13 +394,26 @@ export default function AssignmentDashboard() {
                   <p><strong>Details:</strong> {feedback.feedbackDetails}</p>
                   <p><strong>Comment:</strong> {feedback.comment}</p>
                   <p><strong>Date:</strong> {new Date(feedback.feedbackDate).toLocaleString()}</p>
-                  <p><strong>Grade:</strong> 0</p> {/* Placeholder grade */}
+                  <p><strong>Grade:</strong> {feedback.grade ?? 'Not graded yet'}</p>
                 </div>
               ))
             ) : (
               <p>No feedback available yet.</p>
             )}
           </div>
+          <div className={styles.commentsSection}>
+          <h2>Comments</h2>
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              <div key={comment.feedbackID} className={styles.comment}>
+                <p>{comment.comment}</p>
+                <p>Date: {new Date(comment.feedbackDate).toLocaleString()}</p>
+              </div>
+            ))
+          ) : (
+            <p>No comments available yet.</p>
+          )}
+        </div>
         </div>
       </div>
     </>
