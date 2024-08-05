@@ -92,7 +92,7 @@ const DownloadSubmission: React.FC<DownloadSubmissionProps> = ({ studentID, assi
               {fileData.fileType === 'text/plain' && (
                 <iframe src={fileData.uri} width="100%" height="600px"></iframe>
               )}
-              {fileData.fileType === 'application/zip' && (
+              {(fileData.fileType === 'application/zip' || fileData.fileType === 'application/x-zip-compressed') && (
                 <div>
                   <p>Zip file uploaded. Click the button below to download:</p>
                   <Button onClick={handleDownload} variant='flat'>Download</Button>
