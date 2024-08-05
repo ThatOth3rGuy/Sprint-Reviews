@@ -41,7 +41,8 @@ interface Submission {
   submissionID: number;
   assignmentID: number;
   studentID: number;
-  fileName: string;
+  fileNames: string[];
+  links: string[];
   submissionDate: string;
   autoGrade: number;
   grade: number;
@@ -201,7 +202,16 @@ export default function AssignmentDashboard() {
                 deadline={new Date(assignment.deadline).toLocaleString() || "No deadline set"}
                 allowedFileTypes={assignment.allowedFileTypes}
             />
-            <p>Download: <DownloadSubmission assignmentID={assignment.assignmentID} studentID={Number(studentID)}></DownloadSubmission></p>
+            <div className="flex justify-between items-center my-2">
+              <p><DownloadSubmission assignmentID={assignment.assignmentID} studentID={Number(studentID)}></DownloadSubmission></p>
+            <div className="flex items-center">
+              <p className="text-primary-900 text-large font-bold my-2 mx-3 p-1">
+            {submission?.grade ? 'Adjusted Grade:' : 'Average Grade:'} {submission?.grade ?? submission?.autoGrade}
+          </p><Button variant="flat" color="warning" onClick={handleEditGrade}>Edit Grade</Button>
+            </div>
+            
+            </div>
+            
             </>
             
           )}
@@ -212,7 +222,7 @@ export default function AssignmentDashboard() {
                   ? `${submission?.studentName} - Assignment Submitted Late`
                   : `${submission?.studentName} - Assignment Submitted`}
               </p>
-              {submission.fileName && <p className="text-left text-small">Submitted file: {submission.fileName}</p>}
+              {/* {submission.fileName && <p className="text-left text-small">Submitted file: {submission.fileName}</p>} */}
             </div>
           ) : (
             <p className="text-primary-900 text-large font-bold bg-danger-500 my-2 p-1">{submission?.studentName} - Assignment Not Submitted</p>
@@ -233,11 +243,7 @@ export default function AssignmentDashboard() {
               <p>No feedback available yet.</p>
             )}
           </div>
-          <p className="text-primary-900 text-large font-bold bg-primary-100 my-2 p-1">
-            {submission?.grade ? 'Adjusted Grade:' : 'Average Grade:'} {submission?.grade ?? submission?.autoGrade}
-            <br />
-            <Button className="text-primary-900 text-small font-bold bg-primary-200 my-2 p-0.5" onClick={handleEditGrade}>Edit Grade</Button>
-          </p>
+          
         </div>
       </div>
       <Modal
