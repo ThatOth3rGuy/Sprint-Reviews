@@ -114,6 +114,16 @@ test.describe('Instructor Individual Assignment View', () => {
     // Verify the updated details are displayed
     await expect(page.locator('h1')).toHaveText('New Assignment Title');
     await expect(page.locator('text=New Assignment Description')).toBeVisible();
+
+    // Edit details back to original
+    await page.click('text=Edit Assignment');
+    await expect(modal).toBeVisible();
+    await page.locator('input[aria-label="Enter new title"]').fill('Assignment 1');
+    await page.locator('textarea[placeholder="Assignment Description"]').fill('Description for assignment 1');
+    await page.locator('input[aria-label=" "][type="datetime-local"]').first().fill('2024-12-30T23:59');
+    await page.locator('input[aria-label=" "][type="datetime-local"]').nth(1).fill('2024-12-31T23:59');
+    await page.locator('input[aria-label=" "][type="datetime-local"]').last().fill('2025-01-01T23:59');
+    await page.click('button:has-text("Update")');
   });
 
   test('should display error when updating assignment fails', async ({ page }) => {
