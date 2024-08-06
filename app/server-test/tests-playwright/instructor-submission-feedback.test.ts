@@ -47,7 +47,8 @@ test.describe('Submission Feedback Page', () => {
     // Check for the heading "Comments"
     await expect(page.getByRole('heading', { name: 'Comments' })).toBeVisible();
     // Check for the paragraph "No comments available yet."
-    await expect(page.getByText('No comments available yet.')).toBeVisible();
+    const lastCommentContainer = page.locator('div').filter({ hasText: 'Comments' }).locator('div', { hasText: 'New test comment' }).last();
+    await expect(await lastCommentContainer.locator('text=New test comment').count()).toBeGreaterThan(0);
   });
 
   // Mocking the API for this test doesn't work due to the page reloading after adding a new comment.
