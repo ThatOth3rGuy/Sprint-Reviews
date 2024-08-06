@@ -1,6 +1,4 @@
-// instructor-dashboard.test.ts
 import { test, expect } from '@playwright/test';
-import { time } from 'console';
 
 const baseURL = 'http://localhost:3001';
 
@@ -33,37 +31,41 @@ test.describe('Instructor Dashboard Page', () => {
 
   test('should display assignment types checkboxes', async ({ page }) => {
     await expect(page.getByText('All Assignments', { exact: true })).toBeVisible();
-    await expect(page.getByText('Peer Reviews', { exact: true })).toBeVisible();
-    await expect(page.getByText('Peer Evaluations', { exact: true })).toBeVisible();
+    await expect(page.getByLabel('Individual Assignments')).toBeVisible();
+    await expect(page.getByLabel('Group Assignments')).toBeVisible();
+    await expect(page.getByLabel('Peer Reviews')).toBeVisible();
   });
 
   test('should display assignments section', async ({ page }) => {
-    await expect(page.getByText('Assignments Created', { exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Individual Assignments' })).toBeVisible();
 
-    // Wait for assignments to load
-    await page.waitForSelector('.instructor-components_outerCard__MgHD4', { state: 'attached'});
-
-    // Check if assignments are loaded or "No assignments found" message is displayed
     const assignmentsLoaded = await page.locator('.instructor-components_outerCard__MgHD4').count();
     if (assignmentsLoaded > 0) {
       await expect(page.locator('.instructor-components_outerCard__MgHD4').first()).toBeVisible();
     } else {
-      await expect(page.getByText('No assignments found for this course', { exact: true })).toBeVisible();
+      await expect(page.locator('.instructor-course-dashboard_courseCard__H73iH').filter({ hasText: 'No individual assignments found for this course' })).toBeVisible();
+    }
+  });
+
+  test('should display group assignments section', async ({ page }) => {
+    await expect(page.getByRole('heading', { name: 'Group Assignments' })).toBeVisible();
+
+    const groupAssignmentsLoaded = await page.locator('.instructor-components_outerCard__MgHD4').count();
+    if (groupAssignmentsLoaded > 0) {
+      await expect(page.locator('.instructor-components_outerCard__MgHD4').first()).toBeVisible();
+    } else {
+      await expect(page.locator('.instructor-course-dashboard_courseCard__H73iH').filter({ hasText: 'No group assignments found for this course' })).toBeVisible();
     }
   });
 
   test('should display peer reviews section', async ({ page }) => {
-    await expect(page.getByText('Peer Reviews Created', { exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Peer Reviews' })).toBeVisible();
 
-    // Wait for peer reviews to load
-    await page.waitForSelector('.instructor-components_outerCard__MgHD4', { state: 'attached'});
-
-    // Check if peer reviews are loaded or "No peer review assignments found" message is displayed
     const peerReviewsLoaded = await page.locator('.instructor-components_outerCard__MgHD4').count();
     if (peerReviewsLoaded > 0) {
       await expect(page.locator('.instructor-components_outerCard__MgHD4').first()).toBeVisible();
     } else {
-      await expect(page.getByText('No peer review assignments found for this course', { exact: true })).toBeVisible();
+      await expect(page.locator('.instructor-course-dashboard_courseCard__H73iH').filter({ hasText: 'No peer reviews found for this course' })).toBeVisible();
     }
   });
 
@@ -110,7 +112,7 @@ test.describe('Instructor Dashboard Page', () => {
 
   test('should display the correct navbar based on user role', async ({ page }) => {
     // Wait for either navbar to be visible
-    await page.waitForSelector('nav:has-text("Instructor"), nav:has-text("Admin")', { state: 'visible'});
+    await page.waitForSelector('nav:has-text("Instructor"), nav:has-text("Admin")', { state: 'visible' });
 
     // Check for instructor navbar
     const instructorNavbar = await page.locator('nav:has-text("Instructor")').count();
@@ -125,17 +127,17 @@ test.describe('Instructor Dashboard Page', () => {
   test('should update course name', async ({ page }) => {
     // Open the Edit Course Name modal
     await page.click('text=Edit Course Name');
-  
+
     // Input a new course name
     const newCourseName = 'New Course Name';
     await page.fill('input[aria-label="Enter New Course Name"]', newCourseName);
-  
+
     // Submit the form
     await page.click('button:has-text("Update")');
-  
+
     // Wait for the modal to close
     await page.waitForSelector('.modal-content', { state: 'hidden' });
-  
+
     // Verify that the course name has been updated
     await page.waitForTimeout(250);
     const courseName = await page.locator('h1').innerText();
