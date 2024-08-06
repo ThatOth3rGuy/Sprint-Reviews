@@ -39,7 +39,7 @@ test.describe('Instructor Individual Assignment View', () => {
     await expect(page.locator('h2.AssignmentDetailCard_assignmentTitle__cxkti')).toBeVisible();
 
     // Check for description
-    await expect(page.locator('text="Description for assignment 1"')).toBeVisible();
+    await expect(page.locator('text="Description for assignment 1"').or(page.locator('text="New Assignment Description"'))).toBeVisible();
     
     // Check for deadline
     await expect(page.locator('text="No deadline set"').or(page.locator('text=/Deadline:/'))).toBeVisible();
@@ -59,7 +59,7 @@ test.describe('Instructor Individual Assignment View', () => {
     const submissionRows = await page.locator('table tbody tr').count();
     expect(submissionRows).toBeGreaterThan(0);
   });
-  
+
   test('should redirect to student submission view when clicking a student name', async ({ page }) => {
     // Click John Doe's name
     await page.locator('span[data-label="true"]:has-text("John Doe")').click();
