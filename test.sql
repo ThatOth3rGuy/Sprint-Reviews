@@ -341,3 +341,22 @@ INSERT INTO course_groups (groupID, studentID, courseID) VALUES
 (2, 123470, 2),
 (2, 123471, 2),
 (2, 1002, 2);
+
+-- Insert review for Assignment 1
+INSERT INTO review (assignmentID, isGroupAssignment, allowedFileTypes, startDate, endDate, deadline, anonymous) VALUES
+(1, FALSE, 'pdf,docx', '2024-07-01 00:00:00', '2024-08-01 00:00:00', '2024-08-01 23:59:59', FALSE);
+
+-- Insert review groups for Assignment 1
+INSERT INTO review_groups (studentID, assignmentID, courseID, revieweeID, isReleased) VALUES
+(1001, 1, 1, 1002, FALSE),
+(1002, 1, 1, 1001, FALSE),
+(123467, 1, 1, 123468, FALSE),
+(123468, 1, 1, 123469, FALSE),
+(123469, 1, 1, 123470, FALSE),
+(123470, 1, 1, 123471, FALSE),
+(123471, 1, 1, 123472, FALSE),
+(123472, 1, 1, 123473, FALSE),
+(123473, 1, 1, 123474, FALSE),
+(123474, 1, 1, 123475, FALSE),
+(123475, 1, 1, 123476, FALSE),
+(123476, 1, 1, 123467, FALSE);
