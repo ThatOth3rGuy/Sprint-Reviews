@@ -1,3 +1,9 @@
+/* 
+  this page is part of the view users page on the admin portal, however it is a dummy page as the actual page functionality was not implemented.
+  It was planned but not implemented due to time constraints. The page is intended to extend the display of all users on the platform, including instructors and students, and 
+  allow admin to manage user roles, which can be an extension of join requests as well. The page is added in case the  feature is to be implemented in the future.
+*/
+
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import { useState } from 'react';
