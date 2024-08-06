@@ -230,7 +230,7 @@ INSERT INTO course (courseName, isArchived, instructorID) VALUES
 
 -- Insert assignments
 INSERT INTO assignment (title, descr, rubric, startDate, endDate, deadline, groupAssignment, courseID, allowedFileTypes) VALUES
-('Assignment 1', 'Description for assignment 1', 'Rubric for assignment 1', '2024-07-01 00:00:00', '2024-08-01 00:00:00', '2024-08-01 23:59:59', FALSE, 1, 'pdf,docx'),
+('Assignment 1', 'Description for assignment 1', 'Rubric for assignment 1', '2024-07-01 00:00:00', '2124-08-01 00:00:00', '2124-08-01 23:59:59', FALSE, 1, 'pdf,docx'),
 ('Assignment 2', 'Description for assignment 2', 'Rubric for assignment 2', '2024-07-01 00:00:00', '2024-09-01 00:00:00', '2024-09-01 23:59:59', TRUE, 2, 'pdf,docx');
 
 -- Insert submissions
