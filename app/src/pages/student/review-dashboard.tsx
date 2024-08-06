@@ -320,6 +320,7 @@ export default function ReviewDashboard() {
                   Download Submitted File
                 </Button>
               )}
+              <p>{currentSubmission.studentID}</p>
               <Card>
                 <CardHeader>Review Criteria</CardHeader>
                 <Divider />

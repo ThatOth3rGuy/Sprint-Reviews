@@ -41,7 +41,14 @@ interface ReviewGroup {
   reviewers: StudentDetails[];
   groupData: any; // You may want to define a more specific type based on the actual data structure
 }
-
+interface Assignment {
+  assignmentID: number;
+  title: string;
+  descr: string;
+  deadline: string;
+  courseID: number;
+  
+}
 export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
@@ -67,13 +74,14 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   const [isEditGroupsModalOpen, setIsEditGroupsModalOpen] = useState(false);
   const [editableGroups, setEditableGroups] = useState<ReviewGroup[]>([]);
   const [selectedStudents, setSelectedStudents] = useState<{ student: StudentDetails, groupID: number, reviewerIndex: number }[]>([]);
-
+  const [assignment, setAssignment] = useState<Assignment | null>(null);
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
     if (session && session.user && session.user.userID) {
       fetchCourses(session.user.userID);
     }
+    
   }, [session]);
 
   const fetchCourses = async (instructorID: number) => {
@@ -135,9 +143,19 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
           }
         })
         .catch((error) => console.error('Error fetching group data:', error));
-    }
-  }, [review]);
 
+        fetchAssignmentData();
+    }
+   
+  }, [review]);
+const fetchAssignmentData = async () => {
+  const assignmentResponse = await fetch(`/api/assignments/${review?.assignmentID}`);
+
+  if (assignmentResponse.ok) {
+    const assignmentData: Assignment = await assignmentResponse.json();
+    setAssignment(assignmentData);
+  }
+}
   if (!review || loading) {
     return (
       <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
@@ -155,8 +173,8 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
 
   const handleBackClick = () => { //redirect to course dashboard or all assignments
     const { source } = router.query;
-    if (source === 'course') {
-      router.push(`/instructor/course-dashboard?courseId=${router.query.courseId}`);
+    if (assignment?.courseID) {
+      router.push(`/instructor/course-dashboard?courseId=${assignment?.courseID}`);
     } else {
       router.push('/instructor/dashboard');
     }
@@ -170,6 +188,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   };
   
   const handleUpdateGroups = async (randomize = false) => {
+    const { source, courseId } = router.query;
     const dataToSend = randomize ? null : editableGroups.map(group => ({
       revieweeID: group.reviewee?.studentID,
       reviewers: group.reviewers.map(reviewer => reviewer.studentID)
@@ -185,7 +204,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
           table: 'reviewGroups',
           data: {
             assignmentID: review.assignmentID,
-            courseID: 2,
+            courseID: assignment?.courseID,
             groups: dataToSend,
             reviewsPerAssignment,
             randomize,
@@ -397,7 +416,7 @@ const handleAssignmentsUpdate = async () => {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-            <BreadcrumbItem onClick={handleBackClick}>{router.query.source === 'course' ? (courseName || 'Course Dashboard') : 'Course Dashboard'}</BreadcrumbItem>
+            <BreadcrumbItem onClick={handleBackClick}>{assignment?.courseID ? (courseName || 'Course Dashboard') : ' Dashboard'}</BreadcrumbItem>
             <BreadcrumbItem>{review.reviewID ? `Review ${review.assignmentName}` : "Review"}</BreadcrumbItem>
           </Breadcrumbs>
         </div>
