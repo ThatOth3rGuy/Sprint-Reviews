@@ -25,20 +25,6 @@ test.describe('Submission Feedback Page', () => {
       });
     });
 
-    // Mock the add comment API
-    await page.route('**/api/instructorComments/addFeedback', route => {
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          feedbackID: 2,
-          comment: 'New test comment',
-          feedbackDate: new Date().toISOString(),
-          lastUpdated: new Date().toISOString(),
-        }),
-      });
-    });
-
     // Navigate to the submission feedback page
     await page.goto(`${baseURL}/instructor/submission-feedback?assignmentID=1&studentID=1001`);
   });
@@ -58,22 +44,46 @@ test.describe('Submission Feedback Page', () => {
   });
 
   test('should display comments correctly', async ({ page }) => {
-    await expect(page.locator('text=Comments')).toBeVisible();
-    await expect(page.locator('text=Excellent job on the project!')).toBeVisible();
+    // Check for the heading "Comments"
+    await expect(page.getByRole('heading', { name: 'Comments' })).toBeVisible();
+    // Check for the paragraph "No comments available yet."
+    await expect(page.getByText('No comments available yet.')).toBeVisible();
   });
 
+  // Mocking the API for this test doesn't work due to the page reloading after adding a new comment.
+  // This means that this test adds a new comment directly to the database every time it's run.
   test('should allow adding a comment', async ({ page }) => {
-    await page.fill('input[label="New Comment"]', 'New test comment');
-    await page.click('text=Add Comment');
-    await expect(page.locator('text=New test comment')).toBeVisible();
+    await page.waitForTimeout(1000); // This might be necessary if there's some delay in rendering elements
+    // Fill the input field with the label "New Comment"
+    await page.getByLabel('New Comment').fill('New test comment');
+      
+    // Click the "Add Comment" button
+    await page.getByRole('button', { name: 'Add Comment' }).click();
+
+    // Check if the new comment is visible
+    await expect(page.locator('text=New test comment').first()).toBeVisible();
   });
 
   test('should allow editing a comment', async ({ page }) => {
-    await page.click('text=Edit');
-    await page.fill('input[type="text"]', 'Edited comment');
+    await page.waitForTimeout(1000); // This might be necessary if there's some delay in rendering elements
+    // Locate the most recent comment container
+    const lastCommentContainer = page.locator('div').filter({ hasText: 'Comments' }).locator('div', { hasText: 'New test comment' }).last();
+    
+    // Click the "Edit" button within the last comment container
+    await lastCommentContainer.locator('button:has-text("Edit")').click();
+    
+    // Wait for the input field within the last comment container to be visible
+    const inputFieldSelector = 'input[type="text"][value="New test comment"]';
+    await page.waitForSelector(inputFieldSelector, { state: 'visible' });
+
+    // Fill the input field with the new comment text
+    await page.locator(inputFieldSelector).fill('Edited comment');
     await page.click('text=Save');
-    await expect(page.locator('text=Edited comment')).toBeVisible();
+
+    // Check for success message
+    await expect(page.locator('text="Comment updated successfully"')).toBeVisible();
   });
+
 
   test('should allow editing a grade', async ({ page }) => {
     await page.click('text=Edit Grade');

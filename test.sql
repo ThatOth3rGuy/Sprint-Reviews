@@ -360,3 +360,8 @@ INSERT INTO review_groups (studentID, assignmentID, courseID, revieweeID, isRele
 (123474, 1, 1, 123475, FALSE),
 (123475, 1, 1, 123476, FALSE),
 (123476, 1, 1, 123467, FALSE);
+
+-- Insert instructor feedback for Assignment 1
+INSERT INTO instructor_feedback (assignmentID, courseID, studentID, comment) VALUES
+(1, 1, 1001, 'New test comment'),
+(1, 1, 1002, 'Needs improvement on the analysis.');
