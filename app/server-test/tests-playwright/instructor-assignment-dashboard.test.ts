@@ -124,6 +124,9 @@ test.describe('Instructor Individual Assignment View', () => {
     await page.locator('input[aria-label=" "][type="datetime-local"]').nth(1).fill('2024-12-31T23:59');
     await page.locator('input[aria-label=" "][type="datetime-local"]').last().fill('2025-01-01T23:59');
     await page.click('button:has-text("Update")');
+    // Verify the updated details are displayed
+    await expect(page.locator('h1')).toHaveText('Assignment 1');
+    await expect(page.locator('text=Description for assignment 1')).toBeVisible();
   });
 
   test('should display error when updating assignment fails', async ({ page }) => {
