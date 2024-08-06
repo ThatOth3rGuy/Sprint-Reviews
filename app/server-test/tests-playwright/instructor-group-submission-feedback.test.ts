@@ -116,4 +116,24 @@ test.describe('Group Submission Feedback Page', () => {
     // Verify the updated grade
     await expect(page.locator('text=Adjusted Grade: 95')).toBeVisible();
   });
+
+    // Check that editing and saving grade works correctly
+    test('editing grade for un-submitted assignment displays error', async ({ page }) => {
+      // Navigate to the group submission feedback page for an unsubmitted assignment
+      await page.goto(`${baseURL}/instructor/group-submission-feedback?assignmentID=2&studentID=123467`);
+      
+      // Click the Edit Grade button
+      await page.click('text=Edit Grade');
+      
+      // Fill in new grade
+      const input = page.locator('input[type="number"]');
+      await input.fill('95');
+      
+      // Click Save button
+      await page.click('button:has-text("Save")');
+      
+      // Check for success message
+      await page.waitForSelector('text=Cannot update grade for an un-submitted assignment');
+      await expect(page.locator('text=Cannot update grade for an un-submitted assignment')).toBeVisible();
+    });
 });
