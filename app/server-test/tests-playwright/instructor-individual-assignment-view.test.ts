@@ -59,7 +59,14 @@ test.describe('Instructor Individual Assignment View', () => {
     const submissionRows = await page.locator('table tbody tr').count();
     expect(submissionRows).toBeGreaterThan(0);
   });
+  
+  test('should redirect to student submission view when clicking a student name', async ({ page }) => {
+    // Click John Doe's name
+    await page.locator('span[data-label="true"]:has-text("John Doe")').click();
 
+    // Check for the student submission view
+    await expect(page).toHaveURL(`${baseURL}/instructor/submission-feedback?assignmentID=1&studentID=1001`);
+  });
 
   // This test is failing due to a bug where the page will get stuck on the loading spinner when a fetch fails
   test('should handle error when assignment data fetch fails', async ({ page }) => {
