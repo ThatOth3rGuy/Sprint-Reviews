@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS review_criteria;
 DROP TABLE IF EXISTS review;
 DROP TABLE IF EXISTS review_groups;
 DROP TABLE IF EXISTS course_groups;
+DROP TABLE IF EXISTS instructor_feedback;
 
 -- Table for storing users, which are separated into students and instructors
 CREATE TABLE IF NOT EXISTS user (
@@ -154,8 +155,7 @@ CREATE TABLE IF NOT EXISTS review (
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
 
-
--- Table for storing student notification preferences --
+-- Table for storing student notification preferences
 CREATE TABLE IF NOT EXISTS student_notifications (
     studentID INT,
     assignmentNotification BOOLEAN DEFAULT TRUE,
@@ -166,26 +166,21 @@ CREATE TABLE IF NOT EXISTS student_notifications (
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE CASCADE
 );
 
-
--- Table for storing connected submissions for students to peer review --
-
+-- Table for storing connected submissions for students to peer review
 CREATE TABLE IF NOT EXISTS review_groups  (
     studentID INT,
     assignmentID INT,
     courseID INT,
     revieweeID INT,
     isReleased BOOLEAN DEFAULT false,
-
-    PRIMARY KEY (studentID, submissionID, assignmentID),
-
+    PRIMARY KEY (studentID, revieweeID, assignmentID),
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID),
     FOREIGN KEY (revieweeID) REFERENCES student(studentID)
 );
 
-
--- Table for storing course specific groups --
+-- Table for storing course specific groups
 CREATE TABLE IF NOT EXISTS course_groups (
     groupID INT,
     studentID INT,
@@ -193,6 +188,20 @@ CREATE TABLE IF NOT EXISTS course_groups (
     PRIMARY KEY (groupID, studentID, courseID),
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID)
+);
+
+-- Table for storing instructor feedback on student submissions
+CREATE TABLE IF NOT EXISTS instructor_feedback (
+    feedbackID INT AUTO_INCREMENT PRIMARY KEY,
+    assignmentID INT NOT NULL,
+    courseID INT NOT NULL,
+    studentID INT NOT NULL,
+    feedbackDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    lastUpdated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    comment TEXT,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
+    FOREIGN KEY (courseID) REFERENCES course(courseID),
+    FOREIGN KEY (studentID) REFERENCES student(studentID)
 );
 
 -- Insert users
@@ -237,9 +246,9 @@ INSERT INTO review_criteria (assignmentID, criterion, maxMarks) VALUES
 (2, 'Criterion 2', 25);
 
 -- Insert feedback
-INSERT INTO feedback (submissionID, assignmentID, feedbackDetails, feedbackDate, lastUpdated, comment, reviewerID) VALUES
-(1, 1, 'Great work!', '2024-07-03 12:00:00', '2024-07-03 12:00:00', 'Excellent job on the project!', 1002),
-(2, 2, 'Needs improvement.', '2024-07-04 12:00:00', '2024-07-04 12:00:00', 'The project could use more detailed analysis.', 1001);
+INSERT INTO feedback (revieweeID, assignmentID, feedbackDetails, feedbackDate, lastUpdated, comment, reviewerID) VALUES
+(1001, 1, 'Great work!', '2024-07-03 12:00:00', '2024-07-03 12:00:00', 'Excellent job on the project!', 1002),
+(1002, 2, 'Needs improvement.', '2024-07-04 12:00:00', '2024-07-04 12:00:00', 'The project could use more detailed analysis.', 1001);
 
 -- Insert enrollment
 INSERT INTO enrollment (studentID, courseID) VALUES
