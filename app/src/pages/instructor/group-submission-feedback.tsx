@@ -121,6 +121,7 @@ export default function AssignmentDashboard() {
           }
           const data: Submission = await response.json();
           setSubmission(data);
+          console.log('Submission data: ', data);
           setNewGrade(data.grade ?? data.autoGrade);
         } catch (error) {
           console.error('Error checking submission status:', error);
