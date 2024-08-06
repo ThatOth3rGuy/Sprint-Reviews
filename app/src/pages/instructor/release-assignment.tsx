@@ -20,7 +20,11 @@ import toast from "react-hot-toast";
 // Define the structure for assignment and Rubric items
 interface Assignment {
   assignmentID: number;
+  linkedAssignmentID: string;
   title: string;
+  description: string;
+  deadline: string;
+  groupAssignment: boolean;
 }
 
 interface RubricItem {
@@ -58,15 +62,15 @@ const ReleaseAssignment: React.FC = () => {
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
+   
   // Fetch assignments and students in the course when the component mounts
   useEffect(() => {
-    if (session && session.user) {
-      fetchAssignments(session.user.userID);
+    if ( courseId) {
+      fetchAssignments(courseId as string);
       fetchStudents(courseId as string);
       fetchCourseName(courseId as string);
     }
-  }, [session]);
+  }, [session,courseId]);
 
   const fetchCourseName = async (courseId: string) => {
     try {
@@ -81,17 +85,19 @@ const ReleaseAssignment: React.FC = () => {
   };
 
   // Function to fetch assignments
-  const fetchAssignments = async (userID: string) => {
+  const fetchAssignments = async (courseID: string | string[]) => {
     try {
-      const response = await fetch(`/api/getAllAssignmentsInstructor?userID=${userID}`);
+      const response = await fetch(
+        `/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`
+      );
       if (response.ok) {
         const data = await response.json();
-        setAssignments(data.assignments);
+        setAssignments(data.courses);
       } else {
-        console.error('Failed to fetch assignments');
+        console.error("Failed to fetch courses");
       }
     } catch (error) {
-      console.error('Error fetching assignments:', error);
+      console.error("Error fetching courses:", error);
     }
   };
   // Function to fetch students in the course

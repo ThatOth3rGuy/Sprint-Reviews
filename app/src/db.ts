@@ -4,6 +4,7 @@ import fs from 'fs/promises';
 import config from './dbConfig'; // Import the database configuration from dbConfig.ts
 import { JsonObject } from '@prisma/client/runtime/library';
 import { randomizePeerReviewGroups } from './pages/api/addNew/randomizationAlgorithm';
+import nodemailer from 'nodemailer';
 
 let dbConfig;
 
@@ -1221,18 +1222,62 @@ export async function updateReviewDates(reviewID: number, startDate: string, end
 }
 
 //Update isReleased when startDate = NOW() --> for auto-releaseing an assignment
-export async function autoRelease(assignmentID : string) {
-  const sql = `UPDATE review_groups SET isReleased = true WHERE assignmentID = ? AND startDate = NOW()`;
-
+export async function autoRelease(assignmentID: number) {
   try {
-    const result = await query(sql, [assignmentID]);
-    if (result.affectedRows === 0) {
-      throw new Error(`No review groups found for assignmentID: ${assignmentID} with startDate matching current date.`);
+    // Release the reviews
+    await query('UPDATE review_groups SET isReleased = TRUE WHERE assignmentID = ?', [assignmentID]);
+
+    // Fetch assignment and course details
+    const [assignment] = await query('SELECT title AS assignmentName, courseID FROM assignment WHERE assignmentID = ?', [assignmentID]);
+    const [course] = await query('SELECT courseName FROM course WHERE courseID = ?', [assignment.courseID]);
+
+    // Fetch all students involved in this assignment
+    const students = await query(`
+      SELECT DISTINCT u.userID, u.firstName, u.email
+      FROM user u
+      JOIN student s ON u.userID = s.userID
+      JOIN review_groups rg ON s.studentID = rg.studentID OR s.studentID = rg.revieweeID
+      WHERE rg.assignmentID = ?
+    `, [assignmentID]);
+
+    // Set up email transporter
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    // Send emails to all students
+    for (const student of students) {
+      let mailOptions = {
+        from: process.env.EMAIL_USERNAME,
+        to: student.email,
+        subject: 'Assignment Released for Review',
+        html: `<div style="padding: 5px;">
+                <h2>Sprint Reviews Assignment Notification</h2>
+                <hr />
+                <div>
+                  <p>Hello ${student.firstName},</p>
+                  <p>The assignment "${assignment.assignmentName}" in ${course.courseName} has been released for peer review. Please log in to the Sprint Reviews platform to start your review process.</p>
+                  <p>Best regards,</p>
+                  <p>The Sprint Reviews Team :)</p>
+                </div>
+              </div>`
+      };
+
+      try {
+        await transporter.sendMail(mailOptions);
+        console.log(`Email sent successfully to ${student.email}`);
+      } catch (error) {
+        console.error(`Error sending email to ${student.email}:`, error);
+      }
     }
-    console.log(`Assignment ${assignmentID} auto-released successfully.`);
+
+    console.log(`Assignment ${assignmentID} auto-released successfully and emails sent`);
   } catch (error) {
-    console.error(`Error auto-releasing assignment ${assignmentID}:`, error);
-    throw error;
+    console.error(`Failed to auto-release assignment ${assignmentID}:`, error);
   }
 }
 

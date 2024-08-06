@@ -58,7 +58,7 @@ export default function ReviewDashboard() {
   const { assignmentID } = router.query;
   const [error, setError] = useState<string | null>(null);
   const [deadlinePassed, setDeadlinePassed] = useState<boolean>(false);
-  const [autoRelease, setAutoRelease] = useState(false);
+  const [autoReleaseDate, setAutoReleaseDate] = useState<Date | null>(null);
   useSessionValidation('student', setLoading, setSession);
 
   useEffect(() => {
@@ -86,7 +86,7 @@ export default function ReviewDashboard() {
           setAssignment(assignmentData);
           setReviewCriteria(reviewData.reviewCriteria);
           const reviewSubmissions = await Promise.all(reviewData.submissions.map(async (submission: Submission) => {
-            const submissionResponse = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${submission.studentID}`);
+            const submissionResponse = await fetch(`/api/submissions/checkPRSubmission?assignmentID=${assignmentID}&userID=${userID}`);
             const submissionData = await submissionResponse.json();
             return {
               ...submission,
@@ -251,38 +251,6 @@ export default function ReviewDashboard() {
     return submission.isBefore(dueDate) ? 'Submitted on time' : 'Submitted late';
   };
 
-  const downloadSubmission = async (assignmentID: number, studentID: number) => {
-    try {
-      const response = await fetch(`/api/assignments/downloadSubmission?assignmentID=${assignmentID}&studentID=${studentID}`);
-      if (response.ok) {
-        const contentType = response.headers.get('Content-Type');
-
-        if (contentType === 'application/json') {
-          const data = await response.json();
-          window.open(data.link, '_blank');
-        } else {
-          const blob = await response.blob();
-          const contentDisposition = response.headers.get('Content-Disposition');
-          const fileName = contentDisposition?.split('filename=')[1] || 'downloaded_file';
-
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', decodeURIComponent(fileName));
-
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
-      } else {
-        throw new Error('Failed to download submission');
-      }
-    } catch (error) {
-      console.error('Error downloading submission:', error);
-      toast.error('Error downloading submission. Please try again.');
-    }
-  };
-
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -315,12 +283,6 @@ export default function ReviewDashboard() {
                   <p>Submission Deadline: {new Date(currentSubmission.deadline).toLocaleString()}</p>
                 </CardBody>
               </Card>
-              {currentSubmission.fileName && (
-                <Button onClick={() => downloadSubmission(Number(assignmentID), Number(session.user.userID))}>
-                  Download Submitted File
-                </Button>
-              )}
-              <p>{currentSubmission.studentID}</p>
               <Card>
                 <CardHeader>Review Criteria</CardHeader>
                 <Divider />
@@ -358,7 +320,7 @@ export default function ReviewDashboard() {
                   ) : (
                     <p>Student has not submitted the assignment yet</p>
                   )}
-                  {!deadlinePassed && currentSubmission.isSubmitted && (
+                  {!deadlinePassed && currentSubmission.isSubmitted && checkSubmissionStatus(currentSubmission.submissionDate, currentSubmission.deadline) &&(
                     <Button className={"color=primary"} onClick={handleSubmitAllReviews}>
                       Submit All Reviews
                     </Button>

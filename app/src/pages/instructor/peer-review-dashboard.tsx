@@ -231,26 +231,31 @@ const fetchAssignmentData = async () => {
     }
   };
 
-const handleRelease = async () => {
-  try {
-    const response = await fetch('/api/reviews/releaseReviews', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ assignmentID: review?.assignmentID }),
-    });
-
-    if (response.ok) {
-      toast.success("Review Released successfully!");
-      router.back();
-    } else {
-      console.error('Failed to release assignment for reviews');
+  const handleRelease = async () => {
+    if (autoRelease) {
+      toast.error("Auto-release is scheduled. Cannot release immediately.");
+      return;
     }
-  } catch (error) {
-    console.error('Error releasing assignment for reviews:', error);
-  }
-};
+  
+    try {
+      const response = await fetch('/api/reviews/releaseReviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ assignmentID: review?.assignmentID }),
+      });
+  
+      if (response.ok) {
+        toast.success("Review Released successfully!");
+        router.back();
+      } else {
+        console.error('Failed to release assignment for reviews');
+      }
+    } catch (error) {
+      console.error('Error releasing assignment for reviews:', error);
+    }
+  };
 
 //handle auto-release of assignment on start date
 const handleAutoReleaseChange = async (checked: boolean) => { 
@@ -275,6 +280,7 @@ const handleAutoReleaseChange = async (checked: boolean) => {
     }
   }
 };
+
 
 
 const handleEditAssignmentClick = () => {
@@ -462,8 +468,10 @@ const handleAssignmentsUpdate = async () => {
             ))}
           </div>
           <div className={styles.notificationsSection}>
+          <label htmlFor="autoRelease">Auto-Release on Start Date:</label>
           <Checkbox
           isSelected={autoRelease}
+          id="autoRelease"
           onChange={(e) => handleAutoReleaseChange(e.target.checked)}
         >
           Auto Release on Start Date

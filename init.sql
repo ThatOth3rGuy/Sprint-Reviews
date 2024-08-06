@@ -177,6 +177,7 @@ CREATE TABLE IF NOT EXISTS review_groups  (
     courseID INT,
     revieweeID INT,
     isReleased BOOLEAN DEFAULT false,
+    autoReleaseDate DATETIME,
     PRIMARY KEY (studentID, revieweeID, assignmentID),
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
