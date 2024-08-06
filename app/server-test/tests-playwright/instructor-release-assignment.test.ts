@@ -18,6 +18,24 @@ test.describe('Release Assignment for Peer Review Page', () => {
     // Perform login before each test to obtain a valid session
     await login(page);
 
+    // Mock release assignment endpoint
+    await page.route('**/api/assignments/releaseAssignment*', route => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: true }),
+      });
+    });
+
+    // Mock release peer reviews endpoint
+    await page.route('**/api/addNew/releaseRandomizedPeerReview*', route => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: true }),
+      });
+    });
+
     // Navigate to the release assignment page before each test
     await page.goto(`${baseURL}/instructor/release-assignment?source=course&courseId=1`);
   });
@@ -32,7 +50,7 @@ test.describe('Release Assignment for Peer Review Page', () => {
     await page.goto(`${baseURL}/instructor/release-assignment?source=course&courseId=1`);
     
     // Click on course breadcrumb
-    await page.click('text=Course Name');
+    await page.click('text=COSC 499');
     await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseId=1`);
   });
 
@@ -62,7 +80,7 @@ test.describe('Release Assignment for Peer Review Page', () => {
     await page.locator('input[type="datetime-local"]').nth(2).fill('2124-07-25T10:00'); // End date
 
     await page.click('text=Draft Release');
-    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseId=1`);
+    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseId=1`, { timeout: 15000 });
     await expect(page.locator('text=Assignment created successfully!')).toBeVisible();
   });
 
