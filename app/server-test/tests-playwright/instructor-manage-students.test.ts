@@ -1,13 +1,10 @@
-// manageStudents.test.ts
 import { test, expect } from '@playwright/test';
 import path from 'path';
 import fs from 'fs';
-import { time } from 'console';
 
 const baseURL = 'http://localhost:3001';
 
 // Login function to obtain a valid session
-// Login information comes from the database
 async function login(page: any) {
   await page.goto(`${baseURL}/instructor/login`);
   await page.waitForSelector('input[type="email"]', { state: 'visible' });
@@ -17,7 +14,6 @@ async function login(page: any) {
   await page.click('text=Sign In');
   await page.waitForNavigation();
 }
-
 
 test.describe('Manage Students Page', () => {
 
@@ -36,7 +32,6 @@ test.describe('Manage Students Page', () => {
   });
 
   // Check that enrolling a new student individually, and removing them works
-  // Combinging to tests into one to avoid databaes issues
   test('should enroll and remove a new student', async ({ page }) => {
     // Click on 'Enroll Individual Student'
     await page.click('text=Enroll Individual Student');
@@ -48,8 +43,7 @@ test.describe('Manage Students Page', () => {
     await page.getByRole('button', { name: 'Enroll' }).click({ force: true });
 
     // Verify that the student is enrolled successfully
-    await expect(page.getByText('Jack Black', { exact: true })).toBeVisible();
-
+    await expect(page.getByText('Uma Taylor', { exact: true })).toBeVisible();
 
     // Click on 'Remove Student'
     await page.click('text=Remove Student');
@@ -84,7 +78,7 @@ test.describe('Manage Students Page', () => {
   });
 
   // Check that enrolling a new student individually works
-  test('should display error message when enrolling non-existant student', async ({ page }) => {
+  test('should display error message when enrolling non-existent student', async ({ page }) => {
     // Click on 'Enroll Individual Student'
     await page.click('text=Enroll Individual Student');
     
