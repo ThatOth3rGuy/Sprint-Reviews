@@ -4,14 +4,14 @@ const baseURL = 'http://localhost:3001';
 
 // Function to mock API responses
 async function mockAPIResponses(page: any) {
-  await page.route('**/api/addNew/addInstructor', route => {
+  await page.route('**/api/addNew/addInstructor', (route: { fulfill: (arg0: { status: number; body: string; }) => void; }) => {
     route.fulfill({
       status: 200,
       body: JSON.stringify({ success: true })
     });
   });
 
-  await page.route('**/api/emails/sendEmailConfirmation', route => {
+  await page.route('**/api/emails/sendEmailConfirmation', (route: { fulfill: (arg0: { status: number; body: string; }) => void; }) => {
     route.fulfill({
       status: 200,
       body: JSON.stringify({ success: true })
