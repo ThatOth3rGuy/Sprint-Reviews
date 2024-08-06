@@ -236,7 +236,7 @@ export default function AssignmentDashboard() {
                 <CardBody>
                 <h2 className={styles.assignmentTitle}>{assignment.title} - (Submitted by: {submission?.studentName})</h2>
                 <p className={styles.assignmentDescription}>{assignment.descr}</p>
-                <p className={styles.assignmentDeadline}>Deadline: {assignment.deadline}</p>
+                <p className={styles.assignmentDeadline}>Deadline: {new Date(assignment.deadline).toLocaleString()}</p>
                 </CardBody>
             </Card>
           {submission?.isSubmitted ? (
