@@ -173,6 +173,9 @@ export default function AssignmentDashboard() {
 
   const handleSaveGrade = async (newGrade: number) => {
     try {
+      if (submission?.submissionID === null) {
+        throw new Error('Cannot update grade for an un-submitted assignment');
+      }
       const response = await fetch('/api/updateTable', {
         method: 'POST',
         headers: {
@@ -186,16 +189,20 @@ export default function AssignmentDashboard() {
           },
         }),
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to update grade');
       }
-
+  
       setSubmission((prev) => prev ? { ...prev, grade: newGrade } : null);
       toast.success('Grade updated successfully');
     } catch (error) {
-      console.error('Error updating grade:', error);
-      toast.error('Error updating grade. Please try again.');
+      if ((error as Error).message === 'Cannot update grade for an un-submitted assignment') {
+        toast.error('Cannot update grade for an un-submitted assignment.');
+      } else {
+        console.error('Error updating grade:', error);
+        toast.error('Error updating grade. Please try again.');
+      }
     }
   };
 
