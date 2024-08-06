@@ -65,9 +65,13 @@ test.describe('Create Assignment Page', () => {
   test('should navigate using breadcrumbs', async ({ page }) => {
     await page.click('text=Home');
     await expect(page).toHaveURL(`${baseURL}/instructor/dashboard`);
-    await page.goto(`${baseURL}/instructor/create-assignment?courseId=1`);
-    await page.click('text=COSC 499');
-    await expect(page).toHaveURL(`${baseURL}/course-dashboard?courseId=1`);
+    
+    await page.goto(`${baseURL}/instructor/create-assignment?source=course&courseId=1`);
+    
+    // Select the breadcrumb span element by using a more specific selector
+    await page.locator('span[data-slot="item"][role="link"]:has-text("COSC 499")').click();
+    
+    await expect(page).toHaveURL(`${baseURL}/instructor/course-dashboard?courseId=1`);
   });
 
   test('should show error for past due date', async ({ page }) => {
