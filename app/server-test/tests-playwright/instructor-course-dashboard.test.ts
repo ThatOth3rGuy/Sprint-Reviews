@@ -139,7 +139,7 @@ test.describe('Instructor Dashboard Page', () => {
     await page.waitForSelector('.modal-content', { state: 'hidden' });
 
     // Verify that the course name has been updated
-    await page.waitForTimeout(250);
+    await page.waitForTimeout(1000);
     const courseName = await page.locator('h1').innerText();
     expect(courseName).toBe(newCourseName);
 
@@ -148,6 +148,9 @@ test.describe('Instructor Dashboard Page', () => {
     const oldCourseName = 'COSC 499';
     await page.fill('input[aria-label="Enter New Course Name"]', oldCourseName);
     await page.click('button:has-text("Update")');
-    await page.waitForTimeout(250); // Additional timeout to make sure the update registers
+    await page.waitForSelector('.modal-content', { state: 'hidden' });
+    await page.waitForTimeout(1000); // Additional timeout to make sure the update registers
+    const finalCourseName = await page.locator('h1').innerText();
+    expect(finalCourseName).toBe(oldCourseName);
   });
 });
