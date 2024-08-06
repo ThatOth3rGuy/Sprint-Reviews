@@ -40,11 +40,11 @@ export default function Page() {
         setCourses(data.courses);
       } else {
         toast.error('Failed to fetch courses');
-        console.error('Failed to fetch courses asdljfl;asdfl;k');
+        console.error('Failed to fetch courses');
       }
     } catch (error) {
       toast.error('Error fetching courses');
-      console.error('Error fetching courses dljaksfl;jdsal;kf:', error);
+      console.error('Error fetching courses:', error);
     }
   };
 
