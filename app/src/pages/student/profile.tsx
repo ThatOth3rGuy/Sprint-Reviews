@@ -142,7 +142,7 @@ export default function StudentProfilePage() {
           </Breadcrumbs>
         </div>
         <div className={styles.mainContent}>
-          <div className={styles.assignmentsSection}>
+          <div className={`flex-col bg-white p-[1%] w-[86%] m-[.8%] ml-auto h-[100%]`}>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardBody className="text-sm font-medium">User Profile</CardBody>
@@ -161,12 +161,10 @@ export default function StudentProfilePage() {
                   </>
                 )}
               </CardBody>
-            </Card>
-          </div>
-          <div className="w-[25%] h-[100%] flex-col p-[1%]">
+            </Card> 
             <Button color="primary" variant="ghost" className="w-[100%] m-1" onClick={handleEditClick}>Edit Profile</Button>
-            {/* <Button color="danger" variant="ghost" className="w-[100%] m-1">Delete Account</Button> */}
           </div>
+          
         </div>
       </div>
 

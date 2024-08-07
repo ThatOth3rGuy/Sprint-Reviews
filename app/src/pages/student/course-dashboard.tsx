@@ -149,7 +149,7 @@ export default function Page() {
           </Breadcrumbs>
         </div>
         <div className={styles.mainContent}>
-          <div className={styles.assignmentsSection}>
+          <div className={`flex-col bg-white p-[1%] w-[86%] m-[.8%] ml-auto h-[100%]`}>
             <CheckboxGroup
               label="Select assignment type:"
               orientation="horizontal"
@@ -266,12 +266,7 @@ export default function Page() {
             )}
 
           </div>
-          <div className={styles.notificationsSection}>
-            <h2 className="my-3">Notifications</h2>
-            <div className={styles.notificationsContainer}>
-              <div className={styles.notificationCard}>Dummy Notification</div>
-            </div>
-          </div>
+          
         </div>
       </div>
     </>

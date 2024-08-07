@@ -85,7 +85,7 @@ export default function Page() {
           </Breadcrumbs>
         </div>
         <div className={styles.mainContent}>
-          <div className={` ${styles.assignmentsSection}`}>
+          <div className={`flex-col bg-white p-[1%] w-[86%] m-[.8%] ml-auto h-[100%]`}>
             <h3>Customization Settings Below</h3>
             <br />
             <p>This will be a place where user can customize any changes that they may want to make.</p>
@@ -95,11 +95,9 @@ export default function Page() {
             <Switch defaultSelected={notifications.reviewNotification} className="m-1" onChange={(e) => handleSwitchChange('reviewNotification', e.target.checked)}>
               Peer Review Notifications
             </Switch>
-            <Button onClick={handleSave} className="m-1">Save</Button>
+           <Button onClick={handleSave} className="m-1">Save</Button> 
           </div>
-          <div className="w-[25%] h-[100%] flex-col p-[1%] text-left">
-            {/* Add buttons as needed */}
-          </div>
+          
         </div>
       </div>
       <StudentNavbar settings={{ className: "bg-secondary-200" }} />
