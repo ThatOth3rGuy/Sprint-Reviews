@@ -1,8 +1,73 @@
 # Project 3: Peer Review System - Team 3 (SprintRunners)
 
+# Week 11 Summary 
+##  August 2nd (Fri) - August 7th (Wed)
+### Features in the Project Plan Cycle: 
+1. User's modifying personal details
+2. Instructors leaving feedback on assignments
+3. Auto-Calculate Average student Grade for Reviewed Assignment
+4. Resubmit Assignment
+5. Instructors extending deadlines 
+6. Modifying assignments
+7. Forgot password page
+8. GRoup assignments Feature fixes
+9. Othe bugs and UI fixes
+
+
+###  Tasks from the Project Board:
+![image](https://github.com/user-attachments/assets/18c66230-8611-4bc0-9427-1b356f0c69aa)
+
+
+### Tasks Not planned:
+
+![image](https://github.com/user-attachments/assets/d753a582-60fd-49e0-abd0-85d77df765eb)
+
+
+
+
+### Burn-up Chart (Velocity) for past 3 months :
+![image](https://github.com/user-attachments/assets/2d2855b9-c204-4388-889d-13fa8aa05585)
+
+
+### Times for Team/Individual:
+
+
+Clockify Times this week :
+
+![image](https://github.com/user-attachments/assets/aa5d552e-08a5-4eb7-a9c6-8ae5e0642431)
+
+
+Clockify Times for all active development and design week :
+
+![image](https://github.com/user-attachments/assets/74c5d6eb-14b9-45c2-a8a3-dd7ed7f77533)
+
+
+### Completed Tasks:
+
+![image](https://github.com/user-attachments/assets/78bea597-bc8a-406d-8c3d-9774d51f7efe)
+
+
+
+### In Progress Tasks/ To do:
+![image](https://github.com/user-attachments/assets/70469c43-d81e-4627-89b5-ff74dfd40cd5)
+
+
+### Test Results 
+Playwright :
+
+![Playwright test report](https://github.com/user-attachments/assets/9c9bd9fc-249a-4085-b6e5-0abae82f403a)
+Jest : 
+
+![image](https://github.com/user-attachments/assets/b43f7ede-a023-4497-98fe-cb88ad5e881f)
+
+
+### Overview:
+This week has been busy with big fixes, UI fixes, and additional features as per requirements. It has been overall the busiest week for all of the team, we have manages to have the product complete with all functional requirements and more. We recorded the video to send to the client too and we meet him at 2:00 pm today (08/07/2024). 
+
+
 # Week 10 summary (Test-ORAMA week)
  ## July 31st (Wed) - August 2nd (Fri)
- ### Features in the Project Plan Cycle: 
+### Features in the Project Plan Cycle: 
 1. User's modifying personal details
 2. Instructors leaving feedback on assignments
 3. Auto-Calculate Average student Grade for Reviewed Assignment
