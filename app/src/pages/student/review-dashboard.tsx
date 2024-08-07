@@ -41,6 +41,7 @@ interface Submission {
   studentName?: string;
   deadline: string;
   isSubmitted: boolean;
+  isLate: boolean;
 }
 
 export default function ReviewDashboard() {
