@@ -1,3 +1,13 @@
+//instructor/create-course.tsx
+/**
+ * Renders the page to create course for the instructor.
+ * This component handles the creation of a new course, including uploading a student list 
+ * and enrolling students.
+ *
+ * @return {JSX.Element} The JSX element representing the create course form.
+ */
+
+// Importing necessary libraries and components
 import type { NextPage } from 'next';
 import styles from "../../styles/instructor-assignments-creation.module.css";
 import { useRouter } from 'next/router';
@@ -10,7 +20,11 @@ import AdminHeader from "../components/admin-components/admin-header";
 import { useSessionValidation } from '../api/auth/checkSession';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
+
+
 const Courses: NextPage = () => {
+// Initializing state variables
+
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [fileContent, setFileContent] = useState<string | null>(null);
@@ -55,7 +69,8 @@ const Courses: NextPage = () => {
     }
   }
 
-  // Function to create a course
+// Function to create a course
+// sends  courseName and instructorID data to api/addNew/createCourse.ts
   const onCreateCourseButtonClick = useCallback(async () => {
     if (!session || !session.user || !session.user.userID) {
       console.error('No instructor ID found in session');
@@ -66,7 +81,7 @@ const Courses: NextPage = () => {
 
 
     try {
-      // Call the create course API with courseName and instructorID
+      
       const createCourseResponse = await fetch('/api/addNew/createCourse', {
         method: 'POST',
         headers: {
@@ -88,7 +103,6 @@ const Courses: NextPage = () => {
       const courseData = await createCourseResponse.json();
       const courseId = courseData.courseId;
 
-      //const studentIDs = students.map(student => student.userID);
 
       // Call the enroll students API with studentIDs and courseID
       const enrollStudentsResponse = await fetch(`/api/addNew/enrollStudents`, {
@@ -132,16 +146,22 @@ const Courses: NextPage = () => {
 </div>;
   }
 
-  // If the session exists, check if the user is an admin
+// If the session exists, check if the user is an admin
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
     toast.error('No user found in session. Please try logging in.')
     return;
-  }
+  }  
+// admin check 
+
   const isAdmin = session.user.role === 'admin'; 
+
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");
   }
+
+// Rendering the component
+
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}

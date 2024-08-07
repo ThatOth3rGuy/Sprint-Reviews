@@ -88,23 +88,26 @@ const AssignmentDashboard: NextPage = () => {
 // Checking user session
   useSessionValidation('instructor', setLoading, setSession);
 
+// Fetching data when the router is ready
   useEffect(() => {
     if (!router.isReady) return;
 
     const { assignmentID } = router.query;
- // Fetching data when the router is ready
+ 
+
+// sends data to api/assignments/[assignmentID].ts 
+// fetching data for Assignment details
     const fetchData = async () => {
       if (assignmentID) {
-// sends data to api/assignments/[assignmentID].ts 
-// fetching data for Assignment details         
+         
         try { 
           const assignmentResponse = await fetch(`/api/assignments/${assignmentID}`); 
 
           if (assignmentResponse.ok) {
             const assignmentData: Assignment = await assignmentResponse.json();
             setAssignment(assignmentData);
-// Fetching course data
-            if (assignmentData.courseID) {
+
+            if (assignmentData.courseID) { // Fetching course data
               const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
               if (courseResponse.ok) {
                 const courseData: CourseData = await courseResponse.json();
@@ -146,6 +149,7 @@ const AssignmentDashboard: NextPage = () => {
   }
 // admin check 
   const isAdmin = session.user.role === 'admin';
+  
 // Navigation handlers
   const handleBackClick = () => router.push(`/instructor/course-dashboard?courseId=${courseData?.courseID}`);
 
@@ -161,9 +165,10 @@ const AssignmentDashboard: NextPage = () => {
     setNewAssignmentDesc(event.target.value);
   }
 // function to send data for update to the api/updateTable.ts to update assignment details 
+// Updating assignment name and description
   const handleAssignmentsUpdate = async () => {
     const { assignmentID } = router.query;
-// Updating assignment name and description
+
     try {
       await fetch(`/api/updateTable`, {
         method: 'POST',

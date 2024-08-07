@@ -1,3 +1,6 @@
+// instructor/settings.tsx
+// Not Implemented
+
 import InstructorHeader from "../components/instructor-components/instructor-header";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";

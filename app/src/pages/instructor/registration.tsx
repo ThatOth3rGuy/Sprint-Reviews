@@ -1,6 +1,9 @@
-// Instructor Registration
-// src/pages/instructor/registration.tsx
-/* eslint-disable @next/next/no-img-element */
+// instructor/registration.tsx
+/**
+ * Renders the sign-up page for instructors.
+ *
+ * @return {JSX.Element} Renders the insructor sign-up page.
+ */
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -32,6 +35,8 @@ const SignUp: NextPage = () => {
     return regex.test(password);
   };
 
+  // functions handles adding instructor details to the instructor and user table
+  // sends data to api/addNew/addInstructor.ts
   const handleSignUpClick = async () => {
     let firstNameError = '';
     let lastNameError = '';
@@ -99,7 +104,7 @@ const SignUp: NextPage = () => {
       }
     };
   }
-
+// functions to handle navigation
   const handleBackClick = () => {
     // Redirect user to landing page
     router.push('/');
@@ -109,6 +114,7 @@ const SignUp: NextPage = () => {
     router.push('/instructor/login');
   };
 
+  // Renders the component 
   return (
     <>
       <div className='instructor flex justify-center w-[100vw] h-[100vh] items-center bg-gradient-to-r from-[#404982] to-[#9094af]'>

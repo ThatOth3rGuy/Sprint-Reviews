@@ -1,5 +1,5 @@
 // instructor/login.tsx
-/* eslint-disable @next/next/no-img-element */
+
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 // import styles from '../../styles/instructor-login.module.css';
@@ -40,7 +40,7 @@ const InstructorLogin: NextPage = () => {
     // Redirect to the forgot password page
     router.push("/forgot-password")
   }
-
+// function to check instructor login details by sending email and password to api/auth/instructorLogin.ts
   const handleSignInClick = async () => {
     setError('');
 
@@ -69,6 +69,8 @@ const InstructorLogin: NextPage = () => {
       toast.error("An error occurred. Please try again.")
     }
   };
+  
+// Returns render component
 
   return (
       <div className="instructor flex justify-center items-center min-h-[100vh] min-w-[100vw] bg-gradient-to-r from-[#404982] to-[#9094af]">

@@ -37,7 +37,9 @@ export default function AssignmentsPage() {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [session, setSession] = useState<any>(null);
   const [selectedAssignmentTypes, setSelectedAssignmentTypes] = useState<string[]>(['all']);
+
 // Checking user session
+
   useSessionValidation('instructor', setLoading, setSession);
 
 // Fetching assignments to display from database 
@@ -46,14 +48,17 @@ export default function AssignmentsPage() {
       fetchAssignments(session.user.userID); // function or fetching assignments using userID
     }
   }, [session]);
+
 // Checking if user session exists
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
     return null;
   }
+
 // function which uses userID to fetch all assignments created by instructor 
-  const fetchAssignments = async (userID: string) => {
 // sends userID from session to api/getAllAssignmentsInstructor
+ 
+const fetchAssignments = async (userID: string) => {
     try {
       const response = await fetch(`/api/getAllAssignmentsInstructor?userID=${userID}`);
       if (response.ok) {

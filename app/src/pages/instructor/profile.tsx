@@ -1,3 +1,12 @@
+// instructor/profile.tsx
+/**
+ * Renders the user profile page for instructors. Fetches user details from the server
+ * and displays them in a card. Allows instructors to edit user details by opening a modal
+ * with input fields for first name, last name, and email. When changes are saved, the
+ * server is updated with the new details and the page is reloaded.
+ *
+ * @return {JSX.Element|null} The user profile page or null if the user is not logged in.
+ */
 import React, { useState, useEffect } from 'react';
 import {
   Card, CardHeader, CardBody, Avatar, Button, Spinner, Modal,
@@ -24,6 +33,8 @@ export default function Page() {
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
 
+  // function to fetch instructor details from user table and instructor table 
+  // sends userID to api/userInfo/instructor-user-details.ts to fetch user details
   useEffect(() => {
     console.log('Session:', session);
     if (session?.user?.userID) {
@@ -52,27 +63,26 @@ export default function Page() {
         });
     }
   }, [session]);
-
+//  functions handling navigation
   const handleBackClick = async () => {
     // Redirect to the landing page
     router.back();
   }
 
+  // function to handle editing of profile 
+  // sends update query to api/userInfo/instructor-user-details.ts
   const handleEditClick = () => {
     setIsEditModalOpen(true);
   };
-
   const handleCloseModal = () => {
     setIsEditModalOpen(false);
   };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditedDetails({
       ...editedDetails,
       [e.target.name]: e.target.value
     });
   };
-
   const handleSaveChanges = async () => {
     try {
       const response = await fetch('/api/userInfo/instructor-user-details', {
@@ -103,6 +113,8 @@ export default function Page() {
     }
   };
 
+  // Loading Spinner
+
   if (loading) {
     return (
       <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
@@ -110,14 +122,15 @@ export default function Page() {
       </div>
     );
   }
-
+// check if session data exists 
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
     return null;
   }
-
+// admin check 
   const isAdmin = session.user.role === 'admin';
-
+  
+// Renders the components 
   return (
     <>
       {isAdmin ? <AdminNavbar profile={{ className: "bg-primary-500" }} /> : <InstructorNavbar profile={{ className: "bg-primary-500" }} />}

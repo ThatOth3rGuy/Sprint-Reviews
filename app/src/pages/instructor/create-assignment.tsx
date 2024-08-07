@@ -1,7 +1,17 @@
+// instructor/create-assignment.tsx
+/**
+ * Renders a form for creating an assignment for a course. 
+ * The form includes fields for the assignment title, description, start date, end date, and due date.
+ * It also allows for selecting the allowed file types and link types for the assignment.
+ * 
+ * 
+ * @return {JSX.Element} The JSX element representing the assignment creation form.
+ */
+
+// Importing necessary libraries and components
 import type { NextPage } from "next";
 import styles from "../../styles/instructor-assignments-creation.module.css";
 import { useRouter } from "next/router";
-
 import { 
   Card, SelectItem, Select, Listbox, ListboxItem, AutocompleteItem, Autocomplete, 
   Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, 
@@ -15,19 +25,17 @@ import { useSessionValidation } from '../api/auth/checkSession';
 import toast from "react-hot-toast";
 import { getNotificationsForStudent } from '../utils/getNotificationsForStudent';
 
+// Defining interface for Course Data to set assignment 
 interface CourseData {
   courseID: string;
   courseName: string;
 }
 
 const Assignments: NextPage = () => {
+// Initializing state variables
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const router = useRouter();
-  const { courseId } = router.query;
-
-  useSessionValidation("instructor", setLoading, setSession);
-
   const [file, setFile] = useState<File | null>(null);
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [dueDate, setDueDate] = useState("");
@@ -43,6 +51,10 @@ const Assignments: NextPage = () => {
   const [allowLinks, setAllowLinks] = useState(false);
   const [linkTypes, setLinkTypes] = useState<string[]>([]);
 
+  // Fetching data when the router is ready
+  const { courseId } = router.query;
+// Checking user session
+  useSessionValidation("instructor", setLoading, setSession);
   useEffect(() => {
     const { source, courseId } = router.query;
     if (source === 'course' && courseId) {
@@ -50,6 +62,8 @@ const Assignments: NextPage = () => {
     }
   }, [router.query]);
 
+// function to fetch course name for front end and breadcrumbs
+// send courseID to apo/course/[courseID].ts
   const fetchCourseName = async (courseId: string) => {
     try {
       const response = await fetch(`/api/courses/${courseId}`);
@@ -74,6 +88,7 @@ const Assignments: NextPage = () => {
     );
   };
 
+// function to handle the create assignment and restrictions on create assignment
   const onCreateAssignmentButtonClick = useCallback(async () => {
     setError(null);
 
@@ -101,6 +116,8 @@ const Assignments: NextPage = () => {
       setError("Course ID is missing.");
       return;
     }
+
+// functiosn to handle date restrictions 
     const selectedDueDate = new Date(dueDate);
     const selectedEndDate = new Date(endDate);
     const selectedStartDate = new Date(startDate)
@@ -113,6 +130,8 @@ const Assignments: NextPage = () => {
     const isoStart = new Date(startDate).toISOString(); //converts start date into ISO string
     const isoEnd = new Date(endDate).toISOString(); //converts end date into ISO string
 
+// function to handle file type restrictions 
+// sends all assignment details set by instructor to api/addNew/createAssignment
     let finalAllowedTypes = [...allowedFileTypes];
     if (allowLinks) {
       if (linkTypes.length === 0) {
@@ -144,8 +163,12 @@ const Assignments: NextPage = () => {
       const assignmentData = await response.json();
       toast.success("Assignment created successfully!");
 
+// function to fetch courseId for setting courseID in assignment table 
+
       const courseResponse = await fetch(`/api/courses/${courseId}`);
       const courseData = await courseResponse.json();
+
+// function to send email to stuents after assignment gets created 
 
       const studentsResponse = await fetch(`/api/courses/getCourseList?courseID=${courseId}`);
       if (studentsResponse.ok) {
@@ -185,18 +208,23 @@ const Assignments: NextPage = () => {
     }
   }, [title, description, startDate, endDate, dueDate, courseId, fileContent, groupAssignment, allowedFileTypes, allowLinks, linkTypes, router, session]);
 
+// Loading Spinner
+
   if (loading) {
     return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
       <Spinner color='primary' size="lg" />
     </div>;
   }
+// checks if user session exists 
 
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
     return null;
   }
+// admin check 
   const isAdmin = session.user.role === 'admin';
 
+  // functions to handle navigation 
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");
   }
@@ -241,6 +269,8 @@ const Assignments: NextPage = () => {
       router.push('/instructor/assignments');
     }
   };
+
+// Rendering the component
 
   return (
     <>

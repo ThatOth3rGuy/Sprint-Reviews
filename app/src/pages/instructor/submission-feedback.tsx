@@ -1,4 +1,11 @@
 // instructor/submission-feedback.tsx
+/**
+ * Renders the submission feedback dashboard for instructors.
+ * This page allows the instructor to view and comment on a students submission and also
+ * allows the instructor to edit students grades. 
+ * This page also pulls the feedback given by other students 
+ * @return {JSX.Element} The rendered assignment dashboard.
+ */
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import { useEffect, useState } from "react";
@@ -9,6 +16,7 @@ import { Button, Breadcrumbs, BreadcrumbItem, Spinner, useDisclosure, Modal, Mod
 import toast from "react-hot-toast";
 import DownloadSubmission from "../components/student-components/download-submission";
 
+// Defining interfaces for Assignment,Course,Feedback and Comments Data 
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -56,7 +64,10 @@ interface Comment {
   feedbackDate: string;
   lastUpdated: string;
 }
+
+
 export default function AssignmentDashboard() {
+// Initializing state variables
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const router = useRouter();
@@ -76,8 +87,12 @@ export default function AssignmentDashboard() {
   useEffect(() => {
     if (!router.isReady || !studentID) return;
 
-    checkSubmissionStatus();
-
+    checkSubmissionStatus(); // function to check if student has submitted assignment
+// fetches assignment details,feedback and comments 
+// sends assignmentID to api/assignments/[assignmentID].ts for assignment details
+// sends assignment courseID to api/courses/[courseID].ts for course details
+// sends studentID and assignmentID to /api/peer-reviews/[assignmentID]/[studentID].ts for 
+// fetching feedback for the student 
     const fetchData = async () => {
       if (assignmentID && studentID) {
         try {
@@ -113,6 +128,8 @@ export default function AssignmentDashboard() {
         setLoading(false);
       }
     }; 
+  // function for instructor to additionaly add comments to be viewed by students 
+  //sends assignmentID and student id to /api/instructorComments/[assignmentID]/[studentID].ts
     const fetchComments = async () => {
       if (assignmentID && studentID) {
         try {
@@ -132,6 +149,9 @@ export default function AssignmentDashboard() {
     fetchData();
   }, [router.isReady, studentID, assignmentID]);
 
+// function that checks whether student has submitted or not
+//sends assignmentID and studentID  to /api/submissions/checkSubmission.ts
+
   const checkSubmissionStatus = async () => {
     if (assignmentID && studentID) {
       try {
@@ -150,11 +170,11 @@ export default function AssignmentDashboard() {
       }
     }
   };
-
+// functions to edit and update grades
   const handleEditGrade = () => {
     setIsModalOpen(true);
   };
-
+// sends update query to api/updateTable.ts for case "submission" to update grades manually
   const handleSaveGrade = async (newGrade: number) => {
     try {
       const response = await fetch('/api/updateTable', {
@@ -186,6 +206,9 @@ export default function AssignmentDashboard() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+// function to handle adding comments by instructor for the assignment submission 
+// sends form data for comments to api/instructorComments/addFeddback.ts
   const handleAddComment = async () => {
     try {
       const response = await fetch('/api/instructorComments/addFeedback', {
@@ -216,13 +239,13 @@ export default function AssignmentDashboard() {
       toast.error('Error adding comment. Please try again.');
     }
   };
-
+// functions to handle and save the edited comment 
+// sends data for updated comment to api/instructorComments/addFeedback.ts
   const handleEditComment = (commentId: number, currentComment: string) => {
     setEditingCommentId(commentId);
     setEditedComment(currentComment);
     
   };
-
   const handleSaveEditedComment = async () => {
     try {
       const response = await fetch('/api/instructorComments/addFeedback', {
@@ -257,6 +280,7 @@ export default function AssignmentDashboard() {
     }
   };
   
+// Loading Spinner
   if (!assignment || loading) {
     return (
       <div className="w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto">
@@ -264,11 +288,12 @@ export default function AssignmentDashboard() {
       </div>
     );
   }
-
+// functions to handle navigation
   const handleAssignmentClick = () => router.push(`/instructor/assignment-dashboard?assignmentID=${assignment.assignmentID}`);
   const handleCourseClick = () => router.push(`/instructor/course-dashboard?courseId=${courseData?.courseID}`);
   const handleHomeClick = () => router.push("/instructor/dashboard");
 
+  // Renders the component
   return (
     <>
       <InstructorNavbar />
