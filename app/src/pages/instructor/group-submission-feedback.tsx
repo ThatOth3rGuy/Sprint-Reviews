@@ -36,7 +36,17 @@ interface Feedback {
   score: string;
   content: string;
 }
-
+interface GroupFeedback {
+  feedbackID: number;
+  submissionID: number;
+  reviewerID: number;
+  feedbackDetails: string;
+  feedbackDate: string;
+  lastUpdated: string;
+  comment: string;
+  grade: number | null;
+  feedbackType: 'peer' | 'instructor';
+}
 interface Submission {
   studentName: string;
   submissionID: number;
@@ -66,7 +76,7 @@ export default function AssignmentDashboard() {
   const [feedback, setFeedback] = useState<Feedback[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newGrade, setNewGrade] = useState<number>(0);
-
+  const [groupFeedbacks, setgroupFeedbacks] = useState<GroupFeedback[]>([]);
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
@@ -113,15 +123,18 @@ export default function AssignmentDashboard() {
 
   useEffect(() => {
     const checkSubmissionStatus = async () => {
-      if (assignmentID) {
+      if (assignmentID && studentID) {
         try {
-          const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${studentID}`);
+          const response = await fetch(`/api/submissions/checkSubmission4Instructor?assignmentID=${assignmentID}&userID=${studentID}`);
           if (!response.ok) {
             throw new Error('Failed to check submission status');
           }
           const data: Submission = await response.json();
           setSubmission(data);
+          console.log('Submission data: ', data);
           setNewGrade(data.grade ?? data.autoGrade);
+
+          
         } catch (error) {
           console.error('Error checking submission status:', error);
           toast.error('Error checking submission status. Please refresh the page.');
@@ -138,6 +151,8 @@ export default function AssignmentDashboard() {
           }
           const data = await response.json();
           setIsFeedbackSubmitted(data.isFeedbackSubmitted);
+          
+          
         } catch (error) {
           console.error('Error checking feedback status:', error);
           toast.error('Error checking feedback status. Please refresh the page.');
@@ -154,6 +169,12 @@ export default function AssignmentDashboard() {
           }
           const data = await response.json();
           setFeedback(data);
+          
+          const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${studentID}`);
+            if (feedbacksResponse.ok) {
+              const feedbacksData: GroupFeedback[] = await feedbacksResponse.json();
+              setgroupFeedbacks(feedbacksData);
+            }
         } catch (error) {
           console.error('Error fetching feedback:', error);
           toast.error('Error fetching feedback. Please refresh the page.');
@@ -265,6 +286,7 @@ export default function AssignmentDashboard() {
               <Button className="text-primary-900 text-small font-bold bg-primary-200 my-2 p-0.5" onClick={handleEditGrade}>Edit Grade</Button>
             </p>
         </div>
+        
       </div>
       <Modal
         className='z-20'
@@ -295,6 +317,52 @@ export default function AssignmentDashboard() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+      {/* <div>
+            <h2>Feedback</h2>
+            {groupFeedbacks.length > 0 ? (
+              groupFeedbacks.map((groupFeedback, index) => (
+                <div key={groupFeedback.feedbackID} className={styles.assignmentsSection}>
+                  <p><strong>Feedback {index + 1}:</strong></p>
+                  <p><strong>Details:</strong> {groupFeedback.feedbackDetails}</p>
+                  <p><strong>Comment:</strong> {groupFeedback.comment}</p>
+                  <p><strong>Date:</strong> {new Date(groupFeedback.feedbackDate).toLocaleString()}</p>
+                  <p><strong>Grade:</strong> {groupFeedback.grade !== null ? feedback.grade : "Not graded yet"}</p>
+                </div>
+              ))
+            ) : (
+              <p>No feedback available yet.</p>
+            )}
+          </div> */}
+      <table>
+        <thead>
+          <tr>
+            <th>Feedback ID</th>
+            <th>Submission ID</th>
+            <th>Reviewer ID</th>
+            <th>Feedback Details</th>
+            <th>Feedback Date</th>
+            <th>Last Updated</th>
+            <th>Comment</th>
+            <th>Grade</th>
+            <th>Feedback Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          {groupFeedbacks.map((feedback, index) => (
+            <tr key={index}>
+              <td>{feedback.feedbackID}</td>
+              <td>{feedback.submissionID}</td>
+              <td>{feedback.reviewerID}</td>
+              <td>{feedback.feedbackDetails}</td>
+              <td>{feedback.feedbackDate}</td>
+              <td>{feedback.lastUpdated}</td>
+              <td>{feedback.comment}</td>
+              <td>{feedback.grade}</td>
+              <td>{feedback.feedbackType}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </>
   );
 }

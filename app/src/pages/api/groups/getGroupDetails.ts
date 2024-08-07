@@ -16,12 +16,14 @@ async function getGroupDetails(courseID: number, userID: number) {
   `;
 
   try {
+    let studentID: number;
     const studentIDResult = await getStudentsById(userID);
-    if (studentIDResult.length === 0) {
-      return null;
+    if (studentIDResult === null) {
+      studentID = userID;
+    } else {
+      studentID = studentIDResult.studentID;
     }
 
-    const studentID = studentIDResult.studentID;
     const result = await query(sql, [courseID, courseID, studentID]);
     if (result.length === 0) {
       return null;

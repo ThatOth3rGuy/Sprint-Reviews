@@ -12,7 +12,8 @@ import {
   Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs,
   BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader,
   ModalBody, ModalFooter, useDisclosure,
-  Spinner
+  Spinner,
+  Tooltip
 } from "@nextui-org/react";
 import { randomizePeerReviewGroups } from "../api/addNew/randomizationAlgorithm";
 import toast from "react-hot-toast";
@@ -300,14 +301,13 @@ const ReleaseAssignment: React.FC = () => {
         </div>
         <div className={styles.mainContent}>
           <div className="flex-col w-[85%] bg-white p-[1.5%] pt-[1%] shadow-sm overflow-auto m-auto mr-[1%] text-left ">
-            <h2>Release Assignment for Peer Review</h2>
-            
+            <h2 className="text-center">Release Assignment for Peer Review</h2>
             <br />
             <form onSubmit={handleSubmit}>
               <Select
                 label="Select Assignment"
                 color="primary"
-                variant="bordered"
+                variant="underlined"
                 className="m-2"
                 value={selectedAssignment}
                 onChange={handleAssignmentChange}
@@ -324,24 +324,29 @@ const ReleaseAssignment: React.FC = () => {
               <div >
                 <div className={styles.rubric}>
                   <h3>Review Criteria</h3>
-                  <br />
+                  <p>Create a rubric for students to enter their reviews.</p>
+                  <hr className="my-2"/>
                   {rubric.map((item, index) => (
-                    <div key={index} className={styles.rubricItem}>
+                    <div key={index} className="flex items-center">
                       <Input
+                      color="primary"
                         size="sm"
                         label="Review Criterion"
-                        variant="bordered"
+                        variant="underlined"
                         type="text"
                         value={item.criterion}
                         onChange={(e) =>
                           handleRubricChange(index, "criterion", e.target.value)
                         }
                         required
+                        className="w-2/3 mr-3"
                       />
                       <br />
                       <Input
+                      color="secondary"
+                      size="sm"
                         label="Maximum Marks for Criterion"
-                        variant="bordered"
+                        variant="underlined"
                         type="number"
                         value={item.maxMarks.toString()}
                         onChange={(e) =>
@@ -349,9 +354,10 @@ const ReleaseAssignment: React.FC = () => {
                         }
                         required
                         min = {1}
+                        className="w-1/3"
                       />
                       <Button
-                        size="sm"
+                        size="md"
                         variant="ghost"
                         color="danger"
                         type="button"
@@ -372,23 +378,28 @@ const ReleaseAssignment: React.FC = () => {
                   </Button>
                 </div>
               </div>
-              <Checkbox
-                isSelected={anonymous}
-                onValueChange={setAnonymous}
-                color="primary"
-              >
-                Anonymous Review
-              </Checkbox>
+              
+                <Checkbox isSelected={anonymous} onValueChange={setAnonymous} color="primary" className="my-2 mx-auto"><Tooltip content="Students will not be able to see the name of the person whose assignment they are reviewing" placement="right">Anonymous Review</Tooltip> </Checkbox>
+              
+              
 
               <br />
-              <Input
+              <div className="flex items-end">
+              <Tooltip content="This is the number of assignments a student will be assigned to review." placement="top-end">
+<Input
+              variant='underlined'
                 label="Number of Reviews per Assignment"
                 type="number"
                 min="1"
                 value={reviewsPerAssignment.toString()} // Convert number to string
                 onChange={(e) => setReviewsPerAssignment(Number(e.target.value))}
                 required
+                className="mx-4"
               />
+              </Tooltip>
+              <p className="text-warning-900">The number of reviews can only be evenly distributed for the number of students in the course. Enter the number of reviews per assignment with this in mind.</p>
+              </div>
+              
               <br />
               <div className="flex justify-evenly m-1">
                 <div className="text-left w-1/3 p-2 pt-0">
@@ -417,7 +428,7 @@ const ReleaseAssignment: React.FC = () => {
                 </div>
                 
                 <div className="text-left w-1/3 p-2 pt-0">
-                  <h3>Enter an end Date</h3>
+                  <h3>Enter an End Date</h3>
                   <Input
                     variant="underlined"
                     type="datetime-local"

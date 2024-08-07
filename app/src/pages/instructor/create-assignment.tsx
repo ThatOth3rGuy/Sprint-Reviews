@@ -256,7 +256,7 @@ const Assignments: NextPage = () => {
           </Breadcrumbs>
         </div>
         <div className={styles.mainContent}>
-          <div className="flex-col bg-white p-[1.5%] w-[86%] m-[.8%] ml-auto mt-auto h-fit">
+          <div className="flex-col bg-white p-[1.5%] w-[86%] m-[.8%] ml-auto h-fit">
             <h2>Create Assignment For Student Submission</h2>
             {error && <p style={{ color: "red" }}>{error}</p>}
             <Input
@@ -321,7 +321,7 @@ const Assignments: NextPage = () => {
             </div>
             <br />
             <div className="flex">
-              <h3 className={styles.innerTitle}>Group Assignment:</h3>
+              
               <Checkbox
                 className={styles.innerTitle}
                 isSelected={groupAssignment}
@@ -330,7 +330,7 @@ const Assignments: NextPage = () => {
                 Group Assignment
               </Checkbox>
             </div>
-            <br />
+            <br /><h3 className={styles.innerTitle}>Allowed file types:</h3><br />
             <div className="flex-row align-top items-start justify-start">
               <CheckboxGroup
                 size="sm"
@@ -339,7 +339,7 @@ const Assignments: NextPage = () => {
                 onValueChange={setAllowedFileTypes}
                 orientation="horizontal"
               >
-                <h3 className={styles.innerTitle}>Allowed file types:</h3>
+                
                 <Checkbox value="txt">Text (.txt)</Checkbox>
                 <Checkbox value="pdf">PDF (.pdf)</Checkbox>
                 <Checkbox value="docx">Word (.docx)</Checkbox>
@@ -373,6 +373,7 @@ const Assignments: NextPage = () => {
                 )}
               </div>
             </div>
+            <br />
             <Button color="success" variant="solid" className="cursor-pointer m-2 mx-auto p-4 text-white w-[100%]" onClick={onCreateAssignmentButtonClick}>Create Assignment</Button>
           </div>
         </div>

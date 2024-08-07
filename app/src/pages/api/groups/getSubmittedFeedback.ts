@@ -27,8 +27,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
        WHERE gf.assignmentID = ? AND gf.revieweeID = ?`;
 
     // Convert userID to studentID
-    const revieweeID = await getStudentsById(Number(studentID));
-    const rows = await query(SQL, [assignmentID, revieweeID.studentID]);
+    let revieweeID: number;
+    const studentIDResult = await getStudentsById(Number(studentID));
+    if (studentIDResult === null) {
+      revieweeID = Number(studentID);
+    } else {
+      revieweeID = studentIDResult.studentID;
+    }
+    const rows = await query(SQL, [assignmentID, revieweeID]);
 
     res.status(200).json(rows);
   } catch (error) {

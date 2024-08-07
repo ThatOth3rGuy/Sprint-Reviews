@@ -10,8 +10,14 @@ async function checkFeedbackStatus(assignmentID: number, reviewerID: number) {
   `;
 
   try {
+    let studentID: number;
     const studentIDResult = await getStudentsById(reviewerID);
-    const studentID = studentIDResult.studentID;
+    if (studentIDResult === null) {
+      studentID = reviewerID;
+    } else {
+      studentID = studentIDResult.studentID;
+    }
+    
     const result = await query(sql, [assignmentID, studentID]);
     console.log("Feedback result: ", result);
     return result[0].feedbackCount > 0;
