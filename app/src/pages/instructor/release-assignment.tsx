@@ -2,20 +2,15 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSessionValidation } from '../api/auth/checkSession';
-import InstructorHeader from "../components/instructor-components/instructor-header";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
-import AdminHeader from "../components/admin-components/admin-header";
 import styles from "../../styles/instructor-assignments-creation.module.css";
 
 import {
-  Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs,
-  BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader,
-  ModalBody, ModalFooter, useDisclosure,
-  Spinner,
-  Tooltip
+  SelectItem, Button, Breadcrumbs,
+  BreadcrumbItem, Checkbox, Input, Select,
+  useDisclosure, Spinner, Tooltip
 } from "@nextui-org/react";
-import { randomizePeerReviewGroups } from "../api/addNew/randomizationAlgorithm";
 import toast from "react-hot-toast";
 
 // Define the structure for assignment and Rubric items
@@ -33,11 +28,6 @@ interface RubricItem {
   maxMarks: number;
 }
 
-interface Student {
-  id: string;
-  name: string;
-}
-
 // Main component for releasing an assignment for peer review
 const ReleaseAssignment: React.FC = () => {
   const router = useRouter();
@@ -52,18 +42,17 @@ const ReleaseAssignment: React.FC = () => {
   const [students, setStudents] = useState<{ id: number; name: string }[]>([]);
   const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
   const [uniqueDueDate, setUniqueDueDate] = useState<string>("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
   const [reviewsPerAssignment, setReviewsPerAssignment] = useState<number>(4);
   const [anonymous, setAnonymous] = useState(false);
-  const [autoRelease, setAutoRelease] = useState(false);
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
    
+
   // Fetch assignments and students in the course when the component mounts
   useEffect(() => {
     if ( courseId) {
@@ -93,7 +82,8 @@ const ReleaseAssignment: React.FC = () => {
       );
       if (response.ok) {
         const data = await response.json();
-        setAssignments(data.courses);
+        const filteredAssignments = data.assignments.filter((assignment: { groupAssignment: number; }) => assignment.groupAssignment === 0);
+        setAssignments(filteredAssignments);
       } else {
         console.error("Failed to fetch courses");
       }
@@ -249,12 +239,6 @@ const ReleaseAssignment: React.FC = () => {
       console.error("Error releasing assignment or peer reviews for review:", error);
     }
   };
- 
-  
-  const options = students.map((student) => ({
-    value: student.id,
-    label: student.name,
-  }));
 
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
@@ -271,10 +255,6 @@ const ReleaseAssignment: React.FC = () => {
 
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");
-  }
-
-  function handleAssignmentClick(): void {
-    router.push("/instructor/assignments");
   }
 
 
@@ -444,68 +424,6 @@ const ReleaseAssignment: React.FC = () => {
               <Button onClick={handleSubmit} color="primary" variant="solid" className="float-right m-4" size="sm">
                 <b>Draft Release</b>
               </Button>
-              {/* <Button variant="bordered" onPress={onOpen} color="primary" className="float-left m-4 ml-0" size="sm">
-                Advanced Options</Button> */}
-              <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="instructor">
-                <ModalContent>
-                  {(onClose) => (
-                    <>
-                      <ModalHeader>Advanced Options</ModalHeader>
-                      <ModalBody>
-                        <div >
-                          <p className="text-left p-0 m-0 mb-2">Assign a unique due date to select students:</p>
-                          <p>
-                            <Select
-                              size="sm"
-                              label="Select Students"
-                              selectionMode="multiple"
-                              onChange={(selectedValues) => {
-                                setSelectedStudents((selectedValues as unknown) as number[]);
-                              }}
-                            >
-                              {students.map((student) => (
-                                <SelectItem key={student.id} value={student.id.toString()}>
-                                  {student.name}
-                                </SelectItem>
-                              ))}
-                            </Select>
-                          </p>
-                        </div>
-                        <div >
-                          <form onSubmit={handleStudentSelectionSubmit}>
-                            <div >
-                              {students.map((student) => (
-                                <div key={student.id}>
-                                  <Input
-                                    type="checkbox"
-                                    id={`student-${student.id}`}
-                                    checked={selectedStudents.includes(student.id)}
-                                    onChange={() => handleStudentSelection(student.id)}
-                                  />
-                                  <label htmlFor={`student-${student.id}`}>
-                                    {student.name}
-                                  </label>
-                                </div>
-                              ))}
-                            </div>
-                            <Input
-                              type="datetime-local"
-                              value={uniqueDueDate}
-                              onChange={(e) => setUniqueDueDate(e.target.value)}
-                              required
-                              min={new Date().toISOString().slice(0, 16)}
-                            />
-                            <br />
-                            <Button variant="ghost" type="submit" color="primary">
-                              Set Unique Due Date
-                            </Button>
-                          </form>
-                        </div>
-                      </ModalBody>
-                    </>
-                  )}
-                </ModalContent>
-              </Modal>
               <br />
             </form>
           </div>

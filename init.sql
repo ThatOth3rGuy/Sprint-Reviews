@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS course_groups (
     FOREIGN KEY (courseID) REFERENCES course(courseID)
 );
 
-
+-- Table for storing instructor feedback on student submissions
 CREATE TABLE IF NOT EXISTS instructor_feedback (
     feedbackID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT NOT NULL,
@@ -204,10 +204,8 @@ CREATE TABLE IF NOT EXISTS instructor_feedback (
     comment TEXT,    
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID),
-    FOREIGN KEY (studentID) REFERENCES student(studentID));
-
-
-
+    FOREIGN KEY (studentID) REFERENCES student(studentID)
+);
 
 -- Insert a sample user (student) into the user table
 INSERT INTO user (firstName, lastName, email, pwd, userRole)

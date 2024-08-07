@@ -141,9 +141,8 @@ export default function ReviewDashboard() {
   const handleHomeClick = () => router.push("/student/dashboard");
 
   const handleBackClick = () => {
-    const { source } = router.query;
-    if (source === 'course') {
-      router.push(`/student/course-dashboard?courseId=${assignment?.courseId}`);
+    if (courseData?.courseID != null) {
+      router.push(`/student/course-dashboard?courseId=${courseData?.courseID}`);
     } else {
       router.push('/student/all-assignments');
     }

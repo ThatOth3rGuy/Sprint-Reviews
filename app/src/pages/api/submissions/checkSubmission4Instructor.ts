@@ -1,6 +1,6 @@
 // pages/api/submissions/checkSubmission.ts
 import { NextApiRequest, NextApiResponse } from 'next';
-import { query } from '../../../db';
+import { query, getStudentsById } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { assignmentID, userID } = req.query;
@@ -30,7 +30,9 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{
   studentName: string | null,
   studentID: number | null,
   isLate: boolean,
-  isLink: boolean
+  isLink: boolean,
+  grade : number | null,
+  autoGrade: number | null
 }> {
   const sql = `
   SELECT CONCAT(u.firstName, ' ', u.lastName) AS studentName, s.*
@@ -40,7 +42,15 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{
   WHERE s.assignmentID = ? AND s.studentID = ?;
   `;
   try {
-    const rows = await query(sql, [assignmentID, userID]);
+    let studentID: number;
+    const studentIDResult = await getStudentsById(userID);
+    if (studentIDResult === null) {
+      studentID = userID;
+    } else {
+      studentID = studentIDResult.studentID;
+    }
+
+    const rows = await query(sql, [assignmentID, studentID]);
     console.log(rows);
     if (rows.length > 0) {
       const submissionDate = new Date(rows[0].submissionDate);
@@ -56,10 +66,12 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{
         studentName: rows[0].studentName,
         studentID: rows[0].studentID,
         isLate,
-        isLink
+        isLink,
+        grade: rows[0].grade,
+        autoGrade: rows[0].autoGrade
       };
     } else {
-      return { isSubmitted: false, submissionDate: null, submissionID: null, assignmentID: null, fileName: null, studentName: null, studentID: null, isLate: false, isLink: false };
+      return { isSubmitted: false, submissionDate: null, submissionID: null, assignmentID: null, fileName: null, studentName: null, studentID: null, isLate: false, isLink: false, grade: null, autoGrade: null };
 
 
     }

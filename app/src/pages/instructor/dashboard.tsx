@@ -6,6 +6,7 @@ import { useSessionValidation } from '../api/auth/checkSession';
 import { useRouter } from 'next/router';
 import { Button, Spinner } from '@nextui-org/react';
 import styles from '../../styles/instructor-dashboard.module.css';
+import toast from 'react-hot-toast';
 
 interface Course {
   courseID: number;
@@ -38,9 +39,11 @@ export default function Page() {
         const data = await response.json();
         setCourses(data.courses);
       } else {
+        toast.error('Failed to fetch courses');
         console.error('Failed to fetch courses');
       }
     } catch (error) {
+      toast.error('Error fetching courses');
       console.error('Error fetching courses:', error);
     }
   };
