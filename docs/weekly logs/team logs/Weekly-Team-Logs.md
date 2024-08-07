@@ -55,7 +55,7 @@ Clockify Times for all active development and design week :
 ### Test Results 
 Playwright :
 
-![Playwright test report](https://github.com/user-attachments/assets/48cab5d3-b273-4dfd-9ce7-1a0603ad88ae)
+![Playwright test report](https://github.com/user-attachments/assets/9c9bd9fc-249a-4085-b6e5-0abae82f403a)
 Jest : 
 
 ![image](https://github.com/user-attachments/assets/b43f7ede-a023-4497-98fe-cb88ad5e881f)
