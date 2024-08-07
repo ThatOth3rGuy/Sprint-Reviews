@@ -36,7 +36,7 @@ test.describe('Student Assignment Dashboard', () => {
   });
 
   test('should allow file submission if within submission period', async ({ page }) => {
-    await page.route('/api/assignments/submitAssignment', route => {
+    await page.route('**/api/assignments/submitAssignment', route => {
       route.fulfill({
         status: 200,
         body: JSON.stringify({

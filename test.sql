@@ -236,7 +236,7 @@ INSERT INTO assignment (title, descr, rubric, startDate, endDate, deadline, grou
 -- Insert submissions
 INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate, autoGrade, grade, groupID) VALUES
 (1, 1001, 'assignment1_john.pdf', NULL, 'pdf', '2024-07-01 12:00:00', 0, 85, NULL),
-(2, 1002, 'assignment2_jane.docx', NULL, 'docx', '2024-07-02 12:00:00', 0, 90, NULL);
+(2, 1002, 'assignment2_jane.docx', NULL, 'docx', '2024-07-02 12:00:00', 0, 90, 2);
 
 -- Insert review criteria
 INSERT INTO review_criteria (assignmentID, criterion, maxMarks) VALUES
@@ -324,6 +324,11 @@ INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType
 (1, 123474, 'project_123474.sql', NULL, 'sql', NOW(), 0, NULL, NULL),
 (1, 123475, 'project_123475.sql', NULL, 'sql', NOW(), 0, NULL, NULL),
 (1, 123476, 'project_123476.sql', NULL, 'sql', NOW(), 0, NULL, NULL);
+
+-- Insert submissions for assignment 2
+INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate, autoGrade, grade, groupID) VALUES
+(2, 123470, 'assignment2_jane.docx', NULL, 'docx', '2024-07-02 12:00:00', 0, 90, 2),
+(2, 123471, 'assignment2_jane.docx', NULL, 'docx', '2024-07-02 12:00:00', 0, 90, 2);
 
 -- Insert 5 more people into course 2, for testing group feedback
 INSERT INTO enrollment (studentID, courseID) VALUES
