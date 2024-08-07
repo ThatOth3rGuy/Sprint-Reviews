@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from "../api/auth/checkSession";
 import AssignmentDetailCard from "../components/student-components/student-assignment-details";
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import { Button, Breadcrumbs, BreadcrumbItem, Spinner, useDisclosure, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Spinner, useDisclosure, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import toast from "react-hot-toast";
 import DownloadSubmission from "../components/student-components/download-submission";
 
@@ -17,7 +17,7 @@ interface Assignment {
   endDate: string;
   deadline: string;
   allowedFileTypes: string;
-  courseID: string; 
+  courseID: string;
 }
 
 interface CourseData {
@@ -112,7 +112,7 @@ export default function AssignmentDashboard() {
       } else {
         setLoading(false);
       }
-    }; 
+    };
     const fetchComments = async () => {
       if (assignmentID && studentID) {
         try {
@@ -220,7 +220,7 @@ export default function AssignmentDashboard() {
   const handleEditComment = (commentId: number, currentComment: string) => {
     setEditingCommentId(commentId);
     setEditedComment(currentComment);
-    
+
   };
 
   const handleSaveEditedComment = async () => {
@@ -256,7 +256,7 @@ export default function AssignmentDashboard() {
       toast.error('Error updating comment. Please try again.');
     }
   };
-  
+
   if (!assignment || loading) {
     return (
       <div className="w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto">
@@ -282,33 +282,25 @@ export default function AssignmentDashboard() {
             <BreadcrumbItem onClick={handleAssignmentClick}>{assignment.title}</BreadcrumbItem>
             <BreadcrumbItem>
               {submission?.studentName || "Submission details"}
-              
+
             </BreadcrumbItem>
           </Breadcrumbs>
         </div>
         <div className={styles.assignmentsSection}>
           {assignment && (
             <>
-            <AssignmentDetailCard
+              <AssignmentDetailCard
                 description={assignment.descr || "No description available"}
                 startDate={new Date(assignment.startDate).toLocaleString() || "No start date set"}
                 endDate={new Date(assignment.endDate).toLocaleString() || "No end date set"}
                 deadline={new Date(assignment.deadline).toLocaleString() || "No deadline set"}
                 allowedFileTypes={assignment.allowedFileTypes}
-            />
-            <div className="flex justify-between items-center my-2">
-              <p><DownloadSubmission assignmentID={assignment.assignmentID} studentID={Number(studentID)}></DownloadSubmission></p>
+              />
+              {/* <div className="flex justify-between items-center my-2"> */}
+              <p className="text-left mt-3 "><DownloadSubmission assignmentID={assignment.assignmentID} studentID={Number(studentID)}></DownloadSubmission></p>
 
-            <div className="flex items-center">
-              <p className="text-primary-900 text-large font-bold my-2 mx-3 p-1">
-            {submission?.grade ? 'Adjusted Grade:' : 'Average Grade:'} {submission?.grade ?? submission?.autoGrade}
-          </p><Button variant="flat" color="warning" onClick={handleEditGrade}>Edit Grade</Button>
-            </div>
-            
-            </div>
-            
             </>
-            
+
           )}
           {submission && submission.isSubmitted ? (
             <div>
@@ -318,71 +310,111 @@ export default function AssignmentDashboard() {
                   : `${submission?.studentName} - Assignment Submitted`}
               </p>
               {/* {submission.fileName && <p className="text-left text-small">Submitted file: {submission.fileName}</p>} */}
+              <div className="flex items-center">
+                <p className="text-primary-900 text-large font-bold my-2 mr-3 p-1">
+                  {submission?.grade ? 'Adjusted Grade:' : 'Average Grade:'} {submission?.grade ?? submission?.autoGrade}
+                </p><Button size="sm" variant="flat" color="warning" onClick={handleEditGrade}>Edit Grade</Button>
+              </div>
             </div>
           ) : (
             <p className="text-primary-900 text-large font-bold bg-danger-500 my-2 p-1">{submission?.studentName} - Assignment Not Submitted</p>
           )}
-          <div className={styles.feedbackSection}>
-            <h2>Feedback</h2>
-            {feedbacks.length > 0 ? (
-              feedbacks.map((feedback, index) => (
-                <div key={feedback.feedbackID} className={styles.assignmentsSection}>
-                  <p><strong>Feedback {index + 1}:</strong></p>
-                  <p><strong>Details:</strong> {feedback.feedbackDetails}</p>
-                  <p><strong>Comment:</strong> {feedback.comment}</p>
-                  <p><strong>Date:</strong> {new Date(feedback.feedbackDate).toLocaleString()}</p>
-                  <p><strong>Grade:</strong> {feedback.grade !== null ? feedback.grade : "Not graded yet"}</p>
-                </div>
-              ))
-            ) : (
-              <p>No feedback available yet.</p>
-            )}
-          </div>
+          <div className="instructor flex justify-evenly align-top">
+            <div className="w-1/2 align-top justify-start items-start">
+              <h2 className=" mb-3 align-top items-start">Feedback</h2>
+              {feedbacks.length > 0 ? (
+                // feedbacks.map((feedback, index) => (
+                //   <div key={feedback.feedbackID} className={styles.assignmentsSection}>
+                //     <p><strong>Feedback {index + 1}:</strong></p>
+                //     <p><strong>Details:</strong> {feedback.feedbackDetails}</p>
+                //     <p><strong>Comment:</strong> {feedback.comment}</p>
+                //     <p><strong>Date:</strong> {new Date(feedback.feedbackDate).toLocaleString()}</p>
+                //     <p><strong>Grade:</strong> {feedback.grade !== null ? feedback.grade : "Not graded yet"}</p>
+                //   </div>
+                // ))
+                <div>
+                  <h2 className="mt-8 mb-3">Feedback</h2>
+                  <Table aria-label="Submissions table">
+                    <TableHeader>
+                      <TableColumn>Reviewer ID</TableColumn>
+                      <TableColumn>Feedback Date</TableColumn>
+                      <TableColumn>Comment</TableColumn>
+                      <TableColumn>Last Updated</TableColumn>
 
-          <div className={styles.commentsSection}>
-          <h2>Comments</h2>
-          {comments.length > 0 ? (
-            comments.map((comment) => (
-              <div key={comment.feedbackID} className={styles.comment}>
-                {editingCommentId === comment.feedbackID ? (
-                  <>
-                    <Input
-                      type="text"
-                      fullWidth
-                      value={editedComment}
-                      onChange={(e) => setEditedComment(e.target.value)}
-                    />
-                    <Button color="primary" onPress={handleSaveEditedComment}>Save</Button>
-                    <Button color="secondary" onPress={() => setEditingCommentId(null)}>Cancel</Button>
-                  </>
-                ) : (
-                  <>
-                    <p>{comment.comment}</p>
-                    <p>Date: {new Date(comment.feedbackDate).toLocaleString()}</p>
-                    {comment.lastUpdated && <p>Last Updated: {new Date(comment.lastUpdated).toLocaleString()}</p>}
-                    <Button color="primary" onPress={() => handleEditComment(comment.feedbackID, comment.comment)}>Edit</Button>
-                  </>
-                )}
+                    </TableHeader>
+                    <TableBody>
+                      {feedbacks.map((feedback, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{feedback.reviewerID}</TableCell>
+                          <TableCell>{new Date(feedback.feedbackDate).toLocaleString()}</TableCell>
+                          <TableCell>{feedback.comment}</TableCell>
+                          <TableCell>{new Date(feedback.lastUpdated).toLocaleString()}</TableCell>
+                        </TableRow>
+
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              ) : (
+                <p>No feedback available yet.</p>
+              )}
+            </div>
+
+            <div className="w-1/2 justify-between">
+              <h2>Comments</h2>
+              {comments.length > 0 ? (
+                comments.map((comment) => (
+                  <div key={comment.feedbackID} className={styles.comment}>
+                    {editingCommentId === comment.feedbackID ? (
+                      <>
+                        <Input
+                          type="text"
+                          fullWidth
+                          value={editedComment}
+                          onChange={(e) => setEditedComment(e.target.value)}
+                        />
+                        <Button color="primary" onPress={handleSaveEditedComment}>Save</Button>
+                        <Button color="secondary" onPress={() => setEditingCommentId(null)}>Cancel</Button>
+                      </>
+                    ) : (
+                      <div className="flex">
+                      <div className="flex-col text-left text-medium mr-auto">
+                        <p>{comment.comment}</p>
+                        <p>Date: {new Date(comment.feedbackDate).toLocaleString()}</p>
+                      </div>
+                        <div className="flex-col text-right ">
+                          {comment.lastUpdated && <p>Last Updated: {new Date(comment.lastUpdated).toLocaleString()}</p>}
+                        <Button size="sm" color="secondary" onPress={() => handleEditComment(comment.feedbackID, comment.comment)}>Edit</Button>
+                        </div>
+                        
+                      </div>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <p>No comments available yet.</p>
+              )}
+              <br />
+              <div className="flex items-center">
+                <Input
+                size="sm"
+                type="text"
+                fullWidth
+                label="New Comment"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+              />
+              <Button color="primary" onPress={handleAddComment}>Add Comment</Button>
               </div>
-            ))
-          ) : (
-            <p>No comments available yet.</p>
-          )}
-        </div>
-        <div className={styles.addCommentSection}>
-          <h2>Add Comment</h2>
-          <Input
-            type="text"
-            fullWidth
-            label="New Comment"
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-          />
-          <Button color="primary" onPress={handleAddComment}>Add Comment</Button>
-        </div>
+              
+            </div>
+            
+              
+            
+          </div>
         </div>
       </div>
-            
+
       <Modal
         className='z-20'
         backdrop="blur"
