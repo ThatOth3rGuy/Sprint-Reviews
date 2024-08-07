@@ -303,14 +303,28 @@ export default function ReviewDashboard() {
                             <span>{criterion.criterion}</span>
                             <span>Max marks: {criterion.maxMarks}</span>
                           </div>
+                          
                           <Input
                             type="number"
-                            label={`Grade for ${criterion.criterion}`}
+                            // label={`Grade for ${criterion.criterion}`}
                             placeholder="Enter grade"
                             value={reviewGrades[currentSubmission.studentID]?.[criterion.criteriaID] || ''}
-                            onChange={(e) => handleGradeChange(currentSubmission.studentID, criterion.criteriaID, e.target.value)}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (Number(value) > criterion.maxMarks) {
+                                toast.error(`Grade cannot exceed max marks of ${criterion.maxMarks}`);
+                                return;
+                              }
+                              handleGradeChange(currentSubmission.studentID, criterion.criteriaID, value);
+                            }}
                             max={criterion.maxMarks}
                             min={0}
+                            step="1"
+                            onKeyDown={(e) => {
+                              if (e.key === 'e' || e.key === 'E' || e.key === '+' || e.key === '-') {
+                                e.preventDefault();
+                              }
+                            }}
                           />
                         </div>
                       ))}
@@ -338,11 +352,13 @@ export default function ReviewDashboard() {
           <br />
           <div className="text-center justify-center mx-auto">
             <Pagination
+            size="sm"
           color="secondary"
+          variant="light"
             total={submissionsToReview.length}
             initialPage={1}
             onChange={(page) => setCurrentPage(page)}
-            current={currentPage}
+            // current={currentPage}
           />
           </div>
           

@@ -157,21 +157,23 @@ const Courses: NextPage = () => {
         </div>
         <div className={styles.mainContent}>
           
-        <div className={`flex flex-row items-center justify-center  ${styles.rectangle}`}>         
+        <div className={`instructor flex-col bg-white p-[1.5%] w-[86%] m-[.8%] ml-auto h-[90%]`}>         
         
-        <br/><br/><br/><br/><br/><br/>
+        <br />
         <Image
           src= "/logo-transparent-png.png"
           alt="Theme 1"
-          width={300}
-          height={100}
+          width={200}
+          height={200}
+          className="text=center mx-auto my-0 py-0"
         /> 
         <br />
-        <Input type="text" placeholder="Course Name" className={styles.textbox} value={courseName} onChange={e => setTitle(e.target.value)} />
+        <Input type="text" placeholder="Course Name" className={`text-center mx-auto mb-4 py-0`} value={courseName} onChange={e => setTitle(e.target.value)} />
           
-          <p>Upload Student List: {' '}
+          <p className={`text-center mx-auto mb-4 py-0`}>Upload Student List: {' '}
+          
           <input type="file" onChange={handleFileUpload} /></p>
-          <Button color="primary" variant="ghost" className={styles.createButton} onClick={onCreateCourseButtonClick}>Create Course</Button>
+          <Button className={`text-center mx-auto mb-4 py-0`} color="primary" variant="ghost"  onClick={onCreateCourseButtonClick}>Create Course</Button>
 
           
         </div>
