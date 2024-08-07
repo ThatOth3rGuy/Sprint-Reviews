@@ -1,6 +1,81 @@
 
 # Weekly Logs
 ------------------------------------
+# Week 12
+## Wednesday - August 7, 2024
+**Timesheet Tracking (Wednesday-Tuesday)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_07_31_2024-08_06_2024.pdf)
+### Cycle Review
+
+As we are finally done the development of the project, the last week has been primarily getting the demos ready for User test on this past Friday, the client demo tomorrow and our final demo for Scott on Friday. We finally and proudly have a fully working prototype, that has almost every feature we intended to have! So much work but finally got here. As I have so much going on this past week, I was not able to put too many hours in and submitted my timesheet for the past week (I did not submit Friday as I only had roughly 4 hours accounted for that cycle). Between demo preperation, we have spent the time ensuring our code is well documented, stable for deployment, and completed all fixes/issues required from the testing. Our bin is nearly empty and very little code left to write, all thats left is documentation and the report. The plan for the rest of the week is to focus on the report, and come Friday I SHALL BE READY TO GRADUATE!!!
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Run and Configure Tests For Database/API Changes & Integration 
+  * #3: Review Feedback and Issues From Test-orama - Create Board Issues & Fix Issues
+  * #4: Refactor Database Schema to Handle Appropriate Input & Update API/UI Code to handle new DB Tables/Queries
+  * #5: Test DB Update Calls Implemented, Fix as Needed
+  * #6: Create Final Demos and Final Report
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>COMPLETE!!
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create and Run Integration Tests on Database/API Updates
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Review Issues and Feedback From TestORAMA - Create Kanban Issue Links
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Configure DB and API Calls for Page Updates
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Fix any Remaining Issues
+        </td>
+        <!-- Status -->
+        <td>Practically Complete (There will always be bugs)
+        </td>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Final Demo Prep & Report
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+</table>
+
+#
 # Week 11
 ## Wednesday - July 24, 2024
 **Timesheet Tracking (Friday-Tuesday)**
