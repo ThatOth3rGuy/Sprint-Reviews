@@ -47,7 +47,7 @@ interface Assignment {
   descr: string;
   deadline: string;
   courseID: number;
-  
+
 }
 export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   const [loading, setLoading] = useState(true);
@@ -81,7 +81,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
     if (session && session.user && session.user.userID) {
       fetchCourses(session.user.userID);
     }
-    
+
   }, [session]);
 
   const fetchCourses = async (instructorID: number) => {
@@ -144,18 +144,18 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
         })
         .catch((error) => console.error('Error fetching group data:', error));
 
-        fetchAssignmentData();
+      fetchAssignmentData();
     }
-   
-  }, [review]);
-const fetchAssignmentData = async () => {
-  const assignmentResponse = await fetch(`/api/assignments/${review?.assignmentID}`);
 
-  if (assignmentResponse.ok) {
-    const assignmentData: Assignment = await assignmentResponse.json();
-    setAssignment(assignmentData);
+  }, [review]);
+  const fetchAssignmentData = async () => {
+    const assignmentResponse = await fetch(`/api/assignments/${review?.assignmentID}`);
+
+    if (assignmentResponse.ok) {
+      const assignmentData: Assignment = await assignmentResponse.json();
+      setAssignment(assignmentData);
+    }
   }
-}
   if (!review || loading) {
     return (
       <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
@@ -186,14 +186,14 @@ const fetchAssignmentData = async () => {
   const handleRandomizeClick = () => {
     setIsRandomizeModalOpen(true);
   };
-  
+
   const handleUpdateGroups = async (randomize = false) => {
     const { source, courseId } = router.query;
     const dataToSend = randomize ? null : editableGroups.map(group => ({
       revieweeID: group.reviewee?.studentID,
       reviewers: group.reviewers.map(reviewer => reviewer.studentID)
     }));
-  
+
     try {
       const response = await fetch('/api/updateTable', {
         method: 'POST',
@@ -211,7 +211,7 @@ const fetchAssignmentData = async () => {
           },
         }),
       });
-  
+
       if (response.ok) {
         toast.success("Review groups updated successfully!");
         // Fetch the new review groups and update the state
@@ -236,16 +236,16 @@ const fetchAssignmentData = async () => {
       toast.error("Auto-release is scheduled. Cannot release immediately.");
       return;
     }
-  
+
     try {
       const response = await fetch('/api/reviews/releaseReviews', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ assignmentID: review?.assignmentID }),
+        body: JSON.stringify({ assignmentID: review?.assignmentID, courseId }),
       });
-  
+
       if (response.ok) {
         toast.success("Review Released successfully!");
         router.back();
@@ -257,37 +257,59 @@ const fetchAssignmentData = async () => {
     }
   };
 
-//handle auto-release of assignment on start date
-const handleAutoReleaseChange = async (checked: boolean) => { 
-  setAutoRelease(checked);
-  if (checked) {
+  //handle auto-release of assignment on start date
+  const handleAutoReleaseChange = async (checked: boolean) => {
+    setAutoRelease(checked);
+    if (checked) {
+      try {
+        const response = await fetch('/api/reviews/scheduleAutoRelease', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ assignmentID: review?.assignmentID, startDate: review?.startDate }),
+        });
+
+        if (response.ok) {
+          toast.success("Auto-release scheduled successfully!");
+        } else {
+          console.error('Failed to schedule auto-release');
+        }
+      } catch (error) {
+        console.error('Error scheduling auto-release:', error);
+      }
+    }
+  };
+
+  const handleAutoRelease = async () => {
     try {
+      const startDate = review?.startDate; // Ensure startDate is available
       const response = await fetch('/api/reviews/scheduleAutoRelease', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ assignmentID: review?.assignmentID, startDate: review?.startDate }),
+        body: JSON.stringify({ assignmentID: review?.assignmentID, startDate }),
       });
 
-      if (response.ok) {
-        toast.success("Auto-release scheduled successfully!");
-      } else {
-        console.error('Failed to schedule auto-release');
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error scheduling auto-release:', errorData);
+        throw new Error(errorData.message || 'Failed to schedule auto-release');
       }
+
+      toast.success("Auto-release scheduled successfully!");
     } catch (error) {
       console.error('Error scheduling auto-release:', error);
+      toast.error("Failed to schedule auto-release. Please try again.");
     }
+  };
+
+  const handleEditAssignmentClick = () => {
+    setIsModalOpen(true);
   }
-};
 
-
-
-const handleEditAssignmentClick = () => {
-  setIsModalOpen(true);
-}
-
-const handleAssignmentsUpdate = async () => {
+  const handleAssignmentsUpdate = async () => {
     try {
       const response = await fetch(`/api/updateTable`, {
         method: 'POST',
@@ -297,7 +319,7 @@ const handleAssignmentsUpdate = async () => {
         body: JSON.stringify({
           table: 'reviewDates',
           data: {
-            reviewID: reviewID,            
+            reviewID: reviewID,
             startDate: newStartDate,
             endDate: newEndDate,
 
@@ -329,18 +351,18 @@ const handleAssignmentsUpdate = async () => {
 
   const handleMemberClick = (student: StudentDetails, groupID: number, reviewerIndex: number) => {
     if (!student) return;
-  
+
     if (selectedStudents.length === 0) {
       setSelectedStudents([{ student, groupID, reviewerIndex }]);
     } else if (selectedStudents.length === 1) {
       const [firstSelection] = selectedStudents;
       const targetGroup = editableGroups[groupID];
       const firstSelectionGroup = editableGroups[firstSelection.groupID];
-  
+
       // Check if the students are already in the target groups
       const studentInTargetGroup = targetGroup.reviewers.some(reviewer => reviewer.studentID === firstSelection.student.studentID);
       const firstSelectionInCurrentGroup = firstSelectionGroup.reviewers.some(reviewer => reviewer.studentID === student.studentID);
-  
+
       if (firstSelection.student.studentID === student.studentID) {
         // Same student clicked, clear the selection
         setSelectedStudents([]);
@@ -416,6 +438,7 @@ const handleAssignmentsUpdate = async () => {
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
+      <div className="instructor">
       <div className={styles.container}>
         <div className={styles.header}>
           <h1>{review.reviewID ? `Review For ${review.assignmentName}` : "Review Details"}</h1>
@@ -429,8 +452,8 @@ const handleAssignmentsUpdate = async () => {
 
         <div className={styles.assignmentsSection}>
           <Button color="secondary" variant="ghost" onClick={handleRandomizeClick}>Randomize Review Groups</Button>
-        <Button color='primary' variant='ghost' onClick={handleEditAssignmentClick} >Edit Review Dates</Button>
-        <Button color='primary' variant='ghost' onClick={handleEditGroups} >Edit Groups</Button>
+          <Button color='primary' variant='ghost' onClick={handleEditAssignmentClick} >Edit Review Dates</Button>
+          <Button color='primary' variant='ghost' onClick={handleEditGroups} >Edit Groups</Button>
 
           {review && (
             <ReviewDetailCard
@@ -438,7 +461,7 @@ const handleAssignmentsUpdate = async () => {
               description={`Assignment: ${review.assignmentName}`}
               deadline={review.deadline}
               startDate={review.startDate}
-              endDate = {review.endDate}
+              endDate={review.endDate}
             />
           )}
           <div className={styles.assignmentsSection}>
@@ -468,15 +491,13 @@ const handleAssignmentsUpdate = async () => {
             ))}
           </div>
           <div className={styles.notificationsSection}>
-          <label htmlFor="autoRelease">Auto-Release on Start Date:</label>
-          <Checkbox
-          isSelected={autoRelease}
-          id="autoRelease"
-          onChange={(e) => handleAutoReleaseChange(e.target.checked)}
-        >
-          Auto Release on Start Date
-        </Checkbox>
-            <Button color="primary" variant="ghost" onClick={handleRelease}>Release Assignment for Reviews</Button>
+            <div className="flex justify-center">
+              <Button className="w-1/3" onClick={handleAutoRelease} variant="flat" color='secondary'>
+                Schedule Auto Release
+              </Button>
+              <Button className="w-1/3" color="primary" variant="solid" onClick={handleRelease}>Release Assignment for Reviews</Button>
+            </div>
+
           </div>
           <Modal
             className='z-20'
@@ -485,9 +506,9 @@ const handleAssignmentsUpdate = async () => {
             onOpenChange={(open) => setIsModalOpen(open)}
           >
             <ModalContent>
-            <ModalHeader>Edit Assignment Details</ModalHeader>
+              <ModalHeader>Edit Assignment Details</ModalHeader>
               <ModalBody>
-              <h3>Select New Start Date:</h3>
+                <h3>Select New Start Date:</h3>
                 <Input
                   color="success"
                   variant="underlined"
@@ -521,11 +542,11 @@ const handleAssignmentsUpdate = async () => {
                   min={new Date().toISOString().slice(0, 16)}
                 />
                 <Checkbox
-          isSelected={newAnonymous}
-          onChange={(e) => setNewAnonymous(e.target.checked)}
-        >
-          Anonymous
-        </Checkbox>
+                  isSelected={newAnonymous}
+                  onChange={(e) => setNewAnonymous(e.target.checked)}
+                >
+                  Anonymous
+                </Checkbox>
               </ModalBody>
               <ModalFooter>
                 <Button color="primary" variant="light" onPress={() => setIsModalOpen(false)}>
@@ -539,33 +560,33 @@ const handleAssignmentsUpdate = async () => {
           </Modal>
 
           <Modal
-          className='z-20'
-          backdrop="blur"
-          isOpen={isRandomizeModalOpen}
-          onOpenChange={(open) => setIsRandomizeModalOpen(open)}
-        >
-          <ModalContent>
-            <ModalHeader>Re-randomize Review Groups</ModalHeader>
-            <ModalBody>
-              <h3>Select number of reviews per assignment:</h3>
-              <Input
-                type="number"
-                min="1"
-                max="10"
-                value={reviewsPerAssignment.toString()}
-                onChange={(e) => setReviewsPerAssignment(Number(e.target.value))}
-              />
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary" variant="light" onPress={() => setIsRandomizeModalOpen(false)}>
-                Cancel
-              </Button>
-              <Button color="primary" onPress={handleReRandomizeGroups}>
-                Re-randomize
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
+            className='z-20'
+            backdrop="blur"
+            isOpen={isRandomizeModalOpen}
+            onOpenChange={(open) => setIsRandomizeModalOpen(open)}
+          >
+            <ModalContent>
+              <ModalHeader>Re-randomize Review Groups</ModalHeader>
+              <ModalBody>
+                <h3>Select number of reviews per assignment:</h3>
+                <Input
+                  type="number"
+                  min="1"
+                  max="10"
+                  value={reviewsPerAssignment.toString()}
+                  onChange={(e) => setReviewsPerAssignment(Number(e.target.value))}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" variant="light" onPress={() => setIsRandomizeModalOpen(false)}>
+                  Cancel
+                </Button>
+                <Button color="primary" onPress={handleReRandomizeGroups}>
+                  Re-randomize
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
 
           <Modal
             className='z-20'
@@ -613,7 +634,7 @@ const handleAssignmentsUpdate = async () => {
               </ModalFooter>
             </ModalContent>
           </Modal>
-
+          </div>
         </div>
       </div>
     </>

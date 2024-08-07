@@ -20,7 +20,7 @@ export default async function handler(
       "and user",
       userID
     );
-    const revieweeID = await getRevieweeID(Number(userID), assignmentID);
+    const revieweeID = await getRevieweeID(Number(userID), Number(assignmentID));
     const result = await checkSubmission(
       Number(assignmentID),
       Number(revieweeID)

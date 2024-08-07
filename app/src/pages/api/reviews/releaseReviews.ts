@@ -31,7 +31,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Fetch assignment and course details
     const [assignment] = await query('SELECT title AS assignmentName, courseID FROM assignment WHERE assignmentID = ?', [assignmentID]);
+
+    if (!assignment) {
+      return res.status(404).json({ error: 'Assignment not found' });
+    }
+
     const [course] = await query('SELECT courseName FROM course WHERE courseID = ?', [assignment.courseID]);
+    console.log("assignment details", assignment);
+    if (!course) {
+      return res.status(404).json({ error: 'Course not found' });
+    }
 
     // Fetch all students involved in this assignment
     const students = await query(`
