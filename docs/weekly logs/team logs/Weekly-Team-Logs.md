@@ -1,7 +1,251 @@
 # Project 3: Peer Review System - Team 3 (SprintRunners)
 
+# Week 10 summary (Test-ORAMA week)
+ ## July 31st (Wed) - August 2nd (Fri)
+ ### Features in the Project Plan Cycle: 
+1. User's modifying personal details
+2. Instructors leaving feedback on assignments
+3. Auto-Calculate Average student Grade for Reviewed Assignment
+4. Resubmit Assignment
+5. Instructors extending deadlines 
+6. Modifying assignments
+7. Forgot password page
+
+
+
+###  Tasks from the Project Board:
+![week11Kanban2](./Images/Week11Kanban.png)
+
+
+
+### Tasks for Next Cycle:
+
+![week11ToDo2](./Images/Week11Todo.png)
+
+
+
+### Burn-up Chart (Velocity):
+![week11Burnup2](./Images/Week11BurnUp.png)
+
+
+
+### Times for Team/Individual:
+
+
+Clockify Times:
+
+![week11Clokify2](./Images/Week11Clockify.png)
+
+
+
+
+
+### Completed Tasks:
+![week11Done](https://github.com/user-attachments/assets/3b931bdb-d4e3-450e-98e3-1f4301a11c6a)
+
+
+### In Progress Tasks/ To do:
+![week11InProgress](./Images/Week11InProgress.png)
+
+
+### Test Results 
+Playwright :
+
+![Playwright test report](https://github.com/user-attachments/assets/48cab5d3-b273-4dfd-9ce7-1a0603ad88ae)
+Jest : 
+
+![image](https://github.com/user-attachments/assets/b43f7ede-a023-4497-98fe-cb88ad5e881f)
+
+
+### Overview:
+This week's cycle was slower, yet significant progress was made in the group formation and student view of the dashboard. More work is needed over the weekend to prepare the prototype for testing. Currently, we have some tests ready, and more are in the process of being written.
+
 # Weekly Team Logs
-# Week 9 summary 
+# Week 11 Summary
+ ## July 24th (Wed) - July 31st (Wed)
+ ### Features in the Project Plan Cycle: 
+1. Create Course Groups Functions and edit the course Groups
+2. Instructor Release Peer Review system post-randomization with anonymous handling
+3. Student View of the form created by the instructor  and the reviews to do
+4. Student Side (back-end) feedback is available
+5. Addition of functions to handle  all table updates for the updating tables(course, assignment etc.)
+6. Instructor ability to edit course details
+7. Instructors ability to add and remove students
+8. Email Confirmation upon signup
+9. Forgot Password Functionality
+10. Email notification when assignment is created and when a student is added in a group
+   
+
+
+
+###  Tasks from the Project Board:
+![week11Kanban](https://github.com/user-attachments/assets/c47ffa3e-4631-461f-90e4-f277fb23c8d6)
+
+
+
+
+### Tasks for Next Cycle:
+
+![week11Todo](https://github.com/user-attachments/assets/26c1741d-9385-4c8d-9618-e887a274e5bf)
+
+
+
+
+### Burn-up Chart (Velocity):
+![week11Burnup](https://github.com/user-attachments/assets/de8e9da1-1fd5-468e-a902-cc1b15b8d2c8)
+
+
+
+
+### Times for Team/Individual:
+
+
+Clockify Times:
+
+![week11Clokify](https://github.com/user-attachments/assets/fb84a6dd-65a7-443a-aafe-61718ccf5554)
+
+
+
+
+
+
+### Completed Tasks:
+![week11Done](https://github.com/user-attachments/assets/8df57b2f-f347-42ae-a82c-1e5981c4d0aa)
+
+
+
+### In Progress Tasks/ To do:
+![week11InProgress](https://github.com/user-attachments/assets/04c7eda4-d926-4003-aef9-90414e963ef2)
+
+
+
+### Test Results 
+Playwright :
+
+![Playwright Test Results](https://github.com/user-attachments/assets/a1017716-304d-49b6-a842-d603038e597d)
+
+Jest : 
+
+![image](https://github.com/user-attachments/assets/b43f7ede-a023-4497-98fe-cb88ad5e881f)
+
+
+### Overview:
+The Project Plan Cycle includes key features to enhance the learning process. It allows the creation and editing of Course Groups. The Instructor Release Peer Review system ensures fair and anonymous peer assessments. Students can view and complete reviews on the instructor-created form. A feedback mechanism is available for students. The system includes functions for updating all tables, such as course and assignment tables. Instructors can edit course details and manage student enrollment. These features collectively aim to provide a comprehensive and interactive educational experience.
+ # Week 10 summary (Test-ORAMA week)
+ ## July 24th (Wed) - July 26th (Fri)
+ ### Features in the Project Plan Cycle: 
+1. Randomizer to work with  instructor peer review dashboard
+2. Create a Group feature with all features for group formation in the course
+3. Student peer review dashboard
+
+
+
+###  Tasks from the Project Board:
+![week10Kanban2](https://github.com/user-attachments/assets/6b99d001-de9c-4916-8c73-38923d70bd6a)
+
+
+
+### Tasks for Next Cycle:
+
+![week10ToDo2](https://github.com/user-attachments/assets/e93b518b-0138-4cb0-8df1-8b18ce698632)
+
+
+
+### Burn-up Chart (Velocity):
+![week10Burnup2](https://github.com/user-attachments/assets/af09cdb0-a2c3-47a4-94d0-c6d4f4b43ca5)
+
+
+
+### Times for Team/Individual:
+
+
+Clockify Times:
+
+![week10Clokify2](https://github.com/user-attachments/assets/133b3181-730a-4ca6-a431-bb5754245cc3)
+
+
+
+
+
+### Completed Tasks:
+![week10Done](https://github.com/user-attachments/assets/3b931bdb-d4e3-450e-98e3-1f4301a11c6a)
+
+
+### In Progress Tasks/ To do:
+![week10InProgress2](https://github.com/user-attachments/assets/10634009-12c5-4424-9233-6f8d978e311c)
+
+
+### Test Results 
+Playwright :
+
+![Playwright test report](https://github.com/user-attachments/assets/48cab5d3-b273-4dfd-9ce7-1a0603ad88ae)
+Jest : 
+
+![image](https://github.com/user-attachments/assets/b43f7ede-a023-4497-98fe-cb88ad5e881f)
+
+
+### Overview:
+This week's cycle was slower, yet significant progress was made in the group formation and student view of the dashboard. More work is needed over the weekend to prepare the prototype for testing. Currently, we have some tests ready, and more are in the process of being written.
+
+## July 17th (Wed) - July 24th (Wed)
+### Features in the Project Plan Cycle: 
+1. Fixed the following items as per feedback:
+      - Fix Admin Course Archive/Unarchive	https://github.com/UBCO-COSC499-Summer-2024/team-3-capstone-sprint-runners/issues/262
+      - Fix User Function Buttons on Right Side Menu	https://github.com/UBCO-COSC499-Summer-2024/team-3-capstone-sprint-runners/issues/263
+      - Fix Minor Page Routing Issues	https://github.com/UBCO-COSC499-Summer-2024/team-3-capstone-sprint-runners/issues/268
+      - Update UI Page Navigation Buttons	https://github.com/UBCO-COSC499-Summer-2024/team-3-capstone-sprint-runners/issues/267
+      - Fix Breadcrumb Navigation	https://github.com/UBCO-COSC499-Summer-2024/team-3-capstone-sprint-runners/issues/264
+      - Fix Create Assignment Forms to work in course and form fixes 	https://github.com/UBCO-COSC499-Summer-2024/team-3-capstone-sprint-runners/issues/269
+      - Fix Create Course Screen: Image Display	https://github.com/UBCO-COSC499-Summer-2024/team-3-capstone-sprint-runners/issues/265
+2. A peer-review randomizer that displays randomized groups is available, with the randomization algorithm functioning to some extent.
+3. The Create Course Groups has started to be worked on
+4. In-app notifications for all pages are being worked on
+
+
+###  Tasks from the Project Board:
+![week10Kanban](https://github.com/user-attachments/assets/6e25406e-2905-4b7b-91a7-9171f954eab5)
+
+
+### Tasks for Next Cycle:
+
+![week10ToDo](https://github.com/user-attachments/assets/65d568e2-2380-4b0c-a8b2-1d79b5a7d184)
+
+
+### Burn-up Chart (Velocity):
+![week10Burnup](https://github.com/user-attachments/assets/deb1e63b-d18c-44b6-a0b0-0dec6559b879)
+
+
+### Times for Team/Individual:
+
+
+Clockify Times:
+
+![week10Clokify](https://github.com/user-attachments/assets/fbe5c4c4-4ea6-4a07-86fe-9ac1e74f4cf0)
+
+
+
+
+### Completed Tasks:
+![week10Done](https://github.com/user-attachments/assets/3b931bdb-d4e3-450e-98e3-1f4301a11c6a)
+
+
+### In Progress Tasks/ To do:
+![week10InProgress](https://github.com/user-attachments/assets/f9bfab58-a27d-4089-a8cd-8086eb4c9f18)
+
+### Test Results 
+Playwright :
+
+![image](https://github.com/user-attachments/assets/19f8aa9b-7d4a-4a71-803a-c7c14316955a)
+Jest : 
+
+![image](https://github.com/user-attachments/assets/b43f7ede-a023-4497-98fe-cb88ad5e881f)
+
+
+### Overview:
+Several issues have been addressed based on feedback. These include the resolution of problems with the course archive/unarchive functionality, adjustments to user function buttons, and fixes to minor routing issues. Updates have also been made to the navigation buttons, breadcrumb navigation, and assignment creation forms. The course creation screen now correctly displays images.
+
+In addition to these fixes, new features are being developed. A peer-review randomizer is now available, which displays randomized groups. Work has begun on a feature for creating course groups. Lastly, in-app notifications for all pages are currently under development. These improvements aim to enhance the overall user experience and functionality.
+# Week 9 summary
 ##  July 10th (Wed) - July 17th (Wed)
 ### Features in the Project Plan Cycle: 
 - All instructor pages front end and UX updated 

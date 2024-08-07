@@ -1,5 +1,275 @@
 # Weekly Logs
 
+# Week 12
+
+## Friday-Wednesday (July 26-31, 2024)
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%2012.1-1.png)
+![Clockify Timesheet](./images/EricClockify%2012.1-2.png)
+
+### Cycle Review
+
+Since we have the final user testing event next Friday, the plan for this split is to fully finish the application's features by Wednesday. That way we have the split from Wednesday-Friday to finish up testing and integration of all the seperate branches before the testing. With that said, the first step was to go over the list of necessary requirements and turn everything not already completed into issues (in total there were 17). After that we're just going to assign ourselves issues as we go and try to finish them all by Wednesday.
+
+### Current Tasks
+  * 1: Fixing peer review dashboard issues
+  * 2: Instructor manual student enrollment/unenrollment
+  * 3: Password hashing
+  * 4: Instructor/Admin course editing
+  * 5: Student peer evaluation form
+  * 6: Group assignment submissions 
+  * 7: Assignment view filtering
+  * 8: Instructor feedback on assignments
+
+### Progress Update: Fri-Tue
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Fixing peer review dashboard issues
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Instructor manual student enrollment/unenrollment
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Password hashing
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Instructor/Admin course editing
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+        </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Student peer evaluation form
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Group assignment submissions
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Assignment view filtering
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Instructor feedback on assignments
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
+## Wednesday-Friday (July 31-August 2, 2024)
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%2012.2.png)
+
+### Cycle Review
+
+This is supposed to be the final split of actually coding. We didn't end up finishing all the features by Wednesday like we planned, so we still have to finish some things before the Testing day Friday. My main tasks during this split are to finish the instructor-side for the feedback/submissions that I finished earlier this week. Then I'll need to refactor how the randomizer works because right now it relies on all students having submitted the assignment before a peer-review can be made.
+
+### Current Tasks
+  * 1: Instructor feedback view
+  * 2: Auto-calculating grades
+  * 3: Instructor editing grades
+  * 4: Refactoring randomizer algorithm
+  * 5: Instructor manually editing feedback groups
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Instructor feedback view
+        </td>
+        <!-- Status -->
+        <td> Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Auto-calculating grades
+        </td>
+        <!-- Status -->
+        <td> Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Instructor editing grades
+        </td>
+        <!-- Status -->
+        <td> Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Refactoring randomizer algorithm
+        </td>
+        <!-- Status -->
+        <td> In Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Instructor manually editing feedback groups
+        </td>
+        <!-- Status -->
+        <td> To-Do
+        </td>
+    </tr>
+</table>
+
+# Week 11
+
+## Friday - July 19, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%2011.1-1.png)
+![Clockify Timesheet](./images/EricClockify%2011.1-2.png)
+
+### Cycle Review
+
+After the Test-O-Rama we have a list of fixes/suggestions to help the UI. First priority is to finish that list. After that, our last major feature that needs implementation is the groups and peer review assignments, I'll be working mostly on creating the groups from the instructor side. As well as this, updating the tests seems to be a never-ending cycle that I will continue to chip away at.
+
+### Current Tasks
+  * 1: UI fixes after TestORama
+  * 2: Instructor group creation
+  * 3: Helping finish peer-review randomizaion
+  * 4: Fixing and writing new tests Jest&Playwright
+
+### Progress Update: Fri-Tue
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>UI fixes after TestORama
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Instructor group creation
+        </td>
+        <!-- Status -->
+        <td>Needs Review
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Helping finish peer-review randomizaion
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Fixing and writing new tests Jest&Playwright
+        </td>
+        <!-- Status -->
+        <td>In Progress
+        </td>
+    </tr>
+</table>
+
+## Wednesday - July 24, 2024
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%2011.2.png)
+
+### Cycle Review
+
+For the wedesday to friday split the main goal is to finish fixing the peer review release/randomizer and the group creation features. My main task during this time is to finish the group creation by adding the ability to edit/remove groups and testing it. As well as this I will continue to write/fix the playwright and jest tests from before.
+
+### Current Tasks
+  * 1: Finish group creation
+  * 2: Fix all the testing
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Finish group creation
+        </td>
+        <!-- Status -->
+        <td> Complete
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Fix all the testing
+        </td>
+        <!-- Status -->
+        <td> In Progress (Playwright is done)
+        </td>
+</table>
+
 # Week 10
 
 ## Friday - July 12, 2024
@@ -45,7 +315,7 @@ For the first half of this cycle I was still in Calgary, so I made sure to do as
         <td>Refactoring student enrollment
         </td>
         <!-- Status -->
-        <td>Done
+        <td>Complete
         </td>
     </tr>
 </table>
@@ -78,7 +348,7 @@ This cycle is the final prep before the Test-O-Rama event on Friday. For this cy
         <td> Create API handlers for peer-review randomization
         </td>
         <!-- Status -->
-        <td> Done
+        <td> Complete
         </td>
     </tr>
         <tr>
@@ -86,7 +356,7 @@ This cycle is the final prep before the Test-O-Rama event on Friday. For this cy
         <td> Write the randomization algorithms
         </td>
         <!-- Status -->
-        <td> Done
+        <td> Complete
         </td>
     </tr>
         <tr>
@@ -94,7 +364,7 @@ This cycle is the final prep before the Test-O-Rama event on Friday. For this cy
         <td> Merge all current features into demo branch
         </td>
         <!-- Status -->
-        <td> Done
+        <td> Complete
         </td>
     </tr>
         <tr>
@@ -613,7 +883,7 @@ Not much to talk about during this cycle meeting. We just need to get to work to
         <td>Create Landing Page
         </td>
         <!-- Status -->
-        <td>Done
+        <td>Complete
         </td>
     </tr>
     <tr>
@@ -621,7 +891,7 @@ Not much to talk about during this cycle meeting. We just need to get to work to
         <td>Create registration pages
         </td>
         <!-- Status -->
-        <td>Done
+        <td>Complete
         </td>
     </tr>
     <tr>
@@ -629,7 +899,7 @@ Not much to talk about during this cycle meeting. We just need to get to work to
         <td>Finish login pages
         </td>
         <!-- Status -->
-        <td>Done
+        <td>Complete
         </td>
     </tr>
 </table>
