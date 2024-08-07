@@ -1,6 +1,6 @@
 // pages/api/submissions/checkSubmission.ts
 import { NextApiRequest, NextApiResponse } from 'next';
-import { query } from '../../../db';
+import { query, getStudentsById } from '../../../db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { assignmentID, userID } = req.query;
@@ -40,8 +40,16 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{
   WHERE s.assignmentID = ? AND s.studentID = ?;
   `;
   try {
-    const rows = await query(sql, [assignmentID, userID]);
-    console.log(rows);
+    let studentID: number;
+    const studentIDResult = await getStudentsById(userID);
+    if (studentIDResult === null) {
+      studentID = userID;
+    } else {
+      studentID = studentIDResult.studentID;
+    }
+
+    const rows = await query(sql, [assignmentID, studentID]);
+    console.log('Submissions: ', rows);
     if (rows.length > 0) {
       const submissionDate = new Date(rows[0].submissionDate);
       const deadlineDate = new Date(rows[0].deadline);

@@ -82,8 +82,10 @@ const ReleaseAssignment: React.FC = () => {
       );
       if (response.ok) {
         const data = await response.json();
-        const filteredAssignments = data.assignments.filter((assignment: { groupAssignment: number; }) => assignment.groupAssignment === 0);
-        setAssignments(filteredAssignments);
+        console.log('All assignments: ', data.courses);
+        //const filteredAssignments = data.assignments.filter((assignment: { groupAssignment: number; }) => assignment.groupAssignment === 0);
+        setAssignments(data.courses);
+        //console.log('Filtered assignments: ', filteredAssignments);
       } else {
         console.error("Failed to fetch courses");
       }

@@ -123,7 +123,7 @@ export default function Page() {
           <br />
         </div>
         <div className={styles.mainContent}>
-          <div className={styles.assignmentsSection}>
+          <div className="instructor flex-col bg-white p-[1.5%] w-[86%] m-[.8%] ml-auto h-fit">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardBody className="text-sm font-medium">User Profile</CardBody>

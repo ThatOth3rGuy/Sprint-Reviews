@@ -90,29 +90,31 @@ const Courses: NextPage = () => {
 
       //const studentIDs = students.map(student => student.userID);
 
-      // Call the enroll students API with studentIDs and courseID
-      const enrollStudentsResponse = await fetch(`/api/addNew/enrollStudents`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          studentIDs: students,
-          courseID: courseId,
-          missingData: missingData, // Include missingData here
-        }),
-      });
+      if (students.length > 0) {
+        // Call the enroll students API with studentIDs and courseID
+        const enrollStudentsResponse = await fetch(`/api/addNew/enrollStudents`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            studentIDs: students,
+            courseID: courseId,
+            missingData: missingData, // Include missingData here
+          }),
+        });
 
-      // If it fails, throw an error
-      if (!enrollStudentsResponse.ok) {
-       toast.error('Failed to enroll students');
-       return;
+        // If it fails, throw an error
+        if (!enrollStudentsResponse.ok) {
+        toast.error('Failed to enroll students');
+        return;
+        }
+
+        // If there are no errors, log success message and redirect
+        console.log('Students enrolled successfully');
+        toast.success('Course created!');
+        toast.success('Students enrolled successfully');
       }
-
-      // If there are no errors, log success message and redirect
-      console.log('Students enrolled successfully');
-      toast.success('Course created!');
-      toast.success('Students enrolled successfully');
       
       // Redirect to course page after successful creation and enrollment
       router.push({

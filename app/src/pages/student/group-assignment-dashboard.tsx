@@ -5,7 +5,19 @@ import { useSessionValidation } from "../api/auth/checkSession";
 import StudentAssignmentView from "../components/student-components/student-assignment-details";
 import StudentGroupDetails from "../components/student-components/student-group-details";
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import {  Button,  Breadcrumbs,  BreadcrumbItem,  Spinner,  Modal,  useDisclosure,  ModalContent,  ModalBody,  ModalFooter,  ModalHeader,  Input} from "@nextui-org/react";
+import {
+  Button,
+  Breadcrumbs,
+  BreadcrumbItem,
+  Spinner,
+  Modal,
+  useDisclosure,
+  ModalContent,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Input,
+} from "@nextui-org/react";
 import toast from "react-hot-toast";
 
 interface Assignment {
@@ -99,13 +111,14 @@ export default function AssignmentDashboard() {
           }
 
           const submissionResponse = await fetch(
-            `/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${studentID}`
+            `/api/submissions/checkSubmission4Student?assignmentID=${assignmentID}&userID=${studentID}`
           );
           if (submissionResponse.ok) {
             const submissionData = await submissionResponse.json();
             setIsSubmitted(submissionData.isSubmitted);
             setSubmittedFileName(submissionData.fileName);
             setIsLateSubmission(submissionData.isLate);
+            console.log('Submission data:', submissionData);
           } else {
             console.error("Error checking submission status");
           }

@@ -107,7 +107,6 @@ export default function Page() {
     }
   };
   return (
-    <>
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
           <h1>Archived Courses</h1>
@@ -119,8 +118,6 @@ export default function Page() {
         </div>
         <div className={styles.mainContent}>
           <div className={styles.assignmentsSection}>
-            {/* TODO: add functionality to search bar to search from all archived courses */}
-            <Input className="m-1 mx-4 pr-7" placeholder="Search for course" size="sm" type="search" />
 
             <div className={styles.courseCards}>
               {courses.map((course, index) => (
@@ -164,6 +161,5 @@ export default function Page() {
           <AdminNavbar admin={{ className: "bg-primary-500" }} />
         </div>
       </div>
-    </>
   );
 }

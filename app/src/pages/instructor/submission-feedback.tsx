@@ -312,7 +312,7 @@ export default function AssignmentDashboard() {
               {/* {submission.fileName && <p className="text-left text-small">Submitted file: {submission.fileName}</p>} */}
               <div className="flex items-center">
                 <p className="text-primary-900 text-large font-bold my-2 mr-3 p-1">
-                  {submission?.grade ? 'Adjusted Grade:' : 'Average Grade:'} {submission?.grade ?? submission?.autoGrade}
+                  {submission?.grade ? 'Adjusted Grade:' : 'Average Grade:'} {submission?.grade ?? submission?.autoGrade} %
                 </p><Button size="sm" variant="flat" color="warning" onClick={handleEditGrade}>Edit Grade</Button>
               </div>
             </div>

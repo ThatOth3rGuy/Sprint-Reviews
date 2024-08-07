@@ -70,7 +70,7 @@ export default function Page() {
   }
 
   function handleHomeClick(): void {
-    router.push("/instructor/dashboard");
+    router.push("/student/dashboard");
   }
 
   return (

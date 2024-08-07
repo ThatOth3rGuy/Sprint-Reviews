@@ -119,7 +119,7 @@ export default function AssignmentDashboard() {
           setStudentID(fetchedStudentID);
   
           const response = await fetch(
-            `/api/submissions/checkPRSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`
+            `/api/submissions/checkSubmission4Student?assignmentID=${assignmentID}&userID=${session.user.userID}`
           );
           if (!response.ok) {
             throw new Error("Failed to check submission status");
@@ -142,6 +142,7 @@ export default function AssignmentDashboard() {
           setIsSubmitted(data.isSubmitted);
           setSubmittedFileName(data.fileName);
           setIsLateSubmission(data.isLate);
+          console.log('Submission status:', data);
         } else {
           console.error("Failed to set studentID");
         }
@@ -286,7 +287,7 @@ export default function AssignmentDashboard() {
               {isWithinSubmissionPeriod() && <Button variant="ghost" color="danger" onClick={onOpen}>Resubmit Assignment</Button>}
             </div>
           ) : (
-            isWithinSubmissionPeriod() && <Button variant="solid" color="success" onClick={onOpen}>Submit Assignment</Button>
+            isWithinSubmissionPeriod() && <Button variant="flat" color="success" onClick={onOpen}>Submit Assignment</Button>
           )}
           <Modal
             className="student"

@@ -92,7 +92,6 @@ export default function Page() {
     }
   };
   return (
-    <>
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
           <h1>Admin Dashboard</h1>
@@ -102,8 +101,6 @@ export default function Page() {
         </div>
         <div className={styles.mainContent}>
           <div className={styles.assignmentsSection}>
-            {/* TODO: add functionality to search bar to search from all active courses */}
-            <Input className="m-1 mx-4 pr-7" placeholder="Search for course" size="sm" type="search" />
 
             {/* TODO: turn the course list into pagination */}
             <div className={styles.courseCards}>
@@ -147,6 +144,5 @@ export default function Page() {
           <AdminNavbar admin={{ className: "bg-primary-500" }} />
         </div>
       </div>
-    </>
   );
 }
