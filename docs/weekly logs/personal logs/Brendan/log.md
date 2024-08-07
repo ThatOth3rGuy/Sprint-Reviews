@@ -77,6 +77,90 @@ As we are finally done the development of the project, the last week has been pr
 
 #
 # Week 11
+## Friday - July 26, 2024
+**Timesheet Tracking (Friday-Friday?)**
+* ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_07_19_2024-07_23_2024.pdf)
+*SAME AS WEDNESDAY*
+### Cycle Review
+
+Everything this cycle is the same as Wednesday. Had too much going on this week I was not able to put much work in. 
+
+### Current Tasks
+  * #1: Manage and assign tasks for each cycle (Plaky/Kanban board)
+  * #2: Create Feature Definition and Sub-divisions on Project Board For Team Division
+  * #3: Run and Configure Tests For Database/API Changes
+  * #4: Review Feedback and Issues From Test-orama - Create Board Issues & Fix Issues
+  * #5: Refactor Database Schema to Handle Appropriate Input & Update API/UI Code to handle new DB Tables/Queries - Still *but now with UI*
+  * #6: Test Randomization Calls and Display Results to UI 
+  * #7: Collect & Document Feedback/Issues Noted from Friday Testing
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+        <!-- Task/Issue # -->
+        <td>Update Project Boards with Task Assignees/Details
+        </td>
+        <!-- Status -->
+        <td>Ongoing
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Feature breakdown/sub-division for parallel task work
+        </td>
+        <!-- Status -->
+        <td>Partly Complete (Recurring)
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Create and Run Integration Tests on Database/API Updates
+        </td>
+        <!-- Status -->
+        <td>In-Progress
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Review Issues and Feedback From TestORAMA - Create Kanban Issue Links
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Reconfigure DB and API Calls for Peer Review Creation Randomizer - UI Handling
+        </td>
+        <!-- Status -->
+        <td>Complete-ish
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Test Changes to UI API calls and Query Functions According To DB Updates (Display to Page)
+        </td>
+        <!-- Status -->
+        <td>In-Progress/Fixing
+        </td>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td> Connect All Randomizer Calls, Queries, Handlers, to store proper data
+        </td>
+        <!-- Status -->
+        <td>COMPLETE
+        </td>
+    </tr>
+</table>
+
+#
 ## Wednesday - July 24, 2024
 **Timesheet Tracking (Friday-Tuesday)**
 * ![Clockify Timesheet](./Timesheets/Clockify_Time_Report_Detailed_07_19_2024-07_23_2024.pdf)
