@@ -225,13 +225,13 @@ export default function ManageStudents() {
           </Breadcrumbs>
         </div>
         <div className={styles.mainContent}>
-          <div className={`flex flex-row items-center justify-center ${styles.assignmentsSection}`}>
-            <Card shadow="sm" className={`${styles.outerCard}`} style={{ overflow: 'auto' }}>
-              <h2>All Students</h2>
+          <div className={`flex flex-row items-top justify-top ${styles.assignmentsSection}`}>
+            <Card shadow="sm" className="overflow-auto border-solid border-1 border-primary">
+              <h2 className="bg-primary-50 p-2">All Students</h2>
               <Listbox>
                 {students.length > 0 ? (
                   students.map((student) => (
-                    <ListboxItem key={student.studentID}>{student.firstName} {student.lastName}</ListboxItem>
+                    <ListboxItem color="primary" variant="flat" key={student.studentID}>{student.firstName} {student.lastName}</ListboxItem>
                   ))
                 ) : (
                   <ListboxItem key=''>No students available</ListboxItem>
@@ -240,9 +240,9 @@ export default function ManageStudents() {
             </Card>
           </div>
           <div className={styles.notificationsSection}>
-            <Button color="primary" variant="ghost" onClick={() => setIsEnrollModalOpen(true)}>Enroll Individual Student</Button>
-            <Button color="primary" variant="ghost" onClick={() => setIsFileEnrollModalOpen(true)}>Enroll Students from CSV</Button>
-            <Button color="danger" variant="ghost" onClick={() => setIsRemoveModalOpen(true)}>Remove Student</Button>
+            <Button color="primary" variant="ghost" className="m-1" onClick={() => setIsEnrollModalOpen(true)}>Enroll Individual Student</Button>
+            <Button color="primary" variant="ghost" className="m-1" onClick={() => setIsFileEnrollModalOpen(true)}>Enroll Students from CSV</Button>
+            <Button color="danger" variant="solid" className="m-1" onClick={() => setIsRemoveModalOpen(true)}>Remove Student</Button>
           </div>
         </div>
 

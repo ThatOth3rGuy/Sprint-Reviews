@@ -192,7 +192,7 @@ export default function Page() {
               <>
                 <h3 className={styles.innerTitle}>Individual Assignments</h3>
                 <br />
-                <Divider className="instructor bg-secondary" />
+                <Divider className="student bg-secondary" />
                 <br />
                 <div className={styles.courseCard}>
                   {individualAssignments.length > 0 ? (
@@ -218,7 +218,7 @@ export default function Page() {
               <>
                 <h3 className={styles.innerTitle}>Group Assignments</h3>
                 <br />
-                <Divider className="instructor bg-secondary" />
+                <Divider className="student bg-secondary" />
                 <br />
                 <div className={styles.courseCard}>
                   {groupAssignments.length > 0 ? (
@@ -244,7 +244,7 @@ export default function Page() {
               <>
                 <h3 className={styles.innerTitle}>Peer Reviews</h3>
                 <br />
-                <Divider className="instructor bg-secondary" />
+                <Divider className="student bg-secondary" />
                 <br />
                 <div className={styles.courseCard}>
                   {peerReviews.length > 0 ? (
@@ -254,7 +254,7 @@ export default function Page() {
                         courseID={review.linkedAssignmentID}
                         courseName={`Review for Assignment - ${review.title}`|| `Review for Assignment ${review.linkedAssignmentID}`}
                         color="#b3d0c3"
-                        dueDate={new Date(review.deadline).toLocaleString()}
+                        deadline={new Date(review.deadline).toLocaleString()}
                       />
                     </div>
                     ))

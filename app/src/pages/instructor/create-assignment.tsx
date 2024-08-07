@@ -2,12 +2,10 @@ import type { NextPage } from "next";
 import styles from "../../styles/instructor-assignments-creation.module.css";
 import { useRouter } from "next/router";
 
-import { 
-  Card, SelectItem, Select, Listbox, ListboxItem, AutocompleteItem, Autocomplete, 
+import { Card, SelectItem, Select, Listbox, ListboxItem, AutocompleteItem, Autocomplete, 
   Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, 
   Progress, Input, Spinner 
 } from "@nextui-org/react";
-import InstructorHeader from "../components/instructor-components/instructor-header";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
@@ -256,7 +254,7 @@ const Assignments: NextPage = () => {
           </Breadcrumbs>
         </div>
         <div className={styles.mainContent}>
-          <div className="flex-col bg-white p-[1.5%] w-[86%] m-[.8%] ml-auto h-fit">
+          <div className="instructor flex-col bg-white p-[1.5%] w-[86%] m-[.8%] ml-auto h-fit">
             <h2>Create Assignment For Student Submission</h2>
             {error && <p style={{ color: "red" }}>{error}</p>}
             <Input
