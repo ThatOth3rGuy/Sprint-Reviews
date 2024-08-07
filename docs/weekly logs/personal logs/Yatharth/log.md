@@ -1,12 +1,12 @@
  # Weekly Logs 
 ------------------------------------
 # Week 11 Summary 
-## Friday (08/02/2024)
-### Timesheet Week 10 (07/24/2024- 07/26/2024)
-![image](https://github.com/user-attachments/assets/23f43614-b245-4914-bc07-1d98c52f6042)
+## Wednesday (08/07/2024)
+### Timesheet Week 11 (07/31/2024- 08/07/2024) (End of Development)
+![image](https://github.com/user-attachments/assets/2ff5caf4-ecc4-4ef8-b95a-4c88d1d862aa)
 ### Current Tasks (Complete by the end of the day)
-- file download and viewer for all users
-
+- Final reports
+- Fixes from feedback
 ### Progress Update 
 <table>
     <tr>
@@ -17,14 +17,22 @@
     </tr>
  <tr>
         <!-- Task/Issue # -->
-        <td> File viewer and download 
+        <td> Re-randomizer of Peer review groups 
         </td>
         <!-- Status -->
-        <td> In progress/ partial done
+        <td> Done
+        </td>
+    </tr>
+ <tr>
+        <!-- Task/Issue # -->
+        <td> UI fixes and Bug fixes for instructor pages 
+        </td>
+        <!-- Status -->
+        <td> Done
         </td>
     </tr><tr>
         <!-- Task/Issue # -->
-        <td> Peer review Dashboard Instructor 
+        <td> UI fixes and Bug fixes for student pages 
         </td>
         <!-- Status -->
         <td> Done
@@ -32,7 +40,7 @@
     </tr>
         <tr>
         <!-- Task/Issue # -->
-        <td> Link Submissions and Anonymous    
+        <td> Code documentation for instructor pages    
         </td>
         <!-- Status -->
         <td> Done
@@ -46,7 +54,7 @@
         <td> Email Notifications   
         </td>
         <!-- Status -->
-        <td> Partial Done/In Progress
+        <td> Done
         </td>
     </tr> 
 <tr>
@@ -65,16 +73,39 @@
         <td> Done
         </td>
     </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> Instructor manual feedback entry    
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+     <tr>
+        <!-- Task/Issue # -->
+        <td> Student View of the manual entry     
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
+     <tr>
+        <!-- Task/Issue # -->
+        <td> Video creation for client     
+        </td>
+        <!-- Status -->
+        <td> Done
+        </td>
+    </tr>
     
 </table>
 
 ### Weekly Goal Review :
-This week was mainly focused on getting the application ready for the demo. The project is progressing well with several tasks already completed. The 'Peer review Dashboard Instructor', 'Link Submissions and Anonymous', 'Modifying Assignments', and 'Modifying User Details' tasks have all been completed. The 'File viewer and download' and 'Email Notifications' tasks are currently in progress, with parts already done. The team is diligently working to complete all tasks and ensure the project's success. 
+This week has been exceptionally long because of bugs and Ui fixes, which included many features working in isolation but breaking while working together. Plus a lot of APIs needed a desperate refactor because the changes implemented had two people working on the same page at the same time. I mainly added functionality to modify assignments, and peer reviews,re-randomize and save the new groups of students, modifying user details and fix all bugs in the system which included the student review dashboard, course dashboard for both user types, submission feedback views for both user types etc. I also created the demo video for the client to view the functioning app. Overall a good way to wrap up and have this prototype with minimal issues ready to deploy. Our application is an easy-to-use app which can be implemented in a real live class situation and also outside class. We hope our client likes our product and ends up using it! I would like to thank you for reading my weekly logs, it feels great to know someone was observing our journey as we went through it! I would also give a huge round of applause for my team, they have diligently picked up on issues and solved them. Eric being our testing and backend expert ensures all our tests are in place with also helps others when needed while also developing features as a whole by himself! Brendan was our main DevOps and back-end expert who ensured all our applications were dockerized when other teams were busy deploying Hello World, he also (if anyone did not know) had an active job during the project but he never made any part of the project lack even though we lost a team member in the middle of the course. Lastly, Tithi, our front-end and mindware expert, tirelessly worked on designing the UI and handled all the UI implementation to the bit making the app receive nothing but positive feedback from the user testing, and with that, she also developed individual features you look at the time she has put into the project, is the longest and heaviest part of development. I would also like to thank Dr.Scott and the TA team for helping us at every point when needed and help guide us through our project and holding us responsible if the development was slowing down. With that said, and holding up a tear as I write my final log here, I can say that this course has probably tested and prepared me to do any web application project with no hesitation. With learning to code in Next.js and REACT to create web applications which are to a level industry ready I believe that I walk out of this course with more confidence in my career and I will always remember this project. Thank you to everyone once again this would have never happened without my team and the guidance of my gurus!
+
 ### Next Cycle Goals:  
-* Randomizer algorithm and functionality 
-* Adding update features to all pages
-* Group Peer reviews and manual group creation
-## Wenesday (07/31/2024)
+* Finish up the necessities and requirements for the final report
+## Friday (08/02/2024)
 ### Timesheet Week 10 (07/24/2024- 07/26/2024)
 ![image](https://github.com/user-attachments/assets/f0af57b3-cbf0-4555-9676-d77735584a2a)
 
