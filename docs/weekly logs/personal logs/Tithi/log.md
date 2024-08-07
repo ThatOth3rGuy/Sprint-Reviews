@@ -1,5 +1,23 @@
 # Weekly Personal Logs
 
+## Personal Log For Week 13
+
+### 08/07/2024
+
+Topics Covered:
+* bug fixes and final report
+
+My contributions since Friday's log:
+
+Over the weekend, I was able to setup the file viewer and have it handle the different submission types. The issue that came up here was that any docx file could not be viewed in the application, so I set it up to be download only. I also worked on finishing up the email notifications. As of now, we have emails sent to students when assignments are created and when an assignment is released for review. Since we have the auto-release feature, I fixed the implementation of the email transporter so that it only sends an email once the assignment is released, so if it is released now the email will also be sent now, and if it scheduled for a later date, the email will be sent on that date. Since Monday evening, I have spent a lot of hours just running the application and manually testing for bugs. The major bug that I found was that the peer review dashboard was not being displayed correctly and the data being displayed wasn't entirely what was inputed in the database. Beyond that, there are only minor bugs, including breadcrumbs and peer reviews can't be resubmitted.
+
+| Task | Due By | Status |
+| ------- | ------- | ------- |
+| Bug Fixes | 08/08/2024 |  |
+| Final Report | 08/08/2024 | WIP |
+
+![week 13 time tracking](img/week13.png)
+
 ## Personal Log For Week 12
 
 ### 07/31/2024
@@ -13,9 +31,9 @@ I spent some time doing bugfixes a lot of the functionality we wanted to merge a
 
 | Task | Due By | Status |
 | ------- | ------- | ------- |
-| Email Notifications | 07/31/2024 | Two pages left that need notifications sent |
-| File viewer | 07/31/2024 | Has bugs |
-| Auto-release assignment | 07/31/2024 | Complete with some bugs |
+| Email Notifications | 07/31/2024 | Complete |
+| File viewer | 07/31/2024 | Complete |
+| Auto-release assignment | 07/31/2024 | Complete |
 | Assignment due date fixes | 08/01/2024 | Complete |
 
 ![week 12 time tracking](img/week12.png)
