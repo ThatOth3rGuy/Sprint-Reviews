@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 async function getFeedbacksForAssignment(assignmentID: string, studentID: string) {
   const sql = `
-    SELECT f.feedbackID, f.revieweeID, f.feedbackDetails, f.feedbackDate, f.lastUpdated, f.comment
+    SELECT f.feedbackID, f.revieweeID, f.feedbackDetails, f.feedbackDate, f.lastUpdated, f.comment, s.autoGrade
     FROM feedback f
     JOIN submission s ON f.revieweeID = s.studentID
     WHERE f.assignmentID = ? AND s.studentID = ?
