@@ -59,6 +59,7 @@ export default function ReviewDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [deadlinePassed, setDeadlinePassed] = useState<boolean>(false);
   const [autoReleaseDate, setAutoReleaseDate] = useState<Date | null>(null);
+  const [buttonVisible, setButtonVisible] = useState(true);
   useSessionValidation('student', setLoading, setSession);
 
   useEffect(() => {
@@ -70,31 +71,32 @@ export default function ReviewDashboard() {
         setLoading(false);
         return;
       }
-
+  
       try {
         const [assignmentResponse, reviewResponse] = await Promise.all([
           fetch(`/api/assignments/${assignmentID}`),
           fetch(`/api/review-dashboard/${assignmentID}?userID=${userID}`)
         ]);
-
+  
         if (assignmentResponse.ok && reviewResponse.ok) {
           const [assignmentData, reviewData] = await Promise.all([
             assignmentResponse.json(),
             reviewResponse.json()
           ]);
-
+  
           setAssignment(assignmentData);
           setReviewCriteria(reviewData.reviewCriteria);
+  
           const reviewSubmissions = await Promise.all(reviewData.submissions.map(async (submission: Submission) => {
             const submissionResponse = await fetch(`/api/submissions/checkPRSubmission?assignmentID=${assignmentID}&userID=${userID}`);
             const submissionData = await submissionResponse.json();
             return {
               ...submission,
-              ...submissionData,
+              ...submissionData.submissions.find((s: any) => s.studentID === submission.studentID),
             };
           }));
           setSubmissionsToReview(reviewSubmissions);
-
+  
           if (assignmentData.courseID) {
             const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
             if (courseResponse.ok) {
@@ -103,26 +105,26 @@ export default function ReviewDashboard() {
               setCourseName(courseData.courseName);
             }
           }
-
+  
           // Initialize reviewGrades and reviewComments state
           const initialGrades = reviewSubmissions.reduce((acc: any, submission: Submission) => {
             acc[submission.studentID] = reviewGrades[submission.studentID] || {};
             return acc;
           }, {});
           setReviewGrades(initialGrades);
-
+  
           const initialComments = reviewSubmissions.reduce((acc: any, submission: Submission) => {
             acc[submission.studentID] = reviewComments[submission.studentID] || '';
             return acc;
           }, {});
           setReviewComments(initialComments);
-
+  
           // Check if deadline has passed
           const currentSubmission = reviewSubmissions[currentPage - 1];
           const assignmentDeadline = currentSubmission ? dayjs(currentSubmission.deadline) : null;
           const currentDate = dayjs();
           setDeadlinePassed(currentDate.isAfter(assignmentDeadline));
-
+  
         } else {
           throw new Error('Failed to fetch data');
         }
@@ -132,20 +134,21 @@ export default function ReviewDashboard() {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, [router.isReady, session, assignmentID, currentPage]);
-
+  
   const handleHomeClick = () => router.push("/student/dashboard");
 
   const handleBackClick = () => {
     const { source } = router.query;
     if (source === 'course') {
-      router.push(`/student/course-dashboard?courseId=${assignment?.courseID}`);
+      router.push(`/student/course-dashboard?courseId=${assignment?.courseId}`);
     } else {
-      router.push('/student/dashboard');
+      router.push('/student/all-assignments');
     }
   };
+  
 
   const handleGradeChange = (revieweeID: number, criteriaID: number, value: string) => {
     setReviewGrades(prev => ({
@@ -230,6 +233,7 @@ export default function ReviewDashboard() {
       const result = await submitReviews(assignmentID, reviews);
       console.log(result.message);
       toast.success(result.message);
+      setButtonVisible(false);
       router.push('/student/dashboard');
     } catch (error) {
       console.error('Failed to submit reviews:', error);
@@ -248,14 +252,16 @@ export default function ReviewDashboard() {
   const checkSubmissionStatus = (submissionDate: string, deadline: string) => {
     const submission = dayjs(submissionDate);
     const dueDate = dayjs(deadline);
-    return submission.isBefore(dueDate) ? 'Submitted on time' : 'Submitted late';
+    return submission.isBefore(dueDate) ? 'Review submission available' : 'Submitted late';
   };
-
+  
   if (error) {
     return <div>Error: {error}</div>;
   }
 
   const currentSubmission = submissionsToReview[currentPage - 1];
+
+  
 
   return (
     <>
@@ -272,17 +278,19 @@ export default function ReviewDashboard() {
             </BreadcrumbItem>
           </Breadcrumbs>
         </div>
-        <div className={`w-[100%] flex flex-col ${styles.assignmentsSection}`}>
-          {currentSubmission && (
-            <>
-              <Card className="mb-4">
-                <CardBody>
-                  <p>{currentSubmission.studentName ? `Student Name: ${currentSubmission.studentName}` : 'Student has not submitted the assignment yet'}</p>
-                  <p>File Submission: {currentSubmission.fileName || 'N/A'}</p>
-                  <p>File: <DownloadSubmission assignmentID={Number(assignmentID)} studentID={currentSubmission.studentID}></DownloadSubmission></p>
-                  <p>Submission Deadline: {new Date(currentSubmission.deadline).toLocaleString()}</p>
-                </CardBody>
-              </Card>
+        <div className={` ${styles.mainContent}`}>
+        <div className={`student flex-col bg-white p-[1%] w-[86%] m-[.8%] ml-auto h-[100%] overflow-auto`}>
+        {currentSubmission && (
+          <>
+            <div className="mb-4 flex-col text-left w-[100%] bg-white shadow-sm p-2">
+              <p>{currentSubmission.studentName ? `Student Name: ${currentSubmission.studentName}` : 'Student has not submitted the assignment yet'}</p>
+              
+              <p>Submission Deadline: {new Date(currentSubmission.deadline).toLocaleString()}</p>
+              {currentSubmission.isSubmitted && (
+                <p>Submission Status: {currentSubmission.isLate ? 'Late' : 'On Time'}</p>
+              )}
+              <p className="student"><DownloadSubmission assignmentID={Number(assignmentID)} studentID={currentSubmission.studentID}></DownloadSubmission></p>
+            </div>
               <Card>
                 <CardHeader>Review Criteria</CardHeader>
                 <Divider />
@@ -320,11 +328,6 @@ export default function ReviewDashboard() {
                   ) : (
                     <p>Student has not submitted the assignment yet</p>
                   )}
-                  {!deadlinePassed && currentSubmission.isSubmitted && checkSubmissionStatus(currentSubmission.submissionDate, currentSubmission.deadline) &&(
-                    <Button className={"color=primary"} onClick={handleSubmitAllReviews}>
-                      Submit All Reviews
-                    </Button>
-                  )}
                   {currentSubmission.isSubmitted && (
                     <p>{checkSubmissionStatus(currentSubmission.submissionDate, currentSubmission.deadline)}</p>
                   )}
@@ -332,14 +335,29 @@ export default function ReviewDashboard() {
               </Card>
             </>
           )}
-          <Pagination
+          <br />
+          <div className="text-center justify-center mx-auto">
+            <Pagination
+          color="secondary"
             total={submissionsToReview.length}
             initialPage={1}
             onChange={(page) => setCurrentPage(page)}
             current={currentPage}
           />
+          </div>
+          
+          <br />
+          {!deadlinePassed && currentSubmission?.isSubmitted && checkSubmissionStatus(currentSubmission.submissionDate, currentSubmission.deadline) && buttonVisible && (
+            <Button className="w-[100%]" color='primary' variant="solid" onClick={handleSubmitAllReviews}>
+              Submit All Reviews
+            </Button>
+          )}
+        </div>
         </div>
       </div>
     </>
   );
+  
+  
+  
 }

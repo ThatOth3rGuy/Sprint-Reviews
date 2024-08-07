@@ -245,7 +245,7 @@ export default function AssignmentDashboard() {
   return (
     <>
       <StudentNavbar />
-      <div className={styles.container}>
+      <div className={`${styles.container} student`}>
         <div className={styles.header}>
           <h1>{assignment.title || "Assignment Name- Details"}</h1>
           <br />
@@ -283,10 +283,10 @@ export default function AssignmentDashboard() {
                   )}
                 </p>
               )}
-              {isWithinSubmissionPeriod() && <Button onClick={onOpen}>Resubmit Assignment</Button>}
+              {isWithinSubmissionPeriod() && <Button variant="ghost" color="danger" onClick={onOpen}>Resubmit Assignment</Button>}
             </div>
           ) : (
-            isWithinSubmissionPeriod() && <Button onClick={onOpen}>Submit Assignment</Button>
+            isWithinSubmissionPeriod() && <Button variant="solid" color="success" onClick={onOpen}>Submit Assignment</Button>
           )}
           <Modal
             className="student"
@@ -340,12 +340,10 @@ export default function AssignmentDashboard() {
               )}
             </ModalContent>
           </Modal>
-          <div className={styles.feedbackSection}>
-            <br />
-            <hr />
-
-            <h2>Feedback</h2>
-
+          
+          <div className="flex mt-4 justify-evenly">
+          <div className="mx-3 w-1/2">
+           <h2 className="mb-2">Feedback<hr /></h2>
             {feedbacks.length > 0 ? (
               feedbacks.map((feedback, index) => (
                 <div key={feedback.feedbackID} className={styles.assignmentsSection}>
@@ -360,11 +358,13 @@ export default function AssignmentDashboard() {
               <p>No feedback available yet.</p>
             )}
           </div>
-          <div className={styles.commentsSection}>
-            <h2>Comments</h2>
+          <br />
+          <div className="mx-3 w-1/2">
+          <h2 className="mb-2">Comments<hr /></h2>
+            <br />
             {comments.length > 0 ? (
               comments.map((comment) => (
-                <div key={comment.feedbackID} className={styles.comment}>
+                <div key={comment.feedbackID} className="text-left">
                   <p>{comment.comment}</p>
                   <p>Date: {new Date(comment.feedbackDate).toLocaleString()}</p>
                 </div>
@@ -372,6 +372,7 @@ export default function AssignmentDashboard() {
             ) : (
               <p>No comments available yet.</p>
             )}
+          </div>
           </div>
         </div>
       </div>

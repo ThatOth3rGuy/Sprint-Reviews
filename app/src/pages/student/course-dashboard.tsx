@@ -149,7 +149,7 @@ export default function Page() {
           </Breadcrumbs>
         </div>
         <div className={styles.mainContent}>
-          <div className={`flex-col bg-white p-[1%] w-[86%] m-[.8%] ml-auto h-[100%]`}>
+          <div className={`flex-col bg-white p-[1%] w-[86%] m-[.8%] ml-auto h-[100%] overflow-auto`}>
             <CheckboxGroup
               label="Select assignment type:"
               orientation="horizontal"

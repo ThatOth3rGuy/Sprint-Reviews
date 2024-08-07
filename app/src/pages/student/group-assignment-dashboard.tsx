@@ -5,19 +5,7 @@ import { useSessionValidation } from "../api/auth/checkSession";
 import StudentAssignmentView from "../components/student-components/student-assignment-details";
 import StudentGroupDetails from "../components/student-components/student-group-details";
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import {
-  Button,
-  Breadcrumbs,
-  BreadcrumbItem,
-  Spinner,
-  Modal,
-  useDisclosure,
-  ModalContent,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  Input,
-} from "@nextui-org/react";
+import {  Button,  Breadcrumbs,  BreadcrumbItem,  Spinner,  Modal,  useDisclosure,  ModalContent,  ModalBody,  ModalFooter,  ModalHeader,  Input} from "@nextui-org/react";
 import toast from "react-hot-toast";
 
 interface Assignment {

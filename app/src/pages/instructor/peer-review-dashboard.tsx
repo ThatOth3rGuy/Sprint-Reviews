@@ -241,7 +241,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
 
 
     try {
-      
+
       const response = await fetch('/api/reviews/releaseReviews', {
         method: 'POST',
         headers: {
@@ -443,201 +443,206 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
       <div className="instructor">
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h1>{review.reviewID ? `Review For ${review.assignmentName}` : "Review Details"}</h1>
-          <br />
-          <Breadcrumbs>
-            <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-            <BreadcrumbItem onClick={handleBackClick}>{assignment?.courseID ? (courseName || 'Course Dashboard') : ' Dashboard'}</BreadcrumbItem>
-            <BreadcrumbItem>{review.reviewID ? `Review ${review.assignmentName}` : "Review"}</BreadcrumbItem>
-          </Breadcrumbs>
-        </div>
-
-        <div className={styles.assignmentsSection}>
-          <Button color="secondary" variant="ghost" onClick={handleRandomizeClick}>Randomize Review Groups</Button>
-          <Button color='primary' variant='ghost' onClick={handleEditAssignmentClick} >Edit Review Dates</Button>
-          <Button color='primary' variant='ghost' onClick={handleEditGroups} >Edit Groups</Button>
-
-          {review && (
-            <ReviewDetailCard
-              title={`Review ${review.assignmentName}`}
-              description={`Assignment: ${review.assignmentName}`}
-              deadline={review.deadline}
-              startDate={review.startDate}
-              endDate={review.endDate}
-            />
-          )}
-          <div className={styles.assignmentsSection}>
-            <h2>Total Review Groups: {reviewGroups.length}</h2>
-            {reviewGroups.map((group, groupIndex) => (
-              <div key={groupIndex} className={styles.courseCards}>
-                <Card className={styles.assignmentCard}>
-                  <CardBody>
-                    {group.reviewee ? (
-                      <>
-                        <h3 className={styles.assignmentTitle}>{`Student: ${group.reviewee.firstName} ${group.reviewee.lastName}`}</h3>
-                        <div className={styles.assignmentDescription}>
-                          {group.reviewers.map((reviewer, reviewerIndex) => (
-                            <p key={reviewerIndex}>
-                              Assigned submission for: {reviewer.firstName} {reviewer.lastName}, ({reviewer.studentID})
-                            </p>
-                          ))}
-                        </div>
-                        <p>Total students in this group: {group.reviewers.length}</p>
-                      </>
-                    ) : (
-                      <p>Group data is not available.</p>
-                    )}
-                  </CardBody>
-                </Card>
-              </div>
-            ))}
+        <div className={styles.container}>
+          <div className={styles.header}>
+            <h1>{review.reviewID ? `Reviewing ${review.assignmentName}` : "Review Details"}</h1>
+            <br />
+            <Breadcrumbs>
+              <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
+              <BreadcrumbItem onClick={handleBackClick}>{courseData ? courseData.courseName : ' Dashboard'}</BreadcrumbItem>
+              <BreadcrumbItem>{review.reviewID ? `Review ${review.assignmentName}` : "Review"}</BreadcrumbItem>
+            </Breadcrumbs>
           </div>
-          <div className={styles.notificationsSection}>
-            <div className="flex justify-center">
-              <Button className="w-1/3" onClick={handleAutoRelease} variant="flat" color='secondary'>
-                Schedule Auto Release
-              </Button>
-              <Button className="w-1/3" color="primary" variant="solid" onClick={handleRelease}>Release Assignment for Reviews</Button>
+
+          <div className={styles.assignmentsSection}>
+            <div className="flex">
+              <Button className="w-1/3" color="secondary" variant="light" onClick={handleRandomizeClick}>Randomize Review Groups</Button>
+              <Button className="w-1/3" color='primary' variant='light' onClick={handleEditAssignmentClick} >Edit Review Dates</Button>
+              <Button className="w-1/3" color='success' variant='light' onClick={handleEditGroups} >Edit Groups</Button>
             </div>
 
-          </div>
-          <Modal
-            className='z-20'
-            backdrop="blur"
-            isOpen={isModalOpen}
-            onOpenChange={(open) => setIsModalOpen(open)}
-          >
-            <ModalContent>
-              <ModalHeader>Edit Assignment Details</ModalHeader>
-              <ModalBody>
-                <h3>Select New Start Date:</h3>
-                <Input
-                  color="success"
-                  variant="underlined"
-                  size="sm"
-                  type="datetime-local"
-                  className={styles.textbox}
-                  value={newStartDate}
-                  onChange={(e) => setNewStartDate(e.target.value)}
-                  min={new Date().toISOString().slice(0, 16)}
-                />
-                <h3>Select New Due Date:</h3>
-                <Input
-                  color="warning"
-                  variant="underlined"
-                  size="sm"
-                  type="datetime-local"
-                  className={styles.textbox}
-                  value={newDueDate}
-                  onChange={(e) => setNewDueDate(e.target.value)}
-                  min={new Date().toISOString().slice(0, 16)}
-                />
-                <h3>Select New End Date:</h3>
-                <Input
-                  color="danger"
-                  variant="underlined"
-                  size="sm"
-                  type="datetime-local"
-                  className={styles.textbox}
-                  value={newEndDate}
-                  onChange={(e) => setNewEndDate(e.target.value)}
-                  min={new Date().toISOString().slice(0, 16)}
-                />
-                <Checkbox
-                  isSelected={newAnonymous}
-                  onChange={(e) => setNewAnonymous(e.target.checked)}
-                >
-                  Anonymous
-                </Checkbox>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="primary" variant="light" onPress={() => setIsModalOpen(false)}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={handleAssignmentsUpdate}>
-                  Update
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
 
-          <Modal
-            className='z-20'
-            backdrop="blur"
-            isOpen={isRandomizeModalOpen}
-            onOpenChange={(open) => setIsRandomizeModalOpen(open)}
-          >
-            <ModalContent>
-              <ModalHeader>Re-randomize Review Groups</ModalHeader>
-              <ModalBody>
-                <h3>Select number of reviews per assignment:</h3>
-                <Input
-                  type="number"
-                  min="1"
-                  max="10"
-                  value={reviewsPerAssignment.toString()}
-                  onChange={(e) => setReviewsPerAssignment(Number(e.target.value))}
-                />
-              </ModalBody>
-              <ModalFooter>
-                <Button color="primary" variant="light" onPress={() => setIsRandomizeModalOpen(false)}>
-                  Cancel
+            {review && (
+              <ReviewDetailCard
+                title={`Review ${review.assignmentName}`}
+                description={`Assignment: ${review.assignmentName}`}
+                deadline={review.deadline}
+                startDate={review.startDate}
+                endDate={review.endDate}
+              />
+            )}
+            
+            <div >
+              <h2>Total Review Groups: {reviewGroups.length}</h2>
+              <br />
+              {reviewGroups.map((group, groupIndex) => (
+                <div key={groupIndex} className={styles.courseCards}>
+                  <Card className={styles.assignmentCard}>
+                    <CardBody>
+                      {group.reviewee ? (
+                        <>
+                          <h3 className={styles.assignmentTitle}>{`Student: ${group.reviewee.firstName} ${group.reviewee.lastName}`}</h3>
+                          <div className={styles.assignmentDescription}>
+                            {group.reviewers.map((reviewer, reviewerIndex) => (
+                              <p key={reviewerIndex}>
+                                Assigned submission for: {reviewer.firstName} {reviewer.lastName}, ({reviewer.studentID})
+                              </p>
+                            ))}
+                          </div>
+                          <p>Total students in this group: {group.reviewers.length}</p>
+                        </>
+                      ) : (
+                        <p>Group data is not available.</p>
+                      )}
+                    </CardBody>
+                  </Card>
+                </div>
+              ))}
+            </div>
+            <div className={styles.notificationsSection}>
+              <div className="flex justify-center">
+                <Button className="w-1/3" onClick={handleAutoRelease} variant="flat" color='secondary'>
+                  Schedule Auto Release
                 </Button>
-                <Button color="primary" onPress={handleReRandomizeGroups}>
-                  Re-randomize
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
+                <Button className="w-1/3" color="primary" variant="solid" onClick={handleRelease}>Release Assignment for Reviews</Button>
+              </div>
 
-          <Modal
-            className='z-20'
-            backdrop="blur"
-            isOpen={isEditGroupsModalOpen}
-            onOpenChange={(open) => setIsEditGroupsModalOpen(open)}
-          >
-            <ModalContent style={{ maxHeight: '90%', overflow: 'auto' }}>
-              <ModalHeader>Edit Groups</ModalHeader>
-              <ModalBody>
-                {editableGroups.map((group, index) => (
-                  <div key={index} style={{ marginBottom: '20px' }}>
-                    <h3>{`Group ${index + 1}: ${group.reviewee?.firstName} ${group.reviewee?.lastName}`}</h3>
-                    {group.reviewers.map((reviewer, reviewerIndex) => (
+            </div>
+            <Modal
+              className='z-20'
+              backdrop="blur"
+              isOpen={isModalOpen}
+              onOpenChange={(open) => setIsModalOpen(open)}
+            >
+              <ModalContent>
+                <ModalHeader>Edit Assignment Details</ModalHeader>
+                <ModalBody>
+                  <h3>Select New Start Date:</h3>
+                  <Input
+                    color="success"
+                    variant="underlined"
+                    size="sm"
+                    type="datetime-local"
+                    className={styles.textbox}
+                    value={newStartDate}
+                    onChange={(e) => setNewStartDate(e.target.value)}
+                    min={new Date().toISOString().slice(0, 16)}
+                  />
+                  <h3>Select New Due Date:</h3>
+                  <Input
+                    color="warning"
+                    variant="underlined"
+                    size="sm"
+                    type="datetime-local"
+                    className={styles.textbox}
+                    value={newDueDate}
+                    onChange={(e) => setNewDueDate(e.target.value)}
+                    min={new Date().toISOString().slice(0, 16)}
+                  />
+                  <h3>Select New End Date:</h3>
+                  <Input
+                    color="danger"
+                    variant="underlined"
+                    size="sm"
+                    type="datetime-local"
+                    className={styles.textbox}
+                    value={newEndDate}
+                    onChange={(e) => setNewEndDate(e.target.value)}
+                    min={new Date().toISOString().slice(0, 16)}
+                  />
+                  <Checkbox
+                    isSelected={newAnonymous}
+                    onChange={(e) => setNewAnonymous(e.target.checked)}
+                  >
+                    Anonymous
+                  </Checkbox>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="primary" variant="light" onPress={() => setIsModalOpen(false)}>
+                    Close
+                  </Button>
+                  <Button color="primary" onPress={handleAssignmentsUpdate}>
+                    Update
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+
+            <Modal
+              className='z-20'
+              backdrop="blur"
+              isOpen={isRandomizeModalOpen}
+              onOpenChange={(open) => setIsRandomizeModalOpen(open)}
+            >
+              <ModalContent>
+                <ModalHeader>Re-randomize Review Groups</ModalHeader>
+                <ModalBody>
+                  <h3>Select number of reviews per assignment:</h3>
+                  <Input
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={reviewsPerAssignment.toString()}
+                    onChange={(e) => setReviewsPerAssignment(Number(e.target.value))}
+                  />
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="primary" variant="light" onPress={() => setIsRandomizeModalOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button color="primary" onPress={handleReRandomizeGroups}>
+                    Re-randomize
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+
+            <Modal
+              className='z-20'
+              backdrop="blur"
+              isOpen={isEditGroupsModalOpen}
+              onOpenChange={(open) => setIsEditGroupsModalOpen(open)}
+            >
+              <ModalContent style={{ maxHeight: '90%', overflow: 'auto' }}>
+                <ModalHeader>Edit Groups</ModalHeader>
+                <ModalBody>
+                  {editableGroups.map((group, index) => (
+                    <div key={index} style={{ marginBottom: '20px' }}>
+                      <h3>{`Group ${index + 1}: ${group.reviewee?.firstName} ${group.reviewee?.lastName}`}</h3>
+                      {group.reviewers.map((reviewer, reviewerIndex) => (
+                        <Button
+                          key={reviewer.studentID}
+                          onPress={() => handleMemberClick(reviewer, index, reviewerIndex)}
+                          style={{
+                            margin: '5px',
+                            backgroundColor: selectedStudents.find(s => s.student.studentID === reviewer.studentID) ? 'lightblue' : undefined
+                          }}
+                        >
+                          {`${reviewer.firstName} ${reviewer.lastName}`}
+                        </Button>
+                      ))}
                       <Button
-                        key={reviewer.studentID}
-                        onPress={() => handleMemberClick(reviewer, index, reviewerIndex)}
+                        onPress={() => handleEmptyGroupClick(index, group.reviewers.length)}
                         style={{
                           margin: '5px',
-                          backgroundColor: selectedStudents.find(s => s.student.studentID === reviewer.studentID) ? 'lightblue' : undefined
+                          backgroundColor: 'lightgreen'
                         }}
                       >
-                        {`${reviewer.firstName} ${reviewer.lastName}`}
+                        Move Here
                       </Button>
-                    ))}
-                    <Button
-                      onPress={() => handleEmptyGroupClick(index, group.reviewers.length)}
-                      style={{
-                        margin: '5px',
-                        backgroundColor: 'lightgreen'
-                      }}
-                    >
-                      Move Here
-                    </Button>
-                  </div>
-                ))}
-              </ModalBody>
-              <ModalFooter>
-                <Button color="primary" variant="light" onPress={() => setIsEditGroupsModalOpen(false)}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={handleSaveGroups}>
-                  Save
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
+                    </div>
+                  ))}
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="primary" variant="light" onPress={() => setIsEditGroupsModalOpen(false)}>
+                    Close
+                  </Button>
+                  <Button color="primary" onPress={handleSaveGroups}>
+                    Save
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
           </div>
         </div>
       </div>
