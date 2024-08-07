@@ -134,7 +134,7 @@ export default function AssignmentDashboard() {
     if (assignmentID && session?.user?.userID) {
       try {
         const response = await fetch(
-          `/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`
+          `/api/submissions/checkPRSubmission?assignmentID=${assignmentID}&userID=${session.user.userID}`
         );
         if (!response.ok) throw new Error("Failed to check submission status");
 

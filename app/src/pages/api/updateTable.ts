@@ -5,7 +5,7 @@ import { autoRelease, query,
     updateFeedback, updateReview, updateReviewCriteria, updateReviewer, updateStudent,
 
     updateSubmission, updateUser, updateReviewGroups
-,updateReviewDates, updateGroupFeedback
+,updateReviewDates, updateGroupFeedback, updateStudentNotifications
 
  } from '../../db';
 
@@ -171,6 +171,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     await autoRelease(data.assignmentID);
                 }
                 break;
+
+                case 'studentNotifications':
+                    result = await updateStudentNotifications(
+                        data.studentID,data.assignmentNotification, data.reviewNotification);
+                    break;
 
             default:
             return res.status(400).json({ message: 'Invalid table' });

@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { query } from '../../../db';
 import nodemailer from 'nodemailer';
 
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -62,6 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Send emails to all students
     for (const student of students) {
+      
       let mailOptions = {
         from: process.env.EMAIL_USERNAME,
         to: student.email,
@@ -78,8 +80,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       };
 
       try {
+        
         await transporter.sendMail(mailOptions);
         console.log(`Email sent successfully to ${student.email}`);
+        
       } catch (error) {
         console.error(`Error sending email to ${student.email}:`, error);
       }

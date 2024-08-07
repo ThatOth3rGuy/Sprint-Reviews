@@ -1342,6 +1342,17 @@ export async function addStudentNotification(studentID: number, customPool: mysq
   }
 }
 
+export async function updateStudentNotifications(userID: any, assignmentNotification: any, reviewNotification: any) {
+  const result = await query(
+    `UPDATE student_notifications sn
+    JOIN student s ON sn.studentID = s.studentID
+    SET sn.assignmentNotification = ?, sn.reviewNotification = ?
+    WHERE s.userID = ?;
+    `,
+    [assignmentNotification, reviewNotification, userID]
+  );
+  return result;
+}
 
 /* DELETE FUNCTIONS */
 

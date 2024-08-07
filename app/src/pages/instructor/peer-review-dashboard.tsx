@@ -9,6 +9,7 @@ import styles from "../../styles/AssignmentDetailCard.module.css";
 import { Breadcrumbs, Input, ModalFooter, BreadcrumbItem, ModalContent, Spinner, Card, CardBody, Button, Checkbox, Modal, ModalBody, ModalHeader } from "@nextui-org/react";
 import toast from "react-hot-toast";
 
+
 interface Review {
   reviewID: number;
   assignmentID: number;
@@ -237,7 +238,10 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
       return;
     }
 
+
+
     try {
+      
       const response = await fetch('/api/reviews/releaseReviews', {
         method: 'POST',
         headers: {

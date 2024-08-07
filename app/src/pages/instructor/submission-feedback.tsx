@@ -135,7 +135,7 @@ export default function AssignmentDashboard() {
   const checkSubmissionStatus = async () => {
     if (assignmentID && studentID) {
       try {
-        const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${studentID}`);
+        const response = await fetch(`/api/submissions/checkSubmission4Instructor?assignmentID=${assignmentID}&userID=${studentID}`);
         if (!response.ok) {
           throw new Error('Failed to check submission status');
         }
@@ -197,7 +197,7 @@ export default function AssignmentDashboard() {
           action: 'add',
           assignmentID: assignment?.assignmentID,
           courseID: courseData?.courseID,
-          studentID: submission?.studentID,
+          studentID: studentID,
           comment: newComment,
         }),
       });

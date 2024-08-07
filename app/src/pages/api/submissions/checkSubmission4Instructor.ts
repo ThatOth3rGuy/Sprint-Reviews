@@ -33,12 +33,11 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{
   isLink: boolean
 }> {
   const sql = `
-    SELECT s.*, st.studentID, st.userID, a.deadline, CONCAT(u.firstName, ' ', u.lastName) as studentName 
-    FROM submission s
-    JOIN student st ON s.studentID = st.studentID
-    JOIN user u ON st.userID = u.userID
-    JOIN assignment a ON s.assignmentID = a.assignmentID
-    WHERE s.assignmentID = ? AND st.userID = ?
+  SELECT CONCAT(u.firstName, ' ', u.lastName) AS studentName, s.*
+  FROM submission s
+  JOIN student st ON s.studentID = st.studentID
+  JOIN user u ON st.userID = u.userID
+  WHERE s.assignmentID = ? AND s.studentID = ?;
   `;
   try {
     const rows = await query(sql, [assignmentID, userID]);

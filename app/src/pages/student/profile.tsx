@@ -4,6 +4,7 @@ import { useSessionValidation } from '../api/auth/checkSession';
 import StudentNavbar from "../components/student-components/student-navbar";
 import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Spinner, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from "@nextui-org/react";
 import styles from '../../styles/instructor-course-dashboard.module.css';
+import toast from 'react-hot-toast';
 
 export default function StudentProfilePage() {
   const [loading, setLoading] = useState(true);
@@ -113,6 +114,8 @@ export default function StudentProfilePage() {
         setIsEditModalOpen(false);
       } else {
         console.error('Failed to update user details');
+        toast.error("Error, missing items in the field ");
+        
       }
     } catch (error) {
       console.error('Error updating user details:', error);
@@ -162,7 +165,7 @@ export default function StudentProfilePage() {
           </div>
           <div className="w-[25%] h-[100%] flex-col p-[1%]">
             <Button color="primary" variant="ghost" className="w-[100%] m-1" onClick={handleEditClick}>Edit Profile</Button>
-            <Button color="danger" variant="ghost" className="w-[100%] m-1">Delete Account</Button>
+            {/* <Button color="danger" variant="ghost" className="w-[100%] m-1">Delete Account</Button> */}
           </div>
         </div>
       </div>
