@@ -1,5 +1,108 @@
 # Weekly Logs
 
+# Week 13
+
+## Friday-Wednesday (August 2-7, 2024)
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%2013.1-1.png)
+![Clockify Timesheet](./images/EricClockify%2013.1-2.png)
+
+### Cycle Review
+
+After the Test-O-Rama round 2, we have a lot of bugs and issues that were (mostly) caused by merge conflicts from merging all the features we did last week at the last minute. First priority is to fix them all and finish up the final couple of merges that need to be done. Once that's all done our application is essentially finished and our goal for the rest of the week will be to write a bunch of documentation and make sure all the testing is up to date with the app. Then finally, once all of that is done we'll just be working on our final reports and the final presentation.
+
+### Current Tasks
+  * 1: Refactoring randomizer algorithm
+  * 2: Instructor manually editing feedback groups
+  * 3: Finishing merging and bugfixing from the merge
+  * 4: Write playwright tests for all pages
+  * 5: Write individual final report
+
+### Progress Update: Fri-Tue
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Refactoring randomizer algorithm
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td>Instructor manually editing feedback groups
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Finishing merging and bugfixing from the merge
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Write playwright tests for all pages
+        </td>
+        <!-- Status -->
+        <td>Complete
+        </td>
+    </tr>
+        </tr>
+        </tr>
+        <tr>
+        <!-- Task/Issue # -->
+        <td>Write individual final report
+        </td>
+        <!-- Status -->
+        <td>To-Do
+        </td>
+    </tr>
+</table>
+
+## Wednesday-Friday (August 7-9, 2024)
+
+### Timesheet
+![Clockify Timesheet](./images/EricClockify%2013.2.png)
+
+### Cycle Review
+
+-
+
+### Current Tasks
+  * 1: -
+
+### Progress Update: Wed-Fri
+<table>
+    <tr>
+        <td><strong>TASK/ISSUE #</strong>
+        </td>
+        <td><strong>STATUS</strong>
+        </td>
+    </tr>
+    <tr>
+        <!-- Task/Issue # -->
+        <td> -
+        </td>
+        <!-- Status -->
+        <td> -
+        </td>
+    </tr>
+
+</table>
+
 # Week 12
 
 ## Friday-Wednesday (July 26-31, 2024)
