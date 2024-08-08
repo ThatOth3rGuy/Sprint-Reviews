@@ -1,31 +1,34 @@
+// instructor/create-assignment.tsx
+/**
+ * Renders a form for creating an assignment for a course. 
+ * The form includes fields for the assignment title, description, start date, end date, and due date.
+ * It also allows for selecting the allowed file types and link types for the assignment.
+ * 
+ * 
+ * @return {JSX.Element} The JSX element representing the assignment creation form.
+ */
+// Importing necessary libraries and components
 import type { NextPage } from "next";
 import styles from "../../styles/instructor-assignments-creation.module.css";
 import { useRouter } from "next/router";
-
-import { Card, SelectItem, Select, Listbox, ListboxItem, AutocompleteItem, Autocomplete, 
-  Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, 
-  Progress, Input, Spinner 
-} from "@nextui-org/react";
+import { Textarea, Button, Breadcrumbs, BreadcrumbItem, Checkbox, CheckboxGroup, Input, Spinner } from "@nextui-org/react";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import toast from "react-hot-toast";
 import { getNotificationsForStudent } from '../utils/getNotificationsForStudent';
-
+// Defining interface for Course Data to set assignment 
 interface CourseData {
   courseID: string;
   courseName: string;
 }
 
 const Assignments: NextPage = () => {
+  // Initializing state variables
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const router = useRouter();
-  const { courseId } = router.query;
-
-  useSessionValidation("instructor", setLoading, setSession);
-
   const [file, setFile] = useState<File | null>(null);
   const [fileContent, setFileContent] = useState<string | null>(null);
   const [dueDate, setDueDate] = useState("");
@@ -40,7 +43,13 @@ const Assignments: NextPage = () => {
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [allowLinks, setAllowLinks] = useState(false);
   const [linkTypes, setLinkTypes] = useState<string[]>([]);
+  // Fetching data when the router is ready
+  const { courseId } = router.query;
+  // Checking user session
+  useSessionValidation("instructor", setLoading, setSession);
 
+  // function to fetch course name for front end and breadcrumbs
+  // send courseID to apo/course/[courseID].ts
   useEffect(() => {
     const { source, courseId } = router.query;
     if (source === 'course' && courseId) {
@@ -71,7 +80,7 @@ const Assignments: NextPage = () => {
       checked ? [...prev, linkType] : prev.filter((type) => type !== linkType)
     );
   };
-
+  // function to handle the create assignment and restrictions on create assignment
   const onCreateAssignmentButtonClick = useCallback(async () => {
     setError(null);
 
@@ -107,10 +116,13 @@ const Assignments: NextPage = () => {
       setError("Due date or end date cannot be in the past. Please select a future date and time.");
       return;
     }
+    // functions to handle date restrictions 
     const isoDate = new Date(dueDate).toISOString();
     const isoStart = new Date(startDate).toISOString(); //converts start date into ISO string
     const isoEnd = new Date(endDate).toISOString(); //converts end date into ISO string
 
+    // function to handle file type restrictions 
+    // sends all assignment details set by instructor to api/addNew/createAssignment
     let finalAllowedTypes = [...allowedFileTypes];
     if (allowLinks) {
       if (linkTypes.length === 0) {
@@ -142,6 +154,7 @@ const Assignments: NextPage = () => {
       const assignmentData = await response.json();
       toast.success("Assignment created successfully!");
 
+      // function to fetch courseId for setting courseID in assignment table 
       const courseResponse = await fetch(`/api/courses/${courseId}`);
       const courseData = await courseResponse.json();
 
@@ -166,7 +179,7 @@ const Assignments: NextPage = () => {
               });
               if (!emailResponse.ok) {
                 console.error(`Failed to send email to ${student.email}`);
-              } 
+              }
             }
           } catch (error) {
             console.error(`Error processing notifications for student ${student.userID}:`, error);
@@ -175,7 +188,7 @@ const Assignments: NextPage = () => {
       }
 
       router.push(`/instructor/course-dashboard?courseId=${courseId}`);
-      
+
     } else {
       const errorData = await response.json();
       setError(errorData.message || "An error occurred while creating the assignment");
@@ -183,18 +196,20 @@ const Assignments: NextPage = () => {
     }
   }, [title, description, startDate, endDate, dueDate, courseId, fileContent, groupAssignment, allowedFileTypes, allowLinks, linkTypes, router, session]);
 
+  // Loading Spinner
   if (loading) {
     return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
       <Spinner color='primary' size="lg" />
     </div>;
   }
-
+  // checks if user session exists 
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
     return null;
   }
+  // admin check
   const isAdmin = session.user.role === 'admin';
-
+  //Navigation Handlers
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");
   }
@@ -239,7 +254,7 @@ const Assignments: NextPage = () => {
       router.push('/instructor/assignments');
     }
   };
-
+// Rendering the component
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -319,7 +334,7 @@ const Assignments: NextPage = () => {
             </div>
             <br />
             <div className="flex">
-              
+
               <Checkbox
                 className={styles.innerTitle}
                 isSelected={groupAssignment}
@@ -337,7 +352,7 @@ const Assignments: NextPage = () => {
                 onValueChange={setAllowedFileTypes}
                 orientation="horizontal"
               >
-                
+
                 <Checkbox value="txt">Text (.txt)</Checkbox>
                 <Checkbox value="pdf">PDF (.pdf)</Checkbox>
                 <Checkbox value="docx">Word (.docx)</Checkbox>
@@ -351,7 +366,7 @@ const Assignments: NextPage = () => {
 
               </CheckboxGroup>
               <div className="flex-col">
-                
+
                 {allowLinks && (
                   <div>
                     <br />

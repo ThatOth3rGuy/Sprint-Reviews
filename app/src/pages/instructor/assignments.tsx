@@ -1,4 +1,14 @@
 // instructor/assignments.tsx
+/**
+* This page displays a comprehensive list of all assignments created by the instructor. 
+* It serves as a central hub for instructors to directly access the dashboard of each assignment.
+* The page features a filter function that enables users to search for specific types of 
+* assignments. Additionally, it provides the course name associated with each assignment.
+* 
+* @return {JSX.Element} The rendered AssignmentsPage component.
+*/
+
+// Importing necessary libraries and components
 import { useRouter } from "next/router";
 import InstructorAssignmentCard from "../components/instructor-components/instructor-assignment-card";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
@@ -8,6 +18,7 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import AdminNavbar from "../components/admin-components/admin-navbar";
 
+//Defining interfaces for all assignments created by the instructor 
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -18,13 +29,17 @@ interface Assignment {
 }
 
 export default function AssignmentsPage() {
+  // Initializing state variables
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [session, setSession] = useState<any>(null);
   const [selectedAssignmentTypes, setSelectedAssignmentTypes] = useState<string[]>(['all']);
 
+  // Checking user session
   useSessionValidation('instructor', setLoading, setSession);
+
+  // Fetching assignments to display from database 
 
   useEffect(() => {
     if (session && session.user && session.user.userID) {
@@ -32,11 +47,13 @@ export default function AssignmentsPage() {
     }
   }, [session]);
 
+  // Checking if user session exists
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
     return null;
   }
-
+  // function which uses userID to fetch all assignments created by instructor 
+  // sends userID from session to api/getAllAssignmentsInstructor
   const fetchAssignments = async (userID: string) => {
     try {
       const response = await fetch(`/api/getAllAssignmentsInstructor?userID=${userID}`);
@@ -51,7 +68,7 @@ export default function AssignmentsPage() {
       console.error('Error fetching assignments:', error);
     }
   };
-
+  // front end handler for filtering between assignment types 
   const handleCheckboxChange = (type: string, isChecked: boolean) => {
     if (type === 'all') {
       setSelectedAssignmentTypes(['all']);
@@ -93,7 +110,7 @@ export default function AssignmentsPage() {
         console.log("Unknown action:", key);
     }
   };
-
+  // Navigation handlers
   const handleHomeClick = async () => {
     router.push('/instructor/dashboard');
   };
@@ -105,7 +122,8 @@ export default function AssignmentsPage() {
       </div>
     );
   }
-
+  // function to filter based on assignment type by dynamically rendering 
+  //the function based on the filter and what function is called
   const individualAssignments = assignments.filter(assignment => !assignment.groupAssignment && !assignment.title.toLowerCase().includes('peer review'));
   const groupAssignments = assignments.filter(assignment => assignment.groupAssignment);
   const peerReviews = assignments.filter(assignment => assignment.title.toLowerCase().includes('peer review'));
@@ -136,13 +154,13 @@ export default function AssignmentsPage() {
       </div>
     </>
   );
-
+  // default renders all assignments 
   const shouldRenderAssignments = (type: string) => {
     return selectedAssignmentTypes.includes('all') || selectedAssignmentTypes.includes(type);
   };
-
+  // Checking if user is an admin
   const isAdmin = session.user.role === 'admin';
-
+  // Rendering the component
   return (
     <>
       {isAdmin ? <AdminNavbar assignments={{ className: "bg-primary-500" }} /> : <InstructorNavbar assignments={{ className: "bg-primary-500" }} />}

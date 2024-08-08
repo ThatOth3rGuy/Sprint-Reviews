@@ -1,3 +1,13 @@
+// instructor/manage-students.tsx 
+/**
+ * Renders the ManageStudents component, which allows an instructor to manage students 
+ * enrolled in a course.The component fetches the students enrolled in the course and 
+ * displays them in a list.It also provides functionality to enroll individual students 
+ * or students from a CSV file, and remove a student from the course.
+ *
+ * @return {JSX.Element} The renders the Manage Students component.
+ */
+// Importing necessary libraries and components
 import { useRouter } from "next/router";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
@@ -6,7 +16,7 @@ import { Button, Breadcrumbs, BreadcrumbItem, Listbox, ListboxItem, Card, Modal,
 import { useSessionValidation } from '../api/auth/checkSession';
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import toast from "react-hot-toast";
-
+// Defining interfaces for Students data
 interface Student {
   studentID: number;
   firstName: string;
@@ -14,6 +24,7 @@ interface Student {
 }
 
 export default function ManageStudents() {
+  // Initializing state variables
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
@@ -29,8 +40,9 @@ export default function ManageStudents() {
   const [courseName, setCourseName] = useState<string>("");
   const { courseId } = router.query;
 
+  // Checking user session
   useSessionValidation('instructor', setLoading, setSession);
-
+  // fetching students in course using courseID
   useEffect(() => {
     if (session && session.user && session.user.userID && courseId) {
       fetchStudents(courseId as string);
@@ -69,7 +81,8 @@ export default function ManageStudents() {
     }
   };
 
-  // Function to handle file upload
+  // Function to handle file upload as a csv 
+  // sends the updated students list to api/listStudents 
   async function handleFileUpload(event: ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
@@ -99,7 +112,8 @@ export default function ManageStudents() {
       }
     }
   }
-
+  // function to handle the part to re-enroll students using a .csv 
+  // sends data to api/addNew/enrollStudents.ts which have been added 
   const handleEnrollStudent = async () => {
     if (newStudentID === null) {
       toast.error('Please enter a valid student ID');
@@ -130,7 +144,8 @@ export default function ManageStudents() {
       toast.error('Error enrolling student');
     }
   };
-
+  // function to check and alert on file upload
+  // sends data to api/addNew/enrollStudents.ts
   const handleEnrollStudentsFromFile = async () => {
     if (students.length === 0) {
       toast.error('No students to enroll, double check that you uploaded the correct file and that the students have created accounts');
@@ -161,7 +176,8 @@ export default function ManageStudents() {
       toast.error('Error enrolling students');
     }
   };
-
+  // function to handle students to be removed from the course
+  // sends data to api/unenrollStudent.ts
   const handleRemoveStudent = async () => {
     if (!studentToRemove) return;
 
@@ -189,7 +205,7 @@ export default function ManageStudents() {
       toast.error('Error removing student');
     }
   };
-
+  // checks if session exists 
   if (loading) {
     return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
       <Spinner color='primary' size="lg" />
@@ -200,17 +216,18 @@ export default function ManageStudents() {
     console.error('No user found in session');
     return null;
   }
+  // admin check 
 
   const isAdmin = session.user.role === 'admin';
-
+  // Navigation Handlers
   const handleHomeClick = async () => {
     router.push("/instructor/dashboard");
   }
 
-  const handleBackClick= async () =>{
+  const handleBackClick = async () => {
     router.push(`/instructor/course-dashboard?courseId=${courseId}`);
   }
-
+  // Returns render component 
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -220,7 +237,7 @@ export default function ManageStudents() {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-            <BreadcrumbItem onClick={handleBackClick}>{courseName === '' ? 'Course Dashboard': courseName}</BreadcrumbItem> 
+            <BreadcrumbItem onClick={handleBackClick}>{courseName === '' ? 'Course Dashboard' : courseName}</BreadcrumbItem>
             <BreadcrumbItem>Manage Students</BreadcrumbItem>
           </Breadcrumbs>
         </div>
