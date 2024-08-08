@@ -60,13 +60,10 @@ export default function Page() {
 
   useEffect(() => {
     if (session && session.user && session.user.userID) {
-      fetchAssignments(session.user.userID);
-      
+      fetchAssignments(session.user.userID); //fetches assignments for a student by their userID
     }
     if (courseId) {
-
-      fetchPeerReviews(courseId);
-
+      fetchPeerReviews(courseId);// fetches peer reviews for a student by the courseID
       fetch(`/api/courses/${courseId}`)
         .then((response) => response.json())
         .then((data: CourseData) => {
@@ -74,11 +71,11 @@ export default function Page() {
           setCourseData(data);
         })
         .catch((error) => console.error('Error fetching course data:', error));
-
-      fetchAssignments(courseId);
+      fetchAssignments(courseId); //fetches assignments in a course
     }
   }, [courseId]);
 
+  //filters assignments by types
   const handleCheckboxChange = (type: string, isChecked: boolean) => {
     if (type === 'all') {
       setSelectedAssignmentTypes(['all']);
@@ -94,10 +91,12 @@ export default function Page() {
     }
   };
 
+  //redirects the user to home
   const handleHomeClick = async () => {
     router.push("/student/dashboard");
   };
 
+  //function to fetch assignments via getAssignments4CoursesInstructor.ts 
   const fetchAssignments = async (courseID: string | string[]) => {
     try {
       const response = await fetch(`/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`);
@@ -112,6 +111,7 @@ export default function Page() {
     }
   };
 
+  //fetches peer reivews via getReviewsByCourseId.ts api
   const fetchPeerReviews = async (courseID: string | string[]) => {
     try {
       const timestamp = new Date().getTime();
@@ -130,6 +130,7 @@ export default function Page() {
     }
   };
 
+  //wait for the page to load with the correct data
   if (!courseData || loading) {
     return <div className='w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto'>
       <Spinner color='primary' size="lg" />
@@ -141,10 +142,11 @@ export default function Page() {
     return null;
   }
 
+  //define assignment type for filter
   const individualAssignments = assignments.filter(assignment => !assignment.groupAssignment && !assignment.title.toLowerCase().includes('peer review'));
   const groupAssignments = assignments.filter(assignment => assignment.groupAssignment);
   const peerReviewCards = assignments.filter(assignment => assignment.title.toLowerCase().includes('peer review'));
-
+  //render assignment based on selected type
   const shouldRenderAssignments = (type: string) => {
     return selectedAssignmentTypes.includes('all') || selectedAssignmentTypes.includes(type);
   };
