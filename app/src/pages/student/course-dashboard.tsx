@@ -1,4 +1,12 @@
-// student/course-dashboard.tsx
+// pages/student/course-dashboard.tsx
+/**
+* Renders the course dashboard page for students.This function renders: 
+the assignments an instructor has created the student needs to submit. This page also allows the student to filter what type of assignments they want to display. The folllowing assignment types are displayed: assignments to submit for peer reviews (Assignments), group assignments (Group Assignments), and assignments to review (Peer Reviews). 
+
+ @return {JSX.Element} The rendered course dashboard.
+*/
+
+// Importing necessary libraries and components
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
@@ -8,6 +16,7 @@ import StudentNavbar from "../components/student-components/student-navbar";
 import StudentAssignmentCard from "../components/student-components/student-course-assignment-card";
 import StudentReviewCard from "../components/student-components/student-peer-review-card";
 
+/** Defining interfaces for CourseData, Assignment, and Peer Review **/
 interface CourseData {
   courseID: string;
   courseName: string;
@@ -32,18 +41,22 @@ interface PeerReview {
 }
 
 export default function Page() {
+  // Initializing state variables
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [selectedAssignmentTypes, setSelectedAssignmentTypes] = useState<string[]>(['all']);
-
-  const router = useRouter();
-  const { courseId } = router.query;
 
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [peerReviews, setPeerReviews] = useState<PeerReview[]>([]);
   const [peerReviewAssignments, setPeerReviewAssignments] = useState<Assignment[]>([]);
+
+  // Checking user session
   useSessionValidation('student', setLoading, setSession);
+
+// Fetching data when the router is ready
+  const router = useRouter();
+  const { courseId } = router.query;
 
   useEffect(() => {
     if (session && session.user && session.user.userID) {

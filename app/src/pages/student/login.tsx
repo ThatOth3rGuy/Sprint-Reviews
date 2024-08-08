@@ -1,5 +1,5 @@
 // student/login.tsx
-/* eslint-disable @next/next/no-img-element */
+
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import styles from "../../styles/student-login.module.css";
@@ -41,7 +41,7 @@ const StudentLogin: NextPage = () => {
       handleSignInClick();
     }
   }
-
+// function to check instructor login details by sending email and password to api/auth/studentrLogin.ts
   const handleSignInClick = async () => {
     setError("");
 
