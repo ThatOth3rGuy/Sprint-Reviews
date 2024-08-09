@@ -1,3 +1,11 @@
+// instructor/overall-performance.tsx (not implemented)
+/**
+ * This is ideally the page which gives the overall performance of 
+ * .students in the course. Only front end is added here, 
+ * this feature has not been implemented completely.  
+ *
+ * @return {JSX.Element} The JSX element representing the overall performance component.
+ */
 import React, { useState, useEffect } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";

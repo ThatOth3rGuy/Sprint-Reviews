@@ -1,6 +1,9 @@
 // Student Registration
-// src/pages/student/registration.tsx
-/* eslint-disable @next/next/no-img-element */
+/**
+ * Renders the sign-up page for students.
+ *
+ * @return {JSX.Element} Renders the insructor sign-up page.
+ */
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';

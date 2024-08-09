@@ -1,3 +1,16 @@
+// instructor/assignment-dashboard.tsx
+
+/**
+* Renders the assignment dashboard page for instructors.This function renders 
+* the update of students who have submitted and are yet to submit the assignment 
+* and allows the instructor to also view the individual assignment submission. 
+* This page directs to the submission-feedback page for the selected student
+* This pages uses the Assignment Details component from the 
+* components/instructor-components/instructor-assignment-details.tsx
+* @return {JSX.Element} The rendered assignment dashboard.
+*/
+
+// Importing necessary libraries and components
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
@@ -8,7 +21,10 @@ import styles from "../../styles/AssignmentDetailCard.module.css";
 import { Breadcrumbs, CheckboxGroup, BreadcrumbItem, Spinner, Button, Modal, ModalContent, ModalHeader, ModalBody, Input, ModalFooter, Textarea, Checkbox, Table, TableHeader, TableBody, TableRow, TableCell, TableColumn } from "@nextui-org/react";
 import type { NextPage } from "next";
 import toast from 'react-hot-toast';
-
+/** Defining interfaces for Assignment, CourseData,  
+* SubmittedEntity for students who have submitted the assignment, 
+* and RemainingEntity for students who have not submitted the assignment
+**/
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -46,6 +62,7 @@ interface Submission {
 }
 
 const AssignmentDashboard: NextPage = () => {
+  // Initializing state variables
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [error, setError] = useState('');
@@ -65,13 +82,16 @@ const AssignmentDashboard: NextPage = () => {
   const [submittedEntities, setSubmittedEntities] = useState<SubmittedEntity[]>([]);
   const [remainingEntities, setRemainingEntities] = useState<RemainingEntity[]>([]);
 
+  // Validating session and loading state
   useSessionValidation('instructor', setLoading, setSession);
 
+  // Fetching data when the router is ready
   useEffect(() => {
     if (!router.isReady) return;
 
     const { assignmentID } = router.query;
-
+    // sends data to api/assignments/[assignmentID].ts 
+    // fetching data for Assignment details
     const fetchData = async () => {
       if (assignmentID) {
         try {
@@ -90,7 +110,8 @@ const AssignmentDashboard: NextPage = () => {
               }
             }
           }
-
+          // Fetching students data and sets the list of students who have submitted and who havent
+          // sends data to api/submissions/[assignmentID].ts          
           const studentsResponse = await fetch(`/api/submissions/${assignmentID}/students`);
           if (studentsResponse.ok) {
             const { submittedStudents, remainingStudents } = await studentsResponse.json();
@@ -108,7 +129,7 @@ const AssignmentDashboard: NextPage = () => {
 
     fetchData();
   }, [router.isReady, router.query]);
-
+  // Loading Spinner
   if (loading || !assignment) {
     return (
       <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
@@ -116,20 +137,20 @@ const AssignmentDashboard: NextPage = () => {
       </div>
     );
   }
-
+  // checks if user session exists 
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
     return null;
   }
-
+  // admin check 
   const isAdmin = session.user.role === 'admin';
 
   const handleBackClick = () => router.push(`/instructor/course-dashboard?courseId=${courseData?.courseID}`);
-
+  // Navigation handlers
   const handleHomeClick = () => {
     router.push("/instructor/dashboard")
   }
-
+  // Setter functions to handle updates of assignment details
   const handleAssignmentNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewAssignmentName(event.target.value);
   };
@@ -137,7 +158,8 @@ const AssignmentDashboard: NextPage = () => {
   const handleAssignmentDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewAssignmentDesc(event.target.value);
   }
-
+  // function to send data for update to the api/updateTable.ts to update assignment details 
+  // Updating assignment name and description
   const handleAssignmentsUpdate = async () => {
     const { assignmentID } = router.query;
     try {
@@ -164,7 +186,7 @@ const AssignmentDashboard: NextPage = () => {
           finalAllowedTypes = [...finalAllowedTypes, ...newLinkTypes];
         }
       }
-
+      // Updating assignment submission file restrictions and duedates
       const response = await fetch(`/api/updateTable`, {
         method: 'POST',
         headers: {
@@ -201,7 +223,7 @@ const AssignmentDashboard: NextPage = () => {
   const handleEditAssignmentClick = () => {
     setIsModalOpen(true);
   }
-
+  // Rendering the component
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}
@@ -230,7 +252,7 @@ const AssignmentDashboard: NextPage = () => {
           />
           <br />
 
-          
+
           <h2 className="mb-4">Submissions</h2>
           <Table aria-label="Submissions table">
             <TableHeader>

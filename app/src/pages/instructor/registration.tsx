@@ -1,6 +1,9 @@
-// Instructor Registration
-// src/pages/instructor/registration.tsx
-/* eslint-disable @next/next/no-img-element */
+// instructor/registration.tsx
+/**
+ * Renders the sign-up page for instructors.
+ *
+ * @return {JSX.Element} Renders the insructor sign-up page.
+ */
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -31,7 +34,8 @@ const SignUp: NextPage = () => {
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return regex.test(password);
   };
-
+// functions handles adding instructor details to the instructor and user table
+  // sends data to api/addNew/addInstructor.ts
   const handleSignUpClick = async () => {
     let firstNameError = '';
     let lastNameError = '';

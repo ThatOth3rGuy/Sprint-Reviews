@@ -1,4 +1,14 @@
 // student/all-assignments.tsx
+/**
+* This page displays a comprehensive list of all assignments created by the instructor. 
+* It serves as a central hub for students to directly access the dashboard of each assignment.
+* The page features a filter function that enables users to search for specific types of 
+* assignments. Additionally, it provides the course name associated with each assignment.
+* 
+* @return {JSX.Element} The rendered AssignmentsPage component.
+*/
+
+// Importing necessary libraries and components
 import { useRouter } from "next/router";
 import styles from '../../styles/instructor-course-dashboard.module.css';
 import { Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Spinner } from "@nextui-org/react";
@@ -6,7 +16,7 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import StudentNavbar from "../components/student-components/student-navbar";
 import StudentAssignmentCard from "../components/student-components/student-assignment-card";
-
+//Defining interfaces for all assignments created by the instructor for students
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -17,14 +27,18 @@ interface Assignment {
 }
 
 export default function AssignmentsPage() {
+  // Initializing state variables
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [session, setSession] = useState<any>(null);
   const [selectedAssignmentTypes, setSelectedAssignmentTypes] = useState<string[]>(['all']);
 
+  // Checking user session
   useSessionValidation('student', setLoading, setSession);
 
+  
+// Fetching assignments to display from database 
   useEffect(() => {
     if (session && session.user && session.user.userID) {
       fetchAssignments(session.user.userID);
@@ -35,7 +49,8 @@ export default function AssignmentsPage() {
     console.error('No user found in session');
     return null;
   }
-
+// function which uses userID to fetch all assignments created by instructor 
+// sends userID from session to api/getAllAssignmentsStudent
   const fetchAssignments = async (userID: string) => {
     try {
       const response = await fetch(`/api/getAllAssignmentsStudent?userID=${userID}`);
@@ -49,7 +64,7 @@ export default function AssignmentsPage() {
       console.error('Error fetching assignments:', error);
     }
   };
-
+// front end handler for filtering between assignment types 
   const handleCheckboxChange = (type: string, isChecked: boolean) => {
     if (type === 'all') {
       setSelectedAssignmentTypes(['all']);
@@ -73,10 +88,12 @@ export default function AssignmentsPage() {
     );
   }
 
+// Navigation handlers
   const handleHomeClick = async () => {
     router.push('/instructor/dashboard');
   }
-
+// function to filter based on assignment type by dynamically rendering 
+//the function based on the filter and what function is called
   const individualAssignments = assignments.filter(assignment => !assignment.groupAssignment && !assignment.title.toLowerCase().includes('peer review'));
   const groupAssignments = assignments.filter(assignment => assignment.groupAssignment);
   const peerReviews = assignments.filter(assignment => assignment.title.toLowerCase().includes('peer review'));
@@ -108,10 +125,11 @@ export default function AssignmentsPage() {
     </>
   );
 
+  // default renders all assignments 
   const shouldRenderAssignments = (type: string) => {
     return selectedAssignmentTypes.includes('all') || selectedAssignmentTypes.includes(type);
   };
-
+// Rendering the component
   return (
     <>
       <StudentNavbar />

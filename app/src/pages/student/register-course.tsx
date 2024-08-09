@@ -1,3 +1,7 @@
+// student/register-course.tsx
+
+// This page is not being used but can be implemented to allow students to register into the course
+
 import StudentHeader from "../components/student-components/student-header";
 import StudentNavbar from "../components/student-components/student-navbar";
 import { useState } from 'react';
