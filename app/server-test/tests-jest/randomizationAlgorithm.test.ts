@@ -4,11 +4,11 @@ import { randomizePeerReviewGroups } from '../../src/pages/api/addNew/randomizat
 
 describe('randomizePeerReviewGroups', () => {
   const students = [
-    { studentID: 1, submissionID: 101 },
-    { studentID: 2, submissionID: 102 },
-    { studentID: 3, submissionID: 103 },
-    { studentID: 4, submissionID: 104 },
-    { studentID: 5, submissionID: 105 },
+    { studentID: 1 },
+    { studentID: 2 },
+    { studentID: 3 },
+    { studentID: 4 },
+    { studentID: 5 },
   ];
 
   it('should return the correct structure of review groups', () => {
@@ -18,7 +18,7 @@ describe('randomizePeerReviewGroups', () => {
 
     // Verify the structure
     result.forEach(group => {
-      expect(group).toHaveProperty('submissionID');
+      expect(group).toHaveProperty('revieweeID');
       expect(group).toHaveProperty('reviewers');
       expect(Array.isArray(group.reviewers)).toBe(true);
     });
@@ -32,8 +32,7 @@ describe('randomizePeerReviewGroups', () => {
     // Check that no student reviews their own submission
     result.forEach(group => {
       group.reviewers.forEach(reviewerID => {
-        const student = students.find(s => s.studentID === reviewerID);
-        expect(student?.submissionID).not.toBe(group.submissionID);
+        expect(reviewerID).not.toBe(group.revieweeID);
       });
     });
   });

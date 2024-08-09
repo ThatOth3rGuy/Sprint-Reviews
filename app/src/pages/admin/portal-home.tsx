@@ -8,7 +8,7 @@ import styles from '../../styles/admin-portal-home.module.css';
 import { useRouter } from 'next/router';
 import { Divider, Input, Listbox, ListboxItem, Spinner } from "@nextui-org/react";
 
-interface Course {
+interface Course { // Interface for course object to be displayed in course cards
   courseID: number;
   courseName: string;
   instructorFirstName: string;
@@ -17,24 +17,26 @@ interface Course {
 }
 
 export default function Page() {
-  const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState<any>(null);
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true); // Loading state for session validation
+  const [session, setSession] = useState<any>(null); // Session state for session validation
+  const [courses, setCourses] = useState<Course[]>([]); // State to store courses
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const router = useRouter(); // Router to redirect user to different pages
 
-  useSessionValidation('admin', setLoading, setSession);
+  useSessionValidation('admin', setLoading, setSession); // Validate session 
 
   // Get all courses from database to display in course cards
   useEffect(() => {
-    async function fetchCourses() {
+    async function fetchCourses() { // Function to fetch courses from database using API call
       try {
-        const response = await fetch('/api/courses/getAllArchivedCourses?isArchived=false');
+        const response = await fetch('/api/courses/getAllArchivedCourses?isArchived=false'); // Fetch all active courses from database (isArchived = false)
         if (!response.ok) {
           throw new Error('Failed to fetch courses');
         }
-        const data = await response.json();
-        setCourses(data);
+        const data = await response.json(); // Parse response data as JSON object
+        setCourses(data); // Set courses state to data 
+      
+        // If error occurs during fetch, catch the error and display an alert with the error message
       } catch (error) {
         if (error instanceof Error) {
           setError(error.message);
@@ -44,16 +46,16 @@ export default function Page() {
           alert(String(error));
         }
       } finally {
-        setLoading(false);
+        setLoading(false); // Set loading state to false after fetching courses
       }
     }
 
     if (!loading) {
-      fetchCourses();
+      fetchCourses(); // Fetch courses only if loading state is false (session has been validated)
     }
-  }, [loading]);
+  }, [loading]); // Fetch courses when loading state changes
 
-  if (loading) {
+  if (loading) { // If session is not validated, display loading spinner
     return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
     <Spinner className="Spinner" color='primary' size="lg" />
 </div>;
@@ -63,25 +65,25 @@ export default function Page() {
     return <p>Error: {error}</p>;
   }
 
-  const handleViewUsersClick = () => {
+  const handleViewUsersClick = () => { // Function to redirect user to view users page when "View Users" button is clicked (not implemented)
     router.push('/admin/view-users');
   };
-  const handleRoleRequestClick = () => {
+  const handleRoleRequestClick = () => { // Function to redirect user to role requests page when "Role Requests" button is clicked (not implemented)
     router.push('/admin/role-requests');
   };
-  const handleArchivedCoursesClick = () => {
+  const handleArchivedCoursesClick = () => { // Function to redirect user to archived courses page when "Archived Courses" button is clicked
     router.push('/admin/archived-courses');
   };
-  const handleAction = (key: any) => {
+  const handleAction = (key: any) => { // Function to handle action when an action button is clicked
     switch (key) {
       case "view":
-        handleViewUsersClick();
+        handleViewUsersClick(); // Redirect user to view users page (not implemented only redirects to page)
         break;
       case "role":
-        handleRoleRequestClick();
+        handleRoleRequestClick(); // Redirect user to role requests page (not implemented only redirects to page)
         break;
       case "archives":
-        handleArchivedCoursesClick();
+        handleArchivedCoursesClick(); // Redirect user to archived courses page
         break;
       // case "delete":
       //   // Implement delete course functionality
@@ -92,7 +94,6 @@ export default function Page() {
     }
   };
   return (
-    <>
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
           <h1>Admin Dashboard</h1>
@@ -102,10 +103,7 @@ export default function Page() {
         </div>
         <div className={styles.mainContent}>
           <div className={styles.assignmentsSection}>
-            {/* TODO: add functionality to search bar to search from all active courses */}
-            <Input className="m-1 mx-4 pr-7" placeholder="Search for course" size="sm" type="search" />
 
-            {/* TODO: turn the course list into pagination */}
             <div className={styles.courseCards}>
               {courses.map((course, index) => (
                 <div className={styles.courseCard} key={index}>
@@ -147,6 +145,5 @@ export default function Page() {
           <AdminNavbar admin={{ className: "bg-primary-500" }} />
         </div>
       </div>
-    </>
   );
 }

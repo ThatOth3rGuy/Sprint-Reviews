@@ -8,6 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const courses = await getAssignmentByInstructorID(Number(courseID));
       res.status(200).json({ courses });
+      console.log("assignments pulled:",courses)
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch courses' });
     }
@@ -17,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 async function getAssignmentByInstructorID(courseID: number) {
   const sql = `
-    SELECT assignmentID, title, deadline, descr
+    SELECT *
     FROM assignment
     WHERE courseID = ? 
   `;

@@ -31,6 +31,11 @@ const StudentLogin: NextPage = () => {
     router.push("/student/registration");
   };
 
+  const handleForgotPasswordClick = async () => {
+    // Redirect to the forgot password page
+    router.push("/forgot-password")
+  }
+
   const handleEnter= async (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleSignInClick();
@@ -73,7 +78,7 @@ const StudentLogin: NextPage = () => {
           <div >
             <div className="justify-self-center p-4 pl-2 bg-[#c0dfdc] text-primary flex text-center items-center">
             <img className="m-0 mr-2 object-cover cursor-pointer w-[2vw] h-[2vw]" alt="Back" src="/images/student/Back-Student.png" onClick={handleBackClick} aria-label='Back to Landing Page'/>
-              <h2 className="text-center mx-auto'">Student Login Portal</h2>
+              <h2 className="text-center mx-auto">Student Login Portal</h2>
             </div>
             
             
@@ -84,7 +89,7 @@ const StudentLogin: NextPage = () => {
               Sign In
             </Button>
             <div className="flex-column align-center justify-center text-center">
-              <Button className="bg-white h-fit w-fit my-1 mb-3 text-xs text-[#39776f]" variant="solid" >
+              <Button className="bg-white h-fit w-fit my-1 mb-3 text-xs text-[#39776f]" variant="solid" onClick={handleForgotPasswordClick}>
                 Forgot Your Password?
               </Button><Divider orientation="horizontal" className="bg-primary" />
               <p className="mt-3 p-1 text-small">Don't have an account?</p>

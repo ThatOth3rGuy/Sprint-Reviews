@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 export async function getReviewById(reviewID: string): Promise<any> {
     const sql = `
-      SELECT r.reviewID, r.assignmentID, a.title as assignmentName
+      SELECT r.reviewID, r.assignmentID, r.deadline,r.startDate,r.endDate, a.title as assignmentName
       FROM review r
       JOIN assignment a ON r.assignmentID = a.assignmentID
       WHERE r.reviewID = ?  

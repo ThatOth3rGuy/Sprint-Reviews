@@ -36,7 +36,7 @@ export default function Page() {
 
         </div>
         <div className={styles.mainContent}>
-          <div className={styles.rectangle}>
+          <div className={`flex-col bg-white p-[1%] w-[86%] m-[.8%] ml-auto h-[100%]`}>
             <div className="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -56,11 +56,7 @@ export default function Page() {
               </div>
             </div>
           </div>
-          <div className={styles.notificationsSection}>
-            {/* <div className={styles.notificationsContainer}> */}
-              {/* TODO: add search functionality for selecting to view grades for a specific student */}
-            {/* </div> */}
-          </div>
+          
         </div>
       </div>
       <StudentNavbar grades={{className: "bg-secondary-50"}}/>

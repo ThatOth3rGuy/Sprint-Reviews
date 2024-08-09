@@ -1,3 +1,10 @@
+/* 
+  As mentioned in the previous file, this page is not active in the final version of the application. The page was intended to be part of the admin functionality on the admin portal.
+  This page was a planned feature that was not implemented due to time constraints. The page was intended to allow admins to view all users on the platform, including instructors and students.
+  With the view ability, admins would be able to view/manage users. The serach functionality was never added to the page. Backend calls would be required to implement this feature.
+  The portal-home is the main admin page and this is not being called by it currently. The page remains as it can be added in future versions of the application.
+*/
+
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import AdminHeader from "../components/admin-components/admin-header";
 import { useState } from 'react';

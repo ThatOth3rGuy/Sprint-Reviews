@@ -1,18 +1,26 @@
+//pages/isntructor/release-assignment.tsx
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSessionValidation } from '../api/auth/checkSession';
-import InstructorHeader from "../components/instructor-components/instructor-header";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
-import AdminHeader from "../components/admin-components/admin-header";
 import styles from "../../styles/instructor-assignments-creation.module.css";
-import { Card, SelectItem, Listbox, ListboxItem, AutocompleteItem, Autocomplete, Textarea, Button, Breadcrumbs, BreadcrumbItem, Divider, Checkbox, CheckboxGroup, Progress, Input, Select, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spinner } from "@nextui-org/react";
+
+import {
+  SelectItem, Button, Breadcrumbs,
+  BreadcrumbItem, Checkbox, Input, Select,
+  useDisclosure, Spinner, Tooltip
+} from "@nextui-org/react";
 import toast from "react-hot-toast";
 
 // Define the structure for assignment and Rubric items
 interface Assignment {
   assignmentID: number;
+  linkedAssignmentID: string;
   title: string;
+  description: string;
+  deadline: string;
+  groupAssignment: boolean;
 }
 
 interface RubricItem {
@@ -20,14 +28,11 @@ interface RubricItem {
   maxMarks: number;
 }
 
-interface Student {
-  id: string;
-  name: string;
-}
-
 // Main component for releasing an assignment for peer review
 const ReleaseAssignment: React.FC = () => {
   const router = useRouter();
+  const { source, courseId } = router.query;
+  const [courseName, setCourseName] = useState<string>("");
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [selectedAssignment, setSelectedAssignment] = useState<number | "">("");
   const [rubric, setRubric] = useState<RubricItem[]>([{ criterion: "", maxMarks: 0 }]);
@@ -37,37 +42,25 @@ const ReleaseAssignment: React.FC = () => {
   const [students, setStudents] = useState<{ id: number; name: string }[]>([]);
   const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
   const [uniqueDueDate, setUniqueDueDate] = useState<string>("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
-  const dummyassignments = ['Assignment 1', 'Assignment 2', 'Assignment 3'];
-  const [studentSubmissions, setStudentSubmissions] = useState<{ studentID: number; submissionID: number; }[]>([]);
-  const [courseName, setCourseName] = useState<string>("");
-
-
-  // Dummy rubric
-  const dummyrubric = [
-    { criterion: 'Criterion 1', maxMarks: 10 },
-    { criterion: 'Criterion 2', maxMarks: 20 },
-    { criterion: 'Criterion 3', maxMarks: 30 },
-  ];
-
-  // Dummy questions
-  const questions = ['Was the work clear and easy to understand?', 'Was the content relevant and meaningful?', 'Was the work well-organized and logically structured?', 'Did the author provide sufficient evidence or examples to support their arguments or points?', 'Improvements: What suggestions do you have for improving the work?'];
-
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const [reviewsPerAssignment, setReviewsPerAssignment] = useState<number>(4);
+  const [anonymous, setAnonymous] = useState(false);
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('instructor', setLoading, setSession);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
- 
-  //get course name or assignment page for breadcrumbs
-  useEffect(() => {
-    const { source, courseId } = router.query;
+   
 
-    if (source === 'course' && courseId) {
-      // Fetch course name
+  // Fetch assignments and students in the course when the component mounts
+  useEffect(() => {
+    if ( courseId) {
+      fetchAssignments(courseId as string);
+      fetchStudents(courseId as string);
       fetchCourseName(courseId as string);
     }
-  }, [router.query]);
+  }, [session,courseId]);
 
   const fetchCourseName = async (courseId: string) => {
     try {
@@ -81,39 +74,29 @@ const ReleaseAssignment: React.FC = () => {
     }
   };
 
-  // Fetch assignments and students in the course when the component mounts
-  useEffect(() => {
-    if (session && session.user) {
-      fetchAssignments(session.user.userID);
-      fetchStudents(session.user.courseID);
-    }
-  }, [session]);
-
-  // Debug selectedAssignment state changes
-  useEffect(() => {
-    if (selectedAssignment !== "") {
-      fetchStudentSubmissions(Number(selectedAssignment));
-    }
-  }, [selectedAssignment]);
-
   // Function to fetch assignments
-  const fetchAssignments = async (userID: string) => {
+  const fetchAssignments = async (courseID: string | string[]) => {
     try {
-      const response = await fetch(`/api/getAllAssignmentsInstructor?userID=${userID}`);
+      const response = await fetch(
+        `/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`
+      );
       if (response.ok) {
         const data = await response.json();
-        setAssignments(data.assignments);
+        console.log('All assignments: ', data.courses);
+        //const filteredAssignments = data.assignments.filter((assignment: { groupAssignment: number; }) => assignment.groupAssignment === 0);
+        setAssignments(data.courses);
+        //console.log('Filtered assignments: ', filteredAssignments);
       } else {
-        console.error('Failed to fetch assignments');
+        console.error("Failed to fetch courses");
       }
     } catch (error) {
-      console.error('Error fetching assignments:', error);
+      console.error("Error fetching courses:", error);
     }
   };
-
   // Function to fetch students in the course
   const fetchStudents = async (courseID: string) => {
     try {
+      //courseID = '3';
       const response = await fetch(`/api/courses/getCourseList?courseID=${courseID}`);
       if (response.ok) {
         const students = await response.json();
@@ -123,24 +106,6 @@ const ReleaseAssignment: React.FC = () => {
       }
     } catch (error) {
       console.error("Error fetching students:", error);
-    }
-  };
-
-  const fetchStudentSubmissions = async (assignmentID: number) => {
-    try {
-      const response = await fetch("/api/assignments/getSubmissionList", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ assignmentID }),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setStudentSubmissions(data.formattedSubmissions); // Use the formatted submissions
-      } else {
-        console.error("Failed to fetch student submissions");
-      }
-    } catch (error) {
-      console.error("Failed to fetch student submissions");
     }
   };
 
@@ -168,15 +133,13 @@ const ReleaseAssignment: React.FC = () => {
       });
 
       if (response.ok) {
-        toast.success("Students selected successfully");
+        alert("Students selected successfully");
         setSelectedStudents([]);
         setUniqueDueDate("");
       } else {
-        toast.error("Failed to select students");
         console.error("Failed to select students");
       }
     } catch (error) {
-      toast.error("There was an error while selecting students")
       console.error("Error selecting students:", error);
     }
   };
@@ -211,14 +174,26 @@ const ReleaseAssignment: React.FC = () => {
     const updatedRubric = rubric.filter((_, i) => i !== index);
     setRubric(updatedRubric);
   };
-
+ const isValidFormData = () => {
+    // Add your validation logic here. For example:
+    if (!selectedAssignment ||  !startDate || !endDate || !deadline || !students) {
+      return false;
+    }
+    // If all fields are filled
+    return true;
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+     // Validate form data
+  if (!isValidFormData()) {
+    toast.error("Error: Invalid form data");
+    return;
+  }
     try {
       // Ensure submissions are fetched correctly
       const assignmentID = Number(selectedAssignment);
-      await fetchStudentSubmissions(assignmentID);
-      
+
       const responseReleaseAssignment = await fetch("/api/assignments/releaseAssignment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -227,41 +202,45 @@ const ReleaseAssignment: React.FC = () => {
           rubric,
           isGroupAssignment,
           allowedFileTypes,
+          startDate,
+          endDate,
           deadline,
+          anonymous,
+          students,
         }),
       });
-    
+
       if (!responseReleaseAssignment.ok) {
         throw new Error("Failed to release assignment for review");
+
       }
-    
+
       // Second API call to release randomized peer reviews
       const responseReleasePeerReviews = await fetch("/api/addNew/releaseRandomizedPeerReview", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          reviewsPerAssignment: 4,
-          studentSubmissions,
+          reviewsPerAssignment,
+          students,
           assignmentID,
         }),
       });
-    
+
+
       if (!responseReleasePeerReviews.ok) {
         throw new Error("Failed to release randomized peer reviews");
       }
-    
+
       // If both requests are successful
-      toast.success("Assignment and peer reviews released for review successfully");
-      router.push("/instructor/dashboard");
+      toast.success("Assignment created successfully!")
+      router.push(`/instructor/course-dashboard?courseId=${courseId}`);
+
+
     } catch (error) {
+      toast.error("Error releasing assignment or peer reviews for review");
       console.error("Error releasing assignment or peer reviews for review:", error);
     }
   };
-
-  const options = students.map((student) => ({
-    value: student.id,
-    label: student.name,
-  }));
 
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
@@ -272,17 +251,14 @@ const ReleaseAssignment: React.FC = () => {
 
   if (loading) {
     return <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
-    <Spinner color='primary' size="lg" />
-</div>;
+      <Spinner color='primary' size="lg" />
+    </div>;
   }
-  
+
   function handleHomeClick(): void {
     router.push("/instructor/dashboard");
   }
-  
-  function handleAssignmentClick(): void {
-    router.push("/instructor/assignments");
-  }
+
 
   const handleBackClick = () => { //redirect to course dashboard or all assignments
     const { source } = router.query;
@@ -307,13 +283,13 @@ const ReleaseAssignment: React.FC = () => {
         </div>
         <div className={styles.mainContent}>
           <div className="flex-col w-[85%] bg-white p-[1.5%] pt-[1%] shadow-sm overflow-auto m-auto mr-[1%] text-left ">
-            <h2>Release Assignment for Peer Review</h2>
+            <h2 className="text-center">Release Assignment for Peer Review</h2>
             <br />
             <form onSubmit={handleSubmit}>
               <Select
                 label="Select Assignment"
                 color="primary"
-                variant="bordered"
+                variant="underlined"
                 className="m-2"
                 value={selectedAssignment}
                 onChange={handleAssignmentChange}
@@ -330,33 +306,40 @@ const ReleaseAssignment: React.FC = () => {
               <div >
                 <div className={styles.rubric}>
                   <h3>Review Criteria</h3>
-                  <br />
+                  <p>Create a rubric for students to enter their reviews.</p>
+                  <hr className="my-2"/>
                   {rubric.map((item, index) => (
-                    <div key={index} className={styles.rubricItem}>
+                    <div key={index} className="flex items-center">
                       <Input
+                      color="primary"
                         size="sm"
                         label="Review Criterion"
-                        variant="bordered"
+                        variant="underlined"
                         type="text"
                         value={item.criterion}
                         onChange={(e) =>
                           handleRubricChange(index, "criterion", e.target.value)
                         }
                         required
+                        className="w-2/3 mr-3"
                       />
                       <br />
                       <Input
+                      color="secondary"
+                      size="sm"
                         label="Maximum Marks for Criterion"
-                        variant="bordered"
+                        variant="underlined"
                         type="number"
                         value={item.maxMarks.toString()}
                         onChange={(e) =>
                           handleRubricChange(index, "maxMarks", e.target.value)
                         }
                         required
+                        min = {1}
+                        className="w-1/3"
                       />
                       <Button
-                        size="sm"
+                        size="md"
                         variant="ghost"
                         color="danger"
                         type="button"
@@ -377,82 +360,72 @@ const ReleaseAssignment: React.FC = () => {
                   </Button>
                 </div>
               </div>
+              
+                <Checkbox isSelected={anonymous} onValueChange={setAnonymous} color="primary" className="my-2 mx-auto"><Tooltip content="Students will not be able to see the name of the person whose assignment they are reviewing" placement="right">Anonymous Review</Tooltip> </Checkbox>
+              
+              
+
               <br />
-              <label>Enter Due Date:</label>
-              <br />
-              <Input
-                variant="bordered"
-                type="datetime-local"
-                value={deadline}
-                onChange={(e) => setDeadline(e.target.value)}
-                color="primary"
+              <div className="flex items-end">
+              <Tooltip content="This is the number of assignments a student will be assigned to review." placement="top-end">
+<Input
+              variant='underlined'
+                label="Number of Reviews per Assignment"
+                type="number"
+                min="1"
+                value={reviewsPerAssignment.toString()} // Convert number to string
+                onChange={(e) => setReviewsPerAssignment(Number(e.target.value))}
                 required
+                className="mx-4"
               />
+              </Tooltip>
+              <p className="text-warning-900">The number of reviews can only be evenly distributed for the number of students in the course. Enter the number of reviews per assignment with this in mind.</p>
+              </div>
+              
+              <br />
+              <div className="flex justify-evenly m-1">
+                <div className="text-left w-1/3 p-2 pt-0">
+                  <h3>Enter a Start Date</h3>
+                  <Input
+                    variant="underlined"
+                    type="datetime-local"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    color="success"
+                    required
+                    min={new Date().toISOString().slice(0, 16)}
+                  />
+                </div>
+                <div className="text-left w-1/3 p-2 pt-0">
+                  <h3>Enter a Due Date:</h3>
+                  <Input
+                    variant="underlined"
+                    type="datetime-local"
+                    value={deadline}
+                    onChange={(e) => setDeadline(e.target.value)}
+                    color="warning"
+                    required
+                    min={new Date().toISOString().slice(0, 16)}
+                  />
+                </div>
+                
+                <div className="text-left w-1/3 p-2 pt-0">
+                  <h3>Enter an End Date</h3>
+                  <Input
+                    variant="underlined"
+                    type="datetime-local"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    color="danger"
+                    required
+                    min={new Date().toISOString().slice(0, 16)}
+                  />
+                </div>
+              </div>
+
               <Button onClick={handleSubmit} color="primary" variant="solid" className="float-right m-4" size="sm">
-                <b>Release</b>
+                <b>Draft Release</b>
               </Button>
-              <Button variant="bordered" onPress={onOpen} color="primary" className="float-left m-4 ml-0" size="sm">
-                Advanced Options</Button>
-              <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="instructor">
-                <ModalContent>
-                  {(onClose) => (
-                    <>
-                      <ModalHeader>Advanced Options</ModalHeader>
-                      <ModalBody>
-                        <div >
-                        <p className="text-left p-0 m-0 mb-2">Assign a unique due date to select students:</p>
-                          <p>
-                            <Select
-                            size="sm"
-                              label="Select Students"
-                              selectionMode="multiple"
-                              onChange={(selectedValues) => {
-                                setSelectedStudents(selectedValues.map(Number));
-                              }}
-                            >
-                              {students.map((student) => (
-                                <SelectItem key={student.id} value={student.id.toString()}>
-                                  {student.name}
-                                </SelectItem>
-                              ))}
-                            </Select>
-                          </p>
-                        </div>
-                        <div >
-                          <form onSubmit={handleStudentSelectionSubmit}>
-                            <div >
-                              {students.map((student) => (
-                                <div key={student.id}>
-                                  <Input
-                                    type="checkbox"
-                                    id={`student-${student.id}`}
-                                    checked={selectedStudents.includes(student.id)}
-                                    onChange={() => handleStudentSelection(student.id)}
-                                  />
-                                  <label htmlFor={`student-${student.id}`}>
-                                    {student.name}
-                                  </label>
-                                </div>
-                              ))}
-                            </div>
-                            <Input
-                              type="datetime-local"
-                              value={uniqueDueDate}
-                              onChange={(e) => setUniqueDueDate(e.target.value)}
-                              required
-                            />
-                            <br />
-                            <Button variant="ghost" type="submit" color="primary">
-                              Set Unique Due Date
-                            </Button>
-                          </form>
-                        </div>
-                      </ModalBody>
-                    </>
-                  )}
-                </ModalContent>
-                {/* <h2>Advanced Options</h2> */}
-              </Modal>
               <br />
             </form>
           </div>

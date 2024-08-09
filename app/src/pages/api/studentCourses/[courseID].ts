@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const course = await getCourse(Number(courseID));
+    const course = await getCourse(courseID);
 
     if (course) {
       res.status(200).json(course);

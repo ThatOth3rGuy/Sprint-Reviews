@@ -1,47 +1,135 @@
-import StudentHeader from "../components/student-components/student-header";
-import StudentNavbar from "../components/student-components/student-navbar";
-import { SVGProps, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useSessionValidation } from '../api/auth/checkSession';
+import StudentNavbar from "../components/student-components/student-navbar";
+import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Spinner, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input } from "@nextui-org/react";
 import styles from '../../styles/instructor-course-dashboard.module.css';
-import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Spinner } from "@nextui-org/react";
-import router from "next/router";
+import toast from 'react-hot-toast';
 
-
-export default function Page() {
+export default function StudentProfilePage() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
+  const [userDetails, setUserDetails] = useState<any>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editedDetails, setEditedDetails] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    homeAddress: '',
+    dateOfBirth: ''
+  });
+
+  const router = useRouter();
 
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('student', setLoading, setSession);
 
+  useEffect(() => {
+    if (session?.user?.userID) {
+      fetch(`/api/userInfo/student-user-details?userID=${session.user.userID}`)
+        .then(response => response.json())
+        .then(data => {
+          setUserDetails(data);
+          setEditedDetails({
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            phoneNumber: data.phoneNumber || '',
+            homeAddress: data.homeAddress || '',
+            dateOfBirth: data.dateOfBirth || ''
+          });
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error('Error fetching user details:', error);
+          setLoading(false);
+        });
+    }
+  }, [session]);
+
+  const handleEditClick = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsEditModalOpen(false);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditedDetails({
+      ...editedDetails,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      // Update user table
+      const userResponse = await fetch('/api/updateTable', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          table: 'user',
+          data: {
+            userID: session.user.userID,
+            fname: editedDetails.firstName,
+            lname: editedDetails.lastName,
+            email: editedDetails.email,
+          }
+        }),
+      });
+
+      // Update student table
+      const studentResponse = await fetch('/api/updateTable', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          table: 'student',
+          data: {
+            studentID: userDetails.studentID,
+            userID: session.user.userID,
+            phoneNumber: editedDetails.phoneNumber,
+            address: editedDetails.homeAddress,
+            dob: editedDetails.dateOfBirth,
+          }
+        }),
+      });
+
+      if (userResponse.ok && studentResponse.ok) {
+        // Update was successful
+        setUserDetails({
+          ...userDetails,
+          firstName: editedDetails.firstName,
+          lastName: editedDetails.lastName,
+          email: editedDetails.email,
+          phoneNumber: editedDetails.phoneNumber,
+          homeAddress: editedDetails.homeAddress,
+          dateOfBirth: editedDetails.dateOfBirth
+        });
+        setIsEditModalOpen(false);
+      } else {
+        console.error('Failed to update user details');
+        toast.error("Error, missing items in the field ");
+        
+      }
+    } catch (error) {
+      console.error('Error updating user details:', error);
+    }
+  };
+
   if (loading) {
-    return <div className='w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto'>
-        <Spinner color='primary' size="lg" />
-      </div>;
-  }
-  
-  function handleHomeClick(): void {
-    router.push("/instructor/dashboard");
-  }
-  function UserIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
     return (
-      <svg
-        {...props}
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
-      </svg>
-    )
+      <div className='w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto'>
+        <Spinner color='primary' size="lg" />
+      </div>
+    );
   }
+
   return (
     <>
       <div className={`student text-primary-900 ${styles.container}`}>
@@ -49,13 +137,12 @@ export default function Page() {
           <h1>Profile</h1>
           <br />
           <Breadcrumbs>
-            <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
+            <BreadcrumbItem onClick={() => router.push("/student/dashboard")}>Home</BreadcrumbItem>
             <BreadcrumbItem>Profile</BreadcrumbItem>
           </Breadcrumbs>
         </div>
         <div className={styles.mainContent}>
-          <div className={` ${styles.assignmentsSection}`}>
-            {/* This is where the data can just be parsed here from the functions to display pofile details here */}
+          <div className={`flex-col bg-white p-[1%] w-[86%] m-[.8%] ml-auto h-[100%]`}>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardBody className="text-sm font-medium">User Profile</CardBody>
@@ -63,22 +150,78 @@ export default function Page() {
               <CardBody className="flex flex-col items-center">
                 <Avatar className="h-24 w-24 mb-4">
                   <Avatar src="/placeholder-user.jpg" />
-
                 </Avatar>
-                <div className="text-2xl font-bold">Username</div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">User's email</p>
+                {userDetails && (
+                  <>
+                    <div className="text-2xl font-bold">{`${userDetails.firstName} ${userDetails.lastName}`}</div>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{userDetails.email}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Phone: {userDetails.phoneNumber}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Address: {userDetails.homeAddress}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Date of Birth: {userDetails.dateOfBirth}</p>
+                  </>
+                )}
               </CardBody>
-            </Card>
-
+            </Card> 
+            <Button color="primary" variant="ghost" className="w-[100%] m-1" onClick={handleEditClick}>Edit Profile</Button>
           </div>
-          <div className="w-[25%] h-[100%] flex-col p-[1%]">
-            <Button color="primary" variant="ghost" className="w-[100%] m-1">Edit Profile</Button>
-            <Button color="danger" variant="ghost" className="w-[100%] m-1">Delete Account</Button>
-          </div>
+          
         </div>
       </div>
 
-      <StudentNavbar profile={{ className: "bg-secondary-200" }}/>
+      <Modal
+        backdrop="blur"
+        isOpen={isEditModalOpen}
+        onClose={handleCloseModal}
+      >
+        <ModalContent>
+          <ModalHeader>Edit Profile</ModalHeader>
+          <ModalBody>
+            <Input
+              label="First Name"
+              name="firstName"
+              value={editedDetails.firstName}
+              onChange={handleInputChange}
+            />
+            <Input
+              label="Last Name"
+              name="lastName"
+              value={editedDetails.lastName}
+              onChange={handleInputChange}
+            />
+            <Input
+              label="Email"
+              name="email"
+              value={editedDetails.email}
+              onChange={handleInputChange}
+            />
+            <Input
+              label="Phone Number"
+              name="phoneNumber"
+              value={editedDetails.phoneNumber}
+              onChange={handleInputChange}
+            />
+            <Input
+              label="Home Address"
+              name="homeAddress"
+              value={editedDetails.homeAddress}
+              onChange={handleInputChange}
+            />
+            <Input
+              label="Date of Birth"
+              name="dateOfBirth"
+              value={editedDetails.dateOfBirth}
+              onChange={handleInputChange}
+              type="date"
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={handleSaveChanges}>Save Changes</Button>
+            <Button color="danger" variant="light" onClick={handleCloseModal}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <StudentNavbar profile={{ className: "bg-secondary-200" }} />
     </>
   );
 }

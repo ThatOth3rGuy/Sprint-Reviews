@@ -1,3 +1,4 @@
+// create-groups.tsx
 import { useRouter } from "next/router";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
@@ -48,8 +49,22 @@ export default function CreateGroup() {
   useEffect(() => {
     if (session && session.user && session.user.userID && courseId) {
       fetchStudentsAndGroups(courseId as string);
+      fetchCourseName(courseId as string);
     }
   }, [session, courseId]);
+
+    // Fetching course name for breadcrumbs
+    const fetchCourseName = async (courseId: string) => {
+      try {
+        const response = await fetch(`/api/courses/${courseId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setCourseName(data.courseName);
+        }
+      } catch (error) {
+        console.error('Error fetching course name:', error);
+      }
+    };
 
   const fetchStudentsAndGroups = async (courseId: string) => {
     try {
@@ -331,26 +346,28 @@ export default function CreateGroup() {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-            <BreadcrumbItem onClick={handleBackClick}>{router.query.source === 'course' ? courseName : 'Course Dashboard'}</BreadcrumbItem> 
+            <BreadcrumbItem onClick={handleBackClick}>{courseName ? courseName : 'Course Dashboard'}</BreadcrumbItem> 
             <BreadcrumbItem>Create Student Groups</BreadcrumbItem>
           </Breadcrumbs>
         </div>
         <div className={styles.mainContent}>
           <div className={`flex flex-row items-center justify-center ${styles.assignmentsSection}`}>
-            <Card shadow="sm" className={`${styles.outerCard}`} style={{ overflow: 'auto' }}>
-              <h2>All Students</h2>
+            <Card shadow="sm" className="w-[100%] mb-3 border-solid border-1 border-primary" style={{ overflow: 'auto' }}>
+              <h2 className="p-2 bg-primary-50 ">All Students</h2>
+              <hr />
               <Listbox>
                 {students.length > 0 ? (
                   students.map((student) => (
-                    <ListboxItem key={student.studentID}>{student.firstName} {student.lastName}</ListboxItem>
+                    <ListboxItem color="primary" variant="flat" key={student.studentID}>{student.firstName} {student.lastName}</ListboxItem>
                   ))
                 ) : (
                   <ListboxItem key=''>No students available</ListboxItem>
                 )}
               </Listbox>
             </Card>
-            <Card shadow="sm" className={`${styles.outerCard}`} style={{ maxHeight: '80%', overflow: 'auto', minHeight: groups.length > 0 ? '60%' : '10%' }}>
-              <h2>Groups</h2>
+            
+            <Card shadow="sm" className="w-[100%] border-solid border-1 border-primary" style={{ maxHeight: '80%', overflow: 'auto', minHeight: groups.length > 0 ? '60%' : '10%' }}>
+              <h2 className="p-2 bg-primary-50 ">Groups</h2>
               <Accordion variant="bordered">
                 {groups.map((group, index) => (
                   <AccordionItem
@@ -369,12 +386,11 @@ export default function CreateGroup() {
             </Card>
           </div>
           <div className={styles.notificationsSection}>
-            <Listbox aria-label="Actions" onAction={handleAction}>
-              <ListboxItem key="create">Create/Update Groups</ListboxItem>
-              <ListboxItem key="peer-review">Randomize Groups</ListboxItem>
-            </Listbox>
-            <Button color="primary" variant="ghost" onClick={handleEditGroups}>Edit groups</Button>
-            <Button color="danger" variant="ghost" onClick={handleRemoveGroups}>Remove groups</Button>
+            <Button color="primary" className="m-1" variant="ghost" onClick={handleCreateGroups}>Create/Update Groups</Button>
+            <Button color="primary" className="m-1" variant="ghost" onClick={handleGroupRandomizer}>Create Random Groups</Button>
+            <Button color="primary" className="m-1" variant="ghost" onClick={handleEditGroups}>Edit groups</Button>
+            <Button color="danger" className="m-1" variant="ghost" onClick={handleRemoveGroups}>Remove groups</Button>
+            
           </div>
         </div>
 
@@ -409,13 +425,14 @@ export default function CreateGroup() {
 
         {/* Edit Groups Modal */}
         <Modal
-          className='z-20'
+          className='instructor z-20'
           backdrop="blur"
           isOpen={isEditGroupsModalOpen}
           onOpenChange={(open) => setIsEditGroupsModalOpen(open)}
         >
-          <ModalContent style={{ maxHeight: '90%', overflow: 'auto' }}>
-            <ModalHeader>Edit Groups</ModalHeader>
+          <ModalContent className="overflow-auto ">
+            <ModalHeader><h2>Edit Groups</h2></ModalHeader>
+            
             <ModalBody>
               {editableGroups.map((group, index) => (
                 <div key={index} style={{ marginBottom: '20px' }}>
@@ -434,10 +451,7 @@ export default function CreateGroup() {
                   ))}
                   <Button
                     onPress={() => handleEmptyGroupClick(group.groupID)}
-                    style={{
-                      margin: '5px',
-                      backgroundColor: 'lightgreen'
-                    }}
+                   className="mx-3 text-white" color="success" variant="solid"
                   >
                     Move Here
                   </Button>
@@ -445,7 +459,7 @@ export default function CreateGroup() {
               ))}
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" variant="light" onPress={() => setIsEditGroupsModalOpen(false)}>
+              <Button color="danger" variant="light" onPress={() => setIsEditGroupsModalOpen(false)}>
                 Close
               </Button>
               <Button color="primary" onPress={handleSaveGroups}>
@@ -457,15 +471,15 @@ export default function CreateGroup() {
 
         {/* Remove Groups Modal */}
         <Modal
-          className='z-20'
+          className='z-20 instructor'
           backdrop="blur"
           isOpen={isRemoveGroupsModalOpen}
           onOpenChange={(open) => setIsRemoveGroupsModalOpen(open)}
         >
           <ModalContent>
-            <ModalHeader>Remove Groups</ModalHeader>
+            <ModalHeader><h2>Remove Groups</h2></ModalHeader>
             <ModalBody>
-              <p>Are you sure you want to remove all groups?</p>
+              <p className="text-left">Are you sure you want to remove all groups? Once confirmed, the existing groups will be permanently deleted.</p>
             </ModalBody>
             <ModalFooter>
               <Button color="primary" variant="light" onPress={() => setIsRemoveGroupsModalOpen(false)}>
