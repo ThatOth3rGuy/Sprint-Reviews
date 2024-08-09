@@ -2,6 +2,7 @@
 import mysql from 'mysql2/promise';
 import fs from 'fs/promises';
 import config from './dbConfig'; // Import the database configuration from dbConfig.ts
+import bcrypt from 'bcrypt';
 import { JsonObject } from '@prisma/client/runtime/library';
 import { randomizePeerReviewGroups } from './pages/api/addNew/randomizationAlgorithm';
 import nodemailer from 'nodemailer';
@@ -57,10 +58,11 @@ export async function createUser(firstName: string, lastName: string, email: str
     VALUES (?, ?, ?, ?, ?)
   `;
   try {
-    const result = await query(sql, [firstName, lastName, email, password, role]);
+    const hashedPassword = await bcrypt.hash(password, 10); // Hash the password with a salt round of 10
+    const result = await query(sql, [firstName, lastName, email, hashedPassword, role]);
     return result.insertId; // Return the inserted user ID for adding to the instructor or student table
   } catch (error) {
-    console.error('Error in addUser:', error); // Log the error
+    console.error('Error in createUser:', error); // Log the error
     throw error;
   }
 }
@@ -90,6 +92,7 @@ export async function createInstructor(instructorID: number, userID: number, isA
     throw error;
   }
 }
+
 // adds an assignment to the database for a course (called by createAssignment api)
 export async function addAssignmentToCourse(
   title: string, 
@@ -901,11 +904,16 @@ export async function authenticateAdmin(email: string, password: string): Promis
 
 export async function authenticateInstructor(email: string, password: string): Promise<boolean> {
   const sql = `
-    SELECT * FROM user WHERE email = ? AND pwd = ? AND userRole = 'instructor'
+    SELECT * FROM user WHERE email = ? AND userRole = 'instructor'
   `;
   try {
-    const rows = await query(sql, [email, password]);
-    return rows.length > 0;
+    const rows = await query(sql, [email]);
+    if (rows.length > 0) {
+      const user = rows[0];
+      const match = await bcrypt.compare(password, user.pwd); // Compare provided password with hashed password
+      return match;
+    }
+    return false;
   } catch (error) {
     console.error('Error in authenticateInstructor:', error); // Log the error
     throw error;
@@ -914,11 +922,19 @@ export async function authenticateInstructor(email: string, password: string): P
 
 export async function authenticateStudent(email: string, password: string): Promise<boolean> {
   const sql = `
-    SELECT * FROM user WHERE email = ? AND pwd = ? AND userRole = 'student'
+    SELECT * FROM user WHERE email = ? AND userRole = 'student'
   `;
   try {
-    const rows = await query(sql, [email, password]);
-    return rows.length > 0;
+    const rows = await query(sql, [email]);
+    if (rows.length > 0) {
+      const user = rows[0];
+      console.log('Password:', password);
+      console.log('Hashed password:', user.pwd);
+      const match = await bcrypt.compare(password, user.pwd); // Compare provided password with hashed password
+      console.log('Match:', match);
+      return match;
+    }
+    return false;
   } catch (error) {
     console.error('Error in authenticateStudent:', error); // Log the error
     throw error;
