@@ -1,3 +1,15 @@
+// pages/student/assignment-dashboard.tsx
+/**
+* Renders the  group assignment dashboard page for students.This function renders 
+* the  group assignment the student needs to submit. This page also displays any 
+* instructor comments and also the feedback recieved after reviews.
+*  This page is only missing the displaying auto graded grade and comments by instructor
+* and if instructor wants to setup release grades, they need to enable it here 
+*
+* @return {JSX.Element} The rendered assignment dashboard.
+*/
+
+// Importing necessary libraries and components
 import { useRouter } from "next/router";
 import StudentNavbar from "../components/student-components/student-navbar";
 import { useEffect, useState } from "react";
@@ -19,7 +31,9 @@ import {
   Input,
 } from "@nextui-org/react";
 import toast from "react-hot-toast";
-
+/** Defining interfaces for Assignment, CourseData,  
+* Group details for giving reviews for student sin the group
+**/
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -43,6 +57,7 @@ interface GroupDetails {
 }
 
 export default function AssignmentDashboard() {
+  // Initializing state variables
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const router = useRouter();
@@ -60,9 +75,9 @@ export default function AssignmentDashboard() {
   const [studentID, setStudentID] = useState<number | null>(null);
   const [linkSubmission, setLinkSubmission] = useState('');
   const [submissionType, setSubmissionType] = useState<'file' | 'link'>('file');
-
+// Checking user session
   useSessionValidation("student", setLoading, setSession);
-
+// function to fetch the student ID from session
   useEffect(() => {
     const fetchStudentID = async () => {
       if (session?.user?.userID) {
@@ -80,7 +95,8 @@ export default function AssignmentDashboard() {
         }
       }
     };
-
+  // sends data to api/assignments/[assignmentID].ts and api/courses/[courseID].ts
+// fetching data for Assignment details and Course Data 
     const fetchData = async () => {
       if (assignmentID && studentID) {
         try {

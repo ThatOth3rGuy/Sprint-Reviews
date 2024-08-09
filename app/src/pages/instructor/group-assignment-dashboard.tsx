@@ -1,3 +1,13 @@
+/**
+* Renders the groups assignment dashboard page for instructors.This function renders 
+* the update of students who have submitted and are yet to submit the assignment 
+* and allows the instructor to also view the individual assignment submission. 
+* This page directs to the submission-feedback page for the selected student
+ *
+ * @return {JSX.Element | null} The rendered Assignment Dashboard page or null if there is an error or if the session is not valid.
+ */
+
+// Importing necessary libraries and components
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
@@ -8,7 +18,10 @@ import styles from "../../styles/AssignmentDetailCard.module.css";
 import { Breadcrumbs, BreadcrumbItem, Spinner } from "@nextui-org/react";
 import type { NextPage } from "next";
 import toast from 'react-hot-toast';
-
+/** Defining interfaces for Assignment, CourseData,  
+* SubmittedEntity for students who have submitted the group assignment, 
+* and RemainingEntity for students who have not submitted the group assignments only.
+**/
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -49,7 +62,8 @@ const AssignmentDashboard: NextPage = () => {
     if (!router.isReady) return;
 
     const { assignmentID } = router.query;
-
+    // sends data to api/assignments/[assignmentID].ts 
+    // fetching data for Assignment details
     const fetchData = async () => {
       if (assignmentID) {
         try {
@@ -65,9 +79,9 @@ const AssignmentDashboard: NextPage = () => {
                 setCourseData(courseData);
               }
             }
-
+            // Fetching ,students in the groups, data and sets the list of students who have submitted and who havent
             const studentsResponse = await fetch(`/api/submissions/${assignmentID}/group-students`);
-              
+
             if (studentsResponse.ok) {
               const { submittedGroups, remainingGroups, submittedStudents, remainingStudents } = await studentsResponse.json();
               setSubmittedEntities(submittedGroups || submittedStudents);
@@ -109,7 +123,7 @@ const AssignmentDashboard: NextPage = () => {
 
   const handleBackClick = () => router.push(`/instructor/course-dashboard?courseId=${courseData?.courseID}`);
   const handleHomeClick = () => router.push("/instructor/dashboard");
-
+  // Rendering the component
   return (
     <>
       {isAdmin ? <AdminNavbar /> : <InstructorNavbar />}

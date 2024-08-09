@@ -1,4 +1,15 @@
-//pages/isntructor/release-assignment.tsx
+// instructor/release-assignment.tsx
+/**
+ * Main component for creating an assignment for peer review. The instructor chooses the
+ * fetched assignments to be sent to review and set the review dates,review criterias 
+ * and the initial randomizer group size. This page will redirect to  peer-review-dashboard,  
+ * which renders the initial review groups and review details 
+ * 
+ *
+ * @return {JSX.Element} The rendered ReleaseAssignment component
+ */
+
+// Importing necessary libraries and components
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSessionValidation } from '../api/auth/checkSession';

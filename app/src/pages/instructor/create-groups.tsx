@@ -1,4 +1,15 @@
-// create-groups.tsx
+//instructor/create-groups.tsx
+/**
+ * Renders the page to create and display course groups in the course 
+ * This component handles the creation of a course group, including to display all students 
+ * in the course and the course groups created for group assignments.
+ * Th instructor can also manually choose to edit groups as per need or 
+ * use the randmize groups feature based on number of students per group.
+ *
+ * @return {JSX.Element} The JSX element representing the create course groups page.
+ */
+
+// Importing necessary libraries and components
 import { useRouter } from "next/router";
 import AdminNavbar from "../components/admin-components/admin-navbar";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
@@ -8,13 +19,7 @@ import { useSessionValidation } from '../api/auth/checkSession';
 import React, { useState, useEffect } from 'react';
 import toast from "react-hot-toast";
 
-interface Assignment {
-  assignmentID: number;
-  title: string;
-  description: string;
-  deadline: string;
-  courseID: number;
-}
+// Defining interfaces for Students in the course and Groups data
 
 interface Student {
   studentID: number;
@@ -29,6 +34,7 @@ interface Group {
 }
 
 export default function CreateGroup() {
+  // Initializing state variables
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
@@ -40,12 +46,14 @@ export default function CreateGroup() {
   const [isRemoveGroupsModalOpen, setIsRemoveGroupsModalOpen] = useState(false);
   const [groupSize, setGroupSize] = useState<number>(3); // Default group size
   const [selectedStudents, setSelectedStudents] = useState<{ student: Student, groupID: number }[]>([]);
+  // Fetching data when the router is ready
   const { courseId } = router.query;
 
   const [courseName, setCourseName] = useState<string>("");
-  
+  // Checking user session
   useSessionValidation('instructor', setLoading, setSession);
 
+  // Fetching Students and Groups data and Course Details from database
   useEffect(() => {
     if (session && session.user && session.user.userID && courseId) {
       fetchStudentsAndGroups(courseId as string);
@@ -53,19 +61,21 @@ export default function CreateGroup() {
     }
   }, [session, courseId]);
 
-    // Fetching course name for breadcrumbs
-    const fetchCourseName = async (courseId: string) => {
-      try {
-        const response = await fetch(`/api/courses/${courseId}`);
-        if (response.ok) {
-          const data = await response.json();
-          setCourseName(data.courseName);
-        }
-      } catch (error) {
-        console.error('Error fetching course name:', error);
+  // Fetching course name for breadcrumbs
+  const fetchCourseName = async (courseId: string) => {
+    try {
+      const response = await fetch(`/api/courses/${courseId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setCourseName(data.courseName);
       }
-    };
-
+    } catch (error) {
+      console.error('Error fetching course name:', error);
+    }
+  };
+  // function to fetch students and student groups in the course
+  // sends courseID to  api/course/getCourseList.ts to fetch students in that course
+  // sends courseID to api/groups/getCourseGroups.ts to fetch student groups in the course
   const fetchStudentsAndGroups = async (courseId: string) => {
     try {
       const studentsResponse = await fetch(`/api/courses/getCourseList?courseID=${courseId}`);
@@ -105,7 +115,9 @@ export default function CreateGroup() {
       console.error('Error fetching students and groups:', error);
     }
   };
-
+  // function to fetch student groups again after the instructor chooses to randomize groups 
+  // sends the group size set by instructor and the studentIDs fetched from the fetchStudentsAndGroups
+  // to api/groups/randomizeGroups.ts
   const fetchRandomizedGroups = async (groupSize: number) => {
     try {
       const studentIds = students.map(student => student.studentID);
@@ -143,6 +155,9 @@ export default function CreateGroup() {
     }
   };
 
+  // function to handle teh creation and update of the course groups 
+  // sends the updated list of groups to api/groups/createGroups.ts to
+  // add the groups to teh db 
   const handleCreateGroups = async () => {
     const groupsData = groups.map((group, index) => {
       return {
@@ -173,6 +188,7 @@ export default function CreateGroup() {
       console.error('Error creating groups:', error);
     }
   };
+  // functions to handle Modal opening for front end
 
   const handleGroupRandomizer = () => {
     setIsRandomizeModalOpen(true); // Open the modal to input group size
@@ -186,7 +202,8 @@ export default function CreateGroup() {
   const handleRemoveGroups = () => {
     setIsRemoveGroupsModalOpen(true); // Open the modal to confirm group removal
   };
-
+  // function to reset and remove groups 
+  // sends data to api/groups/removeGroups.ts
   const confirmRemoveGroups = async () => {
     try {
       const response = await fetch(`/api/groups/removeGroups`, {
@@ -210,7 +227,7 @@ export default function CreateGroup() {
       console.error('Error removing groups:', error);
     }
   };
-
+  // functions to handle the front end editiing and setting of the new groups created 
   const handleMemberClick = (student: Student, groupID: number) => {
     if (selectedStudents.length === 0) {
       setSelectedStudents([{ student, groupID }]);
@@ -237,7 +254,7 @@ export default function CreateGroup() {
       }
     }
   };
-
+  // functions to swap between student groups to switch students if needed 
   const swapStudentGroups = (student1: Student, student2: Student, group1ID: number, group2ID: number) => {
     setEditableGroups(prevGroups => {
       const newGroups = prevGroups.map(group => {
@@ -296,7 +313,7 @@ export default function CreateGroup() {
     setGroups(editableGroups);
     setIsEditGroupsModalOpen(false);
   };
-
+  // Loading Spinner
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -307,7 +324,7 @@ export default function CreateGroup() {
   }
 
   const isAdmin = session.user.role === 'admin';
-
+  // Navigation Handlers
   const handleAction = (key: any) => {
     switch (key) {
       case "create":
@@ -324,18 +341,20 @@ export default function CreateGroup() {
   const handleHomeClick = async () => {
     router.push("/instructor/dashboard")
   };
-
-  if(loading){
+  // Loading Spinner
+  if (loading) {
     <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
-    <Spinner color='primary' size="lg" />
-</div>;
+      <Spinner color='primary' size="lg" />
+    </div>;
   }
-  const handleBackClick= async () =>{
+  const handleBackClick = async () => {
     const { source } = router.query;
     if (source === 'course') {
       router.push(`/instructor/course-dashboard?courseId=${router.query.courseId}`);
     }
   }
+
+  // Rendering the components 
 
   return (
     <>
@@ -346,7 +365,7 @@ export default function CreateGroup() {
           <br />
           <Breadcrumbs>
             <BreadcrumbItem onClick={handleHomeClick}>Home</BreadcrumbItem>
-            <BreadcrumbItem onClick={handleBackClick}>{courseName ? courseName : 'Course Dashboard'}</BreadcrumbItem> 
+            <BreadcrumbItem onClick={handleBackClick}>{courseName ? courseName : 'Course Dashboard'}</BreadcrumbItem>
             <BreadcrumbItem>Create Student Groups</BreadcrumbItem>
           </Breadcrumbs>
         </div>
@@ -365,7 +384,7 @@ export default function CreateGroup() {
                 )}
               </Listbox>
             </Card>
-            
+
             <Card shadow="sm" className="w-[100%] border-solid border-1 border-primary" style={{ maxHeight: '80%', overflow: 'auto', minHeight: groups.length > 0 ? '60%' : '10%' }}>
               <h2 className="p-2 bg-primary-50 ">Groups</h2>
               <Accordion variant="bordered">
@@ -390,7 +409,7 @@ export default function CreateGroup() {
             <Button color="primary" className="m-1" variant="ghost" onClick={handleGroupRandomizer}>Create Random Groups</Button>
             <Button color="primary" className="m-1" variant="ghost" onClick={handleEditGroups}>Edit groups</Button>
             <Button color="danger" className="m-1" variant="ghost" onClick={handleRemoveGroups}>Remove groups</Button>
-            
+
           </div>
         </div>
 
@@ -432,7 +451,7 @@ export default function CreateGroup() {
         >
           <ModalContent className="overflow-auto ">
             <ModalHeader><h2>Edit Groups</h2></ModalHeader>
-            
+
             <ModalBody>
               {editableGroups.map((group, index) => (
                 <div key={index} style={{ marginBottom: '20px' }}>
@@ -451,7 +470,7 @@ export default function CreateGroup() {
                   ))}
                   <Button
                     onPress={() => handleEmptyGroupClick(group.groupID)}
-                   className="mx-3 text-white" color="success" variant="solid"
+                    className="mx-3 text-white" color="success" variant="solid"
                   >
                     Move Here
                   </Button>

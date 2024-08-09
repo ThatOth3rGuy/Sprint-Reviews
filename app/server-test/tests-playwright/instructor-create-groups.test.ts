@@ -131,7 +131,7 @@ test.describe('Create Group Page', () => {
 
   test('should randomize, create, and remove groups, then navigate to course dashboard', async ({ page }) => {
     // Open the randomize groups modal
-    await page.click('text=Randomize Groups');
+    await page.click('text=Create Random Groups');
     
     // Verify that the modal header is visible
     await expect(page.locator('header:has-text("Randomize Groups")')).toBeVisible();

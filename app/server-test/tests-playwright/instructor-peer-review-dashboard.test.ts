@@ -92,7 +92,7 @@ test.describe('Review Dashboard Page', () => {
 
   // Check that the review details are displayed correctly
   test('should display review details', async ({ page }) => {
-    await expect(page.locator('h1')).toHaveText('Review For Assignment 1');
+    await expect(page.locator('h1')).toHaveText('Reviewing Assignment 1');
     await expect(page.locator('text=Assignment: Assignment 1')).toBeVisible();
     await expect(page.locator('text=Deadline: 8/1/2024, 11:59:59 PM')).toBeVisible();
     await expect(page.locator('text=Start Date: 7/1/2024, 12:00:00 AM')).toBeVisible();

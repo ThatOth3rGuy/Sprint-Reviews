@@ -1,3 +1,10 @@
+// student/settings.tsx
+/**
+ * Renders the sesttings page for students.
+ *
+ * @return {JSX.Element} Renders the insructor sign-up page.The page allows students to customize their notification preferences 
+ * for assignments and peer reviews. Thi page doesnt currenly handle the peer review notifications 
+ */
 import StudentNavbar from "../components/student-components/student-navbar";
 import { useState, useEffect } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
@@ -32,7 +39,7 @@ export default function Page() {
         });
     }
   }, [session]);
-
+// function to save prefernces of the notifications settings
   const handleSave = async () => {
     try {
       await fetch(`/api/updateTable`, {
@@ -72,7 +79,7 @@ export default function Page() {
   function handleHomeClick(): void {
     router.push("/student/dashboard");
   }
-
+// render the component
   return (
     <>
       <div className={`student text-primary-900 ${styles.container}`}>
