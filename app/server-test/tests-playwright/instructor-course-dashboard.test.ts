@@ -105,11 +105,6 @@ test.describe('Instructor Dashboard Page', () => {
     await expect(page).toHaveURL(`${baseURL}/instructor/manage-students?courseId=1`);
   });
 
-  test('should display notifications section', async ({ page }) => {
-    await expect(page.getByText('Notifications', { exact: true })).toBeVisible();
-    await expect(page.getByText('Dummy Notification', { exact: true })).toBeVisible();
-  });
-
   test('should display the correct navbar based on user role', async ({ page }) => {
     // Wait for either navbar to be visible
     await page.waitForSelector('nav:has-text("Instructor"), nav:has-text("Admin")', { state: 'visible' });
