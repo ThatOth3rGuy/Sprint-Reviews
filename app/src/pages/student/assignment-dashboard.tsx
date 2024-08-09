@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from "../api/auth/checkSession";
 import StudentAssignmentView from "../components/student-components/student-assignment-details";
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import { Button, Breadcrumbs, BreadcrumbItem, Spinner, Modal, useDisclosure, ModalContent, ModalBody, ModalFooter, ModalHeader, Input } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Spinner, Modal, useDisclosure, ModalContent, ModalBody, ModalFooter, ModalHeader, Input, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import toast from "react-hot-toast";
 import DownloadSubmission from "../components/student-components/download-submission";
 
@@ -344,8 +344,9 @@ export default function AssignmentDashboard() {
           
           <div className="flex mt-4 justify-evenly">
           <div className="mx-3 w-1/2">
-           <h2 className="mb-2">Feedback<hr /></h2>
-            {feedbacks.length > 0 ? (
+           {/* <h2 className="mb-2">Feedback<hr /></h2> */}
+           
+            {/* {feedbacks.length > 0 ? (
               feedbacks.map((feedback, index) => (
                 <div key={feedback.feedbackID} className={styles.assignmentsSection}>
                   <p><strong>Feedback {index + 1}:</strong></p>
@@ -357,11 +358,35 @@ export default function AssignmentDashboard() {
               ))
             ) : (
               <p>No feedback available yet.</p>
-            )}
+            )} */}
+            
+                  <h2 className="mb-2">Feedback</h2>
+                  <Table aria-label="Submissions table">
+                    <TableHeader>
+                      <TableColumn>Reviewer ID</TableColumn>
+                      <TableColumn>Feedback Date</TableColumn>
+                      <TableColumn>Comment</TableColumn>
+                      <TableColumn>Last Updated</TableColumn>
+
+                    </TableHeader>
+                    <TableBody>
+                      {feedbacks.map((feedback, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{feedback.reviewerID}</TableCell>
+                          <TableCell>{new Date(feedback.feedbackDate).toLocaleString()}</TableCell>
+                          <TableCell>{feedback.comment}</TableCell>
+                          <TableCell>{new Date(feedback.lastUpdated).toLocaleString()}</TableCell>
+                        </TableRow>
+
+                      ))}
+                    </TableBody>
+                  </Table>
+                
+              
           </div>
           <br />
           <div className="mx-3 w-1/2">
-          <h2 className="mb-2">Comments<hr /></h2>
+          <h2 className="mb-2"> Instructor Comments<hr /></h2>
             <br />
             {comments.length > 0 ? (
               comments.map((comment) => (
@@ -377,6 +402,7 @@ export default function AssignmentDashboard() {
           </div>
         </div>
       </div>
+            
     </>
   );
 }

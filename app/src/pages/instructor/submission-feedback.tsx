@@ -321,7 +321,7 @@ export default function AssignmentDashboard() {
           )}
           <div className="instructor flex justify-evenly align-top">
             <div className="w-1/2 align-top justify-start items-start">
-              <h2 className=" mb-3 align-top items-start">Feedback</h2>
+              {/* <h2 className=" mb-3 align-top items-start">Feedback</h2> */}
               {feedbacks.length > 0 ? (
                 // feedbacks.map((feedback, index) => (
                 //   <div key={feedback.feedbackID} className={styles.assignmentsSection}>
@@ -333,7 +333,7 @@ export default function AssignmentDashboard() {
                 //   </div>
                 // ))
                 <div>
-                  <h2 className="mt-8 mb-3">Feedback</h2>
+                  <h2 className="mt-8 mb-2 lign-top items-start">Feedback</h2>
                   <Table aria-label="Submissions table">
                     <TableHeader>
                       <TableColumn>Reviewer ID</TableColumn>
