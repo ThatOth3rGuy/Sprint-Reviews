@@ -1,4 +1,15 @@
 // pages/student/assignment-dashboard.tsx
+/**
+* Renders the assignment dashboard page for students.This function renders 
+* the assignment the student needs to submit. This page also displays any 
+* instructor comments and also the feedback recieved after reviews.
+*  This page is only missing the displaying auto graded grade 
+* and if instructor wants to setup release grades, they need to enable it here 
+*
+* @return {JSX.Element} The rendered assignment dashboard.
+*/
+
+// Importing necessary libraries and components
 import { useRouter } from "next/router";
 import StudentNavbar from "../components/student-components/student-navbar";
 import { useEffect, useState } from "react";
@@ -8,7 +19,9 @@ import styles from "../../styles/AssignmentDetailCard.module.css";
 import { Button, Breadcrumbs, BreadcrumbItem, Spinner, Modal, useDisclosure, ModalContent, ModalBody, ModalFooter, ModalHeader, Input, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import toast from "react-hot-toast";
 import DownloadSubmission from "../components/student-components/download-submission";
-
+/** Defining interfaces for Assignment, CourseData,  
+* Feedback details from students given review and Instructor Comment
+**/
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -44,10 +57,10 @@ interface Comment {
 }
 
 export default function AssignmentDashboard() {
+  // Initializing state variables
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const router = useRouter();
-  const { assignmentID } = router.query;
   const [assignment, setAssignment] = useState<Assignment | null>(null);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -62,7 +75,10 @@ export default function AssignmentDashboard() {
   const [studentID, setStudentID] = useState<number | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
 
+  // Checking user session
   useSessionValidation("student", setLoading, setSession);
+// Fetching data when the router is ready
+  const { assignmentID } = router.query;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,7 +86,8 @@ export default function AssignmentDashboard() {
   
       try {
         await checkSubmissionStatus();
-  
+  // sends data to api/assignments/[assignmentID].ts and api/courses/[courseID].ts
+// fetching data for Assignment details and Course Data 
         const assignmentResponse = await fetch(`/api/assignments/${assignmentID}`);
         if (assignmentResponse.ok) {
           const assignmentData: Assignment = await assignmentResponse.json();
@@ -95,12 +112,14 @@ export default function AssignmentDashboard() {
   
     fetchData();
   }, [router.isReady, session, assignmentID]);
-  
+  // function to check submission status of the student if they have submitted already or not
   const checkSubmissionStatus = async () => {
     if (assignmentID && session?.user?.userID) {
       try {
         const fetchStudentID = async (userID: number) => {
           try {
+            // This API call fetches the student ID based on the user ID
+            // sends userID to check status api/getStudentByID.ts
             const response = await fetch(`/api/getStudentByID?userID=${userID}`);
             if (response.ok) {
               const data = await response.json();
@@ -117,21 +136,23 @@ export default function AssignmentDashboard() {
         const fetchedStudentID = await fetchStudentID(session.user.userID);
         if (fetchedStudentID) {
           setStudentID(fetchedStudentID);
-  
+  // This API call checks the submission status for a student for a specific assignment
+  // sends assignmentID to api/submissions/checkSubmission4Student.ts
           const response = await fetch(
             `/api/submissions/checkSubmission4Student?assignmentID=${assignmentID}&userID=${session.user.userID}`
           );
           if (!response.ok) {
             throw new Error("Failed to check submission status");
           }
-  
+  // This API call fetches the instructor comments for a student for a specific assignment
           const commentsResponse = await fetch(`/api/studentComments/${assignmentID}/${session.user.userID}`);
           if (commentsResponse.ok) {
             const commentsData: Comment[] = await commentsResponse.json();
             setComments(commentsData);
             console.log(commentsData);
           }
-  
+    // This API call fetches the instructor comments for a student for a specific assignment
+
           const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${fetchedStudentID}`);
           if (feedbacksResponse.ok) {
             const feedbacksData: Feedback[] = await feedbacksResponse.json();
@@ -153,6 +174,7 @@ export default function AssignmentDashboard() {
     }
   };
   
+// handles the file upload based on the restrictions set by instructor
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -177,7 +199,7 @@ export default function AssignmentDashboard() {
     setLinkSubmission('');
     setFileError(null);
   };
-
+// checks if the allowed file types includes links to allow links submission in the modal
   const isLinkTypeAllowed = () => {
     if (!assignment?.allowedFileTypes) return false;
     const allowedTypes = assignment.allowedFileTypes.split(",");
@@ -222,7 +244,7 @@ export default function AssignmentDashboard() {
       toast.error('Invalid submission. Please check your file or link and try again.');
     }
   };
-
+// function to check if the assignment can be submitted and if the student has it on time or late
   const isWithinSubmissionPeriod = () => {
     if (!assignment) return false;
     const currentDate = new Date();
@@ -234,7 +256,7 @@ export default function AssignmentDashboard() {
   const handleBackClick = () => router.push(`/student/course-dashboard?courseId=${courseData?.courseID}`);
 
   const handleHomeClick = () => router.push("/student/dashboard");
-
+// Laoding Spinner
   if (!assignment || loading) {
     return (
       <div className="w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto">
@@ -242,7 +264,7 @@ export default function AssignmentDashboard() {
       </div>
     );
   }
-
+// Render the component
   return (
     <>
       <StudentNavbar />

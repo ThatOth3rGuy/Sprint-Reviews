@@ -1,3 +1,11 @@
+// pages/student/review-dashboard.tsx
+/**
+* Renders the peer review dashboard page for students.This function renders 
+* the assignment(s) the student needs to submit feedback for. 
+* @return {JSX.Element} The rendered assignment dashboard.
+*/
+
+// Importing necessary libraries and components
 import StudentNavbar from "../components/student-components/student-navbar";
 import styles from '../../styles/instructor-course-dashboard.module.css';
 import { Breadcrumbs, BreadcrumbItem, Spinner, Card, CardBody, Divider, Button, Input, Pagination, CardHeader } from "@nextui-org/react";
@@ -9,6 +17,9 @@ import dayjs from "dayjs";
 import toast from "react-hot-toast";
 import DownloadSubmission from "../components/student-components/download-submission";
 
+/** Defining interfaces for Assignment, CourseData,  
+* ReviewCriterion to display the criteria set by the instructor, and Submission to display the details of the student whose assignment is sent for review.
+**/
 interface Assignment {
   assignmentID: number;
   title: string;
@@ -45,6 +56,7 @@ interface Submission {
 }
 
 export default function ReviewDashboard() {
+    // Initializing state variables
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [assignment, setAssignment] = useState<Assignment | null>(null);
@@ -61,9 +73,12 @@ export default function ReviewDashboard() {
   const [deadlinePassed, setDeadlinePassed] = useState<boolean>(false);
   const [autoReleaseDate, setAutoReleaseDate] = useState<Date | null>(null);
   const [buttonVisible, setButtonVisible] = useState(true);
-  useSessionValidation('student', setLoading, setSession);
-
+  
+    // Checking user session
+    useSessionValidation('student', setLoading, setSession);
+  
   useEffect(() => {
+    // Fetching data when the router is ready
     if (!router.isReady || !session) return;
     const fetchData = async () => {
       const userID = session.user?.userID;
@@ -74,6 +89,7 @@ export default function ReviewDashboard() {
       }
   
       try {
+        //Fetch details for assignment being reviewed for each student
         const [assignmentResponse, reviewResponse] = await Promise.all([
           fetch(`/api/assignments/${assignmentID}`),
           fetch(`/api/review-dashboard/${assignmentID}?userID=${userID}`)
@@ -84,10 +100,12 @@ export default function ReviewDashboard() {
             assignmentResponse.json(),
             reviewResponse.json()
           ]);
-  
+          
+          //store data that was fetched
           setAssignment(assignmentData);
           setReviewCriteria(reviewData.reviewCriteria);
   
+          //get details of the submissions that will be reviewed by a student
           const reviewSubmissions = await Promise.all(reviewData.submissions.map(async (submission: Submission) => {
             const submissionResponse = await fetch(`/api/submissions/checkPRSubmission?assignmentID=${assignmentID}&userID=${userID}`);
             const submissionData = await submissionResponse.json();
@@ -96,8 +114,10 @@ export default function ReviewDashboard() {
               ...submissionData.submissions.find((s: any) => s.studentID === submission.studentID),
             };
           }));
+          //store data of submissions
           setSubmissionsToReview(reviewSubmissions);
   
+          //fetch course data
           if (assignmentData.courseID) {
             const courseResponse = await fetch(`/api/courses/${assignmentData.courseID}`);
             if (courseResponse.ok) {
@@ -113,7 +133,7 @@ export default function ReviewDashboard() {
             return acc;
           }, {});
           setReviewGrades(initialGrades);
-  
+
           const initialComments = reviewSubmissions.reduce((acc: any, submission: Submission) => {
             acc[submission.studentID] = reviewComments[submission.studentID] || '';
             return acc;
@@ -139,8 +159,10 @@ export default function ReviewDashboard() {
     fetchData();
   }, [router.isReady, session, assignmentID, currentPage]);
   
+  //redirect to home
   const handleHomeClick = () => router.push("/student/dashboard");
 
+  //redirect to course dashboard or to all assignments depending on the source direction
   const handleBackClick = () => {
     if (courseData?.courseID != null) {
       router.push(`/student/course-dashboard?courseId=${courseData?.courseID}`);
@@ -149,7 +171,7 @@ export default function ReviewDashboard() {
     }
   };
   
-
+//store grade provided in feedback
   const handleGradeChange = (revieweeID: number, criteriaID: number, value: string) => {
     setReviewGrades(prev => ({
       ...prev,
@@ -160,6 +182,7 @@ export default function ReviewDashboard() {
     }));
   };
 
+  //store comment provided in feedback
   const handleCommentChange = (revieweeID: number, value: string) => {
     setReviewComments(prev => ({
       ...prev,
@@ -167,6 +190,7 @@ export default function ReviewDashboard() {
     }));
   };
 
+  //check if all student submissions assigned for review have been provided feedback
   const validateAllSubmissions = () => {
     for (const submission of submissionsToReview) {
       if (submission.isSubmitted) {
@@ -185,6 +209,7 @@ export default function ReviewDashboard() {
     return true;
   };
 
+  //store feedback provided per student
   const submitReviews = async (assignmentID: number | undefined, reviews: { revieweeID: number; feedbackDetails: { criteriaID: number; grade: number; }[]; comment: string; }[]) => {
     try {
       const response = await fetch('/api/reviews/submitReviews', {
@@ -211,6 +236,7 @@ export default function ReviewDashboard() {
     }
   };
 
+  //do not allow submission if all reviews have not been filled out
   const handleSubmitAllReviews = async () => {
     if (!validateAllSubmissions()) {
       toast.error("Please fill out all grades and comments for submitted assignments before submitting reviews.");
@@ -241,6 +267,7 @@ export default function ReviewDashboard() {
     }
   };
 
+  //wait for page to load with correct data
   if (loading) {
     return (
       <div className="w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto">
@@ -249,6 +276,7 @@ export default function ReviewDashboard() {
     );
   }
 
+  //check whether the student submitted reviews late or on time
   const checkSubmissionStatus = (submissionDate: string, deadline: string) => {
     const submission = dayjs(submissionDate);
     const dueDate = dayjs(deadline);
@@ -260,8 +288,6 @@ export default function ReviewDashboard() {
   }
 
   const currentSubmission = submissionsToReview[currentPage - 1];
-
-  
 
   return (
     <>

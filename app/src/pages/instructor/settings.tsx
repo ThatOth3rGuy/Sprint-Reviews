@@ -1,7 +1,15 @@
-import InstructorHeader from "../components/instructor-components/instructor-header";
+// instructor/registration.tsx
+/**
+ * Renders the sesstings  page for instructors.
+ * This page has not been completely implemented but 
+ * ideally instructor can have email notification settings and other 
+ * settings view for instructor if any.
+ * @return {JSX.Element} Renders the insructor settings.
+ */
+
+// Importing necessary libraries and components
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import AdminNavbar from "../components/admin-components/admin-navbar";
-import AdminHeader from "../components/admin-components/admin-header";
 import { JSX, SVGProps, useState } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from '../../styles/instructor-course-dashboard.module.css';

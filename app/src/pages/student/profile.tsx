@@ -1,3 +1,12 @@
+// student/profile.tsx
+/**
+ * Renders the user profile page for students. Fetches user details from the server
+ * and displays them in a card. Allows students to edit user details by opening a modal
+ * with input fields for first name, last name, and email. When changes are saved, the
+ * server is updated with the new details and the page is reloaded.
+ *
+ * @return {JSX.Element|null} The user profile page or null if the user is not logged in.
+ */
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useSessionValidation } from '../api/auth/checkSession';
@@ -25,6 +34,8 @@ export default function StudentProfilePage() {
   // Use the session validation hook to check if the user is logged in
   useSessionValidation('student', setLoading, setSession);
 
+   // function to fetch instructor details from user table and instructor table 
+  // sends userID to api/userInfo/student-user-details.ts to fetch user details
   useEffect(() => {
     if (session?.user?.userID) {
       fetch(`/api/userInfo/student-user-details?userID=${session.user.userID}`)
@@ -47,7 +58,8 @@ export default function StudentProfilePage() {
         });
     }
   }, [session]);
-
+// function to handle editing of profile 
+  // sends update query to api/updateTable.ts
   const handleEditClick = () => {
     setIsEditModalOpen(true);
   };
@@ -129,7 +141,7 @@ export default function StudentProfilePage() {
       </div>
     );
   }
-
+// Renders the components 
   return (
     <>
       <div className={`student text-primary-900 ${styles.container}`}>

@@ -1,4 +1,12 @@
-// student/course-dashboard.tsx
+// pages/student/course-dashboard.tsx
+/**
+* Renders the course dashboard page for students.This function renders: 
+the assignments an instructor has created the student needs to submit. This page also allows the student to filter what type of assignments they want to display. The folllowing assignment types are displayed: assignments to submit for peer reviews (Assignments), group assignments (Group Assignments), and assignments to review (Peer Reviews). 
+
+ @return {JSX.Element} The rendered course dashboard.
+*/
+
+// Importing necessary libraries and components
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
@@ -8,6 +16,7 @@ import StudentNavbar from "../components/student-components/student-navbar";
 import StudentAssignmentCard from "../components/student-components/student-course-assignment-card";
 import StudentReviewCard from "../components/student-components/student-peer-review-card";
 
+/** Defining interfaces for CourseData, Assignment, and Peer Review **/
 interface CourseData {
   courseID: string;
   courseName: string;
@@ -32,28 +41,29 @@ interface PeerReview {
 }
 
 export default function Page() {
+  // Initializing state variables
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
   const [selectedAssignmentTypes, setSelectedAssignmentTypes] = useState<string[]>(['all']);
-
-  const router = useRouter();
-  const { courseId } = router.query;
 
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [peerReviews, setPeerReviews] = useState<PeerReview[]>([]);
   const [peerReviewAssignments, setPeerReviewAssignments] = useState<Assignment[]>([]);
+
+  // Checking user session
   useSessionValidation('student', setLoading, setSession);
+
+// Fetching data when the router is ready
+  const router = useRouter();
+  const { courseId } = router.query;
 
   useEffect(() => {
     if (session && session.user && session.user.userID) {
-      fetchAssignments(session.user.userID);
-      
+      fetchAssignments(session.user.userID); //fetches assignments for a student by their userID
     }
     if (courseId) {
-
-      fetchPeerReviews(courseId);
-
+      fetchPeerReviews(courseId);// fetches peer reviews for a student by the courseID
       fetch(`/api/courses/${courseId}`)
         .then((response) => response.json())
         .then((data: CourseData) => {
@@ -61,11 +71,11 @@ export default function Page() {
           setCourseData(data);
         })
         .catch((error) => console.error('Error fetching course data:', error));
-
-      fetchAssignments(courseId);
+      fetchAssignments(courseId); //fetches assignments in a course
     }
   }, [courseId]);
 
+  //filters assignments by types
   const handleCheckboxChange = (type: string, isChecked: boolean) => {
     if (type === 'all') {
       setSelectedAssignmentTypes(['all']);
@@ -81,10 +91,12 @@ export default function Page() {
     }
   };
 
+  //redirects the user to home
   const handleHomeClick = async () => {
     router.push("/student/dashboard");
   };
 
+  //function to fetch assignments via getAssignments4CoursesInstructor.ts 
   const fetchAssignments = async (courseID: string | string[]) => {
     try {
       const response = await fetch(`/api/assignments/getAssignments4CoursesInstructor?courseID=${courseID}`);
@@ -99,6 +111,7 @@ export default function Page() {
     }
   };
 
+  //fetches peer reivews via getReviewsByCourseId.ts api
   const fetchPeerReviews = async (courseID: string | string[]) => {
     try {
       const timestamp = new Date().getTime();
@@ -117,6 +130,7 @@ export default function Page() {
     }
   };
 
+  //wait for the page to load with the correct data
   if (!courseData || loading) {
     return <div className='w-[100vh=w] h-[100vh] student flex justify-center text-center items-center my-auto'>
       <Spinner color='primary' size="lg" />
@@ -128,10 +142,11 @@ export default function Page() {
     return null;
   }
 
+  //define assignment type for filter
   const individualAssignments = assignments.filter(assignment => !assignment.groupAssignment && !assignment.title.toLowerCase().includes('peer review'));
   const groupAssignments = assignments.filter(assignment => assignment.groupAssignment);
   const peerReviewCards = assignments.filter(assignment => assignment.title.toLowerCase().includes('peer review'));
-
+  //render assignment based on selected type
   const shouldRenderAssignments = (type: string) => {
     return selectedAssignmentTypes.includes('all') || selectedAssignmentTypes.includes(type);
   };

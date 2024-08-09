@@ -1,4 +1,10 @@
-import StudentHeader from "../components/student-components/student-header";
+// student/grades.tsx
+/**
+ * Only front end is added here, this feature has not been implemented completely  
+ * This page would ideally display the auto grade based on assignment and have the same filters here 
+ * @return {JSX.Element} The JSX element representing the grades component for the student.
+ */
+
 import StudentNavbar from "../components/student-components/student-navbar";
 import { useState } from 'react';
 import { useSessionValidation } from '../api/auth/checkSession';
@@ -25,6 +31,7 @@ export default function Page() {
   }
   return (
     <>
+    <StudentNavbar home={{className: "bg-secondary-50"}}/>
       <div className={`student text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
           <h1>Grades</h1>

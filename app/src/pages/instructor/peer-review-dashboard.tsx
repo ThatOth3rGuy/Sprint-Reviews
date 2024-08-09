@@ -1,3 +1,15 @@
+// instructor/peer-review-dashboard.tsx
+/**
+ * ReviewDashboard component is responsible for rendering the peer review groups 
+ * created for reviwed by the instructors. It initialy renders groups by the size 
+ *  set in release-assignment.tsx It fetches the review data, course data, and review groups, and provides functionality for 
+ * editing review dates,  re-randomizing review groups, and releasing assignments for reviews.
+ * This page also uses the Review Deatils component which is in the 
+ * components/instructor-components/instructor-review-details.tsx
+ *
+ * @return {JSX.Element} The JSX element representing the peer review dashboard.
+ */
+// Importing necessary libraries and components
 import { useRouter } from "next/router";
 import InstructorNavbar from "../components/instructor-components/instructor-navbar";
 import ReviewDetailCard from '../components/instructor-components/instructor-review-details';
@@ -5,11 +17,10 @@ import AdminNavbar from "../components/admin-components/admin-navbar";
 import { useEffect, useState } from "react";
 import { useSessionValidation } from '../api/auth/checkSession';
 import styles from "../../styles/AssignmentDetailCard.module.css";
-
 import { Breadcrumbs, Input, ModalFooter, BreadcrumbItem, ModalContent, Spinner, Card, CardBody, Button, Checkbox, Modal, ModalBody, ModalHeader } from "@nextui-org/react";
 import toast from "react-hot-toast";
 
-
+// Defining interfaces for Course Data, Students data, Review and Review Groups Data
 interface Review {
   reviewID: number;
   assignmentID: number;
@@ -51,11 +62,9 @@ interface Assignment {
 
 }
 export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
+  // Initializing state variables
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
-  const router = useRouter();
-  const { reviewID } = router.query;
-
   const [review, setReview] = useState<Review | null>(null);
   const [courseData, setCourseData] = useState<CourseData | null>(null);
   const [reviewGroups, setReviewGroups] = useState<ReviewGroup[]>([]);
@@ -67,24 +76,26 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
   const [newEndDate, setNewEndDate] = useState("");
   const [newAnonymous, setNewAnonymous] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [isRandomizeModalOpen, setIsRandomizeModalOpen] = useState(false);
   const [reviewsPerAssignment, setReviewsPerAssignment] = useState(4);
-
   // New state variables for editing groups
   const [isEditGroupsModalOpen, setIsEditGroupsModalOpen] = useState(false);
   const [editableGroups, setEditableGroups] = useState<ReviewGroup[]>([]);
   const [selectedStudents, setSelectedStudents] = useState<{ student: StudentDetails, groupID: number, reviewerIndex: number }[]>([]);
   const [assignment, setAssignment] = useState<Assignment | null>(null);
+  
+  // Checking user session
   useSessionValidation('instructor', setLoading, setSession);
+ const router = useRouter();
+  const { reviewID } = router.query;
 
+  // functions to fetch course data for course name
   useEffect(() => {
     if (session && session.user && session.user.userID) {
       fetchCourses(session.user.userID);
     }
 
   }, [session]);
-
   const fetchCourses = async (instructorID: number) => {
     try {
       const response = await fetch(`/api/getCourse4Instructor?instructorID=${instructorID}`);
@@ -98,7 +109,6 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
       console.error('Error fetching courses:', error);
     }
   };
-
   useEffect(() => {
     const { source, courseId } = router.query;
 
@@ -119,7 +129,8 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
       console.error('Error fetching course name:', error);
     }
   };
-
+// Fetching review data and review groups created initially 
+// fetch the review details based on the reviewID from api/reviews/[reviewID].ts 
   useEffect(() => {
     if (reviewID) {
       // Fetch review data
@@ -131,7 +142,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
         .catch((error) => console.error('Error fetching review data:', error));
     }
   }, [reviewID]);
-
+// fetch the review groups based on reviewing assignmentID from api/groups/[assignmentID].ts
   useEffect(() => {
     if (review) {
       fetch(`/api/groups/${review.assignmentID}`)
@@ -157,6 +168,7 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
       setAssignment(assignmentData);
     }
   }
+  // Loading Spinner
   if (!review || loading) {
     return (
       <div className='w-[100vh=w] h-[100vh] instructor flex justify-center text-center items-center my-auto'>
@@ -164,14 +176,14 @@ export default function ReviewDashboard({ courseId }: ReviewDashboardProps) {
       </div>
     );
   }
-
+// check if session exists 
   if (!session || !session.user || !session.user.userID) {
     console.error('No user found in session');
     return null;
   }
-
+// admin check
   const isAdmin = session.user.role === 'admin';
-
+// Navigation Handlers 
   const handleBackClick = () => { //redirect to course dashboard or all assignments
     const { source } = router.query;
     if (assignment?.courseID) {

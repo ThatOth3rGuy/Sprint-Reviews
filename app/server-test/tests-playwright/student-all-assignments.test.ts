@@ -68,9 +68,4 @@ test.describe('Student All Assignments Page', () => {
       await expect(page.locator('p').filter({ hasText: 'No peer reviews found.' })).toBeVisible();
     }
   });
-
-  test('should display notifications section', async ({ page }) => {
-    await expect(page.getByText('Notifications', { exact: true })).toBeVisible();
-    await expect(page.getByText('Dummy Notification', { exact: true })).toBeVisible();
-  });
 });
