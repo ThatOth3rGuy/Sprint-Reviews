@@ -79,10 +79,10 @@ After the Test-O-Rama round 2, we have a lot of bugs and issues that were (mostl
 
 ### Cycle Review
 
--
+This is the final split of the year! Our application is fully completed, and as of Wednesday we've demoed it to both Scott and Parsa. So we have no features to be working on, and the entirety of the split will be spent writing our individual reports and code documentation.
 
 ### Current Tasks
-  * 1: -
+  * 1: Write Individual Report
 
 ### Progress Update: Wed-Fri
 <table>
@@ -94,10 +94,10 @@ After the Test-O-Rama round 2, we have a lot of bugs and issues that were (mostl
     </tr>
     <tr>
         <!-- Task/Issue # -->
-        <td> -
+        <td> Write Individual Report
         </td>
         <!-- Status -->
-        <td> -
+        <td> In Progress
         </td>
     </tr>
 
