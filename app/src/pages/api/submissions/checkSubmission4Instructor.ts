@@ -30,15 +30,16 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{
   studentName: string | null,
   studentID: number | null,
   isLate: boolean,
-  isLink: boolean
+  isLink: boolean,
+  grade : number | null,
+  autoGrade: number | null
 }> {
   const sql = `
-    SELECT s.*, st.studentID, st.userID, a.deadline, CONCAT(u.firstName, ' ', u.lastName) as studentName 
-    FROM submission s
-    JOIN student st ON s.studentID = st.studentID
-    JOIN user u ON st.userID = u.userID
-    JOIN assignment a ON s.assignmentID = a.assignmentID
-    WHERE s.assignmentID = ? AND st.studentID = ?
+  SELECT CONCAT(u.firstName, ' ', u.lastName) AS studentName, s.*
+  FROM submission s
+  JOIN student st ON s.studentID = st.studentID
+  JOIN user u ON st.userID = u.userID
+  WHERE s.assignmentID = ? AND s.studentID = ?;
   `;
   try {
     let studentID: number;
@@ -65,10 +66,12 @@ async function checkSubmission(assignmentID: number, userID: number): Promise<{
         studentName: rows[0].studentName,
         studentID: rows[0].studentID,
         isLate,
-        isLink
+        isLink,
+        grade: rows[0].grade,
+        autoGrade: rows[0].autoGrade
       };
     } else {
-      return { isSubmitted: false, submissionDate: null, submissionID: null, assignmentID: null, fileName: null, studentName: null, studentID: null, isLate: false, isLink: false };
+      return { isSubmitted: false, submissionDate: null, submissionID: null, assignmentID: null, fileName: null, studentName: null, studentID: null, isLate: false, isLink: false, grade: null, autoGrade: null };
 
 
     }

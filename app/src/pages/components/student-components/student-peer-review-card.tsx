@@ -7,10 +7,10 @@ interface StudentReviewCardProps {
   courseID: number;
   courseName: string;
   color: string;
-  dueDate: string;
+  deadline: string;
 }
 
-const StudentReviewCard: React.FC<StudentReviewCardProps> = ({ courseID, courseName, color, dueDate }) => {
+const StudentReviewCard: React.FC<StudentReviewCardProps> = ({ courseID, courseName, color, deadline }) => {
   const router = useRouter();
 
   const handleClick = () => {
@@ -22,8 +22,8 @@ const StudentReviewCard: React.FC<StudentReviewCardProps> = ({ courseID, courseN
       <CardBody className="overflow-visible p-0">
       </CardBody>
       <CardFooter className="text-small justify-between" style={{ backgroundColor: color }}>
-        <b>{courseName}</b>
-        <p>{dueDate}</p>
+        <b>Reviewing: {courseName}</b>
+        <p>{deadline}</p>
       </CardFooter>
     </Card>
   );

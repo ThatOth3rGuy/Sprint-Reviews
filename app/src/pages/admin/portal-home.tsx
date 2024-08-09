@@ -94,7 +94,6 @@ export default function Page() {
     }
   };
   return (
-    <>
       <div className={`instructor text-primary-900 ${styles.container}`}>
         <div className={styles.header}>
           <h1>Admin Dashboard</h1>
@@ -146,6 +145,5 @@ export default function Page() {
           <AdminNavbar admin={{ className: "bg-primary-500" }} />
         </div>
       </div>
-    </>
   );
 }

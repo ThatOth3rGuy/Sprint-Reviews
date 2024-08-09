@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS review_criteria;
 DROP TABLE IF EXISTS review;
 DROP TABLE IF EXISTS review_groups;
 DROP TABLE IF EXISTS course_groups;
+DROP TABLE IF EXISTS instructor_feedback;
 
 -- Table for storing users, which are separated into students and instructors
 CREATE TABLE IF NOT EXISTS user (
@@ -154,8 +155,7 @@ CREATE TABLE IF NOT EXISTS review (
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID) ON DELETE CASCADE
 );
 
-
--- Table for storing student notification preferences --
+-- Table for storing student notification preferences
 CREATE TABLE IF NOT EXISTS student_notifications (
     studentID INT,
     assignmentNotification BOOLEAN DEFAULT TRUE,
@@ -166,26 +166,21 @@ CREATE TABLE IF NOT EXISTS student_notifications (
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE CASCADE
 );
 
-
--- Table for storing connected submissions for students to peer review --
-
+-- Table for storing connected submissions for students to peer review
 CREATE TABLE IF NOT EXISTS review_groups  (
     studentID INT,
     assignmentID INT,
     courseID INT,
     revieweeID INT,
     isReleased BOOLEAN DEFAULT false,
-
-    PRIMARY KEY (studentID, submissionID, assignmentID),
-
+    PRIMARY KEY (studentID, revieweeID, assignmentID),
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID),
     FOREIGN KEY (revieweeID) REFERENCES student(studentID)
 );
 
-
--- Table for storing course specific groups --
+-- Table for storing course specific groups
 CREATE TABLE IF NOT EXISTS course_groups (
     groupID INT,
     studentID INT,
@@ -193,6 +188,20 @@ CREATE TABLE IF NOT EXISTS course_groups (
     PRIMARY KEY (groupID, studentID, courseID),
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID)
+);
+
+-- Table for storing instructor feedback on student submissions
+CREATE TABLE IF NOT EXISTS instructor_feedback (
+    feedbackID INT AUTO_INCREMENT PRIMARY KEY,
+    assignmentID INT NOT NULL,
+    courseID INT NOT NULL,
+    studentID INT NOT NULL,
+    feedbackDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    lastUpdated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    comment TEXT,
+    FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
+    FOREIGN KEY (courseID) REFERENCES course(courseID),
+    FOREIGN KEY (studentID) REFERENCES student(studentID)
 );
 
 -- Insert users
@@ -221,13 +230,14 @@ INSERT INTO course (courseName, isArchived, instructorID) VALUES
 
 -- Insert assignments
 INSERT INTO assignment (title, descr, rubric, startDate, endDate, deadline, groupAssignment, courseID, allowedFileTypes) VALUES
-('Assignment 1', 'Description for assignment 1', 'Rubric for assignment 1', '2024-07-01 00:00:00', '2024-08-01 00:00:00', '2024-08-01 23:59:59', FALSE, 1, 'pdf,docx'),
+('Assignment 1', 'Description for assignment 1', 'Rubric for assignment 1', '2024-07-01 00:00:00', '2124-08-01 00:00:00', '2124-08-01 23:59:59', FALSE, 1, 'pdf,docx'),
 ('Assignment 2', 'Description for assignment 2', 'Rubric for assignment 2', '2024-07-01 00:00:00', '2024-09-01 00:00:00', '2024-09-01 23:59:59', TRUE, 2, 'pdf,docx');
 
 -- Insert submissions
 INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate, autoGrade, grade, groupID) VALUES
 (1, 1001, 'assignment1_john.pdf', NULL, 'pdf', '2024-07-01 12:00:00', 0, 85, NULL),
-(2, 1002, 'assignment2_jane.docx', NULL, 'docx', '2024-07-02 12:00:00', 0, 90, NULL);
+(1, 1002, 'assignment1_jane.docx', NULL, 'docx', '2024-07-02 12:00:00', 0, 50, NULL),
+(2, 1002, 'assignment2_jane.docx', NULL, 'docx', '2024-07-02 12:00:00', 0, 90, 2);
 
 -- Insert review criteria
 INSERT INTO review_criteria (assignmentID, criterion, maxMarks) VALUES
@@ -237,9 +247,9 @@ INSERT INTO review_criteria (assignmentID, criterion, maxMarks) VALUES
 (2, 'Criterion 2', 25);
 
 -- Insert feedback
-INSERT INTO feedback (submissionID, assignmentID, feedbackDetails, feedbackDate, lastUpdated, comment, reviewerID) VALUES
-(1, 1, 'Great work!', '2024-07-03 12:00:00', '2024-07-03 12:00:00', 'Excellent job on the project!', 1002),
-(2, 2, 'Needs improvement.', '2024-07-04 12:00:00', '2024-07-04 12:00:00', 'The project could use more detailed analysis.', 1001);
+INSERT INTO feedback (revieweeID, assignmentID, feedbackDetails, feedbackDate, lastUpdated, comment, reviewerID) VALUES
+(1001, 1, 'Great work!', '2024-07-03 12:00:00', '2024-07-03 12:00:00', 'Excellent job on the project!', 1002),
+(1002, 2, 'Needs improvement.', '2024-07-04 12:00:00', '2024-07-04 12:00:00', 'The project could use more detailed analysis.', 1001);
 
 -- Insert enrollment
 INSERT INTO enrollment (studentID, courseID) VALUES
@@ -316,6 +326,11 @@ INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType
 (1, 123475, 'project_123475.sql', NULL, 'sql', NOW(), 0, NULL, NULL),
 (1, 123476, 'project_123476.sql', NULL, 'sql', NOW(), 0, NULL, NULL);
 
+-- Insert submissions for assignment 2
+INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType, submissionDate, autoGrade, grade, groupID) VALUES
+(2, 123470, 'assignment2_jane.docx', NULL, 'docx', '2024-07-02 12:00:00', 0, 90, 2),
+(2, 123471, 'assignment2_jane.docx', NULL, 'docx', '2024-07-02 12:00:00', 0, 90, 2);
+
 -- Insert 5 more people into course 2, for testing group feedback
 INSERT INTO enrollment (studentID, courseID) VALUES
 (123467, 2),
@@ -332,3 +347,28 @@ INSERT INTO course_groups (groupID, studentID, courseID) VALUES
 (2, 123470, 2),
 (2, 123471, 2),
 (2, 1002, 2);
+
+-- Insert review for Assignment 1
+INSERT INTO review (assignmentID, isGroupAssignment, allowedFileTypes, startDate, endDate, deadline, anonymous) VALUES
+(1, FALSE, 'pdf,docx', '2024-07-01 00:00:00', '2124-08-01 00:00:00', '2124-08-01 23:59:59', FALSE);
+
+-- Insert review groups for Assignment 1
+INSERT INTO review_groups (studentID, assignmentID, courseID, revieweeID, isReleased) VALUES
+(1001, 1, 1, 1002, TRUE),
+(1001, 1, 1, 123468, TRUE),
+(1002, 1, 1, 1001, TRUE),
+(123467, 1, 1, 123468, TRUE),
+(123468, 1, 1, 123469, TRUE),
+(123469, 1, 1, 123470, TRUE),
+(123470, 1, 1, 123471, TRUE),
+(123471, 1, 1, 123472, TRUE),
+(123472, 1, 1, 123473, TRUE),
+(123473, 1, 1, 123474, TRUE),
+(123474, 1, 1, 123475, TRUE),
+(123475, 1, 1, 123476, TRUE),
+(123476, 1, 1, 123467, TRUE);
+
+-- Insert instructor feedback for Assignment 1
+INSERT INTO instructor_feedback (assignmentID, courseID, studentID, comment) VALUES
+(1, 1, 1001, 'New test comment'),
+(1, 1, 1002, 'Needs improvement on the analysis.');

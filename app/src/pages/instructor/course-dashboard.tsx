@@ -254,11 +254,11 @@ export default function Page() {
         <div className={styles.mainContent}>
           <div className={styles.assignmentsSection}>
             <CheckboxGroup
-              label="Select assignment type:"
+              label="Filter Assignments:"
               orientation="horizontal"
               color="primary"
               size="sm"
-              className="text-left flex-row mb-2 text-primary-900"
+              className="text-left flex-row mb-2 text-primary-900 items-center"
               value={selectedAssignmentTypes}
             >
               <Checkbox 
@@ -356,7 +356,9 @@ export default function Page() {
                         <InstructorReviewCard
                           reviewID={assignment.assignmentID}
                           linkedAssignmentID={assignment.linkedAssignmentID}
+                          deadline={new Date(assignment.deadline).toLocaleString()}
                           color="#9fc3cf"
+                          title={assignment.title}
                         />
                       </div>
                     ))
@@ -371,10 +373,10 @@ export default function Page() {
           <div className={styles.notificationsSection}>
             <div className={styles.actionButtons}>
               <Listbox aria-label="Actions" onAction={handleAction}>
-                <ListboxItem key="create">Create Assignment</ListboxItem>
-                <ListboxItem key="peer-review">Create Peer Review</ListboxItem>
-                <ListboxItem key="group-review"> Create Student Groups</ListboxItem>
-                <ListboxItem key="manage-students">Manage Students</ListboxItem>
+                <ListboxItem key="create" color="primary">Create Assignment</ListboxItem>
+                <ListboxItem key="peer-review" color="primary">Create Peer Review</ListboxItem>
+                <ListboxItem key="group-review" color="primary"> Create Student Groups</ListboxItem>
+                <ListboxItem key="manage-students" color="primary">Manage Students</ListboxItem>
                 <ListboxItem key="edit-course" color="primary">Edit Course Name</ListboxItem>
                 {isAdmin && (
                   <ListboxItem key="archive" className="text-danger" color="danger">
@@ -383,17 +385,12 @@ export default function Page() {
                 )}
               </Listbox>
             </div>
-            <hr />
-            <h2 className="my-3">Notifications</h2>
-            <div className={styles.notificationsContainer}>
-              <div className={styles.notificationCard}>Dummy Notification</div>
-            </div>
           </div>
         </div>
 
         {/* Archive Course Confirmation Modal */}
         <Modal 
-          className='z-20' 
+          className='instructor z-20' 
           backdrop="blur" 
           isOpen={isArchiveModalOpen} 
           onOpenChange={(open) => setIsArchiveModalOpen(open)}
@@ -416,7 +413,7 @@ export default function Page() {
       </div>
 
       <Modal
-        className='z-20'
+        className='instructor z-20'
         backdrop="blur"
         isOpen={isModalOpen}
         onOpenChange={(open) => setIsModalOpen(open)}
@@ -433,7 +430,7 @@ export default function Page() {
             />
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" variant="light" onPress={() => setIsModalOpen(false)}>
+            <Button color="danger" variant="light" onPress={() => setIsModalOpen(false)}>
               Close
             </Button>
             <Button color="primary" onPress={handleCourseNameUpdate}>

@@ -95,7 +95,7 @@ export default function AssignmentsPage() {
                 courseID={assignment.assignmentID}
                 assignmentName={assignment.title}
                 courseName={assignment.courseName}
-                deadline={assignment.deadline}
+                deadline={new Date(assignment.deadline).toLocaleString()}
                 color={color}
                 groupAssignment={isGroup}
               />
@@ -125,7 +125,7 @@ export default function AssignmentsPage() {
           </Breadcrumbs>
         </div>
         <div className={styles.mainContent}>
-          <div className={styles.assignmentsSection}>
+          <div className={`flex-col bg-white p-[1%] w-[86%] m-[.8%] ml-auto h-[100%]` }>
             <CheckboxGroup
               label="Select assignment type:"
               orientation="horizontal"
@@ -168,13 +168,7 @@ export default function AssignmentsPage() {
             {shouldRenderAssignments('group') && renderAssignments(groupAssignments, 'Group Assignments', '#b3d0c3', true)}
             {shouldRenderAssignments('peerReviews') && renderAssignments(peerReviews, 'Peer Reviews', '#72a98f', false)}
           </div>
-          <div className={styles.notificationsSection}>
-            <hr />
-            <h2 className="my-3">Notifications</h2>
-            <div className={styles.notificationsContainer}>
-              <div className={styles.notificationCard}>Dummy Notification</div>
-            </div>
-          </div>
+          
         </div>
       </div>
     </>

@@ -65,12 +65,12 @@ const StudentNavbar: NextPage<StudentNavbarProps> = ({ home, courses, assignment
         >
           <Link  onClick={() => handleNavigation("/student/all-assignments")} className={`w-[98%] p-2  ${assignments?.className}`} ><img className={style.navImg} src="/images/Student/Assignments.png"/>Assignments</Link>
         </div>
-        <div
+        {/* <div
           className={style.navButton}
          
         >
           <Link  onClick={() => handleNavigation("/student/grades")} className={`w-[98%] p-2  ${grades?.className}`} ><img className={style.navImg} src="/images/Student/Grades.png"/>Grades</Link>
-        </div>
+        </div> */}
         <div
           className={style.navButton}
          

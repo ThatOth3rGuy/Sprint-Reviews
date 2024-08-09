@@ -15,7 +15,7 @@ interface AdminNavbarProps { //used to accept a Button prop for each specific bu
   grades?: ButtonProps;
   profile?: ButtonProps;
   settings?: ButtonProps;
-  admin? : ButtonProps;
+  admin?: ButtonProps;
 
 }
 const AdminNavbar: NextPage<AdminNavbarProps> = ({ home, courses, assignments, grades, profile, settings, admin }) => {
@@ -50,10 +50,8 @@ const AdminNavbar: NextPage<AdminNavbarProps> = ({ home, courses, assignments, g
           width={90}
           height={90}
         />
-
         <div
           className={style.navButton}
-
         >
           <Link onClick={() => handleNavigation("/instructor/dashboard")} className={`w-[98%] p-2 mt-2 ${home?.className} text-primary-50 `} ><img className={style.navImg} src="/images/Instructor/Home.png" />Home</Link>
         </div>
@@ -61,24 +59,20 @@ const AdminNavbar: NextPage<AdminNavbarProps> = ({ home, courses, assignments, g
           className={style.navButton}
         >
           <Link onClick={() => handleNavigation("/instructor/assignments")} className={`w-[98%] p-2  ${assignments?.className} text-primary-50 `} ><img className={style.navImg} src="/images/Instructor/Assignments.png" />Assignments</Link>
-
         </div>
-        <div
+        {/* <div
           className={style.navButton}
         >
           <Link onClick={() => handleNavigation("/instructor/overall-performance")} className={`w-[98%] p-2  ${grades?.className} text-primary-50 `} ><img className={style.navImg} src="/images/Instructor/Grades.png" />Grades</Link>
-
-        </div>
+        </div> */}
         <div
           className={style.navButton}
 
         >
           <Link onClick={() => handleNavigation("/instructor/profile")} className={`w-[98%] p-2  ${profile?.className} text-primary-50 `} ><img className={style.navImg} src="/images/Instructor/Profile.png" />Profile</Link>
-
         </div>
         <div
           className={style.navButton}
-
         >
           <Link onClick={() => handleNavigation("/instructor/settings")} className={`w-[98%] p-2  ${settings?.className} text-primary-50 `} ><img className={style.navImg} src="/images/Instructor/Settings.png" />Settings</Link>
         </div>
@@ -92,12 +86,10 @@ const AdminNavbar: NextPage<AdminNavbarProps> = ({ home, courses, assignments, g
             className={style.navButton}
           >
             <Link className="w-[98%] p-2 text-primary-50 " onClick={() => handleLogout()} ><img className={style.navImg} src="/images/Instructor/Logout.png" />Logout</Link>
-
           </div>
         </div>
       </nav>
     </div>
-
   );
 };
 

@@ -40,14 +40,15 @@ const AssignmentDetailCard: React.FC<AssignmentDetailCardProps> = ({
       </Card>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <h3 className="text-lg font-semibold mb-2 text-black">
+          <h3 className="text-lg font-semibold mb-2 text-success">
             {isGroupAssignment ? "Submitted Groups" : "Submitted Students"}
+            <hr className='mt-2'/>
           </h3>
           {isGroupAssignment ? (
-            <Accordion>
+            <Accordion >
               {(submittedEntities as { groupID: number; groupName: string; members: { studentID: number; name: string; fileName: string }[] }[]).map((group) => (
                 <AccordionItem key={group.groupID} title={group.groupName}>
-                  <Listbox>
+                  <Listbox variant='bordered' color='success'>
                     {group.members.map((member) => (
                       <ListboxItem key={member.studentID} onClick={() => handleNavigation(member.studentID, true)}>
                         {member.name}
@@ -58,7 +59,7 @@ const AssignmentDetailCard: React.FC<AssignmentDetailCardProps> = ({
               ))}
             </Accordion>
           ) : (
-            <Listbox>
+            <Listbox variant='bordered' color='success'>
               {(submittedEntities as { studentID: number; name: string; fileName: string }[]).map((student) => (
                 <ListboxItem key={student.studentID} onClick={() => handleNavigation(student.studentID, false)}>
                   {student.name}
@@ -68,14 +69,15 @@ const AssignmentDetailCard: React.FC<AssignmentDetailCardProps> = ({
           )}
         </div>
         <div>
-          <h3 className="text-lg font-semibold mb-2 text-black">
+          <h3 className="text-lg font-semibold mb-2 text-danger-700">
             {isGroupAssignment ? "Remaining Groups" : "Remaining Students"}
+            <hr className='mt-2'/>
           </h3>
           {isGroupAssignment ? (
             <Accordion>
               {(remainingEntities as { groupID: number; groupName: string; members: { studentID: number; name: string }[] }[]).map((group) => (
                 <AccordionItem key={group.groupID} title={group.groupName}>
-                  <Listbox>
+                  <Listbox variant='bordered' color='danger'>
                     {group.members.map((member) => (
                       <ListboxItem key={member.studentID} onClick={() => handleNavigation(member.studentID, true)}>
                         {member.name}
@@ -86,7 +88,7 @@ const AssignmentDetailCard: React.FC<AssignmentDetailCardProps> = ({
               ))}
             </Accordion>
           ) : (
-            <Listbox>
+            <Listbox variant='bordered' color='danger'>
               {(remainingEntities as { studentID: number; name: string }[]).map((student) => (
                 <ListboxItem key={student.studentID} onClick={() => handleNavigation(student.studentID, false)}>
                   {student.name}

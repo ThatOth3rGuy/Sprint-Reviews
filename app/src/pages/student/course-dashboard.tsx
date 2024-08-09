@@ -149,7 +149,7 @@ export default function Page() {
           </Breadcrumbs>
         </div>
         <div className={styles.mainContent}>
-          <div className={styles.assignmentsSection}>
+          <div className={`flex-col bg-white p-[1%] w-[86%] m-[.8%] ml-auto h-[100%] overflow-auto`}>
             <CheckboxGroup
               label="Select assignment type:"
               orientation="horizontal"
@@ -192,7 +192,7 @@ export default function Page() {
               <>
                 <h3 className={styles.innerTitle}>Individual Assignments</h3>
                 <br />
-                <Divider className="instructor bg-secondary" />
+                <Divider className="student bg-secondary" />
                 <br />
                 <div className={styles.courseCard}>
                   {individualAssignments.length > 0 ? (
@@ -218,7 +218,7 @@ export default function Page() {
               <>
                 <h3 className={styles.innerTitle}>Group Assignments</h3>
                 <br />
-                <Divider className="instructor bg-secondary" />
+                <Divider className="student bg-secondary" />
                 <br />
                 <div className={styles.courseCard}>
                   {groupAssignments.length > 0 ? (
@@ -244,7 +244,7 @@ export default function Page() {
               <>
                 <h3 className={styles.innerTitle}>Peer Reviews</h3>
                 <br />
-                <Divider className="instructor bg-secondary" />
+                <Divider className="student bg-secondary" />
                 <br />
                 <div className={styles.courseCard}>
                   {peerReviews.length > 0 ? (
@@ -254,7 +254,7 @@ export default function Page() {
                         courseID={review.linkedAssignmentID}
                         courseName={`Review for Assignment - ${review.title}`|| `Review for Assignment ${review.linkedAssignmentID}`}
                         color="#b3d0c3"
-                        dueDate={new Date(review.deadline).toLocaleString()}
+                        deadline={new Date(review.deadline).toLocaleString()}
                       />
                     </div>
                     ))
@@ -266,12 +266,7 @@ export default function Page() {
             )}
 
           </div>
-          <div className={styles.notificationsSection}>
-            <h2 className="my-3">Notifications</h2>
-            <div className={styles.notificationsContainer}>
-              <div className={styles.notificationCard}>Dummy Notification</div>
-            </div>
-          </div>
+          
         </div>
       </div>
     </>

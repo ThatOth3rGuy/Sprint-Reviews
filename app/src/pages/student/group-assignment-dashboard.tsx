@@ -111,13 +111,14 @@ export default function AssignmentDashboard() {
           }
 
           const submissionResponse = await fetch(
-            `/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${studentID}`
+            `/api/submissions/checkSubmission4Student?assignmentID=${assignmentID}&userID=${studentID}`
           );
           if (submissionResponse.ok) {
             const submissionData = await submissionResponse.json();
             setIsSubmitted(submissionData.isSubmitted);
             setSubmittedFileName(submissionData.fileName);
             setIsLateSubmission(submissionData.isLate);
+            console.log('Submission data:', submissionData);
           } else {
             console.error("Error checking submission status");
           }

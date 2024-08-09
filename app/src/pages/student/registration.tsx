@@ -45,7 +45,7 @@ const SignUp: NextPage = () => {
     }
 
     if (studentID === '') {
-      studentIDError = 'Instructor ID cannot be empty';
+      studentIDError = 'Student ID cannot be empty';
     }
 
     if (!validateEmail(email)) {

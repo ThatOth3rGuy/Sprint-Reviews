@@ -73,9 +73,16 @@ const DownloadSubmission: React.FC<DownloadSubmissionProps> = ({ studentID, assi
 
   return (
     <div>
-      <Button onClick={handleSubmission} variant='light' color={isViewerOpen ? "danger" : 'success'}>
-        {isViewerOpen ? 'Close Viewer' : 'View Submission'}
-      </Button>
+      <div className="flex items-center">
+        <Button onClick={handleSubmission} variant='light' color={isViewerOpen ? "danger" : 'success'}>
+          {isViewerOpen ? 'Close Viewer' : 'View Submission'}
+        </Button>
+        {isViewerOpen && fileData && (
+          <Button onClick={handleDownload} variant='flat' className="ml-2">
+            Download
+          </Button>
+        )}
+      </div>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {isViewerOpen && (
         <>
@@ -102,7 +109,7 @@ const DownloadSubmission: React.FC<DownloadSubmissionProps> = ({ studentID, assi
               {(fileData.fileType === 'application/zip' || fileData.fileType === 'application/x-zip-compressed') && (
                 <div>
                   <p>Zip file uploaded. Click the button below to download:</p>
-                  <Button onClick={handleDownload} variant='flat'>Download</Button>
+                  <Button onClick={handleDownload} color="primary" variant='solid'>Download</Button>
                 </div>
               )}
             </div>

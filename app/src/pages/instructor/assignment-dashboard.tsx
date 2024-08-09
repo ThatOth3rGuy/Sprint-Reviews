@@ -231,7 +231,7 @@ const AssignmentDashboard: NextPage = () => {
           <br />
 
           
-          <h2>Submissions</h2>
+          <h2 className="mb-4">Submissions</h2>
           <Table aria-label="Submissions table">
             <TableHeader>
               <TableColumn>Student Name</TableColumn>

@@ -52,8 +52,10 @@ const StudentGroupDetails: React.FC<StudentGroupDetailsProps> = ({
       const numericValue = Number(value);
       if (numericValue < 0) {
         validatedValue = '0';
+        toast.error('Score cannot be less than 0.');
       } else if (numericValue > 10) {
         validatedValue = '10';
+        toast.error('Score cannot be greater than 10.');
       }
     }
     setFeedbacks((prevFeedbacks) =>

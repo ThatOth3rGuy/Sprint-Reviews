@@ -59,14 +59,12 @@ const InstructorNavbar: NextPage<InstructorNavbarProps> = ({ home, courses, assi
         >
           <Link onClick={() => handleNavigation("/instructor/assignments")} className={`w-[98%] p-2  ${assignments?.className} text-primary-50 `} ><img className={style.navImg} src="/images/Instructor/Assignments.png" />Assignments</Link>
         </div>
-        <div
+        {/* <div
           className={style.navButton}
           onClick={() => handleNavigation("/instructor/overall-performance")}
         >
           <Link onClick={() => handleNavigation("/instructor/overall-performance")} className={`w-[98%] p-2  ${grades?.className} text-primary-50 `} ><img className={style.navImg} src="/images/Instructor/Grades.png" />Grades</Link>
-
-
-        </div>
+        </div> */}
         <div
           className={style.navButton}
           onClick={() => handleNavigation("/instructor/profile")}

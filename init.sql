@@ -162,9 +162,6 @@ CREATE TABLE IF NOT EXISTS student_notifications (
     studentID INT,
     assignmentNotification BOOLEAN DEFAULT TRUE,
     reviewNotification BOOLEAN DEFAULT TRUE,
-    deadlineNotification BOOLEAN DEFAULT TRUE,
-    evaluationNotification BOOLEAN DEFAULT TRUE,
-    gradesNotification BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (studentID) REFERENCES student(studentID) ON DELETE CASCADE
 );
 
@@ -177,6 +174,7 @@ CREATE TABLE IF NOT EXISTS review_groups  (
     courseID INT,
     revieweeID INT,
     isReleased BOOLEAN DEFAULT false,
+    autoReleaseDate DATETIME,
     PRIMARY KEY (studentID, revieweeID, assignmentID),
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
@@ -194,6 +192,8 @@ CREATE TABLE IF NOT EXISTS course_groups (
     FOREIGN KEY (studentID) REFERENCES student(studentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID)
 );
+
+-- Table for storing instructor feedback on student submissions
 CREATE TABLE IF NOT EXISTS instructor_feedback (
     feedbackID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT NOT NULL,
@@ -204,10 +204,8 @@ CREATE TABLE IF NOT EXISTS instructor_feedback (
     comment TEXT,    
     FOREIGN KEY (assignmentID) REFERENCES assignment(assignmentID),
     FOREIGN KEY (courseID) REFERENCES course(courseID),
-    FOREIGN KEY (studentID) REFERENCES student(studentID));
-
-
-
+    FOREIGN KEY (studentID) REFERENCES student(studentID)
+);
 
 -- Insert a sample user (student) into the user table
 INSERT INTO user (firstName, lastName, email, pwd, userRole)
@@ -400,3 +398,4 @@ INSERT INTO submission (assignmentID, studentID, fileName, fileContent, fileType
 (@assignmentID, 123474, 'project_123474.sql', NULL, 'sql', NOW()),
 (@assignmentID, 123475, 'project_123475.sql', NULL, 'sql', NOW()),
 (@assignmentID, 123476, 'project_123476.sql', NULL, 'sql', NOW());
+

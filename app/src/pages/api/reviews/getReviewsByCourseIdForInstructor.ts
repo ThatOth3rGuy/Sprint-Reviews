@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 async function getPeerReviewAssignmentsByCourseIDForInstructor(courseID: number) {
   const sql = `
-    SELECT DISTINCT r.reviewID as assignmentID, r.assignmentID as linkedAssignmentID, r.deadline
+    SELECT DISTINCT r.reviewID as assignmentID, r.assignmentID as linkedAssignmentID, r.deadline, a.title
     FROM review r
     JOIN assignment a ON r.assignmentID = a.assignmentID
     LEFT JOIN review_groups rg ON r.assignmentID = rg.assignmentID

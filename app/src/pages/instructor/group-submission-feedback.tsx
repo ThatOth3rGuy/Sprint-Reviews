@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 import { useSessionValidation } from "../api/auth/checkSession";
 import InstructorGroupDetails from "../components/instructor-components/instructor-group-feedback";
 import styles from "../../styles/AssignmentDetailCard.module.css";
-import { Button, Breadcrumbs, BreadcrumbItem, Spinner, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Card, CardBody } from "@nextui-org/react";
+import { Button, Breadcrumbs, BreadcrumbItem, Spinner, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Input, Card, CardBody, Table, TableBody, TableColumn, TableHeader, TableRow, TableCell } from "@nextui-org/react";
 import toast from "react-hot-toast";
+import DownloadSubmission from "../components/student-components/download-submission";
 
 interface Assignment {
   assignmentID: number;
@@ -36,7 +37,17 @@ interface Feedback {
   score: string;
   content: string;
 }
-
+interface GroupFeedback {
+  feedbackID: number;
+  submissionID: number;
+  reviewerID: number;
+  feedbackDetails: string;
+  feedbackDate: string;
+  lastUpdated: string;
+  comment: string;
+  grade: number | null;
+  feedbackType: 'peer' | 'instructor';
+}
 interface Submission {
   studentName: string;
   submissionID: number;
@@ -66,7 +77,7 @@ export default function AssignmentDashboard() {
   const [feedback, setFeedback] = useState<Feedback[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newGrade, setNewGrade] = useState<number>(0);
-
+  const [groupFeedbacks, setgroupFeedbacks] = useState<GroupFeedback[]>([]);
   useSessionValidation('instructor', setLoading, setSession);
 
   useEffect(() => {
@@ -113,9 +124,9 @@ export default function AssignmentDashboard() {
 
   useEffect(() => {
     const checkSubmissionStatus = async () => {
-      if (assignmentID) {
+      if (assignmentID && studentID) {
         try {
-          const response = await fetch(`/api/submissions/checkSubmission?assignmentID=${assignmentID}&userID=${studentID}`);
+          const response = await fetch(`/api/submissions/checkSubmission4Instructor?assignmentID=${assignmentID}&userID=${studentID}`);
           if (!response.ok) {
             throw new Error('Failed to check submission status');
           }
@@ -123,6 +134,8 @@ export default function AssignmentDashboard() {
           setSubmission(data);
           console.log('Submission data: ', data);
           setNewGrade(data.grade ?? data.autoGrade);
+
+          
         } catch (error) {
           console.error('Error checking submission status:', error);
           toast.error('Error checking submission status. Please refresh the page.');
@@ -139,6 +152,8 @@ export default function AssignmentDashboard() {
           }
           const data = await response.json();
           setIsFeedbackSubmitted(data.isFeedbackSubmitted);
+          
+          
         } catch (error) {
           console.error('Error checking feedback status:', error);
           toast.error('Error checking feedback status. Please refresh the page.');
@@ -155,6 +170,12 @@ export default function AssignmentDashboard() {
           }
           const data = await response.json();
           setFeedback(data);
+          
+          const feedbacksResponse = await fetch(`/api/peer-reviews/${assignmentID}/${studentID}`);
+            if (feedbacksResponse.ok) {
+              const feedbacksData: GroupFeedback[] = await feedbacksResponse.json();
+              setgroupFeedbacks(feedbacksData);
+            }
         } catch (error) {
           console.error('Error fetching feedback:', error);
           toast.error('Error fetching feedback. Please refresh the page.');
@@ -173,6 +194,9 @@ export default function AssignmentDashboard() {
 
   const handleSaveGrade = async (newGrade: number) => {
     try {
+      if (submission?.submissionID === null) {
+        throw new Error('Cannot update grade for an un-submitted assignment');
+      }
       const response = await fetch('/api/updateTable', {
         method: 'POST',
         headers: {
@@ -186,16 +210,20 @@ export default function AssignmentDashboard() {
           },
         }),
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to update grade');
       }
-
+  
       setSubmission((prev) => prev ? { ...prev, grade: newGrade } : null);
       toast.success('Grade updated successfully');
     } catch (error) {
-      console.error('Error updating grade:', error);
-      toast.error('Error updating grade. Please try again.');
+      if ((error as Error).message === 'Cannot update grade for an un-submitted assignment') {
+        toast.error('Cannot update grade for an un-submitted assignment.');
+      } else {
+        console.error('Error updating grade:', error);
+        toast.error('Error updating grade. Please try again.');
+      }
     }
   };
 
@@ -232,11 +260,11 @@ export default function AssignmentDashboard() {
           </Breadcrumbs>
         </div>
         <div className={styles.assignmentsSection}>
-            <Card className={styles.assignmentCard}>
+            <Card className={`overflow-y-auto min-h-[110px] ${styles.assignmentCard}`}>
                 <CardBody>
                 <h2 className={styles.assignmentTitle}>{assignment.title} - (Submitted by: {submission?.studentName})</h2>
                 <p className={styles.assignmentDescription}>{assignment.descr}</p>
-                <p className={styles.assignmentDeadline}>Deadline: {assignment.deadline}</p>
+                <p className={styles.assignmentDeadline}>Deadline: {new Date(assignment.deadline).toLocaleString()}</p>
                 </CardBody>
             </Card>
           {submission?.isSubmitted ? (
@@ -246,26 +274,51 @@ export default function AssignmentDashboard() {
                   ? "Assignment Submitted Late"
                   : "Assignment Submitted"}
               </p>
-              {submission.fileName && <p className="text-left text-small">Submitted file: {submission.fileName}</p>}
+              {submission.fileName && <p className="text-left mt-3 "><DownloadSubmission assignmentID={assignment.assignmentID} studentID={Number(studentID)}></DownloadSubmission></p>}
+              <div className="flex items-center mb-0">
+                <p className="text-primary-900 text-large font-bold m-2 mr-3 p-1">
+                  {submission?.grade ? 'Adjusted Grade:' : 'Average Grade:'} {submission?.grade ?? submission?.autoGrade}
+                </p><Button size="sm" variant="flat" color="warning" onClick={handleEditGrade}>Edit Grade</Button>
+              </div>
             </div>
           ) : (
             <p className="text-primary-900 text-large font-bold bg-danger-500 my-2 p-1">Assignment Not Submitted</p>
           )}
           <br /><br />
           {groupDetails && (
-            <InstructorGroupDetails
+            <div className="m-0">
+              <InstructorGroupDetails 
               groupID={groupDetails.groupID}
               studentName={submission?.studentName}
               students={groupDetails.students}
               feedbacks={feedback}
             />
+            </div>
+            
           )}
-            <p className="text-primary-900 text-large font-bold bg-primary-100 my-2 p-1">
-              {submission?.grade ? 'Adjusted Grade:' : 'Average Grade:'} {submission?.grade ?? submission?.autoGrade}
-              <br />
-              <Button className="text-primary-900 text-small font-bold bg-primary-200 my-2 p-0.5" onClick={handleEditGrade}>Edit Grade</Button>
-            </p>
+          <h2 className="mt-8 mb-3">Feedback</h2>
+          <Table aria-label="Submissions table">
+          <TableHeader>
+              <TableColumn>Reviewer ID</TableColumn>
+              <TableColumn>Feedback Date</TableColumn>
+              <TableColumn>Comment</TableColumn>              
+              <TableColumn>Last Updated</TableColumn>
+
+            </TableHeader>
+            <TableBody>
+          {groupFeedbacks.map((feedback, index) => (
+                <TableRow key={index}>
+                  <TableCell>{feedback.reviewerID}</TableCell>
+                  <TableCell>{new Date(feedback.feedbackDate).toLocaleString()}</TableCell>
+                  <TableCell>{feedback.comment}</TableCell>                  
+                  <TableCell>{new Date(feedback.lastUpdated).toLocaleString()}</TableCell>
+                </TableRow>
+
+          ))}
+            </TableBody>
+          </Table>
         </div>
+        
       </div>
       <Modal
         className='z-20'
@@ -296,6 +349,40 @@ export default function AssignmentDashboard() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+      {/* <div>
+            <h2>Feedback</h2>
+            {groupFeedbacks.length > 0 ? (
+              groupFeedbacks.map((groupFeedback, index) => (
+                <div key={groupFeedback.feedbackID} className={styles.assignmentsSection}>
+                  <p><strong>Feedback {index + 1}:</strong></p>
+                  <p><strong>Details:</strong> {groupFeedback.feedbackDetails}</p>
+                  <p><strong>Comment:</strong> {groupFeedback.comment}</p>
+                  <p><strong>Date:</strong> {new Date(groupFeedback.feedbackDate).toLocaleString()}</p>
+                  <p><strong>Grade:</strong> {groupFeedback.grade !== null ? feedback.grade : "Not graded yet"}</p>
+                </div>
+              ))
+            ) : (
+              <p>No feedback available yet.</p>
+            )}
+          </div> */}
+      
+        
+        {/* <tbody>
+          {groupFeedbacks.map((feedback, index) => (
+            <tr key={index}>
+              <td>{feedback.feedbackID}</td>
+              <td>{feedback.submissionID}</td>
+              <td>{feedback.reviewerID}</td>
+              <td>{feedback.feedbackDetails}</td>
+              <td>{feedback.feedbackDate}</td>
+              <td>{feedback.lastUpdated}</td>
+              <td>{feedback.comment}</td>
+              <td>{feedback.grade}</td>
+              <td>{feedback.feedbackType}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table> */}
     </>
   );
 }

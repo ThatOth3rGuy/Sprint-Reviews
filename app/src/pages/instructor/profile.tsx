@@ -53,11 +53,6 @@ export default function Page() {
     }
   }, [session]);
 
-  const handleBackClick = async () => {
-    // Redirect to the landing page
-    router.back();
-  }
-
   const handleEditClick = () => {
     setIsEditModalOpen(true);
   };
@@ -126,12 +121,9 @@ export default function Page() {
         <div className={styles.header}>
           <h1>User Profile</h1>
           <br />
-          <img className="m-0 mr-2 object-cover cursor-pointer w-[2vw] h-[2vw]" alt="Back" src="/Images/Instructor/Back.png" onClick={handleBackClick} aria-label='Back to Landing Page' />
-
-
         </div>
         <div className={styles.mainContent}>
-          <div className={styles.assignmentsSection}>
+          <div className="instructor flex-col bg-white p-[1.5%] w-[86%] m-[.8%] ml-auto h-fit">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                 <CardBody className="text-sm font-medium">User Profile</CardBody>
