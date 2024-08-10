@@ -1,5 +1,9 @@
  # Weekly Logs 
 ------------------------------------
+# Final Week Summary 
+overview: we finished our development a while back and caught all the bugs related to the student
+ans instructor file viewer and Submission status which we fixed. Additionally we got the demo ready for presentations and worked
+on the final presentation 
 # Week 11 Summary 
 ## Wednesday (08/07/2024)
 ### Timesheet Week 11 (07/31/2024- 08/07/2024) (End of Development)
